@@ -17,6 +17,7 @@ A premium, futuristic, highly interactive personal portfolio website positioning
   - Interactive case study modals with challenge, strategy, execution, and impact.
   - Dynamic skills wall with category filtering.
   - Viewport-triggered animated statistic counters.
+  - Full Mobile Responsiveness: Dedicated app-style slide-out navigation drawer, fluid typography scaling, touch-enabled transformation slider, and adaptive single-column card grids.
 
 ---
 
