@@ -20,6 +20,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Mobile Navigation Drawer
   const mobileToggle = document.querySelector('.mobile-nav-toggle');
+  const mobileClose = document.querySelector('.mobile-menu-close');
   const mobileOverlay = document.querySelector('.mobile-menu-overlay');
   const mobileLinks = document.querySelectorAll('.mobile-nav-link, .mobile-menu-overlay a');
 
@@ -29,7 +30,14 @@ document.addEventListener('DOMContentLoaded', () => {
     document.body.style.overflow = mobileOverlay?.classList.contains('open') ? 'hidden' : '';
   }
 
+  function closeMobileMenu() {
+    mobileToggle?.classList.remove('open');
+    mobileOverlay?.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
   mobileToggle?.addEventListener('click', toggleMobileMenu);
+  mobileClose?.addEventListener('click', closeMobileMenu);
 
   mobileLinks.forEach((link) => {
     link.addEventListener('click', () => {
