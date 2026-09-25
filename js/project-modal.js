@@ -1,131 +1,199 @@
 /**
- * AAKASH K Portfolio — Fullscreen Agency Case Study Modal
- * Implements the 7-part agency architecture:
- * 01 THE CHALLENGE
- * 02 MY ROLE
- * 03 THE APPROACH
- * 04 THE WORK
- * 05 THE RESULT
- * 06 THE PROOF
- * 07 NEXT PROJECT
+ * AAKASH K Portfolio — Editorial Case Study & Detail Modal
+ * Minimalist, high readability, verified information only.
  */
 
-import { playOpenSound } from './audio.js';
-
-export const projectData = {
-  'purple-collection': {
-    id: 'purple-collection',
-    number: '01',
-    title: 'PURPLE COLLECTION',
-    subtitle: 'High-Fashion Editorial Talent Personal Branding',
-    category: 'PERSONAL BRANDING / FASHION / SOCIAL',
-    tags: ['Personal Branding', 'Content Strategy', 'Videography', 'Video Editing', 'Instagram Management'],
-    client: 'Fashion & Editorial Model',
-    scope: 'Brand Positioning & Content Production',
+export const modalData = {
+  'u6nick': {
+    title: 'U6NICK',
+    subtitle: 'EDITORIAL MODEL PERSONAL BRANDING',
+    category: 'PERSONAL BRANDING / FASHION / CONTENT',
+    meta: [
+      { label: 'DISCIPLINE', value: 'Personal Branding' },
+      { label: 'INDUSTRY', value: 'Editorial Fashion' },
+      { label: 'RESULT', value: 'Approx. 3,000 Followers' }
+    ],
     image: 'assets/project_fashion.jpg',
-    url: null,
-    sections: {
-      challenge: 'The client possessed high-fashion runway presence and striking visual appeal, but had an uncurated digital presence that failed to attract agency bookings and luxury brand partnerships. Previous posts were casual selfies and inconsistent clips that diluted their perceived market positioning.',
-      role: [
-        'Content Strategy & Visual Identity Design',
-        'Script Writing & Scene Direction',
-        'High-Definition Videography & Lighting Setup',
-        'Precision Video Editing & Color Grading',
-        'Instagram Account Management & Grid Aesthetic',
-        'Competitor Research & Trend Benchmarking',
-        'Profile Bio Optimization & Conversion Funnel'
-      ],
-      approach: 'Shifted the narrative from standard influencer posting to a strictly curated high-fashion editorial persona. We planned targeted video themes focusing on runway breakdowns, styling nuances, and behind-the-scenes artistry. Each video hook was engineered to halt the scroll within 1.5 seconds with dark-luxury atmospheric lighting.',
-      work: 'Produced multiple episodic short-form reels with custom color grades mimicking Vogue and Harper’s Bazaar editorial tone. Aligned audio with trending high-retention pacing while preserving a bespoke, elevated luxury feel. Refined the client’s Instagram bio, highlights, and pinned reels into a digital agency comp-card.',
-      result: 'Accelerated audience growth to approximately 3,000 targeted followers. Multiple reels generated viral algorithmic distribution and established a recognizable high-fashion visual signature.',
-      proof: 'Verified metrics: 3,000+ targeted followers, high-performing published reels with organic reach, and tangible inbound inquiries from regional fashion stylists and commercial casting scouts.',
-    },
-    nextId: 'jayashakthi'
+    overview: 'Personal branding and digital content work created for an editorial model, focused on building a stronger online identity, content presence and audience connection.',
+    role: [
+      'Content strategy & brand positioning',
+      'Script writing for short-form video hooks',
+      'High-definition videography & lighting setup',
+      'Pacing, video editing & color grading',
+      'Instagram profile & grid management',
+      'Competitor research & audience benchmarking',
+      'Profile bio optimization & content planning'
+    ],
+    sections: [
+      {
+        label: 'THE WORK',
+        heading: 'Creative Strategy & Production',
+        text: 'Content strategy, scripting, shooting, editing and Instagram management designed to position the model as a recognized editorial presence.'
+      },
+      {
+        label: 'THE RESULT',
+        heading: 'Audience Growth & Engagement',
+        text: 'Built the profile to approximately 3,000 followers with multiple high-performing reels, higher viewer retention, and improved industry positioning.'
+      },
+      {
+        label: 'THE PROOF',
+        heading: 'Verified Signals',
+        text: 'Published work + organic analytics + direct client feedback confirming strong engagement and brand perception.'
+      }
+    ]
+  },
+
+  'digi-marketrix': {
+    title: 'DIGI MARKETRIX',
+    subtitle: 'PROFESSIONAL AGENCY INTERNSHIP',
+    category: 'INTERNSHIP / DIGITAL MARKETING / CREATIVE',
+    meta: [
+      { label: 'TENURE', value: 'May 2026 — July 2026' },
+      { label: 'LOCATION', value: 'Tuticorin, Tamil Nadu' },
+      { label: 'SCOPE', value: 'Client Production & Strategy' }
+    ],
+    image: 'assets/experience_digi_marketrix.jpg',
+    overview: 'Worked across scripting, videography, client shoots, editing, content research and digital marketing while creating content for real businesses and personal brands.',
+    role: [
+      'Scripting for diverse commercial clients',
+      'On-location videography, framing, and camera operation',
+      'Coordinating live client studio & field shoots',
+      'Short-form video editing, audio design & color grading',
+      'Content research, trend analysis & competitive benchmarks',
+      'Developing personal branding frameworks'
+    ],
+    sections: [
+      {
+        label: 'CAPABILITY 01',
+        heading: 'Scripting & Conceptualization',
+        text: 'In-depth market research, hook formulation, value-dense narrative arcs, and tailored scripts for commercial brand campaigns.'
+      },
+      {
+        label: 'CAPABILITY 02',
+        heading: 'Production & On-Location Shoots',
+        text: 'Hands-on cinematography, gimbal stabilization, lighting balance, professional audio recording, and direction on real commercial sets.'
+      },
+      {
+        label: 'CAPABILITY 03',
+        heading: 'Editing & Visual Storytelling',
+        text: 'Short-form editing using CapCut and Premiere Pro, precise transitions, dynamic typography captions, sound design, and retention-focused cuts.'
+      }
+    ]
   },
 
   'jayashakthi': {
-    id: 'jayashakthi',
-    number: '02',
     title: 'JAYASHAKTHI TOURS & TRAVELS',
-    subtitle: 'Modern Business Platform & Fleet Management Portal',
-    category: 'WEB / DIGITAL / BUSINESS',
-    tags: ['Web Development', 'Admin Portal', 'UI/UX Design', 'Information Architecture', 'Responsive Design'],
-    client: 'Jayashakthi Tours & Travels',
-    scope: 'End-to-End Web Platform & Fleet Architecture',
+    subtitle: 'BUSINESS PLATFORM & ADMIN PORTAL',
+    category: 'WEB & DIGITAL INFRASTRUCTURE',
+    meta: [
+      { label: 'ROLE', value: 'Web Design & Architecture' },
+      { label: 'PLATFORM', value: 'jayashakthitoursandtravels.com' },
+      { label: 'STATUS', value: 'Production Active' }
+    ],
     image: 'assets/project_jayashakthi.jpg',
-    url: 'https://www.jayashakthitoursandtravels.com/',
-    sections: {
-      challenge: 'Jayashakthi Tours & Travels operated predominantly through offline word-of-mouth and manual phone scheduling. They needed a contemporary digital presence to capture high-intent travelers, showcase vehicle fleet categories, and streamline inbound booking inquiries without friction.',
-      role: [
-        'Full Web Platform Architecture & Design',
-        'Information Architecture & Navigation Flow',
-        'Mobile-Responsive Frontend Development',
-        'Fleet Management & Route Presentation UI',
-        'Admin Portal UX for Inquiries & Bookings',
-        'Business SEO Optimization & Performance Tuning'
-      ],
-      approach: 'Designed an intuitive, customer-centric booking journey where travelers can view vehicle classes, amenities, route transparent pricing, and instant contact options in seconds. Built a dedicated back-office administrative interface structure for managing fleet availability and incoming customer bookings.',
-      work: 'Developed a high-performance, mobile-first website with clean visual hierarchy, crisp typography, and interactive fleet galleries. Engineered an admin dashboard layout that gives operators clear visibility over route requests, vehicle status, and client reservations.',
-      result: 'Delivered a production-ready, search-engine-indexed digital asset at jayashakthitoursandtravels.com. The platform provides credibility for commercial clients, corporate travel coordinators, and family tour packages.',
-      proof: 'Live published website deployed at https://www.jayashakthitoursandtravels.com/ with responsive UI, integrated route showcase, and business booking architecture.',
-    },
-    nextId: 'chinnadurai'
+    link: 'https://www.jayashakthitoursandtravels.com/',
+    overview: 'Designed and developed a production business website and admin portal for Jayashakthi Tours & Travels, focusing on fleet booking management, route presentation, and conversion-focused information architecture.',
+    role: [
+      'Information architecture and responsive UX design',
+      'Frontend web development with clean semantic markup',
+      'Vehicle fleet showcase and route presentation UI',
+      'Admin portal layout for booking and customer inquiry dispatch',
+      'SEO and local business search indexing'
+    ],
+    sections: [
+      {
+        label: 'THE CHALLENGE',
+        heading: 'Modernizing Tour Operations',
+        text: 'Transitioning an offline, phone-based travel operation into an authoritative digital platform that corporate clients and families can trust.'
+      },
+      {
+        label: 'THE OUTCOME',
+        heading: 'Active Production Asset',
+        text: 'A clean, mobile-first website that showcases fleet offerings and captures direct customer leads at jayashakthitoursandtravels.com.'
+      }
+    ]
   },
 
-  'chinnadurai': {
-    id: 'chinnadurai',
-    number: '03',
-    title: 'CHINNADURAI TEXTILES',
-    subtitle: 'Heritage Craftsmanship Scripting & Content Strategy',
-    category: 'CONTENT / SCRIPTWRITING / PERSONAL BRANDING',
-    tags: ['Content Strategy', 'Script Writing', 'Brand Narrative', 'Competitor Research', 'Personal Branding'],
-    client: 'Chinnadurai Textiles',
-    scope: 'Content Strategy & Scripting Frameworks',
-    image: 'assets/project_textile.jpg',
-    url: null,
-    sections: {
-      challenge: 'Heritage textile businesses frequently struggle to articulate their traditional craftsmanship, premium fabric provenance, and family legacy to younger social audiences who find conventional retail ads monotonous.',
-      role: [
-        'Content Strategy & Thematic Narrative Planning',
-        'High-Retention Script Writing for Video Content',
-        'Captions & Social Copywriting',
-        'Competitor & Local Market Research',
-        'Brand Positioning Strategy'
-      ],
-      approach: 'Focused strictly on narrative positioning and storytelling scripts. Instead of generic promotional pitches, each script opened with a compelling hook highlighting the intricate handloom weaves, the human stories of artisans, and the sensory quality of the fabrics.',
-      work: 'Authored an episodic series of video scripts designed for short-form retention. Structured clear opening questions, paced narrative arcs, and informative hooks that conveyed cultural pride and textile expertise without marketing jargon.',
-      result: 'Delivered verified social video performance with individual videos generating 10K to 15K organic views, substantially elevating brand credibility in the region.',
-      proof: 'Documented performance evidence showing 10K–15K view milestones on published scripted content with organic audience engagement and positive regional brand sentiment.',
-    },
-    nextId: 'salemrr'
+  'ai-hardware': {
+    title: 'AI & HARDWARE PROJECTS',
+    subtitle: 'SIH / AI / IOT / ENGINEERING',
+    category: 'TECHNICAL PROTOTYPING',
+    meta: [
+      { label: 'HARDWARE', value: 'ESP32 / Microcontrollers' },
+      { label: 'FIELD', value: 'AI & Data Science (B.Tech)' },
+      { label: 'HACKATHON', value: 'Smart India Hackathon' }
+    ],
+    image: 'assets/lab_mineguardian.jpg',
+    overview: 'Technical engineering initiatives spanning Smart India Hackathon prototypes, IoT telemetry hubs, environmental safety sensors, and foundational machine learning experiments.',
+    role: [
+      'MineGuardian / MineCore: Underground mine telemetry & hazardous gas alerting system for SIH',
+      'ESP32 Fire & Thermal Telemetry Hub with remote MQTT dashboard alerts',
+      'GrandCare: Accelerometer-based elderly fall detection and health monitoring concept',
+      'PowerSense: Non-invasive CT energy consumption profiling prototype',
+      'Machine Learning pipelines: Exploratory data analysis (EDA) and predictive modeling in Python',
+      'SolidWorks & Tinkercad CAD mechanical enclosures and circuit validation'
+    ],
+    sections: [
+      {
+        label: 'THE GOAL',
+        heading: 'Bridging Creative With Technical Rigor',
+        text: 'Aakash is not solely a marketer or creator. He is actively learning to architect software, train data models, and wire hardware sensors as part of his B.Tech AI & Data Science degree.'
+      }
+    ]
   },
 
-  'salemrr': {
-    id: 'salemrr',
-    number: '04',
-    title: 'SALEMRR BIRIYANI',
-    subtitle: 'Cinematic Culinary Promotion & On-Screen Screenplay',
-    category: 'BRAND PROMOTION / VIDEO / FOOD',
-    tags: ['Cinematic Videography', 'Script Writing', 'Screenplay', 'Video Editing', 'Video VJ', 'Content Strategy'],
-    client: 'Salemrr Biriyani',
-    scope: 'Brand Promotional Reel & Sensory Production',
-    image: 'assets/project_food.jpg',
-    url: null,
-    sections: {
-      challenge: 'The food & culinary sector is intensely saturated with repetitive quick cuts and low-fidelity smartphone videos. Salemrr Biriyani required a distinctive, high-stimulus promotional reel that highlighted aroma, craft, and authentic flavor to drive foot traffic.',
-      role: [
-        'Complete Video Script & Screenplay Development',
-        'Cinematic High-Frame-Rate Food Videography',
-        'On-Camera Presenter / Video VJ Hosting',
-        'Sensory Video Editing & Audio Sound Design',
-        'Strategic Distribution Recommendations'
-      ],
-      approach: 'Combined energetic on-screen personality (VJ hosting) with macro culinary close-ups (steam, sizzling meat, cascading saffron rice) and rhythmic sound effects (ASMR sizzles and blade cuts) to trigger instant appetite and memorable recall.',
-      work: 'Directed and shot the promotional reel on location, capturing the intense energy of open-fire cauldrons and the signature biriyani dum-breaking ritual. Seamlessly wove on-camera narration with fast-paced visual storytelling.',
-      result: 'Created an engaging commercial video sample with strong retention rates and shareability across local food enthusiast communities.',
-      proof: 'Published primary promotional reel showcasing end-to-end creative direction, scriptwriting, on-camera presentation, and cinematic food editing.',
-    },
-    nextId: 'purple-collection'
+  'journey': {
+    title: 'THE JOURNEY',
+    subtitle: 'FROM CONTENT CREATION TO TECHNOLOGY & ENTREPRENEURSHIP',
+    category: 'PROGRESSION TIMELINE',
+    meta: [
+      { label: 'TIMELINE', value: '2020 — Present' },
+      { label: 'FOUNDATION', value: 'Content & Video' },
+      { label: 'FUTURE', value: 'Systems & Technology' }
+    ],
+    overview: 'A disciplined progression from editing raw video pixels in 2020 to building personal brands, executing commercial agency client work, studying AI & Data Science, and working toward scalable business platforms.',
+    role: [
+      '2020: Content Creation & Video Editing fundamentals',
+      '2023: Social Media retention, vertical video psychology, Life With Aakash',
+      '2025: Digital Marketing, founder positioning, Best Reels Creator Award',
+      '2026: Client Work & Digi Marketrix commercial internship',
+      '2026: B.Tech AI & Data Science at Rathinam Technical Campus',
+      'Next: Building scalable digital marketing & AI-assisted technology systems'
+    ],
+    sections: [
+      {
+        label: 'CORE BELIEF',
+        heading: 'Nothing Changes If Nothing Changes',
+        text: 'Real growth comes from continuous execution in the real world. Aakash pairs storytelling intuition with technical engineering.'
+      }
+    ]
+  },
+
+  'about': {
+    title: 'ABOUT AAKASH K',
+    subtitle: 'STUDENT ENTREPRENEUR & BUILDER',
+    category: 'BIOGRAPHY & CONTEXT',
+    meta: [
+      { label: 'DEGREE', value: 'B.Tech AI & Data Science' },
+      { label: 'CAMPUS', value: 'Rathinam Technical Campus' },
+      { label: 'YEAR', value: '2026 — 2030 (First Year)' }
+    ],
+    image: 'assets/aakash_portrait.jpg',
+    overview: 'Aakash K is a student entrepreneur and B.Tech AI & Data Science student working across digital marketing, personal branding, content creation, and technology.',
+    role: [
+      'Pursuing B.Tech in Artificial Intelligence & Data Science at Rathinam Technical Campus (2026 — 2030)',
+      'Completed 12th Grade at SDR, Tuticorin (ISC Curriculum, 75%)',
+      'Awarded Best Reels Creator (Tuticorin, 2025)',
+      'Awarded Young Informative Content (2025)',
+      'Creator of Life With Aakash motivational platform'
+    ],
+    sections: [
+      {
+        label: 'PHILOSOPHY',
+        heading: 'Building While Figuring It Out',
+        text: '“I’m still figuring it out. But I’m building while I figure it out.” Aakash focuses on delivering real work for real clients rather than staying purely theoretical.'
+      }
+    ]
   }
 };
 
@@ -135,188 +203,101 @@ export function initProjectModal() {
   const closeBtn = modal?.querySelector('.modal-close-btn');
   if (!modal || !container) return;
 
-  function renderProject(projectId) {
-    const p = projectData[projectId];
-    if (!p) return;
-
-    const nextProject = projectData[p.nextId];
+  function render(key) {
+    const data = modalData[key];
+    if (!data) return;
 
     container.innerHTML = `
-      <article class="case-study-view">
-        <!-- Case Study Header Banner -->
-        <header class="case-study-hero">
-          <div class="case-study-meta-top">
-            <span class="case-study-num">${p.number} // CASE STUDY</span>
-            <span class="case-study-category">${p.category}</span>
-          </div>
+      <div class="modal-body">
+        <div class="modal-header-section">
+          <span class="section-label accent">${data.category}</span>
+          <h2 class="modal-title">${data.title}</h2>
+          <p style="font-size: 1.15rem; color: var(--text-secondary);">${data.subtitle}</p>
 
-          <h2 class="case-study-title">${p.title}</h2>
-          <p class="case-study-subtitle">${p.subtitle}</p>
-
-          <div class="case-study-tags">
-            ${p.tags.map(t => `<span class="case-tag">${t}</span>`).join('')}
-          </div>
-
-          <div class="case-study-media-wrapper">
-            <img src="${p.image}" alt="${p.title}" class="case-study-media-img" />
-            <div class="case-study-media-gradient"></div>
-            ${p.url ? `
-              <a href="${p.url}" target="_blank" rel="noopener noreferrer" class="case-study-live-btn btn btn-primary">
-                <span>VISIT LIVE PLATFORM ↗</span>
-              </a>
-            ` : ''}
-          </div>
-        </header>
-
-        <!-- Project Meta Strip -->
-        <div class="case-meta-strip">
-          <div class="meta-strip-col">
-            <span class="meta-strip-label">CLIENT</span>
-            <span class="meta-strip-val">${p.client}</span>
-          </div>
-          <div class="meta-strip-col">
-            <span class="meta-strip-label">SCOPE</span>
-            <span class="meta-strip-val">${p.scope}</span>
-          </div>
-          <div class="meta-strip-col">
-            <span class="meta-strip-label">STATUS</span>
-            <span class="meta-strip-val text-accent">DELIVERED & VERIFIED</span>
-          </div>
-        </div>
-
-        <!-- 7-Part Agency Structure -->
-        <div class="case-study-body">
-          <!-- 01 The Challenge -->
-          <section class="case-block">
-            <div class="case-block-header">
-              <span class="block-step-num">01</span>
-              <h3 class="block-step-title">THE CHALLENGE</h3>
-            </div>
-            <p class="block-step-desc">${p.sections.challenge}</p>
-          </section>
-
-          <!-- 02 My Role -->
-          <section class="case-block">
-            <div class="case-block-header">
-              <span class="block-step-num">02</span>
-              <h3 class="block-step-title">MY ROLE & DELIVERABLES</h3>
-            </div>
-            <ul class="case-role-list">
-              ${p.sections.role.map(r => `
-                <li>
-                  <span class="role-bullet">⚡</span>
-                  <span>${r}</span>
-                </li>
+          ${data.meta ? `
+            <div class="meta-strip" style="margin-top: 1rem; margin-bottom: 0;">
+              ${data.meta.map(m => `
+                <div class="meta-pill">
+                  <span style="color: var(--text-muted);">${m.label}:</span>
+                  <span style="color: #ffffff; font-weight: 600;">${m.value}</span>
+                </div>
               `).join('')}
-            </ul>
-          </section>
-
-          <!-- 03 The Approach -->
-          <section class="case-block">
-            <div class="case-block-header">
-              <span class="block-step-num">03</span>
-              <h3 class="block-step-title">THE STRATEGIC APPROACH</h3>
             </div>
-            <p class="block-step-desc">${p.sections.approach}</p>
-          </section>
-
-          <!-- 04 The Work -->
-          <section class="case-block">
-            <div class="case-block-header">
-              <span class="block-step-num">04</span>
-              <h3 class="block-step-title">THE EXECUTION & WORK</h3>
-            </div>
-            <p class="block-step-desc">${p.sections.work}</p>
-          </section>
-
-          <!-- 05 The Result -->
-          <section class="case-block">
-            <div class="case-block-header">
-              <span class="block-step-num">05</span>
-              <h3 class="block-step-title">THE RESULT</h3>
-            </div>
-            <div class="case-result-box">
-              <p class="block-step-desc">${p.sections.result}</p>
-            </div>
-          </section>
-
-          <!-- 06 The Proof -->
-          <section class="case-block">
-            <div class="case-block-header">
-              <span class="block-step-num">06</span>
-              <h3 class="block-step-title">VERIFIED PROOF & SIGNALS</h3>
-            </div>
-            <div class="proof-verified-badge">
-              <span class="proof-dot"></span>
-              <span>VERIFIED REAL-WORLD EVIDENCE</span>
-            </div>
-            <p class="block-step-desc" style="margin-top: 0.75rem;">${p.sections.proof}</p>
-          </section>
-
-          <!-- 07 Next Project -->
-          <footer class="case-study-next-footer">
-            <span class="block-step-num">07</span>
-            <div class="next-project-teaser">
-              <span class="next-label">NEXT CASE STUDY</span>
-              <h4 class="next-title">${nextProject.title}</h4>
-              <p class="next-desc">${nextProject.subtitle}</p>
-              <button type="button" class="btn btn-secondary btn-next-case" data-next-id="${nextProject.id}">
-                <span>EXPLORE ${nextProject.title} →</span>
-              </button>
-            </div>
-          </footer>
+          ` : ''}
         </div>
-      </article>
+
+        ${data.image ? `
+          <div class="modal-image-wrap">
+            <img src="${data.image}" alt="${data.title}" />
+          </div>
+        ` : ''}
+
+        <div class="modal-section-block">
+          <span class="modal-block-label">OVERVIEW</span>
+          <p class="modal-block-text">${data.overview}</p>
+        </div>
+
+        ${data.role ? `
+          <div class="modal-section-block">
+            <span class="modal-block-label">KEY AREAS &amp; RESPONSIBILITIES</span>
+            <ul class="modal-list">
+              ${data.role.map(r => `<li>${r}</li>`).join('')}
+            </ul>
+          </div>
+        ` : ''}
+
+        ${data.sections ? data.sections.map(s => `
+          <div class="modal-section-block" style="border-top: 1px solid var(--border-subtle); padding-top: 1.75rem;">
+            <span class="modal-block-label">${s.label}</span>
+            <h3 class="modal-block-heading">${s.heading}</h3>
+            <p class="modal-block-text">${s.text}</p>
+          </div>
+        `).join('') : ''}
+
+        ${data.link ? `
+          <div style="padding-top: 1.5rem; border-top: 1px solid var(--border-subtle);">
+            <a href="${data.link}" target="_blank" rel="noopener noreferrer" class="btn btn-primary">
+              <span>VISIT LIVE PLATFORM ↗</span>
+            </a>
+          </div>
+        ` : ''}
+      </div>
     `;
-
-    // Hook up Next Project button
-    const nextBtn = container.querySelector('.btn-next-case');
-    nextBtn?.addEventListener('click', () => {
-      const nextId = nextBtn.getAttribute('data-next-id');
-      if (nextId) {
-        modal.scrollTo({ top: 0, behavior: 'smooth' });
-        setTimeout(() => renderProject(nextId), 150);
-      }
-    });
-
-    if (window.__refreshCursor) window.__refreshCursor();
   }
 
-  function openModal(projectId) {
-    if (!projectData[projectId]) return;
-    renderProject(projectId);
+  function open(key) {
+    if (!modalData[key]) return;
+    render(key);
     modal.classList.add('active');
     modal.setAttribute('aria-hidden', 'false');
     document.body.style.overflow = 'hidden';
     modal.scrollTo(0, 0);
-    playOpenSound();
   }
 
-  function closeModal() {
+  function close() {
     modal.classList.remove('active');
     modal.setAttribute('aria-hidden', 'true');
     document.body.style.overflow = '';
   }
 
-  // Work card triggers
-  document.querySelectorAll('[data-project]').forEach((card) => {
-    card.addEventListener('click', () => {
-      const id = card.getAttribute('data-project');
-      if (id) openModal(id);
+  // Bind trigger links
+  document.querySelectorAll('[data-open-modal]').forEach(trigger => {
+    trigger.addEventListener('click', (e) => {
+      e.preventDefault();
+      const key = trigger.getAttribute('data-open-modal');
+      if (key) open(key);
     });
   });
 
-  closeBtn?.addEventListener('click', closeModal);
+  closeBtn?.addEventListener('click', close);
 
-  // Close on backdrop click
   modal.addEventListener('click', (e) => {
-    if (e.target === modal) closeModal();
+    if (e.target === modal) close();
   });
 
-  // Close on ESC
   window.addEventListener('keydown', (e) => {
     if (e.key === 'Escape' && modal.classList.contains('active')) {
-      closeModal();
+      close();
     }
   });
 }
