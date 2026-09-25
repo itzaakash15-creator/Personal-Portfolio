@@ -121,22 +121,22 @@
 }
 
 .hero-title-aku {
-  font-size: clamp(4.5rem, 11vw, 9.5rem);
-  line-height: 0.9;
-  letter-spacing: -0.045em;
+  font-size: clamp(6.2rem, 16.5vw, 13.5rem);
+  line-height: 0.82;
+  letter-spacing: -0.055em;
   font-weight: 900;
   color: #ffffff;
-  margin-bottom: 1.75rem;
+  margin-block: 0.5rem 1.75rem;
   text-transform: uppercase;
 }
 
 .hero-statement-box {
-  margin-bottom: 2.25rem;
+  margin-bottom: 2.5rem;
 }
 
 .hero-statement-lead {
-  font-size: clamp(1.4rem, 2.6vw, 2.1rem);
-  line-height: 1.28;
+  font-size: clamp(1.4rem, 2.5vw, 2.15rem);
+  line-height: 1.25;
   font-weight: 600;
   letter-spacing: -0.025em;
   color: var(--text-primary);
@@ -166,147 +166,137 @@
   flex-wrap: wrap;
 }
 
-/* 3D Character Stage & Fallback */
-.hero-portrait-stage {
+/* ==========================================================================
+   CharacterScene: Reusable 3D Stage & Editorial Fallback Architecture
+   ========================================================================== */
+.character-scene {
   position: relative;
   width: 100%;
-  min-height: clamp(520px, 75vh, 840px);
+  min-height: clamp(520px, 78vh, 880px);
   display: flex;
   align-items: flex-end;
   justify-content: center;
   z-index: 1;
 }
 
-.hero-portrait-backdrop-glow {
+/* Soft warm directional light behind the subject (No rings/circles) */
+.character-scene-backdrop {
   position: absolute;
-  bottom: 25%;
+  bottom: 15%;
   left: 50%;
   transform: translateX(-50%);
-  width: clamp(300px, 38vw, 520px);
-  height: clamp(300px, 38vw, 520px);
-  background: radial-gradient(circle, rgba(216, 195, 165, 0.12) 0%, rgba(14, 14, 18, 0.4) 50%, transparent 75%);
-  filter: blur(60px);
+  width: clamp(380px, 46vw, 680px);
+  height: clamp(380px, 46vw, 680px);
+  background: radial-gradient(circle, rgba(216, 195, 165, 0.09) 0%, rgba(18, 18, 22, 0.25) 50%, transparent 75%);
+  filter: blur(80px);
   pointer-events: none;
   z-index: 0;
 }
 
-.scene-3d-canvas {
+.character-scene-stage {
+  position: relative;
+  width: 100%;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  z-index: 1;
+  perspective: 1200px;
+}
+
+.character-portrait-asset {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 580px;
+  height: auto;
+  max-height: 85vh;
+  object-fit: contain;
+  object-position: bottom center;
+  display: block;
+  /* Authentic high-contrast low-saturation editorial grading */
+  filter: contrast(1.08) brightness(0.96) saturate(0.85);
+  -webkit-mask-image: linear-gradient(to bottom, black 84%, transparent 100%);
+  mask-image: linear-gradient(to bottom, black 84%, transparent 100%);
+  will-change: transform;
+  transform: translate3d(0, 0, 0);
+  transition: transform 0.15s cubic-bezier(0.16, 1, 0.3, 1);
+  pointer-events: none;
+  user-select: none;
+}
+
+/* Future WebGL 3D GLB / React Three Fiber Canvas Mount */
+.character-3d-mount {
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 100% !important;
-  height: 100% !important;
+  inset: 0;
+  width: 100%;
+  height: 100%;
   z-index: 2;
   pointer-events: none;
 }
 
-.hero-authentic-portrait {
-  position: relative;
-  z-index: 1;
-  width: 100%;
-  max-width: 560px;
-  height: auto;
-  max-height: 84vh;
-  object-fit: contain;
-  object-position: bottom center;
-  display: block;
-  /* Authentic editorial grading */
-  filter: contrast(1.08) brightness(0.96) saturate(0.85);
-  -webkit-mask-image: linear-gradient(to bottom, black 82%, transparent 100%);
-  mask-image: linear-gradient(to bottom, black 82%, transparent 100%);
-  transition: opacity 0.8s ease-in-out;
-}
-
-.hero-portrait-badge-meta {
-  position: absolute;
-  bottom: 1.5rem;
-  right: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 0.35rem;
-  font-family: var(--font-mono);
-  font-size: 0.72rem;
-  color: var(--text-muted);
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  z-index: 3;
-  background-color: rgba(10, 10, 12, 0.8);
-  backdrop-filter: blur(12px);
-  padding: 0.55rem 0.95rem;
-  border-radius: var(--radius-xs);
-  border: 1px solid var(--border-subtle);
-}
-
 /* ==========================================================================
-   3. Scroll-Driven 3D Storytelling: "I DON'T FIT INTO ONE BOX."
+   3. Next Scroll Section: "I DON'T FIT INTO ONE BOX." (Pure Typography, No Cards)
    ========================================================================== */
 .identity-sequence-section {
-  padding-block: clamp(6rem, 12vw, 11rem);
+  padding-block: clamp(7rem, 14vw, 13rem);
   background-color: var(--bg-primary);
   border-bottom: 1px solid var(--border-subtle);
   position: relative;
 }
 
-.identity-sequence-header {
-  margin-bottom: clamp(3.5rem, 7vw, 6.5rem);
-}
-
 .identity-huge-statement {
-  font-size: clamp(2.5rem, 6.5vw, 5.5rem);
+  font-size: clamp(3.2rem, 8.8vw, 7.5rem);
   font-weight: 900;
-  line-height: 1.02;
-  letter-spacing: -0.04em;
+  line-height: 0.92;
+  letter-spacing: -0.045em;
   text-transform: uppercase;
   color: #ffffff;
-  margin-bottom: 1.5rem;
+  margin-bottom: clamp(4rem, 9vw, 8.5rem);
 }
 
-.identity-pillars-stack {
+.identity-sequence-flow {
   display: flex;
   flex-direction: column;
 }
 
-.identity-pillar-item {
-  display: grid;
-  grid-template-columns: 180px 1fr;
-  gap: clamp(2rem, 5vw, 4.5rem);
-  padding-block: clamp(2.5rem, 5vw, 4rem);
-  border-top: 1px solid var(--border-subtle);
+.identity-flow-item {
+  display: flex;
   align-items: baseline;
+  justify-content: space-between;
+  padding-block: clamp(2.5rem, 5.5vw, 4.5rem);
+  border-top: 1px solid var(--border-subtle);
   transition: border-color var(--transition-normal);
 }
 
-.identity-pillar-item:hover {
+.identity-flow-item:last-child {
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.identity-flow-item:hover {
   border-color: var(--border-gold);
 }
 
-.identity-pillar-num {
-  font-family: var(--font-mono);
-  font-size: 1.15rem;
-  font-weight: 600;
-  color: var(--accent-gold);
-  letter-spacing: 0.12em;
-}
-
-.identity-pillar-content {
-  display: flex;
-  flex-direction: column;
-  gap: 0.85rem;
-}
-
-.identity-pillar-title {
-  font-size: clamp(2rem, 4.5vw, 3.5rem);
+.identity-flow-title {
+  font-size: clamp(2.8rem, 6.8vw, 6.2rem);
   font-weight: 900;
-  letter-spacing: -0.03em;
+  letter-spacing: -0.035em;
   text-transform: uppercase;
   color: #ffffff;
+  line-height: 1;
+  transition: color var(--transition-fast), transform var(--transition-normal);
 }
 
-.identity-pillar-desc {
-  font-size: clamp(1.1rem, 2vw, 1.35rem);
-  line-height: 1.65;
-  color: var(--text-secondary);
-  max-width: 720px;
+.identity-flow-item:hover .identity-flow-title {
+  color: var(--accent-champagne);
+  transform: translateX(12px);
+}
+
+.identity-flow-num {
+  font-family: var(--font-mono);
+  font-size: clamp(0.9rem, 1.5vw, 1.15rem);
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  color: var(--accent-gold);
 }
 
 /* ==========================================================================
@@ -1815,6 +1805,54 @@ textarea.form-input-clean {
   }
   .horizontal-proj-actions {
     justify-content: flex-start;
+  }
+}
+
+@media (max-width: 960px) {
+  .home-hero-section {
+    padding-top: calc(var(--header-height) + 2rem);
+    padding-bottom: 3rem;
+    min-height: auto;
+  }
+  .home-hero-grid {
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+  }
+  .hero-left-column {
+    padding-bottom: 1rem;
+  }
+  .hero-title-aku {
+    font-size: clamp(4.5rem, 20vw, 8rem);
+    line-height: 0.88;
+  }
+  .hero-statement-lead {
+    font-size: clamp(1.25rem, 4.5vw, 1.7rem);
+  }
+  .hero-cta-group {
+    gap: 1rem;
+  }
+  .character-scene {
+    min-height: auto;
+    max-width: min(85vw, 440px);
+    margin-inline: auto;
+    margin-top: 1rem;
+  }
+  .character-portrait-asset {
+    transform: none !important;
+    max-height: 55vh;
+  }
+  .identity-sequence-section {
+    padding-block: clamp(4.5rem, 10vw, 7rem);
+  }
+  .identity-huge-statement {
+    font-size: clamp(2.5rem, 10vw, 4.8rem);
+    margin-bottom: 3rem;
+  }
+  .identity-flow-item {
+    padding-block: 1.75rem;
+  }
+  .identity-flow-title {
+    font-size: clamp(2rem, 8vw, 3.4rem);
   }
 }
 

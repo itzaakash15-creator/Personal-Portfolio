@@ -35,30 +35,135 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // 3. Subtle Hero Portrait Cursor Interaction
-  const portraitEl = document.querySelector('.hero-authentic-portrait') || document.querySelector('.hero-portrait-card');
-  const heroSection = document.querySelector('.home-hero-section');
+  // 3. CharacterScene: Desktop Pointer-Based Parallax Engine
+  // Exact bounds: max translate X ±6px, translate Y ±4px, rotation ±1 degree
+  // Smooth lerp interpolation, disabled on mobile and reduced motion
+  const characterPortrait = document.getElementById('character-portrait') || document.querySelector('.character-portrait-asset');
+  const heroSection = document.getElementById('hero') || document.querySelector('.home-hero-section');
 
-  if (portraitEl && heroSection && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-    heroSection.addEventListener('mousemove', (e) => {
-      const rect = portraitEl.getBoundingClientRect();
-      const centerX = rect.left + rect.width / 2;
-      const centerY = rect.top + rect.height / 2;
-      const deltaX = (e.clientX - centerX) / (window.innerWidth / 2);
-      const deltaY = (e.clientY - centerY) / (window.innerHeight / 2);
+  if (characterPortrait && heroSection) {
+    let mouseX = 0;
+    let mouseY = 0;
+    let targetX = 0;
+    let targetY = 0;
+    let targetRot = 0;
+    let currentX = 0;
+    let currentY = 0;
+    let currentRot = 0;
+    let isTicking = false;
+    let rafId = null;
 
-      // Subtle rotation and parallax shift (restrained, 2.5 degrees max)
-      const rotateY = deltaX * 2.5;
-      const rotateX = -deltaY * 2.5;
-      portraitEl.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translate3d(${deltaX * 4}px, ${deltaY * 3}px, 0)`;
-    });
+    const isDesktop = () => window.innerWidth > 960 && !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-    heroSection.addEventListener('mouseleave', () => {
-      portraitEl.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) translate3d(0, 0, 0)';
+    function renderParallax() {
+      if (!isDesktop()) {
+        characterPortrait.style.transform = 'none';
+        isTicking = false;
+        return;
+      }
+
+      currentX += (targetX - currentX) * 0.06;
+      currentY += (targetY - currentY) * 0.06;
+      currentRot += (targetRot - currentRot) * 0.06;
+
+      characterPortrait.style.transform = `translate3d(${currentX.toFixed(2)}px, ${currentY.toFixed(2)}px, 0) rotate(${currentRot.toFixed(2)}deg)`;
+
+      // Continue animating until settled
+      if (Math.abs(targetX - currentX) > 0.02 || Math.abs(targetY - currentY) > 0.02) {
+        rafId = requestAnimationFrame(renderParallax);
+      } else {
+        isTicking = false;
+      }
+    }
+
+    function onPointerMove(e) {
+      if (!isDesktop()) return;
+
+      const normX = (e.clientX / window.innerWidth) * 2 - 1;
+      const normY = (e.clientY / window.innerHeight) * 2 - 1;
+
+      // Restrained bounds: X approx ±6px, Y approx ±4px, rotation approx ±1 deg
+      targetX = normX * 6;
+      targetY = normY * 4;
+      targetRot = normX * 1;
+
+      if (!isTicking) {
+        isTicking = true;
+        rafId = requestAnimationFrame(renderParallax);
+      }
+    }
+
+    function onPointerLeave() {
+      if (!isDesktop()) return;
+      targetX = 0;
+      targetY = 0;
+      targetRot = 0;
+      if (!isTicking) {
+        isTicking = true;
+        rafId = requestAnimationFrame(renderParallax);
+      }
+    }
+
+    window.addEventListener('mousemove', onPointerMove, { passive: true });
+    window.addEventListener('mouseleave', onPointerLeave, { passive: true });
+
+    window.addEventListener('resize', () => {
+      if (!isDesktop()) {
+        characterPortrait.style.transform = 'none';
+        targetX = 0;
+        targetY = 0;
+        targetRot = 0;
+        currentX = 0;
+        currentY = 0;
+        currentRot = 0;
+      }
     });
   }
 
-  // 4. Clipboard Helpers & Toast Notifications
+  // 4. Next Section: Restrained Scroll Storytelling Animation
+  if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined' && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    gsap.registerPlugin(ScrollTrigger);
+
+    const statementEl = document.querySelector('.identity-huge-statement');
+    if (statementEl) {
+      gsap.fromTo(statementEl,
+        { opacity: 0.18, y: 35 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 0.8,
+          ease: 'power2.out',
+          scrollTrigger: {
+            trigger: statementEl,
+            start: 'top 85%',
+            end: 'top 45%',
+            scrub: 0.4
+          }
+        }
+      );
+    }
+
+    const flowItems = document.querySelectorAll('.identity-flow-item');
+    flowItems.forEach((item) => {
+      gsap.fromTo(item,
+        { opacity: 0.22, y: 30 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 0.7,
+          ease: 'power2.out',
+          scrollTrigger: {
+            trigger: item,
+            start: 'top 88%',
+            end: 'top 60%',
+            scrub: 0.35
+          }
+        }
+      );
+    });
+  }
+
+  // 5. Clipboard Helpers & Toast Notifications
   const toast = document.getElementById('toast');
   const directEmail = 'itzaakash15@gmail.com';
   const directPhone = '8590637715';

@@ -23,8 +23,7 @@
   <link rel="stylesheet" href="css/nav.css" />
   <link rel="stylesheet" href="css/editorial.css" />
 
-  <!-- 3D & Animation Engines (Three.js + GSAP + ScrollTrigger) -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <!-- Animation Engine (GSAP + ScrollTrigger for restrained scroll storytelling) -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 </head>
@@ -36,14 +35,11 @@
   <header class="site-header" id="site-header">
     <nav class="nav-container" aria-label="Main Navigation">
       <a href="index.html" class="nav-brand" aria-label="AKU Home">
-        <span class="brand-dot" aria-hidden="true"></span>
-        <span>AKU</span>
+        <span>AKU<span class="brand-period">.</span></span>
       </a>
 
       <div class="nav-center-links">
-        <a href="#hero" class="nav-link">HOME</a>
         <a href="#about" class="nav-link">ABOUT</a>
-        <a href="#experience" class="nav-link">EXPERIENCE</a>
         <a href="#work" class="nav-link">WORK</a>
         <a href="#speaking" class="nav-link">SPEAKING</a>
         <a href="#proof" class="nav-link">PROOF</a>
@@ -51,7 +47,7 @@
 
       <div class="nav-right-action">
         <a href="#contact" class="nav-connect-btn" aria-label="Connect with AKU">
-          <span>LET'S CONNECT →</span>
+          <span>LET'S CONNECT ↗</span>
         </a>
         <button type="button" class="mobile-nav-toggle" id="mobile-toggle" aria-label="Toggle mobile menu" aria-expanded="false">
           <span></span>
@@ -63,16 +59,14 @@
     <!-- Mobile Full-Screen Menu with Large Typography -->
     <div class="mobile-drawer" id="mobile-drawer">
       <div class="mobile-drawer-links">
-        <a href="#hero" class="nav-link">HOME</a>
         <a href="#about" class="nav-link">ABOUT</a>
-        <a href="#experience" class="nav-link">EXPERIENCE</a>
         <a href="#work" class="nav-link">WORK</a>
         <a href="#speaking" class="nav-link">SPEAKING</a>
         <a href="#proof" class="nav-link">PROOF</a>
       </div>
       <div class="mobile-drawer-footer">
         <a href="#contact" class="nav-connect-btn" style="width: 100%; justify-content: center; padding: 0.85rem;">
-          <span>LET'S CONNECT →</span>
+          <span>LET'S CONNECT ↗</span>
         </a>
         <a href="resume.html" class="nav-link" style="font-size: 1.15rem; color: var(--accent-gold);">
           DOWNLOAD RESUME ↗
@@ -84,7 +78,7 @@
   <main>
 
     <!-- ======================================================================
-         2. HERO SECTION (~50% Content / ~50% Interactive 3D Character)
+         2. HERO SECTION (Two-Column Editorial Composition)
          ====================================================================== -->
     <section class="home-hero-section" id="hero">
       <div class="container home-hero-grid">
@@ -97,7 +91,8 @@
 
           <div class="hero-statement-box">
             <p class="hero-statement-lead">
-              "I build brands, digital experiences and <span class="hero-serif-accent">ideas that move people.</span>"
+              I build brands, digital experiences<br />
+              and <span class="hero-serif-accent">ideas that move people.</span>
             </p>
             <p class="hero-description-text">
               A marketer, creator, web builder and motivational speaker turning ideas into real opportunities.
@@ -114,21 +109,22 @@
           </div>
         </div>
 
-        <!-- Right: Interactive 3D Character Scene (Stylized-Realistic Depth Stage) -->
-        <div class="hero-portrait-stage" id="hero-3d-stage">
-          <div class="hero-portrait-backdrop-glow" aria-hidden="true"></div>
+        <!-- Right: Reusable CharacterScene Component (Architecture for 3D GLB / Portrait Fallback) -->
+        <div class="character-scene" id="character-scene">
+          <!-- Soft warm directional light behind the subject -->
+          <div class="character-scene-backdrop" aria-hidden="true"></div>
           
-          <!-- Instant Static Fallback (smoothly cross-fades when WebGL initializes) -->
-          <img 
-            src="assets/aakash_authentic_portrait.png" 
-            alt="AKU — Stylized-Realistic Character and Editorial Portrait" 
-            class="hero-authentic-portrait" 
-            id="hero-fallback-portrait" 
-          />
-          
-          <div class="hero-portrait-badge-meta">
-            <span>AKU // CREATIVE DIRECTOR &amp; BUILDER</span>
-            <span>COIMBATORE × TUTICORIN</span>
+          <div class="character-scene-stage" id="character-stage">
+            <!-- Authentic Editorial Portrait with subtle desktop parallax -->
+            <img 
+              src="assets/aakash_authentic_portrait.png" 
+              alt="AKU — Editorial Portrait" 
+              class="character-portrait-asset" 
+              id="character-portrait" 
+            />
+            
+            <!-- Future WebGL 3D GLB / React Three Fiber Canvas Mount -->
+            <div class="character-3d-mount" id="character-3d-mount"></div>
           </div>
         </div>
 
@@ -136,63 +132,40 @@
     </section>
 
     <!-- ======================================================================
-         4. SCROLL-DRIVEN 3D STORYTELLING: "I DON'T FIT INTO ONE BOX."
+         4. NEXT SCROLL SECTION: "I DON'T FIT INTO ONE BOX." (Pure Typography, No Cards)
          ====================================================================== -->
     <section class="identity-sequence-section" id="identity-sequence">
       <div class="container">
         <div class="identity-sequence-header">
-          <span class="label-mono">01 // THE ESSENCE</span>
           <h2 class="identity-huge-statement">
-            "I DON'T FIT INTO ONE BOX."
+            I DON'T FIT<br />
+            INTO ONE BOX.
           </h2>
-          <p class="body-large" style="max-width: 680px;">
-            The intersection where creative intuition meets analytical marketing and technical rigor.
-          </p>
         </div>
 
-        <div class="identity-pillars-stack">
+        <div class="identity-sequence-flow">
           <!-- 01: MARKETER -->
-          <div class="identity-pillar-item">
-            <span class="identity-pillar-num">01</span>
-            <div class="identity-pillar-content">
-              <h3 class="identity-pillar-title">MARKETER</h3>
-              <p class="identity-pillar-desc">
-                Building commercial resonance and client pipelines through organic retention frameworks, high-impact campaign scripting, and data-backed content planning.
-              </p>
-            </div>
+          <div class="identity-flow-item">
+            <span class="identity-flow-title">MARKETER</span>
+            <span class="identity-flow-num">01</span>
           </div>
 
           <!-- 02: BRAND BUILDER -->
-          <div class="identity-pillar-item">
-            <span class="identity-pillar-num">02</span>
-            <div class="identity-pillar-content">
-              <h3 class="identity-pillar-title">BRAND BUILDER</h3>
-              <p class="identity-pillar-desc">
-                Transforming individuals and regional businesses into memorable digital identities that capture authority, command premium positioning, and stand out in crowded feeds.
-              </p>
-            </div>
+          <div class="identity-flow-item">
+            <span class="identity-flow-title">BRAND BUILDER</span>
+            <span class="identity-flow-num">02</span>
           </div>
 
           <!-- 03: CREATOR -->
-          <div class="identity-pillar-item">
-            <span class="identity-pillar-num">03</span>
-            <div class="identity-pillar-content">
-              <h3 class="identity-pillar-title">CREATOR</h3>
-              <p class="identity-pillar-desc">
-                Obsessed with videography, editorial rhythm, camera stabilization, and short-form storytelling hooks that capture human attention within the first three seconds.
-              </p>
-            </div>
+          <div class="identity-flow-item">
+            <span class="identity-flow-title">CREATOR</span>
+            <span class="identity-flow-num">03</span>
           </div>
 
           <!-- 04: SPEAKER -->
-          <div class="identity-pillar-item">
-            <span class="identity-pillar-num">04</span>
-            <div class="identity-pillar-content">
-              <h3 class="identity-pillar-title">SPEAKER</h3>
-              <p class="identity-pillar-desc">
-                Translating real-world field lessons on discipline, motivation, creative hustle, and execution to inspire ambitious minds and spark decisive action.
-              </p>
-            </div>
+          <div class="identity-flow-item">
+            <span class="identity-flow-title">SPEAKER</span>
+            <span class="identity-flow-num">04</span>
           </div>
         </div>
       </div>
@@ -1008,7 +981,6 @@
   <div class="toast-msg" id="toast" role="status" aria-live="polite"></div>
 
   <!-- Scripts -->
-  <script src="js/scene3d.js"></script>
   <script src="js/main.js"></script>
 </body>
 </html>
