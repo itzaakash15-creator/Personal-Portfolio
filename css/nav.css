@@ -88,32 +88,36 @@
   background-color: var(--accent-light);
 }
 
-/* Right: Contact CTA */
+/* Right: Resume & Action */
 .nav-right-action {
   display: flex;
   align-items: center;
-  gap: 1.25rem;
+  gap: 1rem;
 }
 
-.nav-contact-btn {
+.nav-resume-btn {
   font-family: var(--font-mono);
   font-size: 0.8125rem;
   font-weight: 600;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: #ffffff;
+  color: #0b0b0d;
+  background-color: #f4f3ef;
   padding: 0.55rem 1.25rem;
   border-radius: var(--radius-xs);
-  border: 1px solid var(--border-medium);
-  background-color: rgba(255, 255, 255, 0.03);
+  border: 1px solid #f4f3ef;
   transition: all var(--transition-fast);
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
 }
 
-.nav-contact-btn:hover,
-.nav-contact-btn.active {
+.nav-resume-btn:hover {
   background-color: #ffffff;
-  color: #08080a;
   border-color: #ffffff;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(244, 243, 239, 0.15);
 }
 
 /* Mobile Toggle */
@@ -177,7 +181,7 @@
   .nav-center-links {
     display: none;
   }
-  .nav-contact-btn {
+  .nav-resume-btn {
     display: none;
   }
   .mobile-nav-toggle {

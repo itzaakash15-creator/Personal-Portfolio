@@ -9,14 +9,14 @@
 
 :root {
   /* Surfaces & Canvas */
-  --bg-primary: #08080a;
-  --bg-secondary: #0e0e13;
-  --bg-surface: #13131a;
-  --bg-surface-hover: #181822;
-  --bg-card: rgba(19, 19, 26, 0.65);
+  --bg-primary: #0b0b0d;
+  --bg-secondary: #111116;
+  --bg-surface: #16161d;
+  --bg-surface-hover: #1c1c25;
+  --bg-card: rgba(22, 22, 29, 0.7);
 
   /* Typography Colors */
-  --text-primary: #f8fafc;
+  --text-primary: #f4f3ef;
   --text-secondary: #94a3b8;
   --text-muted: #64748b;
   --text-dim: #475569;

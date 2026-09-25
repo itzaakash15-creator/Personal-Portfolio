@@ -37,15 +37,22 @@
       </a>
 
       <div class="nav-center-links">
+        <a href="about.html" class="nav-link">ABOUT</a>
         <a href="work.html" class="nav-link">WORK</a>
         <a href="experience.html" class="nav-link">EXPERIENCE</a>
-        <a href="lab.html" class="nav-link">LAB</a>
-        <a href="journey.html" class="nav-link">JOURNEY</a>
-        <a href="about.html" class="nav-link">ABOUT</a>
+        <a href="lab.html" class="nav-link">TECH</a>
+        <a href="contact.html" class="nav-link active">CONTACT</a>
       </div>
 
       <div class="nav-right-action">
-        <a href="contact.html" class="nav-contact-btn" style="background-color: #ffffff; color: #08080a;">CONTACT</a>
+        <a href="resume.html" class="nav-resume-btn" aria-label="View and Download Resume">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+            <polyline points="7 10 12 15 17 10"></polyline>
+            <line x1="12" y1="15" x2="12" y2="3"></line>
+          </svg>
+          <span>RESUME</span>
+        </a>
         <button type="button" class="mobile-nav-toggle" id="mobile-toggle" aria-label="Toggle mobile menu" aria-expanded="false">
           <span></span>
           <span></span>
@@ -55,13 +62,12 @@
 
     <!-- Mobile Drawer -->
     <div class="mobile-drawer" id="mobile-drawer">
-      <a href="index.html" class="nav-link">HOME</a>
+      <a href="about.html" class="nav-link">ABOUT</a>
       <a href="work.html" class="nav-link">WORK</a>
       <a href="experience.html" class="nav-link">EXPERIENCE</a>
-      <a href="lab.html" class="nav-link">LAB</a>
-      <a href="journey.html" class="nav-link">JOURNEY</a>
-      <a href="about.html" class="nav-link">ABOUT</a>
+      <a href="lab.html" class="nav-link">TECH</a>
       <a href="contact.html" class="nav-link active" style="color: var(--accent-light);">CONTACT →</a>
+      <a href="resume.html" class="nav-link" style="color: var(--text-primary);">DOWNLOAD RESUME ↗</a>
     </div>
   </header>
 
@@ -83,7 +89,7 @@
           </h1>
 
           <p class="body-large" style="margin-bottom: 3rem; color: var(--text-secondary); max-width: 520px;">
-            Open for selected personal branding consulting, commercial digital marketing, video creative direction, and technical collaborations.
+            Whether it's a brand, digital presence, creative project or something completely new — let's talk.
           </p>
 
           <div class="contact-channels-list">
@@ -93,7 +99,18 @@
               <span class="channel-name">EMAIL</span>
               <div class="channel-val">
                 <a href="mailto:itzaakash15@gmail.com">itzaakash15@gmail.com</a>
-                <button type="button" class="channel-copy-btn" id="copy-email-btn" aria-label="Copy email address">
+                <button type="button" class="channel-copy-btn copy-email-btn" id="copy-email-btn" aria-label="Copy email address">
+                  COPY
+                </button>
+              </div>
+            </div>
+
+            <!-- Phone -->
+            <div class="contact-channel-item">
+              <span class="channel-name">PHONE</span>
+              <div class="channel-val">
+                <a href="tel:8590637715">+91 8590637715</a>
+                <button type="button" class="channel-copy-btn copy-phone-btn" id="copy-phone-btn" aria-label="Copy phone number">
                   COPY
                 </button>
               </div>

@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Professional Resume of Aakash K — B.Tech AI & Data Science Student, Digital Marketer, Personal Branding Specialist, and Content Creator." />
+  <title>Resume — Aakash K | AI & Data Science × Digital Marketer</title>
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>" />
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+
+  <style>
+    :root {
+      --bg: #0b0b0d;
+      --card-bg: #14141a;
+      --text: #f4f3ef;
+      --text-muted: #94a3b8;
+      --border: rgba(255, 255, 255, 0.1);
+      --accent: #c084fc;
+      --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: var(--font-sans);
+      line-height: 1.6;
+      padding: 2.5rem 1.5rem;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .resume-wrapper {
+      max-width: 900px;
+      margin: 0 auto;
+      background-color: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 3rem;
+      box-shadow: 0 30px 60px rgba(0, 0, 0, 0.6);
+    }
+
+    .resume-actions-bar {
+      max-width: 900px;
+      margin: 0 auto 1.5rem auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .btn-action {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-family: var(--font-mono);
+      font-size: 0.8125rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 0.65rem 1.25rem;
+      border-radius: 4px;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.2s ease;
+    }
+
+    .btn-primary {
+      background-color: #f4f3ef;
+      color: #0b0b0d;
+      border: 1px solid #f4f3ef;
+    }
+
+    .btn-primary:hover {
+      background-color: #ffffff;
+      transform: translateY(-1px);
+    }
+
+    .btn-secondary {
+      background-color: transparent;
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+
+    .btn-secondary:hover {
+      background-color: rgba(255, 255, 255, 0.05);
+      border-color: rgba(255, 255, 255, 0.25);
+    }
+
+    /* Resume Header */
+    .resume-header {
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 2rem;
+      margin-bottom: 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+    }
+
+    .header-left h1 {
+      font-size: 2.25rem;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      color: #ffffff;
+      margin-bottom: 0.35rem;
+    }
+
+    .header-subtitle {
+      font-family: var(--font-mono);
+      font-size: 0.875rem;
+      color: var(--accent);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      font-weight: 600;
+    }
+
+    .header-contact-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+      font-family: var(--font-mono);
+      font-size: 0.8125rem;
+      color: var(--text-muted);
+    }
+
+    .header-contact-list a {
+      color: var(--text);
+      text-decoration: none;
+      transition: color 0.15s ease;
+    }
+
+    .header-contact-list a:hover {
+      color: var(--accent);
+    }
+
+    /* Sections */
+    .resume-section {
+      margin-bottom: 2.25rem;
+    }
+
+    .section-title-mono {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .section-title-mono::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background-color: var(--border);
+    }
+
+    .resume-lead-summary {
+      font-size: 1rem;
+      line-height: 1.7;
+      color: var(--text);
+    }
+
+    /* Experience Items */
+    .exp-item {
+      margin-bottom: 1.75rem;
+    }
+
+    .exp-item:last-child {
+      margin-bottom: 0;
+    }
+
+    .exp-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-bottom: 0.35rem;
+    }
+
+    .exp-role {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: #ffffff;
+    }
+
+    .exp-company {
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    .exp-meta {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      letter-spacing: 0.08em;
+    }
+
+    .exp-desc {
+      font-size: 0.9375rem;
+      color: var(--text-muted);
+      line-height: 1.65;
+      margin-bottom: 0.5rem;
+    }
+
+    .exp-bullets {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+      padding-left: 1rem;
+    }
+
+    .exp-bullets li {
+      font-size: 0.9375rem;
+      color: var(--text);
+      position: relative;
+    }
+
+    .exp-bullets li::before {
+      content: '•';
+      color: var(--accent);
+      position: absolute;
+      left: -1rem;
+    }
+
+    /* Skills Grid */
+    .skills-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1.25rem;
+    }
+
+    .skill-block h4 {
+      font-size: 0.9375rem;
+      font-weight: 700;
+      color: #ffffff;
+      margin-bottom: 0.35rem;
+    }
+
+    .skill-block p {
+      font-size: 0.875rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    /* Print Styles */
+    @media print {
+      body {
+        background-color: #ffffff !important;
+        color: #111111 !important;
+        padding: 0 !important;
+      }
+
+      .resume-actions-bar {
+        display: none !important;
+      }
+
+      .resume-wrapper {
+        border: none !important;
+        box-shadow: none !important;
+        padding: 0 !important;
+        background-color: #ffffff !important;
+        color: #111111 !important;
+        max-width: 100% !important;
+      }
+
+      .header-left h1,
+      .exp-role,
+      .skill-block h4 {
+        color: #000000 !important;
+      }
+
+      .header-subtitle,
+      .exp-company,
+      .section-title-mono {
+        color: #5521b5 !important;
+      }
+
+      .section-title-mono::after,
+      .resume-header {
+        border-color: #e5e5e5 !important;
+      }
+
+      .header-contact-list,
+      .header-contact-list a,
+      .exp-meta,
+      .exp-desc,
+      .skill-block p {
+        color: #444444 !important;
+      }
+
+      .exp-bullets li {
+        color: #111111 !important;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Action Controls -->
+  <div class="resume-actions-bar">
+    <a href="index.html" class="btn-action btn-secondary">
+      ← Back to Portfolio
+    </a>
+    <div style="display: flex; gap: 0.75rem;">
+      <button type="button" onclick="window.print()" class="btn-action btn-primary">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="6 9 6 2 18 2 18 9"></polyline>
+          <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
+          <rect x="6" y="14" width="12" height="8"></rect>
+        </svg>
+        <span>Print / Save as PDF</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Main Resume Content Frame -->
+  <main class="resume-wrapper">
+
+    <!-- Header -->
+    <header class="resume-header">
+      <div class="header-left">
+        <h1>AAKASH K</h1>
+        <p class="header-subtitle">AI &amp; Data Science Student × Digital Marketer × Creator</p>
+      </div>
+      <div class="header-contact-list">
+        <div><strong>Email:</strong> <a href="mailto:itzaakash15@gmail.com">itzaakash15@gmail.com</a></div>
+        <div><strong>Phone:</strong> <a href="tel:8590637715">+91 8590637715</a></div>
+        <div><strong>Location:</strong> Coimbatore &amp; Tuticorin, Tamil Nadu, IN</div>
+        <div><strong>Portfolio:</strong> <a href="https://aakashk.vercel.app/" target="_blank">aakashk.vercel.app</a></div>
+        <div><strong>LinkedIn:</strong> <a href="https://www.linkedin.com/in/aakash-k-028a2b389/" target="_blank">in/aakash-k-028a2b389</a></div>
+        <div><strong>GitHub:</strong> <a href="https://github.com/itzaakash15-creator" target="_blank">itzaakash15-creator</a></div>
+      </div>
+    </header>
+
+    <!-- Professional Summary -->
+    <section class="resume-section">
+      <h2 class="section-title-mono">01 // PROFESSIONAL PROFILE</h2>
+      <p class="resume-lead-summary">
+        Undergraduate student in Artificial Intelligence &amp; Data Science at Rathinam Technical Campus with proven professional experience across digital marketing, personal branding, commercial video storytelling, and web engineering. Experienced in executing client campaigns (Digi Marketrix), personal branding for editorial talent (U6NICK, ~3K followers), and engineering web portals and IoT hardware prototypes. Operating at the intersection of human attention and computational intelligence.
+      </p>
+    </section>
+
+    <!-- Professional Experience -->
+    <section class="resume-section">
+      <h2 class="section-title-mono">02 // PROFESSIONAL EXPERIENCE</h2>
+
+      <!-- Digi Marketrix -->
+      <article class="exp-item">
+        <div class="exp-header">
+          <div>
+            <span class="exp-role">Digital Marketing &amp; Creative Intern</span> — 
+            <span class="exp-company">Digi Marketrix</span>
+          </div>
+          <span class="exp-meta">May 2026 — July 2026 | Tuticorin</span>
+        </div>
+        <p class="exp-desc">Full-time agency internship executing end-to-end digital marketing and video campaigns for local businesses and personal brands.</p>
+        <ul class="exp-bullets">
+          <li>Researched content hooks and scripted high-retention short-form video concepts for commercial clients.</li>
+          <li>Directed and operated on-location videography and client shoots across retail, automotive, and food industries.</li>
+          <li>Handled post-production editing, sound design, and pacing optimization in Premiere Pro and CapCut.</li>
+          <li>Executed social media strategy, content planning, and personal brand positioning resulting in certified agency completion.</li>
+        </ul>
+      </article>
+
+      <!-- Freelance & Case Studies -->
+      <article class="exp-item">
+        <div class="exp-header">
+          <div>
+            <span class="exp-role">Personal Branding Specialist &amp; Content Strategist</span> — 
+            <span class="exp-company">U6NICK (Editorial Model)</span>
+          </div>
+          <span class="exp-meta">2026 | Thoothukudi</span>
+        </div>
+        <p class="exp-desc">Complete digital identity development and social presence architecture for a professional editorial model.</p>
+        <ul class="exp-bullets">
+          <li>Architected Instagram content strategy, profile optimization, visual moodboarding, and competitor analysis.</li>
+          <li>Wrote video scripts, directed shoots, and edited high-performing reels reaching ~3,000 engaged followers.</li>
+          <li>Delivered measurable engagement spikes validated by client feedback and organic performance analytics.</li>
+        </ul>
+      </article>
+
+      <!-- Web & Commercial Clients -->
+      <article class="exp-item">
+        <div class="exp-header">
+          <div>
+            <span class="exp-role">Web Developer &amp; Commercial Content Creator</span> — 
+            <span class="exp-company">Independent Clients</span>
+          </div>
+          <span class="exp-meta">2025 — Present</span>
+        </div>
+        <ul class="exp-bullets">
+          <li><strong>Jayashakthi Tours &amp; Travels:</strong> Built live commercial business website with custom administrative portal (<a href="https://www.jayashakthitoursandtravels.com/" target="_blank" style="color: inherit; text-decoration: underline;">jayashakthitoursandtravels.com</a>).</li>
+          <li><strong>Chinnadurai Textiles:</strong> Authored video scripts and brand storytelling achieving 10K–15K verified short-form views.</li>
+          <li><strong>SalemRR Biriyani &amp; Vedha Rice:</strong> Produced promotional video content, commercial scriptwriting, and on-camera VJ presentation.</li>
+        </ul>
+      </article>
+
+      <!-- Creator Foundation -->
+      <article class="exp-item">
+        <div class="exp-header">
+          <div>
+            <span class="exp-role">Creator &amp; Platform Host</span> — 
+            <span class="exp-company">Life With Aakash &amp; Mr Aku Vlogs</span>
+          </div>
+          <span class="exp-meta">2020 — Present</span>
+        </div>
+        <ul class="exp-bullets">
+          <li><strong>Life With Aakash (2025–Present):</strong> Platform focused on personal growth and motivation. Achieved 59K peak reel views, published 17 reels, and gained 453 followers.</li>
+          <li><strong>Mr Aku Vlogs (2020–2024):</strong> Foundational creator channel. Built 2,177 verified Instagram followers through local exploration, food content, and brand promotions.</li>
+        </ul>
+      </article>
+    </section>
+
+    <!-- Education -->
+    <section class="resume-section">
+      <h2 class="section-title-mono">03 // EDUCATION</h2>
+
+      <div class="exp-item">
+        <div class="exp-header">
+          <div>
+            <span class="exp-role">B.Tech — Artificial Intelligence &amp; Data Science</span> — 
+            <span class="exp-company">Rathinam Technical Campus</span>
+          </div>
+          <span class="exp-meta">2026 — 2030 (1st Year) | Coimbatore</span>
+        </div>
+        <p class="exp-desc">Focusing on Python, algorithmic problem solving, linear algebra, machine learning foundations, and technical systems.</p>
+      </div>
+
+      <div class="exp-item">
+        <div class="exp-header">
+          <div>
+            <span class="exp-role">Indian School Certificate (ISC) — 75%</span> — 
+            <span class="exp-company">SDR School</span>
+          </div>
+          <span class="exp-meta">Graduated | Tuticorin</span>
+        </div>
+        <p class="exp-desc">Rigorous foundation in Computer Science, Mathematics, Physics, and Chemistry.</p>
+      </div>
+    </section>
+
+    <!-- Technical & Creative Capabilities -->
+    <section class="resume-section">
+      <h2 class="section-title-mono">04 // SKILLS &amp; CAPABILITIES</h2>
+      <div class="skills-grid">
+        <div class="skill-block">
+          <h4>Digital Marketing &amp; Strategy</h4>
+          <p>Personal Branding, Content Strategy, Social Media Management, Instagram Optimization, Audience Retention Analysis, Brand Communication.</p>
+        </div>
+        <div class="skill-block">
+          <h4>Creative &amp; Media Production</h4>
+          <p>Videography, Short-form Storytelling, Scriptwriting, Creative Direction, Video Editing (CapCut, Adobe Premiere Pro, transitioning to Final Cut Pro).</p>
+        </div>
+        <div class="skill-block">
+          <h4>Technology &amp; Engineering</h4>
+          <p>Python, Data Science Foundations, Semantic HTML5/CSS3, JavaScript, Firebase, ESP32 IoT Prototyping, SolidWorks, Tinkercad.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Verified Awards -->
+    <section class="resume-section" style="margin-bottom: 0;">
+      <h2 class="section-title-mono">05 // VERIFIED AWARDS &amp; RECOGNITION</h2>
+      <ul class="exp-bullets">
+        <li><strong>Best Reels Creator (2025)</strong> — Tuticorin Creator Showcase for pacing and short-form video narrative.</li>
+        <li><strong>Young Informative Content Award (2025)</strong> — Regional creator recognition for high-impact educational storytelling.</li>
+      </ul>
+    </section>
+
+  </main>
+
+</body>
+</html>

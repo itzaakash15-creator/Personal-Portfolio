@@ -1031,6 +1031,348 @@ textarea.form-input-clean {
 }
 
 /* ==========================================================================
+   13. Master Redesign Specific Components
+   ========================================================================== */
+
+/* Progression Flow: Creator -> Marketer -> Builder */
+.progression-flow-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  color: var(--accent-light);
+  background-color: var(--accent-subtle);
+  border: 1px solid var(--border-accent);
+  padding: 0.55rem 1.35rem;
+  border-radius: 999px;
+  margin-bottom: 2rem;
+  text-transform: uppercase;
+}
+
+.progression-3blocks-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: clamp(1.5rem, 3vw, 2.5rem);
+  margin-top: 2rem;
+}
+
+.progression-block-card {
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  padding: clamp(2rem, 3vw, 2.5rem);
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  transition: border-color var(--transition-fast), transform var(--transition-fast);
+}
+
+.progression-block-card:hover {
+  border-color: var(--border-accent);
+  transform: translateY(-2px);
+}
+
+.progression-block-badge {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--accent-light);
+}
+
+.progression-block-title {
+  font-size: 1.45rem;
+  font-weight: 800;
+  color: #ffffff;
+  letter-spacing: -0.02em;
+}
+
+.progression-block-desc {
+  font-size: 1.05rem;
+  line-height: 1.7;
+  color: var(--text-secondary);
+}
+
+/* What I Do 3-Column Editorial Grid */
+.what-i-do-3col-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: clamp(2rem, 4vw, 3.5rem);
+  border-top: 1px solid var(--border-subtle);
+  padding-top: 3rem;
+  margin-top: 1.5rem;
+}
+
+.what-i-do-col {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.what-i-do-col-header {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  border-bottom: 1px solid var(--border-subtle);
+  padding-bottom: 1rem;
+}
+
+.what-i-do-category-name {
+  font-size: clamp(1.4rem, 2.2vw, 1.85rem);
+  font-weight: 800;
+  color: #ffffff;
+  letter-spacing: -0.02em;
+}
+
+.what-i-do-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+.what-i-do-item {
+  font-size: 1.05rem;
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  line-height: 1.5;
+}
+
+.what-i-do-item::before {
+  content: '—';
+  color: var(--accent-light);
+  font-family: var(--font-mono);
+}
+
+/* Proof Strip & Interactive Trigger Buttons */
+.proof-strip-container {
+  margin-top: 2.25rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--border-subtle);
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+.proof-strip-label {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--accent-light);
+}
+
+.proof-pills-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.85rem;
+}
+
+.proof-pill-btn {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #ffffff;
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-medium);
+  border-radius: var(--radius-xs);
+  padding: 0.65rem 1.25rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  transition: all var(--transition-fast);
+  cursor: pointer;
+}
+
+.proof-pill-btn:hover {
+  background-color: #ffffff;
+  color: #0b0b0d;
+  border-color: #ffffff;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+}
+
+.proof-pill-btn svg {
+  width: 14px;
+  height: 14px;
+}
+
+/* Mr Aku Vlogs Showcase */
+.mraku-showcase-grid {
+  display: grid;
+  grid-template-columns: 1.15fr 0.85fr;
+  gap: clamp(2.5rem, 5vw, 4.5rem);
+  align-items: center;
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: clamp(2rem, 4vw, 3.5rem);
+  margin-top: 2rem;
+}
+
+.mraku-image-frame {
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  border: 1px solid var(--border-subtle);
+  aspect-ratio: 16 / 10;
+}
+
+.mraku-image-frame img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.6s var(--ease-smooth);
+}
+
+.mraku-showcase-grid:hover .mraku-image-frame img {
+  transform: scale(1.02);
+}
+
+/* Vision Track */
+.vision-progression-track {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  flex-wrap: wrap;
+  margin-block: 2.5rem;
+}
+
+.vision-step-item {
+  padding: 0.85rem 1.65rem;
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-xs);
+  font-family: var(--font-mono);
+  font-size: clamp(0.85rem, 1.6vw, 1.15rem);
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.vision-step-item.highlight {
+  border-color: var(--accent-purple);
+  background-color: var(--accent-subtle);
+  color: var(--accent-light);
+}
+
+.vision-arrow {
+  color: var(--accent-light);
+  font-size: 1.25rem;
+  font-weight: 800;
+}
+
+/* Lightbox & Proof Modal Engine */
+.proof-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(11, 11, 13, 0.9);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  z-index: 5000;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(1rem, 3vw, 3rem);
+  opacity: 0;
+  transition: opacity 0.25s var(--ease-smooth);
+}
+
+.proof-modal-overlay.active {
+  display: flex;
+  opacity: 1;
+}
+
+.proof-modal-dialog {
+  background-color: #14141b;
+  border: 1px solid var(--border-medium);
+  border-radius: var(--radius-sm);
+  max-width: 860px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 40px 80px rgba(0, 0, 0, 0.9), 0 0 40px rgba(139, 92, 246, 0.1);
+  transform: scale(0.97);
+  transition: transform 0.25s var(--ease-smooth);
+}
+
+.proof-modal-overlay.active .proof-modal-dialog {
+  transform: scale(1);
+}
+
+.proof-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem 2rem;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.proof-modal-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: -0.015em;
+}
+
+.proof-modal-close-btn {
+  color: var(--text-muted);
+  padding: 0.5rem;
+  font-size: 1.5rem;
+  line-height: 1;
+  transition: color var(--transition-fast);
+  cursor: pointer;
+  background: none;
+  border: none;
+}
+
+.proof-modal-close-btn:hover {
+  color: #ffffff;
+}
+
+.proof-modal-body {
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.proof-modal-image {
+  width: 100%;
+  border-radius: var(--radius-xs);
+  border: 1px solid var(--border-subtle);
+  max-height: 520px;
+  object-fit: contain;
+  background-color: #0b0b0d;
+}
+
+.proof-modal-meta-row {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  color: var(--text-muted);
+  border-top: 1px solid var(--border-subtle);
+  padding-top: 1rem;
+}
+
+.proof-modal-desc {
+  font-size: 1rem;
+  line-height: 1.7;
+  color: var(--text-secondary);
+}
+
+/* ==========================================================================
    Responsive Adaptations
    ========================================================================== */
 @media (max-width: 1024px) {
@@ -1077,6 +1419,15 @@ textarea.form-input-clean {
   .contact-page-layout {
     grid-template-columns: 1fr;
   }
+  .progression-3blocks-grid {
+    grid-template-columns: 1fr;
+  }
+  .what-i-do-3col-grid {
+    grid-template-columns: 1fr;
+  }
+  .mraku-showcase-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 @media (max-width: 640px) {
@@ -1088,5 +1439,12 @@ textarea.form-input-clean {
   }
   .about-pillars-grid {
     grid-template-columns: 1fr;
+  }
+  .vision-progression-track {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .vision-arrow {
+    text-align: center;
   }
 }
