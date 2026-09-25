@@ -1,68 +1,67 @@
 /**
- * AAKASH K Portfolio — Contact Form & Email Quick Copy
+ * AAKASH K Portfolio — Contact & Direct Action Logic
+ * Handles interactive contact form validation, toast notifications,
+ * and direct email copying to clipboard.
  */
 
 export function initContact() {
-  // 1. Quick Copy Email with Toast Feedback
+  const form = document.getElementById('contact-form');
   const copyBtn = document.getElementById('copy-email-btn');
-  const toast = document.getElementById('toast');
-  const toastMsg = document.getElementById('toast-message');
+  const emailVal = 'itzaakash15@gmail.com';
 
-  function showToast(message) {
-    if (!toast) return;
-    toastMsg.textContent = message;
-    toast.classList.add('show');
-    setTimeout(() => {
-      toast.classList.remove('show');
-    }, 3500);
-  }
-
+  // Copy email functionality
   copyBtn?.addEventListener('click', async () => {
-    const email = 'itzaakash15@gmail.com';
     try {
-      if (navigator.clipboard) {
-        await navigator.clipboard.writeText(email);
-        showToast('Email copied to clipboard: itzaakash15@gmail.com');
-      } else {
-        showToast('itzaakash15@gmail.com');
-      }
+      await navigator.clipboard.writeText(emailVal);
+      showToast(`Email copied: ${emailVal}`);
     } catch (err) {
-      showToast('itzaakash15@gmail.com');
+      showToast(`Contact: ${emailVal}`);
     }
   });
 
-  // 2. Interactive Contact Form Submission Simulation
-  const contactForm = document.getElementById('contact-form');
-  if (!contactForm) return;
+  // Form submission handler
+  if (form) {
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
 
-  contactForm.addEventListener('submit', (e) => {
-    e.preventDefault();
+      const nameInput = form.querySelector('[name="name"]');
+      const emailInput = form.querySelector('[name="email"]');
+      const serviceInput = form.querySelector('[name="service"]');
+      const messageInput = form.querySelector('[name="message"]');
 
-    const submitBtn = contactForm.querySelector('button[type="submit"]');
-    const originalText = submitBtn.innerHTML;
+      const name = nameInput?.value.trim();
+      const email = emailInput?.value.trim();
+      const service = serviceInput?.value.trim() || 'Strategy Consultation';
+      const message = messageInput?.value.trim();
 
-    // Loading state
-    submitBtn.disabled = true;
-    submitBtn.innerHTML = `
-      <svg class="animate-spin" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="animation: spin 1s linear infinite;">
-        <circle cx="12" cy="12" r="10" stroke-opacity="0.25"></circle>
-        <path d="M12 2a10 10 0 0 1 10 10"></path>
-      </svg>
-      Sending Message...
-    `;
+      if (!name || !email || !message) {
+        showToast('Please fill out all required fields.');
+        return;
+      }
 
-    setTimeout(() => {
-      submitBtn.disabled = false;
-      submitBtn.innerHTML = `✓ Message Sent!`;
-      submitBtn.style.background = 'linear-gradient(135deg, #10b981 0%, #059669 100%)';
+      // Construct mailto link
+      const subject = encodeURIComponent(`[Inquiry] ${service} — ${name}`);
+      const body = encodeURIComponent(`Hi Aakash,\n\nMy name is ${name} (${email}).\n\nService of Interest: ${service}\n\nProject Details:\n${message}\n\nLooking forward to speaking.`);
+      
+      const mailtoUrl = `mailto:${emailVal}?subject=${subject}&body=${body}`;
 
-      showToast("Thank you! Your message was received. Aakash will respond shortly.");
-
+      showToast('Opening your email client to send message...');
+      
       setTimeout(() => {
-        contactForm.reset();
-        submitBtn.innerHTML = originalText;
-        submitBtn.style.background = '';
-      }, 4000);
-    }, 1200);
-  });
+        window.location.href = mailtoUrl;
+      }, 500);
+
+      form.reset();
+    });
+  }
+}
+
+function showToast(msg) {
+  const toast = document.getElementById('toast');
+  const toastMsg = document.getElementById('toast-message');
+  if (toast && toastMsg) {
+    toastMsg.textContent = msg;
+    toast.classList.add('visible');
+    setTimeout(() => toast.classList.remove('visible'), 2600);
+  }
 }

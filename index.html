@@ -3,17 +3,18 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Aakash K — Young Student Entrepreneur, Personal Branding Strategist, Digital Marketer, and Content Creator building value in the digital era." />
-  <meta name="keywords" content="Aakash K, Personal Branding Strategist, Digital Marketing, Content Creator, Entrepreneur, AI and Data Science" />
+  <meta name="description" content="Aakash K — AI & Data Science Student, Digital Marketer, Content Creator, Personal Branding Strategist & Student Entrepreneur. Personal digital command center." />
+  <meta name="keywords" content="Aakash K, Personal Branding, Digital Marketing, AI and Data Science, Rathinam Technical Campus, Digi Marketrix, Content Creation, Technology" />
   <meta name="author" content="Aakash K" />
 
-  <!-- Open Graph Meta Tags -->
-  <meta property="og:title" content="Aakash K — Personal Branding Strategist & Digital Marketer" />
-  <meta property="og:description" content="Building value in the digital era. Nothing changes if nothing changes." />
+  <!-- Open Graph / Meta -->
+  <meta property="og:title" content="AAKASH K — Personal Digital Command Center" />
+  <meta property="og:description" content="I build digital presence that people remember. 80% premium editorial design + 20% futuristic technology." />
   <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://aakashk.vercel.app/" />
   <meta property="og:image" content="assets/project_fashion.jpg" />
 
-  <title>AAKASH K — Personal Branding Strategist • Digital Marketer • Founder</title>
+  <title>AAKASH K — Personal Digital Command Center | AI & Data Science • Digital Marketing • Content • Builder</title>
 
   <!-- Favicon SVG -->
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>" />
@@ -25,378 +26,329 @@
 </head>
 <body>
 
+  <!-- Top Scroll Progress Bar -->
+  <div id="scroll-progress-bar" aria-hidden="true"></div>
+
+  <!-- Custom Magnetic Cursor (Desktop) -->
+  <div class="cursor-dot" aria-hidden="true"></div>
+  <div class="cursor-ring" aria-hidden="true"></div>
+
   <!-- ========================================================================
-       Navigation Bar
+       Minimal Fixed Navigation Bar
        ======================================================================== -->
   <header class="site-header" id="site-header">
     <nav class="nav-container" aria-label="Main Navigation">
+      <!-- Left: Brand -->
       <a href="#hero" class="nav-brand" aria-label="Aakash K Home">
         <span class="brand-indicator" aria-hidden="true"></span>
         <span>AAKASH K</span>
       </a>
 
+      <!-- Center: Main Section Links -->
       <div class="nav-links">
-        <a href="#about" class="nav-link">About</a>
-        <a href="#services" class="nav-link">Services</a>
-        <a href="#work" class="nav-link">Work</a>
-        <a href="#experience" class="nav-link">Experience</a>
-        <a href="#vision" class="nav-link">Vision</a>
-        <a href="#contact" class="nav-link">Contact</a>
+        <a href="#work" class="nav-link">WORK</a>
+        <a href="#experience" class="nav-link">EXPERIENCE</a>
+        <a href="#lab" class="nav-link">DIGITAL LAB</a>
+        <a href="#journey" class="nav-link">JOURNEY</a>
+        <a href="#about" class="nav-link">ABOUT</a>
       </div>
 
+      <!-- Right: Action Controls -->
       <div class="nav-actions">
-        <a href="#contact" class="btn btn-primary btn-sm">
-          <span>LET'S TALK</span>
+        <!-- Command Palette Trigger Pill -->
+        <button type="button" class="cmd-palette-btn" data-action="open-palette" aria-label="Open Command Palette" title="Command Palette (⌘K)">
+          <span>Search</span>
+          <span class="cmd-kbd">⌘K</span>
+        </button>
+
+        <!-- Subtle Audio Feedback Toggle -->
+        <button type="button" class="sound-toggle-btn" aria-label="Toggle Sound Effects" title="Toggle Micro Audio Feedback">
+          <span aria-hidden="true">🔊</span>
+          <span class="sound-status-label">SFX OFF</span>
+        </button>
+
+        <!-- Menu Button (Full overlay trigger) -->
+        <button type="button" class="nav-menu-btn" id="nav-menu-toggle" aria-label="Toggle Fullscreen Menu" aria-expanded="false">
+          <span>MENU</span>
+        </button>
+
+        <!-- Contact CTA -->
+        <a href="#contact" class="btn btn-primary btn-sm btn-magnetic">
+          <span>CONTACT</span>
           <span class="btn-arrow" aria-hidden="true">↗</span>
         </a>
       </div>
-
-      <!-- Mobile Hamburger Button -->
-      <button class="mobile-nav-toggle" aria-label="Toggle Mobile Menu" aria-expanded="false">
-        <span class="hamburger-line"></span>
-      </button>
     </nav>
   </header>
 
-  <!-- Mobile Full-screen Overlay -->
-  <div class="mobile-menu-overlay" aria-hidden="true">
-    <div class="mobile-menu-header">
-      <div class="mobile-menu-brand">
+  <!-- ========================================================================
+       Fullscreen Navigation Overlay (Menu Trigger)
+       ======================================================================== -->
+  <div class="fullscreen-nav-overlay" id="nav-fullscreen-overlay" role="dialog" aria-modal="true" aria-hidden="true">
+    <div class="overlay-header">
+      <div class="overlay-brand">
         <span class="brand-indicator" aria-hidden="true"></span>
-        <span>AAKASH K</span>
+        <span>AAKASH K // INDEX</span>
       </div>
-      <button class="mobile-menu-close" aria-label="Close navigation menu">✕</button>
+      <button type="button" class="overlay-close-btn" id="nav-overlay-close" aria-label="Close navigation overlay">✕</button>
     </div>
 
-    <div class="mobile-menu-links">
-      <a href="#hero" class="mobile-nav-link">
-        <span>Home</span>
-        <span class="mobile-link-num">00</span>
-      </a>
-      <a href="#about" class="mobile-nav-link">
-        <span>About</span>
-        <span class="mobile-link-num">01</span>
-      </a>
-      <a href="#services" class="mobile-nav-link">
-        <span>Services</span>
-        <span class="mobile-link-num">02</span>
-      </a>
-      <a href="#work" class="mobile-nav-link">
-        <span>Selected Work</span>
-        <span class="mobile-link-num">03</span>
-      </a>
-      <a href="#transformation" class="mobile-nav-link">
-        <span>Transformation</span>
-        <span class="mobile-link-num">04</span>
-      </a>
-      <a href="#experience" class="mobile-nav-link">
-        <span>Experience</span>
-        <span class="mobile-link-num">05</span>
-      </a>
-      <a href="#skills" class="mobile-nav-link">
-        <span>Skills Arsenal</span>
-        <span class="mobile-link-num">06</span>
-      </a>
-      <a href="#journey" class="mobile-nav-link">
-        <span>Journey</span>
-        <span class="mobile-link-num">07</span>
-      </a>
-      <a href="#vision" class="mobile-nav-link">
-        <span>The Vision</span>
-        <span class="mobile-link-num">08</span>
-      </a>
-      <a href="#contact" class="mobile-nav-link">
-        <span>Contact</span>
-        <span class="mobile-link-num">09</span>
-      </a>
+    <div class="overlay-content">
+      <nav class="overlay-links-list" aria-label="Extended Navigation">
+        <a href="#work" class="nav-overlay-link">
+          <span class="link-num">01</span>
+          <span>WORK</span>
+        </a>
+        <a href="#experience" class="nav-overlay-link">
+          <span class="link-num">02</span>
+          <span>EXPERIENCE</span>
+        </a>
+        <a href="#lab" class="nav-overlay-link">
+          <span class="link-num">03</span>
+          <span>DIGITAL LAB</span>
+        </a>
+        <a href="#journey" class="nav-overlay-link">
+          <span class="link-num">04</span>
+          <span>JOURNEY</span>
+        </a>
+        <a href="#about" class="nav-overlay-link">
+          <span class="link-num">05</span>
+          <span>ABOUT</span>
+        </a>
+        <a href="#vision" class="nav-overlay-link">
+          <span class="link-num">06</span>
+          <span>VISION</span>
+        </a>
+        <a href="#contact" class="nav-overlay-link">
+          <span class="link-num">07</span>
+          <span>CONTACT</span>
+        </a>
+      </nav>
     </div>
 
-    <div class="mobile-menu-footer">
-      <a href="#contact" class="btn btn-primary" style="width: 100%;">
-        <span>LET'S GROW YOUR VALUE</span>
-        <span class="btn-arrow">↗</span>
-      </a>
+    <div class="overlay-footer">
+      <div class="badge-status">
+        <span class="badge-dot"></span>
+        <span>LOCATION: TUTICORIN • STATUS: ACTIVE</span>
+      </div>
 
-      <div class="mobile-menu-socials">
-        <a href="https://www.linkedin.com/in/aakash-k-028a2b389" target="_blank" rel="noopener noreferrer" class="mobile-social-btn" aria-label="LinkedIn">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
-          </svg>
-        </a>
-        <a href="https://www.instagram.com/life.with_aakash" target="_blank" rel="noopener noreferrer" class="mobile-social-btn" aria-label="Instagram">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
-            <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
-            <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
-          </svg>
-        </a>
-        <a href="https://github.com/itzaakash15-creator" target="_blank" rel="noopener noreferrer" class="mobile-social-btn" aria-label="GitHub">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-            <path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/>
-          </svg>
-        </a>
+      <div class="overlay-social-links">
+        <a href="https://www.linkedin.com/in/aakash-k-028a2b389/" target="_blank" rel="noopener noreferrer">LINKEDIN ↗</a>
+        <a href="https://www.instagram.com/life.with_aakash/" target="_blank" rel="noopener noreferrer">INSTAGRAM ↗</a>
+        <a href="https://github.com/itzaakash15-creator" target="_blank" rel="noopener noreferrer">GITHUB ↗</a>
+        <a href="mailto:itzaakash15@gmail.com">EMAIL ↗</a>
       </div>
     </div>
   </div>
 
+  <!-- ========================================================================
+       Command Palette (⌘K / Ctrl+K)
+       ======================================================================== -->
+  <div class="palette-overlay" id="command-palette" role="dialog" aria-modal="true" aria-hidden="true">
+    <div class="palette-box">
+      <div class="palette-input-wrap">
+        <span class="palette-search-icon" aria-hidden="true">⌕</span>
+        <input type="text" id="command-input" placeholder="Search Aakash... (or type a command)" autocomplete="off" spellcheck="false" />
+        <span class="palette-esc-badge">ESC</span>
+      </div>
+
+      <div class="palette-list" id="command-list" role="listbox">
+        <!-- Rendered dynamically via js/command-palette.js -->
+      </div>
+
+      <div class="palette-footer">
+        <span>Personal Command Palette</span>
+        <div class="palette-footer-shortcuts">
+          <span>↑↓ to navigate</span>
+          <span>↵ to execute</span>
+          <span>ESC to exit</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================
+       Main Content
+       ======================================================================== -->
   <main>
+
     <!-- ======================================================================
-         Hero Section
+         1. Hero Section (90-100vh)
          ====================================================================== -->
     <section class="hero-section" id="hero">
       <canvas id="hero-canvas" aria-hidden="true"></canvas>
 
-      <div class="container hero-content">
-        <div class="hero-eyebrow-container">
-          <div class="badge-eyebrow">
-            <span>STUDENT ENTREPRENEUR • PERSONAL BRANDING • DIGITAL MARKETING</span>
-          </div>
-        </div>
-
-        <h1 class="hero-title">
-          <span>BUILDING VALUE</span>
-          <span class="title-accent">IN THE DIGITAL ERA.</span>
-        </h1>
-
-        <p class="hero-description">
-          I’m a student entrepreneur, AI &amp; Data Science student, content creator, and aspiring business builder focused on personal branding and digital marketing. I help founders, businesses, and individuals build stronger brand presence, communicate their value, and create content that turns attention into opportunity.
-        </p>
-
-        <div class="hero-tagline-pill">
-          <span>NOTHING CHANGES IF NOTHING CHANGES.</span>
-        </div>
-
-        <div class="hero-actions">
-          <a href="#contact" class="btn btn-primary">
-            <span>LET'S GROW YOUR VALUE</span>
-            <span class="btn-arrow" aria-hidden="true">↗</span>
-          </a>
-          <a href="#work" class="btn btn-secondary">
-            <span>VIEW MY WORK</span>
-            <span class="btn-arrow" aria-hidden="true">↓</span>
-          </a>
-        </div>
-      </div>
-
-      <div class="hero-scroll-indicator" aria-hidden="true">
-        <div class="mouse-icon">
-          <div class="mouse-wheel"></div>
-        </div>
-        <span>SCROLL</span>
-      </div>
-    </section>
-
-    <!-- ======================================================================
-         Scrolling Intro Marquee
-         ====================================================================== -->
-    <div class="marquee-wrapper" aria-hidden="true">
-      <div class="marquee-track">
-        <div class="marquee-item">
-          <span>PERSONAL BRANDING</span> <span class="marquee-bullet">•</span>
-          <span>DIGITAL MARKETING</span> <span class="marquee-bullet">•</span>
-          <span>CONTENT</span> <span class="marquee-bullet">•</span>
-          <span>STORYTELLING</span> <span class="marquee-bullet">•</span>
-          <span>CREATIVE STRATEGY</span> <span class="marquee-bullet">•</span>
-          <span>AI</span> <span class="marquee-bullet">•</span>
-          <span>ENTREPRENEURSHIP</span> <span class="marquee-bullet">•</span>
-        </div>
-        <div class="marquee-item">
-          <span>PERSONAL BRANDING</span> <span class="marquee-bullet">•</span>
-          <span>DIGITAL MARKETING</span> <span class="marquee-bullet">•</span>
-          <span>CONTENT</span> <span class="marquee-bullet">•</span>
-          <span>STORYTELLING</span> <span class="marquee-bullet">•</span>
-          <span>CREATIVE STRATEGY</span> <span class="marquee-bullet">•</span>
-          <span>AI</span> <span class="marquee-bullet">•</span>
-          <span>ENTREPRENEURSHIP</span> <span class="marquee-bullet">•</span>
-        </div>
-      </div>
-    </div>
-
-    <!-- ======================================================================
-         01 — About Section
-         ====================================================================== -->
-    <section class="section-spacer" id="about">
-      <div class="container">
-        <div class="about-grid">
-          <div class="about-text-content">
-            <span class="section-label">01 — ABOUT</span>
-            <h2 class="section-heading">
-              MORE THAN A STUDENT.<br />
-              <span class="text-gradient">A BUILDER IN PROGRESS.</span>
-            </h2>
-            <p>
-              I’m a student entrepreneur, AI &amp; Data Science student, content creator, and aspiring business builder. My journey started with content creation and video editing and gradually evolved into digital marketing and personal branding.
-            </p>
-            <p>
-              Today, I focus on helping people and businesses communicate their value better through content, strategy, and digital presence.
-            </p>
-            <p>
-              I’m currently working toward building a digital marketing agency and service platform designed for the AI-driven digital era.
-            </p>
-
-            <div class="about-highlight-box">
-              <p>
-                <strong>The Edge:</strong> Combining an AI &amp; Data Science background with high-retention video production gives my branding strategies both analytical rigor and creative authority.
-              </p>
+      <div class="container hero-grid">
+        <!-- Left: Asymmetrical Headline Composition -->
+        <div class="hero-text-content">
+          <div class="hero-meta-top">
+            <span class="hero-tag-system">AI &amp; DATA SCIENCE / DIGITAL / CREATIVE</span>
+            <div class="badge-status">
+              <span class="badge-dot badge-dot-purple"></span>
+              <span>CURRENTLY BUILDING</span>
             </div>
           </div>
 
-          <div class="stats-card-container">
-            <div class="stat-box spotlight-card">
-              <div class="stat-number" data-target="4" data-suffix="+">4+</div>
-              <div>
-                <div class="stat-label">Years Experience</div>
-                <div class="stat-sublabel">Content Creation &amp; Editing</div>
-              </div>
-            </div>
+          <h1 class="hero-main-title">
+            <span>I BUILD DIGITAL PRESENCE</span>
+            <span class="headline-accent">THAT PEOPLE REMEMBER.</span>
+          </h1>
 
-            <div class="stat-box spotlight-card">
-              <div class="stat-number" data-target="2" data-suffix="+">2+</div>
-              <div>
-                <div class="stat-label">Years Strategy</div>
-                <div class="stat-sublabel">Digital Marketing &amp; Personal Branding</div>
-              </div>
-            </div>
+          <p class="hero-supporting-copy">
+            AI &amp; Data Science student exploring the intersection of technology, digital marketing, content and personal branding.
+          </p>
 
-            <div class="stat-box spotlight-card">
-              <div class="stat-number" data-target="1" data-suffix="+">1+</div>
-              <div>
-                <div class="stat-label">Year Active</div>
-                <div class="stat-sublabel">Motivational Speaking</div>
-              </div>
+          <div class="hero-ctas-wrap">
+            <a href="#identity" class="btn btn-primary btn-magnetic">
+              <span>ENTER EXPERIENCE →</span>
+            </a>
+            <a href="#work" class="btn btn-secondary btn-magnetic">
+              <span>VIEW WORK</span>
+              <span class="btn-arrow" aria-hidden="true">↓</span>
+            </a>
+          </div>
+
+          <!-- Ticker Pill -->
+          <div class="hero-ticker-pill">
+            <span>CREATIVE</span>
+            <span class="ticker-dot">•</span>
+            <span>DIGITAL</span>
+            <span class="ticker-dot">•</span>
+            <span>TECHNOLOGY</span>
+            <span class="ticker-dot">•</span>
+            <span>BUILDING</span>
+          </div>
+        </div>
+
+        <!-- Right: Technical Telemetry Card -->
+        <div class="hero-telemetry-box spotlight-card">
+          <div class="telemetry-header">
+            <span class="telemetry-title">COMMAND SYSTEM // SPEC</span>
+            <span class="telemetry-badge">v2.6 ACTIVE</span>
+          </div>
+
+          <div class="telemetry-rows">
+            <div class="telemetry-row">
+              <span class="telemetry-label">OPERATOR</span>
+              <span class="telemetry-val">AAKASH K</span>
             </div>
+            <div class="telemetry-row">
+              <span class="telemetry-label">DISCIPLINE</span>
+              <span class="telemetry-val">AI &amp; DS + STRATEGY</span>
+            </div>
+            <div class="telemetry-row">
+              <span class="telemetry-label">INSTITUTION</span>
+              <span class="telemetry-val">RATHINAM TECHNICAL CAMPUS</span>
+            </div>
+            <div class="telemetry-row">
+              <span class="telemetry-label">BASE LOCATION</span>
+              <span class="telemetry-val">TUTICORIN, TN</span>
+            </div>
+            <div class="telemetry-row">
+              <span class="telemetry-label">FOCUS RATIO</span>
+              <span class="telemetry-val text-accent">80% EDITORIAL + 20% TECH</span>
+            </div>
+          </div>
+
+          <div class="telemetry-chips">
+            <span class="telemetry-chip">Machine Learning</span>
+            <span class="telemetry-chip">Brand Authority</span>
+            <span class="telemetry-chip">Sensory Video</span>
+            <span class="telemetry-chip">Web Platforms</span>
+            <span class="telemetry-chip">IoT Hardware</span>
           </div>
         </div>
       </div>
     </section>
 
     <!-- ======================================================================
-         02 — Services Section
+         2. Identity Statement Section
          ====================================================================== -->
-    <section class="section-spacer" id="services" style="background: var(--bg-secondary);">
+    <section class="section-spacer identity-section" id="identity">
+      <div class="container identity-grid">
+        <div>
+          <span class="section-label">00 // CORE IDENTITY</span>
+          <h2 class="identity-statement-large">
+            FROM CONTENT CREATION<br />
+            <span class="text-gradient">TO BUILDING DIGITAL SYSTEMS.</span>
+          </h2>
+        </div>
+
+        <div class="identity-narrative-wrap">
+          <p class="identity-narrative-text">
+            Aakash started through content creation and video editing, moved into scripting, digital marketing and personal branding, and is now combining those skills with AI &amp; Data Science and technology.
+          </p>
+          <div class="identity-coord-meta">
+            <span>NODE: 01 // CROSS-DISCIPLINARY EXECUTION</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================================================================
+         3. Proof / Signals Section (STRICTLY VERIFIED INFORMATION)
+         ====================================================================== -->
+    <section class="section-spacer proof-section" id="proof">
       <div class="container">
-        <span class="section-label">02 — WHAT I DO</span>
+        <span class="section-label">VERIFIED PROOF &amp; SIGNALS</span>
         <h2 class="section-heading">
-          I DON'T JUST CREATE CONTENT.<br />
-          <span class="text-gradient">I BUILD PERCEIVED VALUE.</span>
+          METRICS BACKED BY<br />
+          <span class="text-gradient">REAL AUDIENCES &amp; AWARDS.</span>
         </h2>
         <p class="section-subheading">
-          Strategic digital marketing and personal branding tailored to turn raw attention into lasting credibility and compound opportunities.
+          Strictly verified data points and industry recognitions. No manufactured claims or unverified metrics.
         </p>
 
-        <div class="services-grid">
-          <!-- Service 01 -->
-          <div class="service-card spotlight-card">
-            <div class="service-header">
-              <span class="service-num">01</span>
-              <div class="service-icon-badge" aria-hidden="true">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                  <circle cx="12" cy="7" r="4"></circle>
-                </svg>
-              </div>
+        <div class="proof-grid">
+          <!-- Metric 1: 59K -->
+          <div class="proof-card spotlight-card">
+            <div class="proof-card-top">
+              <span class="proof-signal-dot" aria-hidden="true"></span>
+              <span class="proof-verified-pill">VERIFIED</span>
             </div>
             <div>
-              <h3 class="service-title">PERSONAL BRANDING</h3>
-              <p class="service-description">
-                Building recognizable digital identities for founders, professionals, creators, and brands that position them at the top of their industries.
-              </p>
+              <div class="proof-num proof-num-accent" data-counter-target="59" data-counter-suffix="K">59K</div>
+              <div class="proof-label">Highest Life With Aakash reel</div>
+              <div class="proof-subtext">Peak viral vertical video retention</div>
             </div>
           </div>
 
-          <!-- Service 02 -->
-          <div class="service-card spotlight-card">
-            <div class="service-header">
-              <span class="service-num">02</span>
-              <div class="service-icon-badge" aria-hidden="true">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M18 20V10"></path>
-                  <path d="M12 20V4"></path>
-                  <path d="M6 20v-6"></path>
-                </svg>
-              </div>
+          <!-- Metric 2: 3K+ -->
+          <div class="proof-card spotlight-card">
+            <div class="proof-card-top">
+              <span class="proof-signal-dot" aria-hidden="true"></span>
+              <span class="proof-verified-pill">VERIFIED</span>
             </div>
             <div>
-              <h3 class="service-title">DIGITAL MARKETING</h3>
-              <p class="service-description">
-                Creating digital strategies focused on visibility, engagement, positioning, and growth that connect your offer with target buyers.
-              </p>
+              <div class="proof-num" data-counter-target="3" data-counter-suffix="K+">3K+</div>
+              <div class="proof-label">Purple Collection followers</div>
+              <div class="proof-subtext">Editorial personal branding community</div>
             </div>
           </div>
 
-          <!-- Service 03 -->
-          <div class="service-card spotlight-card">
-            <div class="service-header">
-              <span class="service-num">03</span>
-              <div class="service-icon-badge" aria-hidden="true">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
-                </svg>
-              </div>
+          <!-- Metric 3: Best Reels Creator 2025 -->
+          <div class="proof-card spotlight-card">
+            <div class="proof-card-top">
+              <span class="proof-signal-dot" aria-hidden="true"></span>
+              <span class="proof-verified-pill">AWARD</span>
             </div>
             <div>
-              <h3 class="service-title">CONTENT STRATEGY</h3>
-              <p class="service-description">
-                Developing content ideas and frameworks designed systematically around attention, communication, and deep audience engagement.
-              </p>
+              <div class="proof-num" data-counter-target="2025" data-counter-suffix="">2025</div>
+              <div class="proof-label">Best Reels Creator</div>
+              <div class="proof-subtext">Tuticorin — Regional creator accolade</div>
             </div>
           </div>
 
-          <!-- Service 04 -->
-          <div class="service-card spotlight-card">
-            <div class="service-header">
-              <span class="service-num">04</span>
-              <div class="service-icon-badge" aria-hidden="true">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <polygon points="23 7 16 12 23 17 23 7"></polygon>
-                  <rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect>
-                </svg>
-              </div>
+          <!-- Metric 4: Young Informative Content 2025 -->
+          <div class="proof-card spotlight-card">
+            <div class="proof-card-top">
+              <span class="proof-signal-dot" aria-hidden="true"></span>
+              <span class="proof-verified-pill">AWARD</span>
             </div>
             <div>
-              <h3 class="service-title">VIDEO EDITING &amp; VIDEOGRAPHY</h3>
-              <p class="service-description">
-                Transforming raw footage into professional, engaging visual content with cinematic pacing, sound design, and retention-focused cuts.
-              </p>
-            </div>
-          </div>
-
-          <!-- Service 05 -->
-          <div class="service-card spotlight-card">
-            <div class="service-header">
-              <span class="service-num">05</span>
-              <div class="service-icon-badge" aria-hidden="true">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M12 20h9"></path>
-                  <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
-                </svg>
-              </div>
-            </div>
-            <div>
-              <h3 class="service-title">SCRIPT &amp; CONTENT WRITING</h3>
-              <p class="service-description">
-                Creating scripts and written content that communicate ideas clearly, hold audience attention from the first second, and drive action.
-              </p>
-            </div>
-          </div>
-
-          <!-- Service 06 -->
-          <div class="service-card spotlight-card">
-            <div class="service-header">
-              <span class="service-num">06</span>
-              <div class="service-icon-badge" aria-hidden="true">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <circle cx="12" cy="12" r="10"></circle>
-                  <line x1="2" y1="12" x2="22" y2="12"></line>
-                  <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
-                </svg>
-              </div>
-            </div>
-            <div>
-              <h3 class="service-title">SEO &amp; WEBSITE BUILDING</h3>
-              <p class="service-description">
-                Creating and optimizing digital platforms for maximum online visibility, discoverability, speed, and premium user experience.
-              </p>
+              <div class="proof-num" data-counter-target="2025" data-counter-suffix="">2025</div>
+              <div class="proof-label">Young Informative Content</div>
+              <div class="proof-subtext">Educational brand communication recognition</div>
             </div>
           </div>
         </div>
@@ -404,120 +356,170 @@
     </section>
 
     <!-- ======================================================================
-         03 — Selected Work Section
-         ======================================================================== -->
-    <section class="section-spacer" id="work">
+         4. Selected Work Section (Editorial Project Blocks)
+         ====================================================================== -->
+    <section class="section-spacer work-section" id="work">
       <div class="container">
-        <span class="section-label">03 — SELECTED WORK</span>
+        <span class="section-label">01 // SELECTED WORK</span>
         <h2 class="section-heading">
           WORK BUILT AROUND<br />
-          <span class="text-gradient">PERSONAL BRANDING &amp; DIGITAL MARKETING.</span>
+          <span class="text-gradient">AUTHORITY, CODE &amp; RETENTION.</span>
         </h2>
         <p class="section-subheading">
-          Real case studies where strategy, creative production, and positioning transformed how clients were perceived in their markets.
+          Selected client case studies across fashion personal branding, web engineering, food storytelling, and heritage scripting. Click any project to open the agency case study.
         </p>
 
-        <div class="work-grid">
-          <!-- Featured Project 01: Fashion Model -->
-          <div class="work-card work-card-featured spotlight-card" data-project="fashion">
-            <div class="work-media">
-              <img src="assets/project_fashion.jpg" alt="Fashion Model Personal Branding Case Study" class="work-img" loading="lazy" />
-              <div class="work-overlay"></div>
-            </div>
-            <div class="work-details">
-              <div>
-                <span class="work-category-pill">PERSONAL BRANDING • FEATURED CASE STUDY</span>
-                <h3 class="work-title">FASHION MODEL — PERSONAL BRANDING</h3>
-                <p class="work-desc">
-                  Developed content and personal-branding direction for a fashion modeling client, focusing on professional presentation, content quality, positioning, and social-media presence.
-                </p>
-              </div>
-              <div class="work-cta-link">
-                <span>VIEW CASE STUDY</span>
-                <span aria-hidden="true">↗</span>
-              </div>
-            </div>
-          </div>
+        <div class="work-editorial-list">
 
-          <!-- Project 02: Textile Brand -->
-          <div class="work-card work-card-standard spotlight-card" data-project="textile">
-            <div class="work-media">
-              <img src="assets/project_textile.jpg" alt="Southern Textile Brand Personal Branding" class="work-img" loading="lazy" />
-              <div class="work-overlay"></div>
+          <!-- Project 01: Purple Collection -->
+          <article class="work-block spotlight-card" data-project="purple-collection" tabindex="0" role="button" aria-label="Open Purple Collection Case Study">
+            <div class="work-block-media">
+              <img src="assets/project_fashion.jpg" alt="Purple Collection Fashion Model Personal Branding" class="work-block-img" loading="lazy" />
+              <div class="work-media-overlay"></div>
             </div>
-            <div class="work-details">
-              <div>
-                <span class="work-category-pill">PERSONAL BRANDING / TEXTILE</span>
-                <h3 class="work-title">SOUTHERN TEXTILE BRAND</h3>
-                <p class="work-desc">
-                  Worked on scripting, content creation, and personal-branding content for a textile brand, transforming heritage ideas into professional digital content.
-                </p>
+            <div class="work-block-info">
+              <div class="work-meta-header">
+                <span class="work-index-num">PROJECT 01</span>
+                <span class="work-cat-pill">PERSONAL BRANDING / FASHION / SOCIAL</span>
               </div>
-              <div class="work-cta-link">
-                <span>VIEW CASE STUDY</span>
-                <span aria-hidden="true">↗</span>
+              <h3 class="work-block-title">PURPLE COLLECTION</h3>
+              <p class="work-block-desc">
+                Personal branding and social media content work for a fashion/editorial model. Elevated visual positioning from casual posts to luxury editorial authority.
+              </p>
+              <div class="work-role-chips">
+                <span class="role-chip">Content Strategy</span>
+                <span class="role-chip">Script Writing</span>
+                <span class="role-chip">Videography</span>
+                <span class="role-chip">Video Editing</span>
+                <span class="role-chip">Instagram Management</span>
+                <span class="role-chip">Profile Optimization</span>
+              </div>
+              <div class="work-action-row">
+                <span class="work-view-link">
+                  <span>EXPLORE CASE STUDY</span>
+                  <span class="btn-arrow" aria-hidden="true">↗</span>
+                </span>
+                <span class="proof-verified-pill">~3,000 FOLLOWERS GENERATED</span>
               </div>
             </div>
-          </div>
+          </article>
 
-          <!-- Project 03: Food Industry -->
-          <div class="work-card work-card-standard spotlight-card" data-project="food">
-            <div class="work-media">
-              <img src="assets/project_food.jpg" alt="Food Industry Digital Marketing" class="work-img" loading="lazy" />
-              <div class="work-overlay"></div>
+          <!-- Project 02: Jayashakthi Tours & Travels -->
+          <article class="work-block reverse spotlight-card" data-project="jayashakthi" tabindex="0" role="button" aria-label="Open Jayashakthi Tours Case Study">
+            <div class="work-block-media">
+              <img src="assets/project_jayashakthi.jpg" alt="Jayashakthi Tours and Travels Website & Portal UI" class="work-block-img" loading="lazy" />
+              <div class="work-media-overlay"></div>
             </div>
-            <div class="work-details">
-              <div>
-                <span class="work-category-pill">DIGITAL MARKETING</span>
-                <h3 class="work-title">FOOD INDUSTRY MARKETING</h3>
-                <p class="work-desc">
-                  Worked on digital content and marketing activities within the food industry, gaining practical experience in audience engagement and sensory communication.
-                </p>
+            <div class="work-block-info">
+              <div class="work-meta-header">
+                <span class="work-index-num">PROJECT 02</span>
+                <span class="work-cat-pill">WEB / DIGITAL / BUSINESS</span>
               </div>
-              <div class="work-cta-link">
-                <span>VIEW CASE STUDY</span>
-                <span aria-hidden="true">↗</span>
+              <h3 class="work-block-title">JAYASHAKTHI TOURS &amp; TRAVELS</h3>
+              <p class="work-block-desc">
+                Designed and developed a business website and admin portal for Jayashakthi Tours &amp; Travels, providing fleet route management and customer inquiry architecture.
+              </p>
+              <div class="work-role-chips">
+                <span class="role-chip">Website UI</span>
+                <span class="role-chip">Admin Portal</span>
+                <span class="role-chip">Responsive Design</span>
+                <span class="role-chip">Information Architecture</span>
+                <span class="role-chip">Business SEO</span>
+              </div>
+              <div class="work-action-row">
+                <span class="work-view-link">
+                  <span>EXPLORE CASE STUDY</span>
+                  <span class="btn-arrow" aria-hidden="true">↗</span>
+                </span>
+                <a href="https://www.jayashakthitoursandtravels.com/" target="_blank" rel="noopener noreferrer" class="btn btn-secondary btn-sm" onclick="event.stopPropagation();">
+                  <span>VISIT LIVE SITE ↗</span>
+                </a>
               </div>
             </div>
-          </div>
+          </article>
 
-          <!-- Project 04: Startup & Industrial -->
-          <div class="work-card work-card-standard spotlight-card" data-project="industrial">
-            <div class="work-media">
-              <img src="assets/project_industrial.jpg" alt="Startup and Industrial Brands Marketing" class="work-img" loading="lazy" />
-              <div class="work-overlay"></div>
+          <!-- Project 03: Chinnadurai Textiles -->
+          <article class="work-block spotlight-card" data-project="chinnadurai" tabindex="0" role="button" aria-label="Open Chinnadurai Textiles Case Study">
+            <div class="work-block-media">
+              <img src="assets/project_textile.jpg" alt="Chinnadurai Textiles Heritage Scripting & Branding" class="work-block-img" loading="lazy" />
+              <div class="work-media-overlay"></div>
             </div>
-            <div class="work-details">
-              <div>
-                <span class="work-category-pill">DIGITAL MARKETING / CONTENT</span>
-                <h3 class="work-title">STARTUP &amp; INDUSTRIAL BRANDS</h3>
-                <p class="work-desc">
-                  Worked across startup and metal/industrial business environments, developing practical understanding of how technical industries present themselves digitally.
-                </p>
+            <div class="work-block-info">
+              <div class="work-meta-header">
+                <span class="work-index-num">PROJECT 03</span>
+                <span class="work-cat-pill">CONTENT / SCRIPTWRITING / PERSONAL BRANDING</span>
               </div>
-              <div class="work-cta-link">
-                <span>VIEW CASE STUDY</span>
-                <span aria-hidden="true">↗</span>
+              <h3 class="work-block-title">CHINNADURAI TEXTILES</h3>
+              <p class="work-block-desc">
+                Content strategy and script writing translating artisanal heritage weaving into high-retention short-form digital storytelling.
+              </p>
+              <div class="work-role-chips">
+                <span class="role-chip">Content Strategy</span>
+                <span class="role-chip">Script Writing</span>
+                <span class="role-chip">Captions</span>
+                <span class="role-chip">Branding</span>
+                <span class="role-chip">Competitor Research</span>
+              </div>
+              <div class="work-action-row">
+                <span class="work-view-link">
+                  <span>EXPLORE CASE STUDY</span>
+                  <span class="btn-arrow" aria-hidden="true">↗</span>
+                </span>
+                <span class="proof-verified-pill">10K–15K VERIFIED VIEWS</span>
               </div>
             </div>
-          </div>
+          </article>
+
+          <!-- Project 04: Salemrr Biriyani -->
+          <article class="work-block reverse spotlight-card" data-project="salemrr" tabindex="0" role="button" aria-label="Open Salemrr Biriyani Case Study">
+            <div class="work-block-media">
+              <img src="assets/project_food.jpg" alt="Salemrr Biriyani Cinematic Videography & VJ Promo" class="work-block-img" loading="lazy" />
+              <div class="work-media-overlay"></div>
+            </div>
+            <div class="work-block-info">
+              <div class="work-meta-header">
+                <span class="work-index-num">PROJECT 04</span>
+                <span class="work-cat-pill">BRAND PROMOTION / VIDEO / FOOD</span>
+              </div>
+              <h3 class="work-block-title">SALEMRR BIRIYANI</h3>
+              <p class="work-block-desc">
+                High-energy culinary brand promotional reel combining on-camera video VJ hosting with macro food videography and sensory audio cuts.
+              </p>
+              <div class="work-role-chips">
+                <span class="role-chip">Script Writing</span>
+                <span class="role-chip">Cinematic Videography</span>
+                <span class="role-chip">Screenplay</span>
+                <span class="role-chip">Video Editing</span>
+                <span class="role-chip">Video VJ</span>
+                <span class="role-chip">Content Strategy</span>
+              </div>
+              <div class="work-action-row">
+                <span class="work-view-link">
+                  <span>EXPLORE CASE STUDY</span>
+                  <span class="btn-arrow" aria-hidden="true">↗</span>
+                </span>
+                <span class="proof-verified-pill">PUBLISHED WORK SAMPLE</span>
+              </div>
+            </div>
+          </article>
+
         </div>
       </div>
     </section>
 
     <!-- ======================================================================
-         04 — Work Transformation Section
+         5. Transformation Showcase (Before vs After)
          ====================================================================== -->
     <section class="section-spacer transformation-section" id="transformation">
       <div class="container">
-        <div class="transformation-header">
-          <span class="section-label">04 — TRANSFORMATION</span>
+        <div style="text-align: center; max-width: 740px; margin-inline: auto; margin-bottom: 3.5rem;">
+          <span class="section-label">PERCEIVED VALUE ELEVATION</span>
           <h2 class="section-heading">
             FROM BORING<br />
-            <span class="text-gradient">TO PROFESSIONAL.</span>
+            <span class="text-gradient">TO PROFESSIONAL AUTHORITY.</span>
           </h2>
-          <p class="section-subheading">
-            One of my personal-branding projects went through a major transformation in just 5 videos. The objective wasn't simply to make better videos. It was to create a stronger professional identity and improve the perceived value of the person behind the content.
+          <p class="section-subheading" style="margin-inline: auto;">
+            A personal-branding case study transformed in just 5 videos. The objective wasn’t merely to capture cleaner footage—it was to improve the perceived authority of the person behind the lens.
           </p>
         </div>
 
@@ -526,98 +528,137 @@
             <span class="slider-label slider-label-before">BEFORE — UNPOLISHED</span>
             <span class="slider-label slider-label-after">AFTER — 5 VIDEOS LATER</span>
 
-            <img src="assets/transform_after.jpg" alt="Transformed Professional Video Branding" class="slider-img slider-img-after" />
-            <img src="assets/transform_before.jpg" alt="Original Unpolished Video Framing" class="slider-img slider-img-before" />
+            <img src="assets/transform_after.jpg" alt="Transformed Professional Video Framing" class="slider-img slider-img-after" />
+            <img src="assets/transform_before.jpg" alt="Original Unpolished Framing" class="slider-img slider-img-before" />
 
             <div class="slider-handle">
               <div class="slider-handle-button" aria-hidden="true">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                  <polyline points="15 18 9 12 15 6"></polyline>
-                  <polyline points="9 18 3 12 9 6" style="display:none;"></polyline>
-                </svg>
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                  <polyline points="9 18 15 12 9 6"></polyline>
-                </svg>
+                <span>⇄</span>
               </div>
             </div>
           </div>
         </div>
-        <p class="slider-hint">← DRAG SLIDER TO REVEAL TRANSFORMATION →</p>
+        <p class="slider-hint">← DRAG SLIDER OR USE ARROW KEYS TO INSPECT TRANSFORMATION →</p>
       </div>
     </section>
 
     <!-- ======================================================================
-         05 — Experience Section
+         6. Creator → Builder Journey Section
+         ====================================================================== -->
+    <section class="section-spacer journey-section" id="journey">
+      <div class="container">
+        <span class="section-label">02 // CHRONOLOGY</span>
+        <h2 class="section-heading">
+          CREATOR → BUILDER<br />
+          <span class="text-gradient">EVOLUTIONARY JOURNEY.</span>
+        </h2>
+        <p class="section-subheading">
+          The step-by-step transition from editing pixels to architecting digital marketing campaigns, writing scripts, and pursuing AI &amp; Data Science.
+        </p>
+
+        <div class="journey-interactive-wrap">
+          <!-- Timeline Stage Nav -->
+          <div class="journey-nodes-nav" role="tablist" aria-label="Journey Milestones">
+            <button type="button" class="journey-timeline-node" role="tab" aria-selected="false">
+              <span class="node-stage">STAGE 01</span>
+              <span class="node-year">2020</span>
+              <span class="node-title-short">Content Creation</span>
+            </button>
+            <button type="button" class="journey-timeline-node" role="tab" aria-selected="false">
+              <span class="node-stage">STAGE 02</span>
+              <span class="node-year">2023</span>
+              <span class="node-title-short">Social Media</span>
+            </button>
+            <button type="button" class="journey-timeline-node" role="tab" aria-selected="false">
+              <span class="node-stage">STAGE 03</span>
+              <span class="node-year">2025</span>
+              <span class="node-title-short">Digital Marketing</span>
+            </button>
+            <button type="button" class="journey-timeline-node active" role="tab" aria-selected="true">
+              <span class="node-stage">STAGE 04</span>
+              <span class="node-year">2026</span>
+              <span class="node-title-short">Client Work</span>
+            </button>
+            <button type="button" class="journey-timeline-node" role="tab" aria-selected="false">
+              <span class="node-stage">STAGE 05</span>
+              <span class="node-year">2026</span>
+              <span class="node-title-short">AI &amp; Data Science</span>
+            </button>
+            <button type="button" class="journey-timeline-node" role="tab" aria-selected="false">
+              <span class="node-stage">STAGE 06</span>
+              <span class="node-year">NEXT</span>
+              <span class="node-title-short">Building Bigger</span>
+            </button>
+          </div>
+
+          <!-- Dynamic Inspection Card (Rendered via js/journey.js) -->
+          <div class="journey-detail-card" role="tabpanel">
+            <!-- Injected via journey.js -->
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================================================================
+         7. Experience Section (Digi Marketrix)
          ====================================================================== -->
     <section class="section-spacer experience-section" id="experience">
       <div class="container">
-        <span class="section-label">05 — EXPERIENCE</span>
+        <span class="section-label">03 // INDUSTRY EXPERIENCE</span>
         <h2 class="section-heading">
-          LEARNING BY WORKING<br />
-          <span class="text-gradient">ACROSS INDUSTRIES.</span>
+          COMMERCIAL CLIENT<br />
+          <span class="text-gradient">AGENCY INTERNSHIP.</span>
         </h2>
         <p class="section-subheading">
-          Digital marketing industry experience gained through real-world commercial deliverables, content campaigns, and strategic brand consulting across diverse sectors.
+          Real-world agency deliverables, client shoots, scriptwriting, and video editing executed in Tuticorin.
         </p>
 
-        <div class="experience-timeline">
-          <!-- Timeline Item 1 -->
-          <div class="timeline-item">
-            <div class="timeline-node" aria-hidden="true"></div>
-            <div class="timeline-content">
-              <h3 class="timeline-industry">FOOD INDUSTRY</h3>
-              <div class="timeline-tags">DIGITAL MARKETING • CONTENT • AUDIENCE ENGAGEMENT</div>
-              <p class="timeline-desc">
-                Implemented social video strategies and sensory visual storytelling to amplify customer discovery, foot traffic, and brand loyalty.
-              </p>
+        <div class="experience-card-featured spotlight-card">
+          <div class="experience-header-strip">
+            <div>
+              <span class="section-label" style="margin-bottom: 0.5rem;">PRIMARY EXPERIENCE</span>
+              <h3 class="company-title">DIGI MARKETRIX</h3>
+            </div>
+            <span class="role-badge-pill">Digital Marketing / Content / Creative Intern</span>
+          </div>
+
+          <div class="exp-meta-grid">
+            <div class="exp-meta-item">
+              <span class="exp-meta-lbl">TENURE DATES</span>
+              <span class="exp-meta-val">May 1, 2026 — July 1, 2026</span>
+            </div>
+            <div class="exp-meta-item">
+              <span class="exp-meta-lbl">LOCATION</span>
+              <span class="exp-meta-val">Tuticorin, Tamil Nadu</span>
+            </div>
+            <div class="exp-meta-item">
+              <span class="exp-meta-lbl">SCOPE OF ROLE</span>
+              <span class="exp-meta-val">Client Shoots &amp; Video Production</span>
+            </div>
+            <div class="exp-meta-item">
+              <span class="exp-meta-lbl">VALIDATION</span>
+              <span class="exp-meta-val text-accent">Active Industry Internship</span>
             </div>
           </div>
 
-          <!-- Timeline Item 2 -->
-          <div class="timeline-item">
-            <div class="timeline-node" aria-hidden="true"></div>
-            <div class="timeline-content">
-              <h3 class="timeline-industry">TEXTILE INDUSTRY</h3>
-              <div class="timeline-tags">PERSONAL BRANDING • CONTENT • SCRIPTING</div>
-              <p class="timeline-desc">
-                Crafted high-end founder narratives, script frameworks, and digital showcases bridging artisanal heritage with modern luxury branding.
-              </p>
-            </div>
-          </div>
+          <h4 style="font-size: 1.15rem; margin-bottom: 1.25rem; color: #ffffff;">Work Included &amp; Deliverables:</h4>
+          <ul class="exp-deliverables-list">
+            <li><span class="role-bullet">⚡</span><span>Scripting for diverse commercial clients</span></li>
+            <li><span class="role-bullet">⚡</span><span>On-location videography &amp; camera framing</span></li>
+            <li><span class="role-bullet">⚡</span><span>Coordinating client video shoots</span></li>
+            <li><span class="role-bullet">⚡</span><span>Fast-paced video editing &amp; audio sync</span></li>
+            <li><span class="role-bullet">⚡</span><span>Content research &amp; trend benchmarking</span></li>
+            <li><span class="role-bullet">⚡</span><span>Personal branding content blueprints</span></li>
+            <li><span class="role-bullet">⚡</span><span>Social media content scheduling &amp; distribution</span></li>
+            <li><span class="role-bullet">⚡</span><span>Digital marketing strategy exposure</span></li>
+          </ul>
 
-          <!-- Timeline Item 3 -->
-          <div class="timeline-item">
-            <div class="timeline-node" aria-hidden="true"></div>
-            <div class="timeline-content">
-              <h3 class="timeline-industry">FASHION &amp; MODELING</h3>
-              <div class="timeline-tags">PERSONAL BRANDING • CONTENT STRATEGY • DIGITAL PRESENCE</div>
-              <p class="timeline-desc">
-                Built aesthetic editorial direction and professional digital profiles that positioned modeling talent for high-tier commercial casting.
-              </p>
-            </div>
-          </div>
-
-          <!-- Timeline Item 4 -->
-          <div class="timeline-item">
-            <div class="timeline-node" aria-hidden="true"></div>
-            <div class="timeline-content">
-              <h3 class="timeline-industry">STARTUP BRANDS</h3>
-              <div class="timeline-tags">CONTENT • DIGITAL MARKETING • BRAND COMMUNICATION</div>
-              <p class="timeline-desc">
-                Devised organic distribution flywheels and concise value communication for fast-moving early-stage ventures looking to dominate niches.
-              </p>
-            </div>
-          </div>
-
-          <!-- Timeline Item 5 -->
-          <div class="timeline-item">
-            <div class="timeline-node" aria-hidden="true"></div>
-            <div class="timeline-content">
-              <h3 class="timeline-industry">METAL &amp; INDUSTRIAL BUSINESS</h3>
-              <div class="timeline-tags">CONTENT • DIGITAL PRESENCE • MARKETING EXPOSURE</div>
-              <p class="timeline-desc">
-                Modernized traditional B2B manufacturing messaging into sleek, technologically impressive digital authority content.
-              </p>
+          <div class="exp-toolchain-box">
+            <span class="exp-toolchain-title">EDITING &amp; PRODUCTION TOOLCHAIN:</span>
+            <div class="exp-toolchain-chips">
+              <span class="role-chip">CapCut</span>
+              <span class="role-chip">Basic Premiere Pro</span>
+              <span class="role-chip">Currently Learning Final Cut Pro</span>
             </div>
           </div>
         </div>
@@ -625,297 +666,318 @@
     </section>
 
     <!-- ======================================================================
-         Skills Wall Section
+         8. Digital Lab Section (Hardware, AI, Web, SIH)
          ====================================================================== -->
-    <section class="section-spacer" id="skills">
-      <div class="container" style="text-align: center;">
-        <span class="section-label">ARSENAL &amp; CAPABILITIES</span>
+    <section class="section-spacer lab-section" id="lab">
+      <div class="container">
+        <span class="section-label">04 // DIGITAL LAB</span>
         <h2 class="section-heading">
-          SKILLS BUILT FOR<br />
-          <span class="text-gradient">THE DIGITAL ERA.</span>
+          WHERE CREATIVE STRATEGY<br />
+          <span class="text-gradient">MEETS HARDWARE &amp; CODE.</span>
         </h2>
-        <p class="section-subheading" style="margin-inline: auto; margin-bottom: 2.5rem;">
-          The cross-disciplinary toolkit bridging creative strategy, technical production, and audience psychology.
+        <p class="section-subheading">
+          Aakash is not only a marketer. He is learning to build technology. Explore technical projects across Web Platforms, AI experiments, ESP32 IoT hardware, and Smart India Hackathon engineering.
         </p>
 
         <!-- Category Filters -->
-        <div class="skills-filter-container">
-          <button class="skills-filter-btn active" data-filter="all">All Disciplines</button>
-          <button class="skills-filter-btn" data-filter="branding">Strategy &amp; Branding</button>
-          <button class="skills-filter-btn" data-filter="content">Content &amp; Video</button>
-          <button class="skills-filter-btn" data-filter="tech">Tech &amp; AI</button>
+        <div class="lab-filters-row" role="tablist" aria-label="Digital Lab Categories">
+          <button type="button" class="lab-filter-btn active" data-filter="all">ALL PROJECTS</button>
+          <button type="button" class="lab-filter-btn" data-filter="web">WEB INFRASTRUCTURE</button>
+          <button type="button" class="lab-filter-btn" data-filter="sih">SMART INDIA HACKATHON</button>
+          <button type="button" class="lab-filter-btn" data-filter="hardware">IOT &amp; HARDWARE</button>
+          <button type="button" class="lab-filter-btn" data-filter="ai">AI &amp; DATA SCIENCE</button>
         </div>
 
-        <!-- Skills Wall -->
-        <div class="skills-wall">
-          <div class="skill-tag" data-category="branding"><span class="skill-tag-dot"></span>Personal Branding</div>
-          <div class="skill-tag" data-category="branding"><span class="skill-tag-dot"></span>Digital Marketing</div>
-          <div class="skill-tag" data-category="content"><span class="skill-tag-dot"></span>Content Creation</div>
-          <div class="skill-tag" data-category="branding"><span class="skill-tag-dot"></span>Content Strategy</div>
-          <div class="skill-tag" data-category="content"><span class="skill-tag-dot"></span>Video Editing</div>
-          <div class="skill-tag" data-category="content"><span class="skill-tag-dot"></span>Videography</div>
-          <div class="skill-tag" data-category="content"><span class="skill-tag-dot"></span>Script Writing</div>
-          <div class="skill-tag" data-category="content"><span class="skill-tag-dot"></span>Content Writing</div>
-          <div class="skill-tag" data-category="tech"><span class="skill-tag-dot"></span>SEO</div>
-          <div class="skill-tag" data-category="tech"><span class="skill-tag-dot"></span>Website Building</div>
-          <div class="skill-tag" data-category="branding"><span class="skill-tag-dot"></span>Social Media Strategy</div>
-          <div class="skill-tag" data-category="branding"><span class="skill-tag-dot"></span>Audience Engagement</div>
-          <div class="skill-tag" data-category="branding"><span class="skill-tag-dot"></span>Instagram Strategy</div>
-          <div class="skill-tag" data-category="branding"><span class="skill-tag-dot"></span>Brand Communication</div>
-          <div class="skill-tag" data-category="tech"><span class="skill-tag-dot"></span>AI &amp; Technology</div>
+        <!-- Dynamic Lab Cards Grid -->
+        <div class="lab-grid">
+          <!-- Injected via js/digital-lab.js -->
         </div>
       </div>
     </section>
 
     <!-- ======================================================================
-         Journey Section
+         9. Skills Constellation & Interactive Mapping
          ====================================================================== -->
-    <section class="section-spacer" id="journey" style="background: var(--bg-secondary);">
+    <section class="section-spacer skills-section" id="skills">
       <div class="container">
-        <span class="section-label">THE EVOLUTION</span>
+        <span class="section-label">05 // ARSENAL &amp; CAPABILITIES</span>
         <h2 class="section-heading">
-          THE JOURNEY IS<br />
-          <span class="text-gradient">JUST BEGINNING.</span>
+          INTERACTIVE SKILLS<br />
+          <span class="text-gradient">MAPPED TO REAL WORK.</span>
         </h2>
         <p class="section-subheading">
-          A progression from editing raw pixels to architecting high-value personal brands and future company platforms.
+          No fake percentage bars. Hover over any discipline to inspect the exact real-world case studies and outcomes it produced.
         </p>
 
-        <div class="journey-track-container">
-          <div class="journey-track">
-            <!-- Stage 1 -->
-            <div class="journey-step spotlight-card">
-              <div class="journey-step-num">STAGE 01</div>
-              <div class="journey-step-title">CONTENT CREATION</div>
-            </div>
-            <div class="journey-arrow" aria-hidden="true">→</div>
+        <div class="skills-interactive-container">
+          <!-- Left: Categorized Pills -->
+          <div class="skills-categories-grid">
 
-            <!-- Stage 2 -->
-            <div class="journey-step spotlight-card">
-              <div class="journey-step-num">STAGE 02</div>
-              <div class="journey-step-title">VIDEO EDITING</div>
+            <!-- Category: CREATIVE -->
+            <div class="skill-category-block">
+              <span class="skill-cat-title">01 // CREATIVE DISCIPLINE</span>
+              <div class="skills-pills-row">
+                <button type="button" class="skill-pill" data-skill="Content Creation">Content Creation</button>
+                <button type="button" class="skill-pill" data-skill="Video Editing">Video Editing</button>
+                <button type="button" class="skill-pill" data-skill="Videography">Videography</button>
+                <button type="button" class="skill-pill" data-skill="Script Writing">Script Writing</button>
+                <button type="button" class="skill-pill" data-skill="Storytelling">Storytelling</button>
+              </div>
             </div>
-            <div class="journey-arrow" aria-hidden="true">→</div>
 
-            <!-- Stage 3 -->
-            <div class="journey-step spotlight-card">
-              <div class="journey-step-num">STAGE 03</div>
-              <div class="journey-step-title">DIGITAL MARKETING</div>
+            <!-- Category: DIGITAL -->
+            <div class="skill-category-block">
+              <span class="skill-cat-title">02 // DIGITAL &amp; BRANDING</span>
+              <div class="skills-pills-row">
+                <button type="button" class="skill-pill active" data-skill="Personal Branding">Personal Branding</button>
+                <button type="button" class="skill-pill" data-skill="Digital Marketing">Digital Marketing</button>
+                <button type="button" class="skill-pill" data-skill="Content Strategy">Content Strategy</button>
+                <button type="button" class="skill-pill" data-skill="Instagram Strategy">Instagram Strategy</button>
+                <button type="button" class="skill-pill" data-skill="Social Media Strategy">Social Media Strategy</button>
+                <button type="button" class="skill-pill" data-skill="Brand Communication">Brand Communication</button>
+                <button type="button" class="skill-pill" data-skill="SEO">SEO</button>
+                <button type="button" class="skill-pill" data-skill="Website Building">Website Building</button>
+              </div>
             </div>
-            <div class="journey-arrow" aria-hidden="true">→</div>
 
-            <!-- Stage 4 -->
-            <div class="journey-step spotlight-card">
-              <div class="journey-step-num">STAGE 04</div>
-              <div class="journey-step-title">PERSONAL BRANDING</div>
+            <!-- Category: TECH -->
+            <div class="skill-category-block">
+              <span class="skill-cat-title">03 // TECHNICAL &amp; ENGINEERING</span>
+              <div class="skills-pills-row">
+                <button type="button" class="skill-pill" data-skill="AI & Data Science">AI &amp; Data Science</button>
+                <button type="button" class="skill-pill" data-skill="Web Development">Web Development</button>
+                <button type="button" class="skill-pill" data-skill="IoT">IoT</button>
+                <button type="button" class="skill-pill" data-skill="Hardware Prototyping">Hardware Prototyping</button>
+                <button type="button" class="skill-pill" data-skill="Firebase">Firebase</button>
+                <button type="button" class="skill-pill" data-skill="Git / GitHub">Git / GitHub</button>
+              </div>
             </div>
-            <div class="journey-arrow" aria-hidden="true">→</div>
+          </div>
 
-            <!-- Stage 5 -->
-            <div class="journey-step spotlight-card">
-              <div class="journey-step-num">STAGE 05</div>
-              <div class="journey-step-title">ENTREPRENEURSHIP</div>
-            </div>
-            <div class="journey-arrow" aria-hidden="true">→</div>
-
-            <!-- Stage 6 -->
-            <div class="journey-step spotlight-card" style="border-color: var(--accent-purple-light); background: rgba(168, 85, 247, 0.1);">
-              <div class="journey-step-num" style="color: var(--accent-purple-neon);">STAGE 06</div>
-              <div class="journey-step-title">BUILDING THE FUTURE</div>
-            </div>
+          <!-- Right: Interactive Preview Panel (Rendered by js/skills.js) -->
+          <div class="skills-interactive-preview">
+            <!-- Injected via skills.js -->
           </div>
         </div>
       </div>
     </section>
 
     <!-- ======================================================================
-         06 — Vision Section
+         10. About, Education & Verified Awards
          ====================================================================== -->
-    <section class="vision-section" id="vision">
-      <div class="vision-glow-backdrop" aria-hidden="true"></div>
-
+    <section class="section-spacer about-section" id="about">
       <div class="container">
-        <span class="section-label">06 — THE VISION</span>
-        <h2 class="vision-heading-large">
-          I DON'T WANT TO JUST WORK IN DIGITAL MARKETING.<br />
-          <span class="vision-accent">I WANT TO CHANGE IT.</span>
-        </h2>
-
-        <p class="vision-body-text">
-          My long-term vision is to build a powerful agency and service platform that combines personal branding, digital marketing, technology, and AI to create a new way for businesses and founders to build value in the digital era.
-        </p>
-
-        <p class="vision-body-text" style="margin-top: 1.75rem; color: #ffffff; font-weight: 600;">
-          I want to be known as an unshakable personal branding strategist and eventually as the founder behind a company that creates a real shift in the digital marketing industry.
-        </p>
-      </div>
-    </section>
-
-    <!-- ======================================================================
-         Personal Philosophy Section
-         ====================================================================== -->
-    <section class="philosophy-section" aria-label="Personal Philosophy">
-      <div class="container">
-        <h2 class="philosophy-quote">NOTHING CHANGES IF NOTHING CHANGES.</h2>
-        <div class="philosophy-sub">Growth requires action.</div>
-      </div>
-    </section>
-
-    <!-- ======================================================================
-         Contact / CTA Section
-         ====================================================================== -->
-    <section class="contact-section" id="contact">
-      <div class="container">
-        <div class="contact-grid">
-          <div class="contact-left">
-            <span class="section-label">GET IN TOUCH</span>
-            <h2 class="section-heading">
-              LET'S GROW<br />
-              <span class="text-gradient">YOUR VALUE.</span>
+        <div class="about-editorial-grid">
+          <!-- Left: Personal Philosophy & Context -->
+          <div>
+            <span class="section-label">06 // ABOUT &amp; PHILOSOPHY</span>
+            <h2 class="about-headline-quote">
+              I’M STILL FIGURING IT OUT.<br />
+              <span class="text-gradient">BUT I’M BUILDING WHILE I FIGURE IT OUT.</span>
             </h2>
-            <div class="contact-sub">Let's grow your value in this digital era together.</div>
-            <p>
-              Whether you're a founder, business, creator, or brand looking to build a stronger digital presence, let's create something that makes people notice—and remember.
+            <p class="about-body-text">
+              I’m currently pursuing B.Tech in Artificial Intelligence &amp; Data Science at Rathinam Technical Campus while actively accumulating commercial experience across content creation, digital marketing, personal branding, technology, and entrepreneurship.
+            </p>
+            <p class="about-body-text">
+              I believe in learning by executing real client work rather than staying within textbook theory. By bridging data science fundamentals with high-retention video production, every branding strategy I design possesses both technical rigor and creative authority.
             </p>
 
-            <div class="contact-email-card">
-              <div class="email-info">
-                <span class="email-label">DIRECT EMAIL</span>
-                <span class="email-address">itzaakash15@gmail.com</span>
+            <div style="margin-top: 2rem;">
+              <a href="#contact" class="btn btn-primary btn-magnetic">
+                <span>CONNECT WITH AAKASH →</span>
+              </a>
+            </div>
+          </div>
+
+          <!-- Right: Academic Credentials & Verified Awards -->
+          <div class="about-meta-columns">
+
+            <!-- Education Box -->
+            <div class="meta-subcard spotlight-card">
+              <span class="meta-subcard-title">ACADEMIC FOUNDATION</span>
+
+              <div class="edu-item" style="margin-bottom: 1.5rem;">
+                <h3 class="edu-title">RATHINAM TECHNICAL CAMPUS</h3>
+                <div class="edu-sub">B.Tech — Artificial Intelligence &amp; Data Science</div>
+                <div class="edu-dates">2026 — 2030 • Currently: First Year</div>
               </div>
-              <div class="contact-email-card-actions">
-                <button type="button" class="btn btn-secondary btn-sm" id="copy-email-btn" title="Copy email address">
+
+              <div class="edu-item" style="border-top: 1px solid var(--border-subtle); padding-top: 1rem;">
+                <h4 class="edu-title" style="font-size: 1.05rem;">SDR, TUTICORIN</h4>
+                <div class="edu-sub">12th Grade — ISC Curriculum</div>
+                <div class="edu-dates">Scored 75%</div>
+              </div>
+            </div>
+
+            <!-- Verified Awards Box -->
+            <div class="meta-subcard spotlight-card">
+              <span class="meta-subcard-title">VERIFIED HONORS &amp; RECOGNITIONS</span>
+
+              <div class="award-item">
+                <div>
+                  <div class="award-title">BEST REELS CREATOR</div>
+                  <div style="font-size: 0.8rem; color: var(--text-muted);">Tuticorin Creator Summit</div>
+                </div>
+                <span class="award-year">2025</span>
+              </div>
+
+              <div class="award-item">
+                <div>
+                  <div class="award-title">YOUNG INFORMATIVE CONTENT</div>
+                  <div style="font-size: 0.8rem; color: var(--text-muted);">Regional Digital Media Recognition</div>
+                </div>
+                <span class="award-year">2025</span>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================================================================
+         11. Vision Section (Services -> Systems -> Products)
+         ====================================================================== -->
+    <section class="section-spacer vision-section" id="vision">
+      <div class="container">
+        <span class="section-label" style="justify-content: center;">07 // STRATEGIC HORIZON</span>
+        <h2 class="vision-headline-huge">
+          FROM SERVICES<br />
+          TO SYSTEMS<br />
+          <span class="text-gradient">TO PRODUCTS.</span>
+        </h2>
+
+        <div class="vision-pipeline-row">
+          <div class="pipeline-node">PERSONAL BRANDING</div>
+          <span class="pipeline-arrow" aria-hidden="true">→</span>
+          <div class="pipeline-node">DIGITAL MARKETING</div>
+          <span class="pipeline-arrow" aria-hidden="true">→</span>
+          <div class="pipeline-node">AGENCY PLATFORM</div>
+          <span class="pipeline-arrow" aria-hidden="true">→</span>
+          <div class="pipeline-node node-highlight">AI-ASSISTED MARKETING SYSTEMS</div>
+        </div>
+
+        <p class="vision-body-copy">
+          The direction I'm building toward: combining digital marketing, personal branding, software architecture, and artificial intelligence into scalable systems that elevate how founders and businesses communicate their value.
+        </p>
+      </div>
+    </section>
+
+    <!-- ======================================================================
+         12. Contact Section
+         ====================================================================== -->
+    <section class="section-spacer contact-section" id="contact">
+      <div class="container">
+        <div class="contact-grid">
+          <!-- Left: Invitation & Direct Links -->
+          <div>
+            <span class="section-label">GET IN TOUCH</span>
+            <h2 class="contact-heading-huge">
+              HAVE SOMETHING<br />
+              <span class="text-gradient">WORTH BUILDING?</span><br />
+              LET’S TALK →
+            </h2>
+            <p class="about-body-text">
+              Whether you’re a founder looking to elevate your personal brand authority, a business seeking modern digital positioning, or an engineer building technical platforms—let’s connect.
+            </p>
+
+            <!-- Direct Email Card -->
+            <div class="contact-direct-card">
+              <div>
+                <span class="direct-email-label">DIRECT EMAIL ADDRESS</span>
+                <div class="direct-email-val">itzaakash15@gmail.com</div>
+              </div>
+              <div class="direct-actions-row">
+                <button type="button" class="btn btn-secondary btn-sm" id="copy-email-btn" title="Copy to clipboard">
                   <span>Copy</span>
                 </button>
                 <a href="mailto:itzaakash15@gmail.com" class="btn btn-primary btn-sm">
-                  <span>Email Me ↗</span>
+                  <span>Write ↗</span>
                 </a>
               </div>
             </div>
 
             <div class="badge-status">
               <span class="badge-dot"></span>
-              <span>Available for Select Projects &amp; Strategy Consultations</span>
+              <span>Available for Select Client Projects &amp; Collaborations</span>
             </div>
           </div>
 
-          <!-- Interactive Contact Form -->
-          <div class="contact-right">
-            <form class="contact-form" id="contact-form" novalidate>
-              <h3 style="font-size: 1.5rem; margin-bottom: 1.5rem; color: #ffffff;">Send a Message</h3>
-
+          <!-- Right: Interactive Message Form -->
+          <div class="contact-form-card spotlight-card">
+            <h3 style="font-size: 1.4rem; font-weight: 700; margin-bottom: 1.5rem; color: #ffffff;">Transmit a Message</h3>
+            <form id="contact-form" novalidate>
               <div class="form-group">
-                <label for="form-name" class="form-label">Your Name</label>
-                <input type="text" id="form-name" name="name" class="form-control" placeholder="e.g. Alex Morgan" required />
+                <label for="name" class="form-label">YOUR NAME</label>
+                <input type="text" id="name" name="name" class="form-control" placeholder="e.g. Alex Morgan" required />
               </div>
 
               <div class="form-group">
-                <label for="form-email" class="form-label">Email Address</label>
-                <input type="email" id="form-email" name="email" class="form-control" placeholder="alex@company.com" required />
+                <label for="email" class="form-label">EMAIL ADDRESS</label>
+                <input type="email" id="email" name="email" class="form-control" placeholder="alex@company.com" required />
               </div>
 
               <div class="form-group">
-                <label for="form-service" class="form-label">Service of Interest</label>
-                <select id="form-service" name="service" class="form-control" style="background: rgba(20, 16, 28, 0.95); cursor: pointer;">
-                  <option value="Personal Branding">Personal Branding</option>
-                  <option value="Digital Marketing Strategy">Digital Marketing Strategy</option>
-                  <option value="Content Strategy & Creation">Content Strategy &amp; Creation</option>
-                  <option value="Video Editing & Direction">Video Editing &amp; Direction</option>
-                  <option value="Founder Consultation">Founder Consultation</option>
+                <label for="service" class="form-label">AREA OF COLLABORATION</label>
+                <select id="service" name="service" class="form-control" style="background: #0f0e17;">
+                  <option value="Personal Branding Strategy">Personal Branding Strategy</option>
+                  <option value="High-Retention Video Production">High-Retention Video Production</option>
+                  <option value="Web & Platform Development">Web &amp; Platform Development</option>
+                  <option value="AI & Technical Prototyping">AI &amp; Technical Prototyping</option>
+                  <option value="General Conversation">General Conversation</option>
                 </select>
               </div>
 
               <div class="form-group">
-                <label for="form-message" class="form-label">Project Details</label>
-                <textarea id="form-message" name="message" class="form-control" placeholder="Tell me about your brand goals, vision, and timeline..." required></textarea>
+                <label for="message" class="form-label">PROJECT DETAILS &amp; VISION</label>
+                <textarea id="message" name="message" class="form-control" placeholder="Describe what you want to build or achieve..." required></textarea>
               </div>
 
               <button type="submit" class="btn btn-primary" style="width: 100%;">
-                <span>LET'S WORK TOGETHER</span>
+                <span>TRANSMIT INQUIRY</span>
                 <span class="btn-arrow" aria-hidden="true">↗</span>
               </button>
             </form>
           </div>
         </div>
-      </div>
-    </section>
 
-    <!-- ======================================================================
-         Social Hub Section
-         ====================================================================== -->
-    <section class="social-hub-section" aria-label="Social Channels">
-      <div class="container">
-        <div class="social-links-grid">
-          <!-- LinkedIn -->
-          <a href="https://www.linkedin.com/in/aakash-k-028a2b389" target="_blank" rel="noopener noreferrer" class="social-card">
-            <div class="social-card-left">
-              <div class="social-icon-box" aria-hidden="true">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
-                </svg>
-              </div>
-              <div>
-                <div class="social-card-title">LinkedIn</div>
-                <div class="social-card-handle">aakash-k-028a2b389</div>
-              </div>
+        <!-- Social Strip -->
+        <div class="socials-strip-row">
+          <a href="https://www.linkedin.com/in/aakash-k-028a2b389/" target="_blank" rel="noopener noreferrer" class="social-strip-card spotlight-card">
+            <div class="social-info-wrap">
+              <span class="social-name">LinkedIn</span>
+              <span class="social-handle">aakash-k-028a2b389</span>
             </div>
             <span class="btn-arrow" aria-hidden="true">↗</span>
           </a>
 
-          <!-- Instagram: Life with Aakash -->
-          <a href="https://www.instagram.com/life.with_aakash" target="_blank" rel="noopener noreferrer" class="social-card">
-            <div class="social-card-left">
-              <div class="social-icon-box" aria-hidden="true">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
-                  <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
-                  <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
-                </svg>
-              </div>
-              <div>
-                <div class="social-card-title">Instagram</div>
-                <div class="social-card-handle">@life.with_aakash</div>
-              </div>
+          <a href="https://www.instagram.com/life.with_aakash/" target="_blank" rel="noopener noreferrer" class="social-strip-card spotlight-card">
+            <div class="social-info-wrap">
+              <span class="social-name">Instagram</span>
+              <span class="social-handle">@life.with_aakash</span>
             </div>
             <span class="btn-arrow" aria-hidden="true">↗</span>
           </a>
 
-          <!-- Instagram: Aku Vlogs -->
-          <a href="https://www.instagram.com/mr._aku_vlogs" target="_blank" rel="noopener noreferrer" class="social-card">
-            <div class="social-card-left">
-              <div class="social-icon-box" aria-hidden="true">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
-                  <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
-                  <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
-                </svg>
-              </div>
-              <div>
-                <div class="social-card-title">Aku Vlogs</div>
-                <div class="social-card-handle">@mr._aku_vlogs</div>
-              </div>
+          <a href="https://github.com/itzaakash15-creator" target="_blank" rel="noopener noreferrer" class="social-strip-card spotlight-card">
+            <div class="social-info-wrap">
+              <span class="social-name">GitHub</span>
+              <span class="social-handle">@itzaakash15-creator</span>
             </div>
             <span class="btn-arrow" aria-hidden="true">↗</span>
           </a>
 
-          <!-- GitHub -->
-          <a href="https://github.com/itzaakash15-creator" target="_blank" rel="noopener noreferrer" class="social-card">
-            <div class="social-card-left">
-              <div class="social-icon-box" aria-hidden="true">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                  <path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/>
-                </svg>
-              </div>
-              <div>
-                <div class="social-card-title">GitHub</div>
-                <div class="social-card-handle">itzaakash15-creator</div>
-              </div>
+          <a href="https://aakashk.vercel.app/" target="_blank" rel="noopener noreferrer" class="social-strip-card spotlight-card">
+            <div class="social-info-wrap">
+              <span class="social-name">Live Portfolio</span>
+              <span class="social-handle">aakashk.vercel.app</span>
             </div>
             <span class="btn-arrow" aria-hidden="true">↗</span>
           </a>
         </div>
       </div>
     </section>
+
   </main>
 
   <!-- ========================================================================
@@ -923,46 +985,48 @@
        ======================================================================== -->
   <footer class="site-footer">
     <div class="container">
-      <div class="footer-top">
+      <div class="footer-top-row">
         <div>
-          <div class="footer-brand">AAKASH K</div>
-          <div class="footer-tagline">PERSONAL BRANDING • DIGITAL MARKETING • CONTENT</div>
+          <div class="footer-brand-title">AAKASH K</div>
+          <div class="footer-brand-desc">AI &amp; DATA SCIENCE // DIGITAL // CREATIVE</div>
         </div>
-        <div style="font-family: var(--font-mono); font-size: 0.9rem; color: var(--accent-purple-light); font-weight: 600;">
-          NOTHING CHANGES IF NOTHING CHANGES.
+        <div class="footer-quote">
+          “Nothing changes if nothing changes.”
         </div>
       </div>
 
-      <div class="footer-bottom">
-        <div>© 2026 Aakash K. Built for the digital era.</div>
+      <div class="footer-bottom-row">
+        <div>
+          © <span id="current-year">2026</span> Aakash K. Built with precision for the digital era.
+        </div>
         <div style="display: flex; gap: 1.5rem; align-items: center;">
-          <a href="#hero" style="font-family: var(--font-mono); font-size: 0.8rem; color: var(--text-secondary);">BACK TO TOP ↑</a>
+          <button type="button" class="btn btn-secondary btn-sm" id="back-to-top">
+            <span>BACK TO TOP ↑</span>
+          </button>
         </div>
       </div>
     </div>
   </footer>
 
   <!-- ========================================================================
-       Case Study Detail Modal
+       Fullscreen Agency Case Study Modal
        ======================================================================== -->
-  <div class="modal-overlay" id="project-modal" role="dialog" aria-modal="true" aria-label="Case Study Modal">
+  <div class="modal-overlay" id="project-modal" role="dialog" aria-modal="true" aria-hidden="true" aria-label="Case Study View">
+    <button type="button" class="modal-close-btn" aria-label="Close Case Study">✕</button>
     <div class="modal-container">
-      <button class="modal-close-btn" aria-label="Close modal">✕</button>
       <div class="modal-dynamic-content">
-        <!-- Injected via project-modal.js -->
+        <!-- Rendered dynamically via js/project-modal.js -->
       </div>
     </div>
   </div>
 
-  <!-- ========================================================================
-       Toast Notification
-       ======================================================================== -->
+  <!-- Toast Notification Container -->
   <div class="toast" id="toast" role="status" aria-live="polite">
-    <div class="toast-icon" aria-hidden="true">✓</div>
-    <div class="toast-message" id="toast-message">Notification message</div>
+    <span class="toast-icon">✓</span>
+    <span class="toast-message" id="toast-message">Notification message</span>
   </div>
 
-  <!-- Scripts -->
+  <!-- Main JavaScript Bootstrap -->
   <script type="module" src="js/app.js"></script>
 </body>
 </html>

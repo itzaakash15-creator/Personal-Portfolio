@@ -1,88 +1,106 @@
 /**
- * AAKASH K Portfolio — Custom Desktop Cursor
- * Implements smooth lerp physics, button magnetism, and custom hover states.
+ * AAKASH K Portfolio — Custom Magnetic Cursor
+ * Runs only on devices with fine pointer (desktop).
+ * Features smooth lerp ring + dot, magnetic attraction, and interaction scaling.
  */
 
 export function initCursor() {
-  // Disable on touch / mobile devices
-  if (window.matchMedia('(hover: none) or (pointer: coarse)').matches) {
-    return;
-  }
+  if (!window.matchMedia('(pointer: fine)').matches) return;
 
-  const dot = document.createElement('div');
-  dot.className = 'cursor-dot';
-  const ring = document.createElement('div');
-  ring.className = 'cursor-ring';
-
-  document.body.appendChild(dot);
-  document.body.appendChild(ring);
+  const dot = document.querySelector('.cursor-dot');
+  const ring = document.querySelector('.cursor-ring');
+  if (!dot || !ring) return;
 
   let mouseX = window.innerWidth / 2;
   let mouseY = window.innerHeight / 2;
   let ringX = mouseX;
   let ringY = mouseY;
-  let dotX = mouseX;
-  let dotY = mouseY;
-  let isHovering = false;
-  let isProjectHover = false;
+  let isHovered = false;
+  let isMagnetic = false;
+  let magneticTarget = null;
+  let isVisible = false;
 
   window.addEventListener('mousemove', (e) => {
     mouseX = e.clientX;
     mouseY = e.clientY;
+
+    if (!isVisible) {
+      isVisible = true;
+      dot.style.opacity = '1';
+      ring.style.opacity = '1';
+    }
+
+    // Direct update on dot for zero lag
+    dot.style.transform = `translate3d(${mouseX}px, ${mouseY}px, 0)`;
+
+    // Update global CSS mouse coordinates for spotlight cards
+    document.documentElement.style.setProperty('--cursor-x', `${mouseX}px`);
+    document.documentElement.style.setProperty('--cursor-y', `${mouseY}px`);
   });
 
-  // RAF Smooth loop
+  document.addEventListener('mouseleave', () => {
+    isVisible = false;
+    dot.style.opacity = '0';
+    ring.style.opacity = '0';
+  });
+
+  document.addEventListener('mouseenter', () => {
+    isVisible = true;
+    dot.style.opacity = '1';
+    ring.style.opacity = '1';
+  });
+
+  // Smooth lerp loop for the outer ring
   function render() {
-    // Dot moves instantly
-    dotX += (mouseX - dotX) * 0.75;
-    dotY += (mouseY - dotY) * 0.75;
-    dot.style.transform = `translate3d(${dotX}px, ${dotY}px, 0) translate(-50%, -50%)`;
+    let targetX = mouseX;
+    let targetY = mouseY;
 
-    // Ring lags with lerp for organic fluid motion
-    ringX += (mouseX - ringX) * 0.18;
-    ringY += (mouseY - ringY) * 0.18;
-    ring.style.transform = `translate3d(${ringX}px, ${ringY}px, 0) translate(-50%, -50%)`;
+    if (isMagnetic && magneticTarget) {
+      const rect = magneticTarget.getBoundingClientRect();
+      const centerX = rect.left + rect.width / 2;
+      const centerY = rect.top + rect.height / 2;
+      targetX = centerX + (mouseX - centerX) * 0.35;
+      targetY = centerY + (mouseY - centerY) * 0.35;
+    }
 
+    ringX += (targetX - ringX) * 0.18;
+    ringY += (targetY - ringY) * 0.18;
+
+    ring.style.transform = `translate3d(${ringX}px, ${ringY}px, 0) scale(${isHovered ? 1.6 : 1})`;
     requestAnimationFrame(render);
   }
   requestAnimationFrame(render);
 
-  // Hover detection
-  function attachHoverListeners() {
-    // Interactive clickable items
-    const clickables = document.querySelectorAll('a, button, input, textarea, .spotlight-card, .skills-filter-btn');
-    clickables.forEach((el) => {
-      el.addEventListener('mouseenter', () => {
-        ring.classList.add('cursor-hover');
-      });
-      el.addEventListener('mouseleave', () => {
-        ring.classList.remove('cursor-hover');
-      });
-    });
+  // Attach hover scaling and magnetic snapping
+  function refreshHoverListeners() {
+    const interactables = document.querySelectorAll(
+      'a, button, input, select, textarea, .work-card, .lab-card, .timeline-node, .skill-pill, [data-cursor="pointer"]'
+    );
 
-    // Work project cards trigger VIEW ↗ cursor
-    const projectCards = document.querySelectorAll('.work-card');
-    projectCards.forEach((el) => {
+    interactables.forEach((el) => {
       el.addEventListener('mouseenter', () => {
-        ring.classList.add('cursor-view');
-        dot.style.opacity = '0';
+        isHovered = true;
+        ring.classList.add('cursor-hover');
+        dot.classList.add('cursor-hover');
+
+        if (el.hasAttribute('data-magnetic') || el.classList.contains('btn-magnetic')) {
+          isMagnetic = true;
+          magneticTarget = el;
+        }
       });
+
       el.addEventListener('mouseleave', () => {
-        ring.classList.remove('cursor-view');
-        dot.style.opacity = '1';
+        isHovered = false;
+        isMagnetic = false;
+        magneticTarget = null;
+        ring.classList.remove('cursor-hover');
+        dot.classList.remove('cursor-hover');
       });
     });
   }
 
-  attachHoverListeners();
+  refreshHoverListeners();
 
-  // Hide cursor when leaving window
-  document.addEventListener('mouseleave', () => {
-    dot.style.opacity = '0';
-    ring.style.opacity = '0';
-  });
-  document.addEventListener('mouseenter', () => {
-    dot.style.opacity = '1';
-    ring.style.opacity = '1';
-  });
+  // Expose refresh function for dynamic content
+  window.__refreshCursor = refreshHoverListeners;
 }

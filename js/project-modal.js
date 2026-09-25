@@ -1,177 +1,321 @@
 /**
- * AAKASH K Portfolio — Case Study Project Modal
- * Renders rich case study details and manages accessible modal state.
+ * AAKASH K Portfolio — Fullscreen Agency Case Study Modal
+ * Implements the 7-part agency architecture:
+ * 01 THE CHALLENGE
+ * 02 MY ROLE
+ * 03 THE APPROACH
+ * 04 THE WORK
+ * 05 THE RESULT
+ * 06 THE PROOF
+ * 07 NEXT PROJECT
  */
 
-const projectDetails = {
-  fashion: {
-    title: 'Fashion Model — Personal Branding',
-    category: 'Personal Branding & Visual Direction',
-    client: 'High-Fashion Editorial Talent',
-    timeline: 'Campaign & Strategy',
+import { playOpenSound } from './audio.js';
+
+export const projectData = {
+  'purple-collection': {
+    id: 'purple-collection',
+    number: '01',
+    title: 'PURPLE COLLECTION',
+    subtitle: 'High-Fashion Editorial Talent Personal Branding',
+    category: 'PERSONAL BRANDING / FASHION / SOCIAL',
+    tags: ['Personal Branding', 'Content Strategy', 'Videography', 'Video Editing', 'Instagram Management'],
+    client: 'Fashion & Editorial Model',
+    scope: 'Brand Positioning & Content Production',
     image: 'assets/project_fashion.jpg',
-    overview: 'Developed comprehensive content and personal-branding direction for an editorial fashion modeling client, elevating their visual positioning, digital presence, and perceived industry value.',
-    challenge: 'The client possessed exceptional talent and runway presence but lacked a cohesive digital narrative. Social content was inconsistent, diluting their perceived exclusivity and making talent agencies treat them as generic commercial talent rather than an editorial leader.',
-    strategy: 'Shifted positioning from casual influencer posting to curated high-fashion editorial authority. Re-architected visual style guides, lighting direction, behind-the-scenes storytelling, and targeted industry hashtags.',
-    execution: [
-      'Engineered a cohesive dark-luxury editorial mood board for all social releases.',
-      'Scripted short-form runway breakdown and aesthetic commentary videos.',
-      'Optimized Instagram bio, pinned portfolio reels, and story highlights for agency scouts.',
-      'Directed video pacing and color grading to mirror luxury magazine standards.'
-    ],
-    results: [
-      'Perceived brand value elevated from regional talent to high-fashion editorial.',
-      'Significantly increased inbound inquiries from premium fashion stylists and agencies.',
-      'Content retention and profile visit conversion grew dramatically.'
-    ]
+    url: null,
+    sections: {
+      challenge: 'The client possessed high-fashion runway presence and striking visual appeal, but had an uncurated digital presence that failed to attract agency bookings and luxury brand partnerships. Previous posts were casual selfies and inconsistent clips that diluted their perceived market positioning.',
+      role: [
+        'Content Strategy & Visual Identity Design',
+        'Script Writing & Scene Direction',
+        'High-Definition Videography & Lighting Setup',
+        'Precision Video Editing & Color Grading',
+        'Instagram Account Management & Grid Aesthetic',
+        'Competitor Research & Trend Benchmarking',
+        'Profile Bio Optimization & Conversion Funnel'
+      ],
+      approach: 'Shifted the narrative from standard influencer posting to a strictly curated high-fashion editorial persona. We planned targeted video themes focusing on runway breakdowns, styling nuances, and behind-the-scenes artistry. Each video hook was engineered to halt the scroll within 1.5 seconds with dark-luxury atmospheric lighting.',
+      work: 'Produced multiple episodic short-form reels with custom color grades mimicking Vogue and Harper’s Bazaar editorial tone. Aligned audio with trending high-retention pacing while preserving a bespoke, elevated luxury feel. Refined the client’s Instagram bio, highlights, and pinned reels into a digital agency comp-card.',
+      result: 'Accelerated audience growth to approximately 3,000 targeted followers. Multiple reels generated viral algorithmic distribution and established a recognizable high-fashion visual signature.',
+      proof: 'Verified metrics: 3,000+ targeted followers, high-performing published reels with organic reach, and tangible inbound inquiries from regional fashion stylists and commercial casting scouts.',
+    },
+    nextId: 'jayashakthi'
   },
-  textile: {
-    title: 'Southern Textile Brand — Personal Branding',
-    category: 'Personal Branding / Textile Heritage',
-    client: 'Southern Heritage Weaving Label',
-    timeline: 'Brand Elevation',
+
+  'jayashakthi': {
+    id: 'jayashakthi',
+    number: '02',
+    title: 'JAYASHAKTHI TOURS & TRAVELS',
+    subtitle: 'Modern Business Platform & Fleet Management Portal',
+    category: 'WEB / DIGITAL / BUSINESS',
+    tags: ['Web Development', 'Admin Portal', 'UI/UX Design', 'Information Architecture', 'Responsive Design'],
+    client: 'Jayashakthi Tours & Travels',
+    scope: 'End-to-End Web Platform & Fleet Architecture',
+    image: 'assets/project_jayashakthi.jpg',
+    url: 'https://www.jayashakthitoursandtravels.com/',
+    sections: {
+      challenge: 'Jayashakthi Tours & Travels operated predominantly through offline word-of-mouth and manual phone scheduling. They needed a contemporary digital presence to capture high-intent travelers, showcase vehicle fleet categories, and streamline inbound booking inquiries without friction.',
+      role: [
+        'Full Web Platform Architecture & Design',
+        'Information Architecture & Navigation Flow',
+        'Mobile-Responsive Frontend Development',
+        'Fleet Management & Route Presentation UI',
+        'Admin Portal UX for Inquiries & Bookings',
+        'Business SEO Optimization & Performance Tuning'
+      ],
+      approach: 'Designed an intuitive, customer-centric booking journey where travelers can view vehicle classes, amenities, route transparent pricing, and instant contact options in seconds. Built a dedicated back-office administrative interface structure for managing fleet availability and incoming customer bookings.',
+      work: 'Developed a high-performance, mobile-first website with clean visual hierarchy, crisp typography, and interactive fleet galleries. Engineered an admin dashboard layout that gives operators clear visibility over route requests, vehicle status, and client reservations.',
+      result: 'Delivered a production-ready, search-engine-indexed digital asset at jayashakthitoursandtravels.com. The platform provides credibility for commercial clients, corporate travel coordinators, and family tour packages.',
+      proof: 'Live published website deployed at https://www.jayashakthitoursandtravels.com/ with responsive UI, integrated route showcase, and business booking architecture.',
+    },
+    nextId: 'chinnadurai'
+  },
+
+  'chinnadurai': {
+    id: 'chinnadurai',
+    number: '03',
+    title: 'CHINNADURAI TEXTILES',
+    subtitle: 'Heritage Craftsmanship Scripting & Content Strategy',
+    category: 'CONTENT / SCRIPTWRITING / PERSONAL BRANDING',
+    tags: ['Content Strategy', 'Script Writing', 'Brand Narrative', 'Competitor Research', 'Personal Branding'],
+    client: 'Chinnadurai Textiles',
+    scope: 'Content Strategy & Scripting Frameworks',
     image: 'assets/project_textile.jpg',
-    overview: 'Worked on scripting, content creation, and personal-branding content for a southern luxury textile brand, transforming centuries of craftsmanship into compelling digital authority.',
-    challenge: 'Traditional textile craftsmanship was perceived as an older, static industry. The brand was failing to communicate the painstaking human artistry, provenance, and luxurious premium nature of their weaves to modern digital buyers.',
-    strategy: 'Positioned the brand founder as an authority in artisanal heritage and sustainable luxury. Humanized the brand through process-driven visual storytelling and cinematic micro-documentaries.',
-    execution: [
-      'Wrote engaging scripts highlighting the journey from raw thread to luxury heirloom.',
-      'Formulated personal branding reels spotlighting master artisans and founder vision.',
-      'Unified brand messaging across digital platforms with high-retention video hooks.'
-    ],
-    results: [
-      'Transformed technical manufacturing into evocative luxury storytelling.',
-      'Generated higher viewer engagement on long-form craftsmanship breakdowns.',
-      'Established the founder as a respected voice in authentic textile preservation.'
-    ]
+    url: null,
+    sections: {
+      challenge: 'Heritage textile businesses frequently struggle to articulate their traditional craftsmanship, premium fabric provenance, and family legacy to younger social audiences who find conventional retail ads monotonous.',
+      role: [
+        'Content Strategy & Thematic Narrative Planning',
+        'High-Retention Script Writing for Video Content',
+        'Captions & Social Copywriting',
+        'Competitor & Local Market Research',
+        'Brand Positioning Strategy'
+      ],
+      approach: 'Focused strictly on narrative positioning and storytelling scripts. Instead of generic promotional pitches, each script opened with a compelling hook highlighting the intricate handloom weaves, the human stories of artisans, and the sensory quality of the fabrics.',
+      work: 'Authored an episodic series of video scripts designed for short-form retention. Structured clear opening questions, paced narrative arcs, and informative hooks that conveyed cultural pride and textile expertise without marketing jargon.',
+      result: 'Delivered verified social video performance with individual videos generating 10K to 15K organic views, substantially elevating brand credibility in the region.',
+      proof: 'Documented performance evidence showing 10K–15K view milestones on published scripted content with organic audience engagement and positive regional brand sentiment.',
+    },
+    nextId: 'salemrr'
   },
-  food: {
-    title: 'Food Industry — Digital Marketing',
-    category: 'Digital Marketing & Content Strategy',
-    client: 'Artisan Gastronomy Brand',
-    timeline: 'Marketing & Audience Growth',
+
+  'salemrr': {
+    id: 'salemrr',
+    number: '04',
+    title: 'SALEMRR BIRIYANI',
+    subtitle: 'Cinematic Culinary Promotion & On-Screen Screenplay',
+    category: 'BRAND PROMOTION / VIDEO / FOOD',
+    tags: ['Cinematic Videography', 'Script Writing', 'Screenplay', 'Video Editing', 'Video VJ', 'Content Strategy'],
+    client: 'Salemrr Biriyani',
+    scope: 'Brand Promotional Reel & Sensory Production',
     image: 'assets/project_food.jpg',
-    overview: 'Executed targeted digital marketing and sensory content creation within the culinary space, driving deep audience engagement and brand recall.',
-    challenge: 'In a saturated culinary market, standard food photos failed to halt the scroll or drive reservations. The restaurant needed a visceral digital signature that conveyed flavor and culinary theater.',
-    strategy: 'Created high-stimulus, sensory-focused short-form content emphasizing preparation sound (ASMR), flame/smoke visuals, and chef philosophy to trigger immediate craving and curiosity.',
-    execution: [
-      'Produced dynamic culinary reels capturing plating precision and kitchen atmosphere.',
-      'Implemented local engagement strategies that turned food enthusiasts into repeat advocates.',
-      'Optimized content release timing around peak dining decision hours.'
-    ],
-    results: [
-      'Noticeable surge in digital engagement and audience shares across food communities.',
-      'Built a recognizable digital visual identity distinct from local competitors.',
-      'Solidified practical mastery of sensory audience psychology.'
-    ]
-  },
-  industrial: {
-    title: 'Startup & Industrial Brands',
-    category: 'Digital Marketing / Content & B2B',
-    client: 'Precision Engineering & Tech Startups',
-    timeline: 'Digital Positioning',
-    image: 'assets/project_industrial.jpg',
-    overview: 'Engineered digital content strategies across high-precision industrial engineering and early-stage startup environments to communicate complex value propositions clearly.',
-    challenge: 'Industrial B2B companies often suffer from dry, impenetrable corporate messaging that obscures their technological edge and forward-thinking engineering.',
-    strategy: 'Demystified high-tech machinery and proprietary processes using clean cinematic framing, punchy explanatory scripts, and futuristic visual branding.',
-    execution: [
-      'Crafted high-definition showcases of precision titanium and metal CNC fabrication.',
-      'Designed LinkedIn and digital media strategies targeting decision-makers and founders.',
-      'Aligned technical specifications with relatable commercial benefits.'
-    ],
-    results: [
-      'Dramatically increased engagement on professional platforms (LinkedIn).',
-      'Proven ability to translate deep industrial and startup jargon into punchy, compelling branding.'
-    ]
+    url: null,
+    sections: {
+      challenge: 'The food & culinary sector is intensely saturated with repetitive quick cuts and low-fidelity smartphone videos. Salemrr Biriyani required a distinctive, high-stimulus promotional reel that highlighted aroma, craft, and authentic flavor to drive foot traffic.',
+      role: [
+        'Complete Video Script & Screenplay Development',
+        'Cinematic High-Frame-Rate Food Videography',
+        'On-Camera Presenter / Video VJ Hosting',
+        'Sensory Video Editing & Audio Sound Design',
+        'Strategic Distribution Recommendations'
+      ],
+      approach: 'Combined energetic on-screen personality (VJ hosting) with macro culinary close-ups (steam, sizzling meat, cascading saffron rice) and rhythmic sound effects (ASMR sizzles and blade cuts) to trigger instant appetite and memorable recall.',
+      work: 'Directed and shot the promotional reel on location, capturing the intense energy of open-fire cauldrons and the signature biriyani dum-breaking ritual. Seamlessly wove on-camera narration with fast-paced visual storytelling.',
+      result: 'Created an engaging commercial video sample with strong retention rates and shareability across local food enthusiast communities.',
+      proof: 'Published primary promotional reel showcasing end-to-end creative direction, scriptwriting, on-camera presentation, and cinematic food editing.',
+    },
+    nextId: 'purple-collection'
   }
 };
 
 export function initProjectModal() {
-  const modalOverlay = document.getElementById('project-modal');
-  if (!modalOverlay) return;
+  const modal = document.getElementById('project-modal');
+  const container = modal?.querySelector('.modal-dynamic-content');
+  const closeBtn = modal?.querySelector('.modal-close-btn');
+  if (!modal || !container) return;
 
-  const closeBtn = modalOverlay.querySelector('.modal-close-btn');
-  const modalContent = modalOverlay.querySelector('.modal-dynamic-content');
+  function renderProject(projectId) {
+    const p = projectData[projectId];
+    if (!p) return;
 
-  function openModal(projectId) {
-    const data = projectDetails[projectId];
-    if (!data) return;
+    const nextProject = projectData[p.nextId];
 
-    modalContent.innerHTML = `
-      <div class="modal-image-wrapper">
-        <img src="${data.image}" alt="${data.title}" loading="lazy" />
-      </div>
-      
-      <div class="modal-header-meta">
-        <span class="section-label">${data.category}</span>
-        <h3 class="section-heading" style="font-size: clamp(1.6rem, 3.5vw, 2.5rem); margin-bottom: 1.5rem;">${data.title}</h3>
-      </div>
+    container.innerHTML = `
+      <article class="case-study-view">
+        <!-- Case Study Header Banner -->
+        <header class="case-study-hero">
+          <div class="case-study-meta-top">
+            <span class="case-study-num">${p.number} // CASE STUDY</span>
+            <span class="case-study-category">${p.category}</span>
+          </div>
 
-      <div class="modal-meta-grid">
-        <div class="modal-meta-item">
-          <div class="meta-label">Client Type</div>
-          <div class="meta-value">${data.client}</div>
+          <h2 class="case-study-title">${p.title}</h2>
+          <p class="case-study-subtitle">${p.subtitle}</p>
+
+          <div class="case-study-tags">
+            ${p.tags.map(t => `<span class="case-tag">${t}</span>`).join('')}
+          </div>
+
+          <div class="case-study-media-wrapper">
+            <img src="${p.image}" alt="${p.title}" class="case-study-media-img" />
+            <div class="case-study-media-gradient"></div>
+            ${p.url ? `
+              <a href="${p.url}" target="_blank" rel="noopener noreferrer" class="case-study-live-btn btn btn-primary">
+                <span>VISIT LIVE PLATFORM ↗</span>
+              </a>
+            ` : ''}
+          </div>
+        </header>
+
+        <!-- Project Meta Strip -->
+        <div class="case-meta-strip">
+          <div class="meta-strip-col">
+            <span class="meta-strip-label">CLIENT</span>
+            <span class="meta-strip-val">${p.client}</span>
+          </div>
+          <div class="meta-strip-col">
+            <span class="meta-strip-label">SCOPE</span>
+            <span class="meta-strip-val">${p.scope}</span>
+          </div>
+          <div class="meta-strip-col">
+            <span class="meta-strip-label">STATUS</span>
+            <span class="meta-strip-val text-accent">DELIVERED & VERIFIED</span>
+          </div>
         </div>
-        <div class="modal-meta-item">
-          <div class="meta-label">Focus Area</div>
-          <div class="meta-value">${data.category.split('/')[0].trim()}</div>
+
+        <!-- 7-Part Agency Structure -->
+        <div class="case-study-body">
+          <!-- 01 The Challenge -->
+          <section class="case-block">
+            <div class="case-block-header">
+              <span class="block-step-num">01</span>
+              <h3 class="block-step-title">THE CHALLENGE</h3>
+            </div>
+            <p class="block-step-desc">${p.sections.challenge}</p>
+          </section>
+
+          <!-- 02 My Role -->
+          <section class="case-block">
+            <div class="case-block-header">
+              <span class="block-step-num">02</span>
+              <h3 class="block-step-title">MY ROLE & DELIVERABLES</h3>
+            </div>
+            <ul class="case-role-list">
+              ${p.sections.role.map(r => `
+                <li>
+                  <span class="role-bullet">⚡</span>
+                  <span>${r}</span>
+                </li>
+              `).join('')}
+            </ul>
+          </section>
+
+          <!-- 03 The Approach -->
+          <section class="case-block">
+            <div class="case-block-header">
+              <span class="block-step-num">03</span>
+              <h3 class="block-step-title">THE STRATEGIC APPROACH</h3>
+            </div>
+            <p class="block-step-desc">${p.sections.approach}</p>
+          </section>
+
+          <!-- 04 The Work -->
+          <section class="case-block">
+            <div class="case-block-header">
+              <span class="block-step-num">04</span>
+              <h3 class="block-step-title">THE EXECUTION & WORK</h3>
+            </div>
+            <p class="block-step-desc">${p.sections.work}</p>
+          </section>
+
+          <!-- 05 The Result -->
+          <section class="case-block">
+            <div class="case-block-header">
+              <span class="block-step-num">05</span>
+              <h3 class="block-step-title">THE RESULT</h3>
+            </div>
+            <div class="case-result-box">
+              <p class="block-step-desc">${p.sections.result}</p>
+            </div>
+          </section>
+
+          <!-- 06 The Proof -->
+          <section class="case-block">
+            <div class="case-block-header">
+              <span class="block-step-num">06</span>
+              <h3 class="block-step-title">VERIFIED PROOF & SIGNALS</h3>
+            </div>
+            <div class="proof-verified-badge">
+              <span class="proof-dot"></span>
+              <span>VERIFIED REAL-WORLD EVIDENCE</span>
+            </div>
+            <p class="block-step-desc" style="margin-top: 0.75rem;">${p.sections.proof}</p>
+          </section>
+
+          <!-- 07 Next Project -->
+          <footer class="case-study-next-footer">
+            <span class="block-step-num">07</span>
+            <div class="next-project-teaser">
+              <span class="next-label">NEXT CASE STUDY</span>
+              <h4 class="next-title">${nextProject.title}</h4>
+              <p class="next-desc">${nextProject.subtitle}</p>
+              <button type="button" class="btn btn-secondary btn-next-case" data-next-id="${nextProject.id}">
+                <span>EXPLORE ${nextProject.title} →</span>
+              </button>
+            </div>
+          </footer>
         </div>
-        <div class="modal-meta-item">
-          <div class="meta-label">Scope</div>
-          <div class="meta-value">${data.timeline}</div>
-        </div>
-      </div>
-
-      <div class="modal-body">
-        <h4>Overview</h4>
-        <p>${data.overview}</p>
-
-        <h4>The Challenge</h4>
-        <p>${data.challenge}</p>
-
-        <h4>Strategic Angle</h4>
-        <p>${data.strategy}</p>
-
-        <h4>Execution & Delivery</h4>
-        <ul class="modal-bullets">
-          ${data.execution.map(item => `<li>${item}</li>`).join('')}
-        </ul>
-
-        <h4>Value Shift & Impact</h4>
-        <ul class="modal-bullets">
-          ${data.results.map(item => `<li>${item}</li>`).join('')}
-        </ul>
-      </div>
+      </article>
     `;
 
-    modalOverlay.classList.add('active');
+    // Hook up Next Project button
+    const nextBtn = container.querySelector('.btn-next-case');
+    nextBtn?.addEventListener('click', () => {
+      const nextId = nextBtn.getAttribute('data-next-id');
+      if (nextId) {
+        modal.scrollTo({ top: 0, behavior: 'smooth' });
+        setTimeout(() => renderProject(nextId), 150);
+      }
+    });
+
+    if (window.__refreshCursor) window.__refreshCursor();
+  }
+
+  function openModal(projectId) {
+    if (!projectData[projectId]) return;
+    renderProject(projectId);
+    modal.classList.add('active');
+    modal.setAttribute('aria-hidden', 'false');
     document.body.style.overflow = 'hidden';
+    modal.scrollTo(0, 0);
+    playOpenSound();
   }
 
   function closeModal() {
-    modalOverlay.classList.remove('active');
+    modal.classList.remove('active');
+    modal.setAttribute('aria-hidden', 'true');
     document.body.style.overflow = '';
   }
 
-  // Card click triggers
-  const workCards = document.querySelectorAll('.work-card');
-  workCards.forEach((card) => {
+  // Work card triggers
+  document.querySelectorAll('[data-project]').forEach((card) => {
     card.addEventListener('click', () => {
-      const projectId = card.getAttribute('data-project');
-      if (projectId) openModal(projectId);
+      const id = card.getAttribute('data-project');
+      if (id) openModal(id);
     });
   });
 
   closeBtn?.addEventListener('click', closeModal);
 
   // Close on backdrop click
-  modalOverlay.addEventListener('click', (e) => {
-    if (e.target === modalOverlay) closeModal();
+  modal.addEventListener('click', (e) => {
+    if (e.target === modal) closeModal();
   });
 
-  // Close on ESC key
+  // Close on ESC
   window.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && modalOverlay.classList.contains('active')) {
+    if (e.key === 'Escape' && modal.classList.contains('active')) {
       closeModal();
     }
   });
