@@ -316,18 +316,64 @@
   z-index: 2;
 }
 
-/* Soft warm directional light behind the subject */
-.character-scene-backdrop {
+/* ==========================================================================
+   Hero Cinematic Studio Lighting System
+   - Soft warm radial light behind upper body/head
+   - Subtle directional key light from one side
+   - Faint ambient gradients in deep charcoal black
+   - Subtle rim-light feeling around character silhouette
+   ========================================================================== */
+.character-scene-backdrop,
+#hero-radial-light {
   position: absolute;
-  bottom: 15%;
+  bottom: 18%;
   left: 50%;
   transform: translateX(-50%);
-  width: clamp(420px, 50vw, 750px);
-  height: clamp(420px, 50vw, 750px);
-  background: radial-gradient(circle, rgba(216, 195, 165, 0.10) 0%, rgba(18, 18, 22, 0.25) 55%, transparent 75%);
-  filter: blur(85px);
+  width: clamp(480px, 55vw, 820px);
+  height: clamp(480px, 55vw, 820px);
+  background: radial-gradient(circle, rgba(216, 195, 165, 0.16) 0%, rgba(185, 160, 125, 0.08) 35%, rgba(16, 16, 20, 0.28) 60%, transparent 75%);
+  filter: blur(80px);
   pointer-events: none;
   z-index: 0;
+  will-change: transform;
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.character-directional-light {
+  position: absolute;
+  top: -8%;
+  left: 8%;
+  width: clamp(380px, 45vw, 650px);
+  height: clamp(450px, 55vh, 750px);
+  background: radial-gradient(ellipse at 25% 25%, rgba(255, 245, 230, 0.07) 0%, rgba(216, 195, 165, 0.03) 45%, transparent 68%);
+  filter: blur(70px);
+  pointer-events: none;
+  z-index: 0;
+  will-change: transform;
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.character-ambient-gradient {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 65% 75%, rgba(18, 18, 24, 0.85) 0%, transparent 72%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.character-rim-light {
+  position: absolute;
+  bottom: 8%;
+  left: 48%;
+  transform: translateX(-50%);
+  width: clamp(340px, 38vw, 540px);
+  height: clamp(480px, 58vh, 720px);
+  background: radial-gradient(ellipse at 50% 60%, rgba(216, 195, 165, 0.09) 0%, rgba(216, 195, 165, 0.02) 48%, transparent 65%);
+  filter: blur(45px);
+  pointer-events: none;
+  z-index: 0;
+  will-change: transform;
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .character-scene-stage {
@@ -358,15 +404,28 @@
   transform: translate3d(0, 0, 0);
   pointer-events: none;
   user-select: none;
+  transition: opacity 0.5s ease;
 }
 
-/* Future WebGL 3D GLB / React Three Fiber Canvas Mount */
+/* Genuine WebGL 3D Canvas Mount */
 .character-3d-mount {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
   z-index: 2;
+  pointer-events: none;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.character-3d-mount canvas {
+  width: 100% !important;
+  height: 100% !important;
+  display: block;
   pointer-events: none;
 }
 
@@ -2046,3 +2105,727 @@ textarea.form-input-clean {
     text-align: center;
   }
 }
+
+/* ==========================================================================
+   21. Global Atmospheric Overlays & Micro-Interaction Controls
+   ========================================================================== */
+.scroll-progress-line {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 2px;
+  width: 0%;
+  background: linear-gradient(90deg, var(--accent-champagne) 0%, #ffffff 100%);
+  z-index: 10000;
+  pointer-events: none;
+  transition: width 0.08s ease-out;
+}
+
+.atmospheric-noise {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9990;
+  opacity: 0.022;
+  background-image: radial-gradient(rgba(255, 255, 255, 0.9) 1px, transparent 1px);
+  background-size: 3px 3px;
+  mix-blend-mode: overlay;
+}
+
+.cursor-context-badge {
+  position: fixed;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  z-index: 9999;
+  transform: translate3d(-50%, -50%, 0) scale(0.6);
+  opacity: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.35rem 0.75rem;
+  background: rgba(10, 10, 12, 0.88);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(216, 195, 165, 0.45);
+  border-radius: 999px;
+  color: var(--accent-champagne);
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.2s ease;
+  will-change: transform, opacity;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+}
+
+.cursor-context-badge.visible {
+  transform: translate3d(-50%, -50%, 0) scale(1);
+  opacity: 1;
+}
+
+.cursor-badge-arrow {
+  font-size: 0.75rem;
+  line-height: 1;
+}
+
+/* ==========================================================================
+   22. Digi Marketrix: Cinematic Interactive Split Case Study
+   ========================================================================== */
+.project-cinematic-split {
+  display: grid;
+  grid-template-columns: 0.95fr 1.05fr;
+  gap: clamp(3rem, 6vw, 6.5rem);
+  align-items: start;
+  position: relative;
+  margin-top: 2.5rem;
+}
+
+.project-sticky-nav-col {
+  position: sticky;
+  top: calc(var(--header-height) + 2rem);
+  display: flex;
+  flex-direction: column;
+}
+
+.project-chapter-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  margin-block: 2.25rem 2rem;
+  border-left: 1px solid var(--border-subtle);
+  padding-left: 1.5rem;
+}
+
+.chapter-nav-item {
+  display: flex;
+  align-items: baseline;
+  gap: 0.85rem;
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  padding-block: 0.35rem;
+  transition: color 0.25s ease, transform 0.25s ease;
+  text-decoration: none;
+}
+
+.chapter-nav-item .chapter-num {
+  font-size: 0.72rem;
+  color: var(--accent-champagne);
+  font-weight: 700;
+}
+
+.chapter-nav-item:hover,
+.chapter-nav-item.active {
+  color: #ffffff;
+  transform: translateX(4px);
+}
+
+.chapter-nav-item.active .chapter-num {
+  color: #ffffff;
+}
+
+.project-scrolling-content-col {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(2.5rem, 5vw, 4rem);
+}
+
+.case-chapter-card {
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-xs);
+  padding: clamp(2rem, 3.5vw, 3.25rem);
+  transition: border-color 0.3s ease, transform 0.3s ease;
+}
+
+.case-chapter-card:hover {
+  border-color: rgba(255, 255, 255, 0.22);
+}
+
+.chapter-header-badge {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  color: var(--accent-champagne);
+  text-transform: uppercase;
+  margin-bottom: 0.75rem;
+}
+
+.chapter-card-heading {
+  font-family: var(--font-sans);
+  font-size: clamp(1.4rem, 2.5vw, 2rem);
+  font-weight: 700;
+  color: #ffffff;
+  line-height: 1.18;
+  margin-bottom: 1.25rem;
+  letter-spacing: -0.01em;
+}
+
+.case-quote-callout {
+  margin-top: 1.5rem;
+  padding: 1.25rem 1.5rem;
+  border-left: 2px solid var(--accent-champagne);
+  background: rgba(216, 195, 165, 0.04);
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 1.05rem;
+  line-height: 1.55;
+  color: #e8e4dc;
+}
+
+/* ==========================================================================
+   23. Personal Branding: Interactive Visual Timeline
+   ========================================================================== */
+.branding-timeline-system {
+  display: flex;
+  flex-direction: column;
+  margin-top: 3.5rem;
+  position: relative;
+}
+
+.branding-timeline-system::before {
+  content: '';
+  position: absolute;
+  top: 2.5rem;
+  bottom: 2.5rem;
+  left: 1.75rem;
+  width: 1px;
+  background: linear-gradient(to bottom, var(--accent-champagne), var(--border-subtle) 85%, transparent);
+  pointer-events: none;
+}
+
+.timeline-stage-row {
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  gap: clamp(2rem, 4vw, 4rem);
+  padding-block: 2.25rem;
+  border-bottom: 1px solid var(--border-subtle);
+  align-items: start;
+  transition: background-color 0.25s ease;
+}
+
+.timeline-stage-row:hover {
+  background-color: rgba(255, 255, 255, 0.015);
+}
+
+.timeline-stage-marker {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  position: relative;
+  z-index: 2;
+}
+
+.stage-step-num {
+  width: 3.5rem;
+  height: 3.5rem;
+  border-radius: 50%;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-medium);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--accent-champagne);
+  flex-shrink: 0;
+  box-shadow: 0 0 0 6px var(--bg-primary);
+  transition: border-color 0.25s ease, color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.timeline-stage-row:hover .stage-step-num {
+  border-color: var(--accent-champagne);
+  box-shadow: 0 0 0 6px var(--bg-primary), 0 0 16px rgba(216, 195, 165, 0.25);
+}
+
+.stage-step-name {
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  color: #ffffff;
+  text-transform: uppercase;
+}
+
+.stage-content-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #ffffff;
+  margin-bottom: 0.65rem;
+}
+
+.stage-content-text {
+  font-size: 0.95rem;
+  line-height: 1.65;
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+/* ==========================================================================
+   24. Motivational Speaking: Editorial Event Atmosphere & Horizontal Track
+   ========================================================================== */
+.speaking-event-atmosphere {
+  position: relative;
+  overflow: hidden;
+  background-color: #0b0b0e;
+}
+
+.speaking-spotlight-beam {
+  position: absolute;
+  top: -100px;
+  right: 12%;
+  width: clamp(450px, 50vw, 750px);
+  height: 800px;
+  background: radial-gradient(ellipse at 50% 0%, rgba(216, 195, 165, 0.12) 0%, rgba(216, 195, 165, 0.03) 42%, transparent 75%);
+  filter: blur(80px);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.speaking-statement-huge {
+  font-family: var(--font-sans);
+  font-size: clamp(3rem, 7.5vw, 6.2rem);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 0.92;
+  color: #ffffff;
+  margin-bottom: 1.75rem;
+  text-transform: uppercase;
+}
+
+.speaking-horizontal-viewport {
+  position: relative;
+  width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  margin-top: 3.5rem;
+  padding-bottom: 1.5rem;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+
+.speaking-horizontal-viewport::-webkit-scrollbar {
+  display: none;
+}
+
+.speaking-horizontal-track {
+  display: flex;
+  gap: 1.75rem;
+  width: max-content;
+  padding-right: 2rem;
+}
+
+.speaking-track-card {
+  width: clamp(340px, 28vw, 440px);
+  min-height: 380px;
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-xs);
+  padding: 2.25rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+  flex-shrink: 0;
+  cursor: pointer;
+}
+
+.speaking-track-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(255, 255, 255, 0.28);
+  box-shadow: 0 14px 40px rgba(0, 0, 0, 0.4);
+}
+
+.speaking-track-card.highlight-border {
+  border-color: rgba(216, 195, 165, 0.35);
+}
+
+.speaking-card-title {
+  font-family: var(--font-sans);
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: #ffffff;
+  line-height: 1.25;
+  margin-block: 0.85rem 0.85rem;
+  letter-spacing: -0.01em;
+}
+
+.speaking-card-desc {
+  font-size: 0.92rem;
+  line-height: 1.6;
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+/* ==========================================================================
+   25. Mr Aku Vlogs: Filmmaking & Director's Monitor Layout
+   ========================================================================== */
+.mraku-filmmaking-layout {
+  display: grid;
+  grid-template-columns: 0.9fr 1.1fr;
+  gap: clamp(3rem, 6vw, 6rem);
+  align-items: center;
+  margin-top: 3.5rem;
+}
+
+.mraku-headline-large {
+  font-family: var(--font-sans);
+  font-size: clamp(3rem, 7vw, 5.8rem);
+  font-weight: 800;
+  line-height: 0.92;
+  letter-spacing: -0.03em;
+  color: #ffffff;
+  margin-bottom: 2rem;
+}
+
+.mraku-triad-statement {
+  font-family: var(--font-mono);
+  font-size: clamp(1.2rem, 2.2vw, 1.85rem);
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  line-height: 1.35;
+  color: var(--accent-champagne);
+  text-transform: uppercase;
+}
+
+.filmmaking-monitor-frame {
+  position: relative;
+  background: #070709;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: var(--radius-xs);
+  overflow: hidden;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.5);
+  cursor: pointer;
+  transition: border-color 0.3s ease;
+}
+
+.filmmaking-monitor-frame:hover {
+  border-color: var(--accent-champagne);
+}
+
+.filmmaking-monitor-frame:hover .monitor-image-asset {
+  transform: scale(1.03);
+}
+
+.monitor-top-meta,
+.monitor-bottom-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.65rem 1rem;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+  color: var(--text-muted);
+  background: rgba(10, 10, 12, 0.9);
+}
+
+.monitor-rec-dot {
+  color: #e53e3e;
+  font-weight: 700;
+  animation: pulseRec 1.8s infinite;
+}
+
+@keyframes pulseRec {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.25; }
+}
+
+.monitor-viewport {
+  position: relative;
+  overflow: hidden;
+  aspect-ratio: 16 / 10;
+}
+
+.monitor-image-asset {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  display: block;
+}
+
+/* ==========================================================================
+   26. Dedicated Proof Vault: Masonry Layout
+   ========================================================================== */
+.proof-masonry-layout {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.75rem;
+  align-items: start;
+}
+
+.proof-card-wide {
+  grid-column: span 2;
+}
+
+.proof-card-tall {
+  grid-row: span 2;
+}
+
+/* ==========================================================================
+   27. Interactive Career Journey System
+   ========================================================================== */
+.interactive-journey-system {
+  margin-top: 4.5rem;
+  padding-top: 3.5rem;
+  border-top: 1px solid var(--border-subtle);
+}
+
+.journey-header-row {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  margin-bottom: 2.5rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.journey-instruction-pill {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.14em;
+  color: var(--accent-champagne);
+  padding: 0.4rem 0.85rem;
+  border: 1px solid rgba(216, 195, 165, 0.3);
+  border-radius: 999px;
+  background: rgba(216, 195, 165, 0.04);
+}
+
+.journey-split-interface {
+  display: grid;
+  grid-template-columns: 1.15fr 0.85fr;
+  gap: clamp(2.5rem, 5vw, 5rem);
+  align-items: start;
+}
+
+.journey-timeline-track {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  border-left: 2px solid var(--border-subtle);
+  padding-left: 2rem;
+  gap: 1.75rem;
+}
+
+.journey-node {
+  position: relative;
+  cursor: pointer;
+  padding: 1.25rem 1.5rem;
+  border-radius: var(--radius-xs);
+  background: transparent;
+  border: 1px solid transparent;
+  transition: all 0.25s ease;
+}
+
+.journey-node:hover {
+  background: var(--bg-surface);
+  border-color: var(--border-subtle);
+}
+
+.journey-node.active {
+  background: var(--bg-surface);
+  border-color: rgba(216, 195, 165, 0.45);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.35);
+}
+
+.journey-node .node-indicator {
+  position: absolute;
+  left: calc(-2rem - 6px);
+  top: 1.85rem;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--border-medium);
+  border: 2px solid var(--bg-primary);
+  transition: all 0.25s ease;
+}
+
+.journey-node.active .node-indicator {
+  background: var(--accent-champagne);
+  box-shadow: 0 0 12px var(--accent-champagne);
+  transform: scale(1.3);
+}
+
+.node-year {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--accent-champagne);
+  letter-spacing: 0.12em;
+}
+
+.node-title {
+  font-family: var(--font-sans);
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #ffffff;
+  margin-block: 0.25rem;
+}
+
+.node-entity {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.journey-context-panel {
+  position: sticky;
+  top: calc(var(--header-height) + 2rem);
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-xs);
+  padding: clamp(2rem, 3.5vw, 2.75rem);
+  transition: all 0.3s ease;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
+}
+
+.context-panel-year {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--accent-champagne);
+  letter-spacing: 0.16em;
+}
+
+.context-panel-role {
+  font-family: var(--font-sans);
+  font-size: 1.65rem;
+  font-weight: 700;
+  color: #ffffff;
+  margin-block: 0.4rem 0.25rem;
+}
+
+.context-panel-company {
+  font-size: 1rem;
+  color: var(--text-secondary);
+  margin-bottom: 1.75rem;
+}
+
+/* ==========================================================================
+   28. Consistent Section-Based Lighting Depth Throughout
+   ========================================================================== */
+section[data-theme="digi"] {
+  position: relative;
+  background: radial-gradient(circle at 10% 20%, rgba(216, 195, 165, 0.05) 0%, transparent 60%), #08080a;
+}
+
+section[data-theme="branding"] {
+  position: relative;
+  background: radial-gradient(circle at 85% 30%, rgba(216, 195, 165, 0.04) 0%, transparent 65%), #0c0c0f;
+}
+
+section[data-theme="speaking"] {
+  position: relative;
+  background: radial-gradient(circle at 50% 0%, rgba(216, 195, 165, 0.06) 0%, transparent 70%), #09090c;
+}
+
+section[data-theme="vlogs"] {
+  position: relative;
+  background: radial-gradient(circle at 80% 80%, rgba(216, 195, 165, 0.04) 0%, transparent 65%), #08080a;
+}
+
+section[data-theme="proof"] {
+  position: relative;
+  background: radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.02) 0%, transparent 75%), #0c0c0f;
+}
+
+section[data-theme="about"] {
+  position: relative;
+  background: radial-gradient(circle at 20% 80%, rgba(216, 195, 165, 0.04) 0%, transparent 65%), #08080a;
+}
+
+/* ==========================================================================
+   29. Mobile & Tablet Responsive Choreography
+   ========================================================================== */
+@media (max-width: 960px) {
+  .project-cinematic-split {
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+  }
+
+  .project-sticky-nav-col {
+    position: static;
+  }
+
+  .project-chapter-nav {
+    display: none;
+  }
+
+  .timeline-stage-row {
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+  }
+
+  .branding-timeline-system::before {
+    display: none;
+  }
+
+  .speaking-horizontal-viewport {
+    overflow-x: auto;
+  }
+
+  .speaking-track-card {
+    width: 310px;
+    min-height: 340px;
+    padding: 1.75rem;
+  }
+
+  .mraku-filmmaking-layout {
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+  }
+
+  .proof-masonry-layout {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .proof-card-wide {
+    grid-column: span 2;
+  }
+
+  .proof-card-tall {
+    grid-row: span 1;
+  }
+
+  .journey-split-interface {
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+  }
+
+  .journey-context-panel {
+    position: static;
+  }
+
+  .cursor-context-badge {
+    display: none !important;
+  }
+}
+
+@media (max-width: 640px) {
+  .proof-masonry-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .proof-card-wide {
+    grid-column: span 1;
+  }
+
+  .speaking-horizontal-track {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .speaking-track-card {
+    width: 100%;
+    min-height: auto;
+  }
+}
+

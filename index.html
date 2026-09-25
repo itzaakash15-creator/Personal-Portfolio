@@ -26,6 +26,10 @@
   <!-- Animation Engine (GSAP + ScrollTrigger for restrained scroll storytelling) -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+
+  <!-- Three.js & GLTFLoader for Genuine 3D Character Architecture -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
 </head>
 <body>
 
@@ -160,8 +164,14 @@
 
           <!-- Right: Reusable CharacterScene Component (Architecture for 3D GLB / Portrait Fallback) -->
           <div class="character-scene" id="character-scene">
-            <!-- Soft warm directional light behind the subject -->
-            <div class="character-scene-backdrop" aria-hidden="true"></div>
+            <!-- 1. Soft warm radial light behind upper body/head -->
+            <div class="character-scene-backdrop" id="hero-radial-light" aria-hidden="true"></div>
+            <!-- 2. Subtle directional light entering from side -->
+            <div class="character-directional-light" aria-hidden="true"></div>
+            <!-- 3. Faint ambient gradient in background -->
+            <div class="character-ambient-gradient" aria-hidden="true"></div>
+            <!-- 4. Subtle rim-light feeling behind character silhouette -->
+            <div class="character-rim-light" aria-hidden="true"></div>
             
             <div class="character-scene-stage" id="character-stage">
               <!-- Authentic Editorial Portrait with pointer parallax and scroll kinematics -->
@@ -185,195 +195,291 @@
     <div id="work"></div>
 
     <!-- ======================================================================
-         5. FIRST FEATURED CASE STUDY: DIGI MARKETRIX
+         5. FIRST FEATURED CASE STUDY: DIGI MARKETRIX (Interactive Cinematic Journey)
          ====================================================================== -->
-    <section class="featured-project-section" id="experience">
-      <div class="container">
-        <div class="project-editorial-header">
-          <div>
-            <span class="project-category-tag">SELECTED WORK / 01</span>
-            <div class="project-dates-loc">MAY 2026 — JULY 2026 // TUTICORIN</div>
-          </div>
-          <div>
-            <span class="label-mono accent">DIGITAL MARKETING &nbsp;·&nbsp; STRATEGY &nbsp;·&nbsp; BRAND GROWTH</span>
-          </div>
-        </div>
+    <section class="featured-project-section" id="experience" data-theme="digi">
+      <div class="container project-cinematic-split">
+        
+        <!-- Left: Sticky Project Navigation & Identification -->
+        <div class="project-sticky-nav-col">
+          <div class="sticky-nav-inner">
+            <span class="project-category-tag">SELECTED WORK // 01</span>
+            
+            <h2 class="project-title-large">
+              DIGI<br />MARKETRIX.
+            </h2>
 
-        <h2 class="project-title-large">DIGI MARKETRIX.</h2>
-
-        <p class="project-lead-desc">
-          Full-time agency internship working across digital marketing, personal branding, content research, scripting, videography, on-location client shoots, and editing for real commercial businesses.
-        </p>
-
-        <!-- Responsibilities Pills -->
-        <div class="role-pills-row">
-          <span class="editorial-role-tag">SCRIPTING</span>
-          <span class="editorial-role-tag">CONTENT RESEARCH</span>
-          <span class="editorial-role-tag">VIDEOGRAPHY</span>
-          <span class="editorial-role-tag">CLIENT SHOOTS</span>
-          <span class="editorial-role-tag">VIDEO EDITING</span>
-          <span class="editorial-role-tag">PERSONAL BRANDING</span>
-          <span class="editorial-role-tag">CONTENT PLANNING</span>
-          <span class="editorial-role-tag">CLIENT WORK</span>
-        </div>
-
-        <!-- Case Study Breakdown Chapters -->
-        <div class="case-breakdown-grid">
-          <div class="case-breakdown-block">
-            <span class="case-breakdown-label">CONTEXT &amp; OPPORTUNITY</span>
-            <h4 class="case-breakdown-title">Commercial Agency Environment</h4>
-            <p class="case-breakdown-text">
-              Fast-growing regional businesses needed cinematic video campaigns, structured personal branding, and high-retention content to convert social viewers into paying clients.
+            <p class="project-lead-desc">
+              Full-time agency internship working across digital marketing, personal branding, content research, scripting, videography, on-location client shoots, and editing for real commercial businesses.
             </p>
+
+            <div class="project-dates-loc">
+              MAY 2026 — JULY 2026 // TUTICORIN
+            </div>
+
+            <!-- Interactive Chapter Navigation Rail -->
+            <nav class="project-chapter-nav" aria-label="Digi Marketrix Chapters">
+              <a href="#digi-opportunity" class="chapter-nav-item active" data-chapter="opportunity">
+                <span class="chapter-num">01</span>
+                <span class="chapter-name">THE OPPORTUNITY</span>
+              </a>
+              <a href="#digi-strategy" class="chapter-nav-item" data-chapter="strategy">
+                <span class="chapter-num">02</span>
+                <span class="chapter-name">STRATEGY &amp; SCOPE</span>
+              </a>
+              <a href="#digi-execution" class="chapter-nav-item" data-chapter="execution">
+                <span class="chapter-num">03</span>
+                <span class="chapter-name">EXECUTION &amp; MEDIA</span>
+              </a>
+              <a href="#digi-results" class="chapter-nav-item" data-chapter="results">
+                <span class="chapter-num">04</span>
+                <span class="chapter-name">MEASURABLE RESULTS</span>
+              </a>
+              <a href="#digi-proof" class="chapter-nav-item" data-chapter="proof">
+                <span class="chapter-num">05</span>
+                <span class="chapter-name">VERIFIED PROOF</span>
+              </a>
+            </nav>
+
+            <div class="sticky-action-row">
+              <a href="experience.html" class="btn-editorial">
+                <span>View Full Chapter →</span>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right: Scrolling Evidence Chapters -->
+        <div class="project-scrolling-content-col">
+          
+          <!-- Chapter 01: The Opportunity -->
+          <div class="case-chapter-card" id="digi-opportunity">
+            <span class="chapter-header-badge">01 // THE OPPORTUNITY</span>
+            <h3 class="chapter-card-heading">Commercial Agency Environment</h3>
+            <p class="body-standard">
+              Fast-growing regional businesses needed cinematic video campaigns, structured personal branding, and high-retention content to convert social viewers into paying clients. The gap lay between generic static ads and genuine founder-led visual storytelling.
+            </p>
+            <div class="case-quote-callout">
+              “Moving from passive marketing to hook-driven, authentic founder presence increased retention across all target client sectors.”
+            </div>
           </div>
 
-          <div class="case-breakdown-block">
-            <span class="case-breakdown-label">STRATEGY &amp; ROLE</span>
-            <h4 class="case-breakdown-title">Hook-Driven Production</h4>
-            <p class="case-breakdown-text">
+          <!-- Chapter 02: Strategy & Role -->
+          <div class="case-chapter-card" id="digi-strategy">
+            <span class="chapter-header-badge">02 // STRATEGY &amp; SCOPE</span>
+            <h3 class="chapter-card-heading">Hook-Driven Production Architecture</h3>
+            <p class="body-standard">
               Shifted from generic static ads to authentic founder-led storytelling. Handled end-to-end client pre-production, on-location cinematography, and rapid turnaround editing.
             </p>
+            <div class="role-pills-row" style="margin-top: 1.25rem;">
+              <span class="editorial-role-tag">SCRIPTING</span>
+              <span class="editorial-role-tag">CONTENT RESEARCH</span>
+              <span class="editorial-role-tag">VIDEOGRAPHY</span>
+              <span class="editorial-role-tag">CLIENT SHOOTS</span>
+              <span class="editorial-role-tag">VIDEO EDITING</span>
+              <span class="editorial-role-tag">PERSONAL BRANDING</span>
+              <span class="editorial-role-tag">CONTENT PLANNING</span>
+              <span class="editorial-role-tag">CLIENT WORK</span>
+            </div>
           </div>
 
-          <div class="case-breakdown-block">
-            <span class="case-breakdown-label">EXECUTION &amp; OUTCOME</span>
-            <h4 class="case-breakdown-title">Proven Campaign Deliverables</h4>
-            <p class="case-breakdown-text">
-              Delivered multiple commercial video series, managed client expectations under strict deadlines, and mastered agency-scale team communication and client pitching.
+          <!-- Chapter 03: Execution & Production Visuals -->
+          <div class="case-chapter-card" id="digi-execution">
+            <span class="chapter-header-badge">03 // EXECUTION &amp; MEDIA</span>
+            <h3 class="chapter-card-heading">Cinematography &amp; On-Location Sets</h3>
+            <p class="body-standard" style="margin-bottom: 1.5rem;">
+              Managed on-location camera setups, stabilized gimbal tracking, professional audio capture, and fast-paced editing sequences tailored for Instagram Reels and client web campaigns.
             </p>
+            
+            <div class="project-immersive-media" data-cursor="VIEW" data-proof="digi-shoots">
+              <img src="assets/experience_digi_marketrix.jpg" alt="Digi Marketrix Commercial Production &amp; Client Shoots" loading="lazy" />
+              <div class="media-hover-overlay">
+                <span class="media-overlay-pill">INSPECT PRODUCTION STILLS ↗</span>
+              </div>
+            </div>
           </div>
-        </div>
 
-        <!-- Large Editorial Visual -->
-        <div class="project-immersive-media">
-          <img src="assets/experience_digi_marketrix.jpg" alt="Digi Marketrix Commercial Production &amp; Client Shoots" loading="lazy" />
-        </div>
-
-        <!-- Proof Strip (Clicking opens Lightbox) -->
-        <div class="proof-strip-container">
-          <span class="proof-strip-label">VERIFIED PROOF &amp; EVIDENCE (CLICK TO INSPECT)</span>
-          <div class="proof-pills-row">
-            <button type="button" class="proof-pill-btn" data-proof="digi-cert">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="16" rx="2"></rect><line x1="8" y1="2" x2="8" y2="6"></line><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="10" x2="16" y2="10"></line></svg>
-              <span>INTERNSHIP CERTIFICATE</span>
-            </button>
-            <button type="button" class="proof-pill-btn" data-proof="digi-shoots">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 7l-7 5 7 5V7z"></path><rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect></svg>
-              <span>CLIENT SHOOTS</span>
-            </button>
-            <button type="button" class="proof-pill-btn" data-proof="digi-shoots">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polygon points="10 8 16 12 10 16 10 8"></polygon></svg>
-              <span>WORKING MEDIA</span>
-            </button>
-            <button type="button" class="proof-pill-btn" data-proof="digi-shoots">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
-              <span>PUBLISHED CONTENT</span>
-            </button>
+          <!-- Chapter 04: Results & Deliverables -->
+          <div class="case-chapter-card" id="digi-results">
+            <span class="chapter-header-badge">04 // MEASURABLE OUTCOMES</span>
+            <h3 class="chapter-card-heading">Proven Commercial Deliverables</h3>
+            
+            <div class="verified-metrics-strip" style="margin-top: 1.5rem;">
+              <div class="metric-strip-item">
+                <span class="metric-huge-number">100%</span>
+                <span class="metric-legend-mono">DEADLINE ADHERENCE</span>
+              </div>
+              <div class="metric-strip-item">
+                <span class="metric-huge-number">MULTI</span>
+                <span class="metric-legend-mono">COMMERCIAL SERIES</span>
+              </div>
+              <div class="metric-strip-item">
+                <span class="metric-huge-number">B2B</span>
+                <span class="metric-legend-mono">CLIENT PITCH READY</span>
+              </div>
+            </div>
           </div>
+
+          <!-- Chapter 05: Verified Proof -->
+          <div class="case-chapter-card" id="digi-proof">
+            <span class="chapter-header-badge">05 // VERIFIED PROOF</span>
+            <h3 class="chapter-card-heading">Official Credentials &amp; Archives</h3>
+            <p class="body-standard" style="margin-bottom: 1.5rem;">
+              Inspect the official Digi Marketrix internship completion certificate and media archive.
+            </p>
+
+            <div class="proof-card-horizontal" data-proof="digi-cert" data-cursor="INSPECT">
+              <div class="proof-card-horizontal-thumb">
+                <img src="assets/digi_marketrix_cert.jpg" alt="Digi Marketrix Certificate Thumbnail" loading="lazy" />
+              </div>
+              <div class="proof-card-horizontal-info">
+                <span class="label-mono accent">VERIFIED CERTIFICATE</span>
+                <h4 style="color: #ffffff; font-size: 1.15rem; margin-block: 0.25rem;">Agency Internship Credential</h4>
+                <p style="font-size: 0.85rem; color: var(--text-muted); margin: 0;">Completed full-time agency internship in Tuticorin.</p>
+                <span class="proof-card-cta" style="margin-top: 0.5rem; display: inline-block;">Click to View Full Document →</span>
+              </div>
+            </div>
+          </div>
+
         </div>
 
-        <div style="margin-top: 2.5rem;">
-          <a href="experience.html" class="btn-editorial">
-            <span>View Experience Chapter →</span>
-          </a>
-        </div>
       </div>
     </section>
 
     <!-- ======================================================================
-         5. SECOND MAJOR CASE STUDY: PERSONAL BRANDING (U6NICK)
+         5. SECOND MAJOR CASE STUDY: PERSONAL BRANDING (Interactive Visual Timeline)
          ====================================================================== -->
-    <section class="featured-project-section alt-bg" id="work">
+    <section class="featured-project-section alt-bg" id="work" data-theme="branding">
       <div class="container">
         <div class="project-editorial-header">
           <div>
-            <span class="project-category-tag">FEATURED CASE STUDY // 02</span>
+            <span class="project-category-tag">SELECTED WORK // 02</span>
             <div class="project-dates-loc">THOOTHUKUDI // 2026</div>
           </div>
           <div>
-            <span class="label-mono accent">PERSONAL BRANDING / EDITORIAL / SOCIAL</span>
+            <span class="label-mono accent">PERSONAL BRANDING &nbsp;·&nbsp; STRATEGY &nbsp;·&nbsp; VISUAL IDENTITY</span>
           </div>
         </div>
 
-        <h2 class="project-title-large">U6NICK.</h2>
+        <h2 class="project-title-large">
+          PERSONAL<br />BRANDING.
+        </h2>
 
         <p class="project-lead-desc">
-          Personal branding and digital positioning work created for an editorial model, focused on developing an elevated visual identity, high-retention video reels, and commanding social presence.
+          Professional brand-building case study (U6NICK): Developing an elevated editorial visual identity, high-retention video reels, and commanding digital positioning for creative talent.
         </p>
 
-        <!-- Responsibilities Pills -->
-        <div class="role-pills-row">
-          <span class="editorial-role-tag">CONTENT STRATEGY</span>
-          <span class="editorial-role-tag">SCRIPTWRITING</span>
-          <span class="editorial-role-tag">VIDEOGRAPHY</span>
-          <span class="editorial-role-tag">EDITING</span>
-          <span class="editorial-role-tag">INSTAGRAM MANAGEMENT</span>
-          <span class="editorial-role-tag">CONTENT PLANNING</span>
-          <span class="editorial-role-tag">COMPETITOR RESEARCH</span>
-          <span class="editorial-role-tag">PROFILE OPTIMIZATION</span>
+        <!-- Interactive Visual Timeline (IDEA ↓ POSITIONING ↓ CONTENT ↓ DISTRIBUTION ↓ GROWTH) -->
+        <div class="branding-timeline-system">
+          
+          <!-- Step 1: IDEA -->
+          <div class="timeline-stage-row">
+            <div class="timeline-stage-marker">
+              <span class="stage-step-num">01</span>
+              <span class="stage-step-name">IDEA</span>
+            </div>
+            <div class="timeline-stage-content">
+              <h4 class="stage-content-title">Uncovering the Editorial Niche</h4>
+              <p class="stage-content-text">
+                Identified an underserved regional talent segment: bridging high-fashion editorial aesthetics with relatable, hook-driven creator reels rather than conventional static portfolio photos.
+              </p>
+            </div>
+          </div>
+
+          <!-- Step 2: POSITIONING -->
+          <div class="timeline-stage-row">
+            <div class="timeline-stage-marker">
+              <span class="stage-step-num">02</span>
+              <span class="stage-step-name">POSITIONING</span>
+            </div>
+            <div class="timeline-stage-content">
+              <h4 class="stage-content-title">Signature Visual Identity</h4>
+              <p class="stage-content-text">
+                Engineered a cinematic lighting palette, dark editorial wardrobe, and disciplined grid typography to distinguish the talent from casual social creators.
+              </p>
+            </div>
+          </div>
+
+          <!-- Step 3: CONTENT -->
+          <div class="timeline-stage-row">
+            <div class="timeline-stage-marker">
+              <span class="stage-step-num">03</span>
+              <span class="stage-step-name">CONTENT</span>
+            </div>
+            <div class="timeline-stage-content">
+              <h4 class="stage-content-title">Hook-Formulation &amp; High-Retention Cinematography</h4>
+              <p class="stage-content-text">
+                Wrote and directed short-form videos with custom audio pacing, 3-second hook retention, and seamless transitions designed to hold viewer attention.
+              </p>
+            </div>
+          </div>
+
+          <!-- Step 4: DISTRIBUTION -->
+          <div class="timeline-stage-row">
+            <div class="timeline-stage-marker">
+              <span class="stage-step-num">04</span>
+              <span class="stage-step-name">DISTRIBUTION</span>
+            </div>
+            <div class="timeline-stage-content">
+              <h4 class="stage-content-title">Algorithm-Driven Publishing Strategy</h4>
+              <p class="stage-content-text">
+                Targeted peak engagement windows and leveraged retention curve analytics to ensure reels consistently circulated through discovery feeds.
+              </p>
+            </div>
+          </div>
+
+          <!-- Step 5: GROWTH -->
+          <div class="timeline-stage-row">
+            <div class="timeline-stage-marker">
+              <span class="stage-step-num">05</span>
+              <span class="stage-step-name">GROWTH</span>
+            </div>
+            <div class="timeline-stage-content">
+              <h4 class="stage-content-title">Audience Scale &amp; Commercial Proof</h4>
+              <p class="stage-content-text">
+                Scaled the profile to ~3,000 targeted followers, delivered multiple viral reels, and achieved 100% client satisfaction validated by verified analytics.
+              </p>
+              
+              <div class="verified-metrics-strip" style="margin-top: 1.5rem;">
+                <div class="metric-strip-item">
+                  <span class="metric-huge-number">~3,000</span>
+                  <span class="metric-legend-mono">FOLLOWERS REACHED</span>
+                </div>
+                <div class="metric-strip-item">
+                  <span class="metric-huge-number">VIRAL</span>
+                  <span class="metric-legend-mono">HIGH-RETENTION REELS</span>
+                </div>
+                <div class="metric-strip-item">
+                  <span class="metric-huge-number">100%</span>
+                  <span class="metric-legend-mono">CLIENT SATISFACTION</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
         </div>
 
-        <!-- Verified Results Strip -->
-        <div class="verified-metrics-strip">
-          <div class="metric-strip-item">
-            <span class="metric-huge-number">~3,000</span>
-            <span class="metric-legend-mono">FOLLOWERS REACHED</span>
-          </div>
-          <div class="metric-strip-item">
-            <span class="metric-huge-number">VIRAL</span>
-            <span class="metric-legend-mono">HIGH-PERFORMING REELS</span>
-          </div>
-          <div class="metric-strip-item">
-            <span class="metric-huge-number">100%</span>
-            <span class="metric-legend-mono">CLIENT SATISFACTION</span>
-          </div>
-        </div>
-
-        <!-- Case Study Breakdown Chapters -->
-        <div class="case-breakdown-grid">
-          <div class="case-breakdown-block">
-            <span class="case-breakdown-label">BRAND STRATEGY</span>
-            <h4 class="case-breakdown-title">Editorial Model Identity</h4>
-            <p class="case-breakdown-text">
-              Positioned the talent with high-fashion lighting, refined color palettes, and deliberate wardrobe curation to distinguish the profile from casual creators.
-            </p>
-          </div>
-
-          <div class="case-breakdown-block">
-            <span class="case-breakdown-label">CONTENT EXECUTION</span>
-            <h4 class="case-breakdown-title">Scripting &amp; Cinematography</h4>
-            <p class="case-breakdown-text">
-              Directed short-form reels with custom pacing, atmospheric audio tracks, and hook formulations designed to maximize average watch percentage.
-            </p>
-          </div>
-
-          <div class="case-breakdown-block">
-            <span class="case-breakdown-label">REAL PROOF &amp; OUTCOME</span>
-            <h4 class="case-breakdown-title">Organic Audience Growth</h4>
-            <p class="case-breakdown-text">
-              Scaled the profile to ~3,000 engaged followers with high viewer retention, proven by analytics data and enthusiastic client endorsement.
-            </p>
-          </div>
-        </div>
-
-        <!-- Large Visual Showcase -->
-        <div class="project-immersive-media">
+        <!-- Large Visual Showcase with Contextual Cursor -->
+        <div class="project-immersive-media" data-cursor="INSPECT" data-proof="u6nick-analytics" style="margin-top: 3.5rem;">
           <img src="assets/project_fashion.jpg" alt="U6NICK Editorial Model Personal Branding Showcase" loading="lazy" />
+          <div class="media-hover-overlay">
+            <span class="media-overlay-pill">INSPECT CASE STUDY ARTIFACTS ↗</span>
+          </div>
         </div>
 
         <!-- Proof Strip -->
         <div class="proof-strip-container">
           <span class="proof-strip-label">CASE STUDY PROOF &amp; ARTIFACTS</span>
           <div class="proof-pills-row">
-            <button type="button" class="proof-pill-btn" data-proof="u6nick-analytics">
+            <button type="button" class="proof-pill-btn" data-proof="u6nick-analytics" data-cursor="OPEN">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
               <span>ANALYTICS PROOF</span>
             </button>
-            <button type="button" class="proof-pill-btn" data-proof="u6nick-analytics">
+            <button type="button" class="proof-pill-btn" data-proof="u6nick-analytics" data-cursor="OPEN">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 7l-7 5 7 5V7z"></path><rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect></svg>
               <span>PUBLISHED REELS</span>
             </button>
-            <button type="button" class="proof-pill-btn" data-proof="u6nick-analytics">
+            <button type="button" class="proof-pill-btn" data-proof="u6nick-analytics" data-cursor="OPEN">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>
               <span>CLIENT FEEDBACK</span>
             </button>
@@ -458,155 +564,203 @@
     </section>
 
     <!-- ======================================================================
-         6. MOTIVATIONAL SPEAKING (Credible & Professional)
+         6. MOTIVATIONAL SPEAKING (Editorial Event Atmosphere & Horizontal Track)
          ====================================================================== -->
-    <section class="section-spacer alt-bg" id="speaking">
+    <section class="section-spacer alt-bg speaking-event-atmosphere" id="speaking" data-theme="speaking">
+      <div class="speaking-spotlight-beam" aria-hidden="true"></div>
       <div class="container">
+        
         <div class="project-editorial-header">
           <div>
             <span class="project-category-tag">THE VOICE // 04</span>
-            <div class="project-dates-loc">MOTIVATION &amp; EXECUTION</div>
+            <div class="project-dates-loc">MOTIVATION &amp; EXECUTION // REGIONAL KEYNOTES</div>
           </div>
           <div>
-            <span class="label-mono accent">PERSONAL PLATFORM &amp; KEYNOTES</span>
+            <span class="label-mono accent">SPOKEN STORYTELLING &amp; LIVE AUDIENCES</span>
           </div>
         </div>
 
-        <h2 class="project-title-large">MOTIVATIONAL SPEAKING.</h2>
+        <h2 class="speaking-statement-huge">
+          WORDS CAN<br />
+          <span class="hero-serif-accent">MOVE PEOPLE.</span>
+        </h2>
 
-        <p class="project-lead-desc">
+        <p class="project-lead-desc" style="max-width: 680px;">
           Translating real-world execution, discipline, and creative resilience into spoken storytelling. Grounded in actual experiences in video production, marketing campaigns, and academic engineering.
         </p>
 
-        <!-- Speaking Topics & Awards Box -->
-        <div class="motivational-voice-box">
-          <div>
-            <span class="label-mono accent">SPEAKING TOPICS</span>
-            <h3 style="font-size: 1.5rem; font-weight: 700; color: #ffffff; margin-bottom: 0.75rem;">
-              CREATIVE DISCIPLINE &amp; EXECUTION
-            </h3>
-            <p class="body-standard" style="color: var(--text-muted); margin-bottom: 1.25rem;">
-              Focused on personal growth, overcoming inertia, building real skills early, and turning small creative ideas into tangible opportunities.
-            </p>
-            <div class="role-pills-row">
-              <span class="editorial-role-tag">PERSONAL GROWTH</span>
-              <span class="editorial-role-tag">DISCIPLINE</span>
-              <span class="editorial-role-tag">STORYTELLING</span>
-              <span class="editorial-role-tag">EXECUTION</span>
+        <!-- Horizontal Gallery Track on Desktop / Vertical Stack on Mobile -->
+        <div class="speaking-horizontal-viewport">
+          <div class="speaking-horizontal-track" id="speaking-track">
+            
+            <!-- Slide 01: Core Topic -->
+            <div class="speaking-track-card">
+              <span class="label-mono accent">KEYNOTE // 01</span>
+              <h3 class="speaking-card-title">Creative Discipline &amp; Overcoming Inertia</h3>
+              <p class="speaking-card-desc">
+                Focusing on young creators and students: building real-world skills early, learning through tangible commercial projects, and turning small ideas into execution without waiting for permission.
+              </p>
+              <div class="role-pills-row" style="margin-top: auto; padding-top: 1.5rem;">
+                <span class="editorial-role-tag">DISCIPLINE</span>
+                <span class="editorial-role-tag">EXECUTION</span>
+                <span class="editorial-role-tag">STUDENT VENTURES</span>
+              </div>
             </div>
-          </div>
 
-          <div>
-            <span class="label-mono">VERIFIED RECOGNITION (2025)</span>
-            <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
-              <div style="background-color: var(--bg-primary); border: 1px solid var(--border-subtle); padding: 1.25rem 1.5rem; border-radius: var(--radius-xs); flex: 1; min-width: 240px;">
-                <div style="font-size: 1.1rem; font-weight: 700; color: #ffffff;">Best Reels Creator — 2025</div>
-                <div style="font-family: var(--font-mono); font-size: 0.75rem; color: var(--accent-gold); margin-top: 0.25rem;">Tuticorin Creator Recognition</div>
-              </div>
-              <div style="background-color: var(--bg-primary); border: 1px solid var(--border-subtle); padding: 1.25rem 1.5rem; border-radius: var(--radius-xs); flex: 1; min-width: 240px;">
-                <div style="font-size: 1.1rem; font-weight: 700; color: #ffffff;">Young Informative Content — 2025</div>
-                <div style="font-family: var(--font-mono); font-size: 0.75rem; color: var(--accent-gold); margin-top: 0.25rem;">Regional Content Honors</div>
+            <!-- Slide 02: Audience Psychology -->
+            <div class="speaking-track-card">
+              <span class="label-mono accent">KEYNOTE // 02</span>
+              <h3 class="speaking-card-title">The Psychology of Digital Attention</h3>
+              <p class="speaking-card-desc">
+                Breaking down why audiences stop scrolling, how visual pacing shapes perception, and how founders and creators can communicate complex ideas with cinematic clarity and ethical persuasion.
+              </p>
+              <div class="role-pills-row" style="margin-top: auto; padding-top: 1.5rem;">
+                <span class="editorial-role-tag">ATTENTION HOOKS</span>
+                <span class="editorial-role-tag">PERCEPTION</span>
+                <span class="editorial-role-tag">RETENTION</span>
               </div>
             </div>
+
+            <!-- Slide 03: Recognition - Best Reels Creator 2025 -->
+            <div class="speaking-track-card highlight-border" data-proof="award-bestreels" data-cursor="INSPECT">
+              <span class="label-mono">REGIONAL CITATION // 2025</span>
+              <h3 class="speaking-card-title">Best Reels Creator — 2025</h3>
+              <p class="speaking-card-desc">
+                Awarded regional creator recognition in Tuticorin for short-form video pacing, narrative timing, and authentic regional storytelling.
+              </p>
+              <div style="margin-top: auto; padding-top: 1.5rem;">
+                <span class="proof-card-cta">Inspect Citation Artifact →</span>
+              </div>
+            </div>
+
+            <!-- Slide 04: Recognition - Young Informative Content -->
+            <div class="speaking-track-card highlight-border" data-proof="award-younginfo" data-cursor="INSPECT">
+              <span class="label-mono">REGIONAL CITATION // 2025</span>
+              <h3 class="speaking-card-title">Young Informative Content — 2025</h3>
+              <p class="speaking-card-desc">
+                Honored for motivational and informative short-form communication, delivering actionable insights to a growing youth audience.
+              </p>
+              <div style="margin-top: auto; padding-top: 1.5rem;">
+                <span class="proof-card-cta">Inspect Citation Artifact →</span>
+              </div>
+            </div>
+
+            <!-- Slide 05: Life With Aakash Laboratory -->
+            <div class="speaking-track-card lab-card" data-proof="life-reel" data-cursor="INSPECT">
+              <span class="label-mono accent">TESTING GROUND</span>
+              <h3 class="speaking-card-title">Life With Aakash (59K Peak Reach)</h3>
+              <p class="speaking-card-desc">
+                Personal testing platform for audience retention. Reached a verified 59,000 views on a single viral reel across 17 published episodes.
+              </p>
+              <div class="verified-metrics-strip" style="margin-top: 1rem; border-top: 1px solid var(--border-subtle); padding-top: 1rem;">
+                <div class="metric-strip-item">
+                  <span class="metric-huge-number">59K</span>
+                  <span class="metric-legend-mono">PEAK REACH</span>
+                </div>
+                <div class="metric-strip-item">
+                  <span class="metric-huge-number">17</span>
+                  <span class="metric-legend-mono">EPISODES</span>
+                </div>
+              </div>
+            </div>
+
           </div>
         </div>
 
-        <!-- Life With Aakash Milestone -->
-        <div style="margin-top: 3.5rem;">
-          <span class="label-mono">ORIGINAL TESTING GROUND</span>
-          <h3 style="font-size: 1.6rem; font-weight: 800; color: #ffffff; margin-bottom: 1rem;">
-            LIFE WITH AAKASH (@life.with_aakash)
-          </h3>
-          <p class="body-standard" style="max-width: 720px; margin-bottom: 2rem;">
-            My personal storytelling platform serving as a live laboratory for audience psychology and short-form video retention. Reached a verified 59,000 views on a single viral reel across 17 published episodes.
-          </p>
-
-          <div class="verified-metrics-strip">
-            <div class="metric-strip-item">
-              <span class="metric-huge-number">59K</span>
-              <span class="metric-legend-mono">HIGHEST REEL REACH</span>
-            </div>
-            <div class="metric-strip-item">
-              <span class="metric-huge-number">17</span>
-              <span class="metric-legend-mono">PUBLISHED REELS</span>
-            </div>
-            <div class="metric-strip-item">
-              <span class="metric-huge-number">453</span>
-              <span class="metric-legend-mono">VERIFIED AUDIENCE</span>
-            </div>
-          </div>
-
-          <div style="margin-top: 2rem; display: flex; gap: 1rem; flex-wrap: wrap;">
-            <button type="button" class="btn-editorial" data-proof="life-reel">
-              <span>Inspect 59K Reel Proof →</span>
-            </button>
-            <a href="https://www.instagram.com/life.with_aakash/" target="_blank" rel="noopener noreferrer" class="btn-editorial-outline">
-              <span>Visit Instagram Profile ↗</span>
-            </a>
-          </div>
+        <div style="margin-top: 2.5rem; display: flex; gap: 1.25rem; flex-wrap: wrap;">
+          <button type="button" class="btn-editorial" data-proof="life-reel">
+            <span>Inspect 59K Reel Proof →</span>
+          </button>
+          <a href="https://www.instagram.com/life.with_aakash/" target="_blank" rel="noopener noreferrer" class="btn-editorial-outline">
+            <span>Visit Instagram Profile ↗</span>
+          </a>
         </div>
       </div>
     </section>
 
     <!-- ======================================================================
-         6. MR AKU VLOGS (Creator Foundation — Within Broader Journey)
+         7. MR AKU VLOGS (Filmmaking & Visual Storytelling Laboratory)
          ====================================================================== -->
-    <section class="section-spacer" id="creator-foundation">
+    <section class="section-spacer" id="creator-foundation" data-theme="vlogs">
       <div class="container">
-        <span class="label-mono">05 // CREATOR FOUNDATION</span>
-        <h2 class="section-title">MR AKU VLOGS.</h2>
-        <p class="body-large" style="max-width: 780px;">
-          Where I started creating. The foundational bedrock of videography, local food exploration, and brand promotions that led directly into commercial digital marketing.
-        </p>
-
-        <div class="mraku-showcase-grid">
+        
+        <div class="project-editorial-header">
           <div>
-            <div style="display: flex; gap: 1.5rem; margin-bottom: 1.5rem; font-family: var(--font-mono); font-size: 0.8125rem; color: var(--accent-gold);">
-              <span>YOUTUBE: 2020</span>
-              <span>•</span>
-              <span>INSTAGRAM: 2023</span>
-              <span>•</span>
-              <span>2,177 FOLLOWERS</span>
-            </div>
-
-            <h3 style="font-size: 1.6rem; font-weight: 700; color: #ffffff; margin-bottom: 1rem;">
-              The Discipline of Raw Storytelling.
-            </h3>
-
-            <p class="body-standard" style="margin-bottom: 1.5rem;">
-              Before managing client campaigns, I picked up cameras to document local exploration, food content, commercial store promotions, and creator collaborations. This hands-on journey taught me camera stabilization, timeline pacing, audience hooks, and authentic brand communication.
-            </p>
-
-            <div class="role-pills-row" style="margin-bottom: 2rem;">
-              <span class="editorial-role-tag">LOCAL EXPLORATION</span>
-              <span class="editorial-role-tag">FOOD CONTENT</span>
-              <span class="editorial-role-tag">BUSINESS PROMOTIONS</span>
-              <span class="editorial-role-tag">CREATOR COLLABORATIONS</span>
-            </div>
-
-            <div class="proof-pills-row">
-              <button type="button" class="proof-pill-btn" data-proof="mraku-archive">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
-                <span>INSTAGRAM ARCHIVE (2,177)</span>
-              </button>
-              <button type="button" class="proof-pill-btn" data-proof="mraku-archive">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="23 7 16 12 23 17 23 7"></polygon><rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect></svg>
-                <span>PROMOTION WORK</span>
-              </button>
-            </div>
+            <span class="project-category-tag">05 // CREATOR FOUNDATION</span>
+            <div class="project-dates-loc">YOUTUBE 2020 — PRESENT // 2,177 COMMUNITY</div>
           </div>
-
-          <div class="mraku-image-frame">
-            <img src="assets/mraku_vlogs.jpg" alt="Mr Aku Vlogs Production Rig and Editing Timeline" loading="lazy" />
+          <div>
+            <span class="label-mono accent">DOCUMENTARY &amp; COMMERCIAL PROMOTIONS</span>
           </div>
         </div>
+
+        <div class="mraku-filmmaking-layout">
+          <!-- Left: Big Editorial Title -->
+          <div class="mraku-title-col">
+            <h2 class="mraku-headline-large">
+              MR AKU<br />
+              VLOGS.
+            </h2>
+            <div class="mraku-triad-statement">
+              CONTENT.<br />
+              STORIES.<br />
+              EXPERIMENTS.
+            </div>
+          </div>
+
+          <!-- Right: Visual Monitor & Project Imagery -->
+          <div class="mraku-monitor-col">
+            <div class="filmmaking-monitor-frame" data-cursor="OPEN" data-proof="mraku-archive">
+              <div class="monitor-top-meta">
+                <span class="monitor-rec-dot">● REC</span>
+                <span class="monitor-timecode">00:20:26:15</span>
+                <span class="monitor-res">4K RAW</span>
+              </div>
+              <div class="monitor-viewport">
+                <img src="assets/mraku_vlogs.jpg" alt="Mr Aku Vlogs Production Rig and Editing Timeline" loading="lazy" class="monitor-image-asset" />
+                <div class="media-hover-overlay">
+                  <span class="media-overlay-pill">OPEN CREATOR ARCHIVE (2,177) ↗</span>
+                </div>
+              </div>
+              <div class="monitor-bottom-meta">
+                <span>LOCAL EXPLORATION</span>
+                <span>•</span>
+                <span>FOOD CULTURE</span>
+                <span>•</span>
+                <span>BRAND REELS</span>
+              </div>
+            </div>
+
+            <div class="mraku-editorial-narrative">
+              <p class="body-standard" style="margin-top: 1.5rem;">
+                Where I started creating in 2020. Before managing multi-brand agency campaigns, I spent thousands of hours behind cameras and editing timelines documenting local cuisine, small businesses, and creator stories. This hands-on foundation taught me the core mechanics of visual pacing and viewer empathy.
+              </p>
+              
+              <div class="proof-pills-row" style="margin-top: 1.5rem;">
+                <button type="button" class="proof-pill-btn" data-proof="mraku-archive" data-cursor="OPEN">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
+                  <span>INSTAGRAM ARCHIVE (2,177)</span>
+                </button>
+                <button type="button" class="proof-pill-btn" data-proof="mraku-archive" data-cursor="OPEN">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="23 7 16 12 23 17 23 7"></polygon><rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect></svg>
+                  <span>COMMERCIAL REELS</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
       </div>
     </section>
+
 
     <!-- ======================================================================
          7. DEDICATED PROOF & EVIDENCE VAULT
          ====================================================================== -->
-    <section class="section-spacer alt-bg" id="proof">
+    <!-- ======================================================================
+         8. DEDICATED PROOF & EVIDENCE VAULT (Editorial Masonry Architecture)
+         ====================================================================== -->
+    <section class="section-spacer alt-bg" id="proof" data-theme="proof">
       <div class="container">
         <span class="label-mono">06 // VERIFIED EVIDENCE</span>
         <h2 class="section-title">PROOF OF WORK.</h2>
@@ -617,33 +771,34 @@
         <!-- Filter Tabs -->
         <div class="proof-vault-filters">
           <button type="button" class="proof-filter-btn active" data-filter="all">ALL PROOF (8)</button>
-          <button type="button" class="proof-filter-btn" data-filter="credential">CREDENTIALS</button>
-          <button type="button" class="proof-filter-btn" data-filter="client">CLIENT WORK</button>
+          <button type="button" class="proof-filter-btn" data-filter="results">RESULTS</button>
+          <button type="button" class="proof-filter-btn" data-filter="client">WORK</button>
+          <button type="button" class="proof-filter-btn" data-filter="credential">CERTIFICATES</button>
+          <button type="button" class="proof-filter-btn" data-filter="recognition">AWARDS &amp; EVENTS</button>
           <button type="button" class="proof-filter-btn" data-filter="analytics">ANALYTICS</button>
-          <button type="button" class="proof-filter-btn" data-filter="recognition">RECOGNITION</button>
         </div>
 
-        <!-- Proof Cards Grid -->
-        <div class="proof-vault-grid">
+        <!-- Proof Cards Masonry Grid -->
+        <div class="proof-vault-grid proof-masonry-layout">
           
           <!-- Card 1: Digi Marketrix Certificate -->
-          <div class="proof-card" data-category="credential" data-proof="digi-cert">
+          <div class="proof-card proof-card-wide" data-category="credential" data-proof="digi-cert" data-cursor="INSPECT">
             <div class="proof-card-thumb">
               <img src="assets/digi_marketrix_cert.jpg" alt="Digi Marketrix Internship Certificate" loading="lazy" />
             </div>
             <div class="proof-card-body">
               <div class="proof-card-meta">
                 <span>DIGI MARKETRIX</span>
-                <span class="proof-card-badge">CREDENTIAL</span>
+                <span class="proof-card-badge">CERTIFICATE</span>
               </div>
               <h4 class="proof-card-title">Agency Internship Completion</h4>
               <p class="proof-card-desc">Full-time verified internship across scripting, videography, client shoots, and editing.</p>
-              <span class="proof-card-cta">Inspect Certificate →</span>
+              <span class="proof-card-cta">Inspect Document →</span>
             </div>
           </div>
 
           <!-- Card 2: U6NICK Analytics -->
-          <div class="proof-card" data-category="analytics" data-proof="u6nick-analytics">
+          <div class="proof-card proof-card-tall" data-category="analytics results" data-proof="u6nick-analytics" data-cursor="INSPECT">
             <div class="proof-card-thumb">
               <img src="assets/project_fashion.jpg" alt="U6NICK Follower Growth and Engagement" loading="lazy" />
             </div>
@@ -659,46 +814,46 @@
           </div>
 
           <!-- Card 3: 59K Reel Milestone -->
-          <div class="proof-card" data-category="analytics" data-proof="life-reel">
+          <div class="proof-card" data-category="analytics results" data-proof="life-reel" data-cursor="INSPECT">
             <div class="proof-card-thumb">
               <img src="assets/life_with_aakash.jpg" alt="Life With Aakash 59K Peak Reel" loading="lazy" />
             </div>
             <div class="proof-card-body">
               <div class="proof-card-meta">
                 <span>LIFE WITH AAKASH</span>
-                <span class="proof-card-badge">ANALYTICS</span>
+                <span class="proof-card-badge">RESULTS</span>
               </div>
               <h4 class="proof-card-title">59K Viral Reel Reach</h4>
               <p class="proof-card-desc">Verified organic reach milestone demonstrating viral hook mechanics and audience retention.</p>
-              <span class="proof-card-cta">Inspect Reel Data →</span>
+              <span class="proof-card-cta">Inspect Data →</span>
             </div>
           </div>
 
           <!-- Card 4: Best Reels Creator 2025 -->
-          <div class="proof-card" data-category="recognition" data-proof="award-bestreels">
+          <div class="proof-card" data-category="recognition" data-proof="award-bestreels" data-cursor="INSPECT">
             <div class="proof-card-thumb">
               <img src="assets/life_with_aakash.jpg" alt="Best Reels Creator Award 2025" loading="lazy" />
             </div>
             <div class="proof-card-body">
               <div class="proof-card-meta">
                 <span>AWARDS 2025</span>
-                <span class="proof-card-badge">RECOGNITION</span>
+                <span class="proof-card-badge">AWARDS</span>
               </div>
               <h4 class="proof-card-title">Best Reels Creator — 2025</h4>
               <p class="proof-card-desc">Regional creator recognition in Tuticorin for short-form video pacing and storytelling.</p>
-              <span class="proof-card-cta">Inspect Award →</span>
+              <span class="proof-card-cta">Inspect Citation →</span>
             </div>
           </div>
 
           <!-- Card 5: Young Informative Content -->
-          <div class="proof-card" data-category="recognition" data-proof="award-younginfo">
+          <div class="proof-card" data-category="recognition" data-proof="award-younginfo" data-cursor="INSPECT">
             <div class="proof-card-thumb">
               <img src="assets/mraku_vlogs.jpg" alt="Young Informative Content Award" loading="lazy" />
             </div>
             <div class="proof-card-body">
               <div class="proof-card-meta">
                 <span>AWARDS 2025</span>
-                <span class="proof-card-badge">RECOGNITION</span>
+                <span class="proof-card-badge">AWARDS</span>
               </div>
               <h4 class="proof-card-title">Young Informative Content</h4>
               <p class="proof-card-desc">Regional digital content honors for motivational and informative short-form communication.</p>
@@ -707,14 +862,14 @@
           </div>
 
           <!-- Card 6: Mr Aku Vlogs Archive -->
-          <div class="proof-card" data-category="client" data-proof="mraku-archive">
+          <div class="proof-card proof-card-wide" data-category="client" data-proof="mraku-archive" data-cursor="INSPECT">
             <div class="proof-card-thumb">
               <img src="assets/mraku_vlogs.jpg" alt="Mr Aku Vlogs Production Rig and 2,177 Followers" loading="lazy" />
             </div>
             <div class="proof-card-body">
               <div class="proof-card-meta">
                 <span>CREATOR ARCHIVE</span>
-                <span class="proof-card-badge">CLIENT</span>
+                <span class="proof-card-badge">WORK</span>
               </div>
               <h4 class="proof-card-title">2,177 Verified Creator Community</h4>
               <p class="proof-card-desc">Commercial store promotions, food reviews, and video editing production archive since 2020.</p>
@@ -723,14 +878,14 @@
           </div>
 
           <!-- Card 7: Jayashakthi Tours Live Web Platform -->
-          <div class="proof-card" data-category="client" data-proof="tech-jayashakthi">
+          <div class="proof-card" data-category="client results" data-proof="tech-jayashakthi" data-cursor="INSPECT">
             <div class="proof-card-thumb">
               <img src="assets/project_jayashakthi.jpg" alt="Jayashakthi Tours Web Platform" loading="lazy" />
             </div>
             <div class="proof-card-body">
               <div class="proof-card-meta">
                 <span>WEB ENGINEERING</span>
-                <span class="proof-card-badge">CLIENT</span>
+                <span class="proof-card-badge">WORK</span>
               </div>
               <h4 class="proof-card-title">Jayashakthi Tours Platform</h4>
               <p class="proof-card-desc">Live production travel fleet portal with administrative booking management system.</p>
@@ -739,14 +894,14 @@
           </div>
 
           <!-- Card 8: MineGuardian Telemetry -->
-          <div class="proof-card" data-category="credential" data-proof="tech-mineguardian">
+          <div class="proof-card" data-category="credential results" data-proof="tech-mineguardian" data-cursor="INSPECT">
             <div class="proof-card-thumb">
               <img src="assets/lab_mineguardian.jpg" alt="MineGuardian SIH IoT Rover" loading="lazy" />
             </div>
             <div class="proof-card-body">
               <div class="proof-card-meta">
                 <span>HARDWARE / AI</span>
-                <span class="proof-card-badge">CREDENTIAL</span>
+                <span class="proof-card-badge">CERTIFICATE</span>
               </div>
               <h4 class="proof-card-title">MineGuardian Rover Prototype</h4>
               <p class="proof-card-desc">Smart India Hackathon underground mine rover with toxic gas and telemetry sensors.</p>
@@ -759,17 +914,17 @@
     </section>
 
     <!-- ======================================================================
-         8. ABOUT AKU (Personal Brand & Multi-Disciplinary Rigor)
+         9. ABOUT & INTERACTIVE CAREER JOURNEY SYSTEM
          ====================================================================== -->
-    <section class="section-spacer" id="about">
+    <section class="section-spacer" id="about" data-theme="about">
       <div class="container">
-        <span class="label-mono">07 // ABOUT</span>
+        <span class="label-mono">07 // ABOUT &amp; EXPERIENCE</span>
         
         <h2 class="display-title" style="margin-bottom: 2rem; font-size: clamp(2.4rem, 5vw, 4.4rem);">
           THE INTERSECTION OF BUSINESS, CREATIVITY, TECHNOLOGY &amp; COMMUNICATION.
         </h2>
 
-        <div style="display: grid; grid-template-columns: 1.15fr 0.85fr; gap: clamp(3rem, 6vw, 6rem); align-items: start;">
+        <div style="display: grid; grid-template-columns: 1.15fr 0.85fr; gap: clamp(3rem, 6vw, 6rem); align-items: start; margin-bottom: 4rem;">
           <div>
             <p class="body-large" style="margin-bottom: 1.75rem; color: var(--text-primary);">
               I'm an AI &amp; Data Science student at Rathinam Technical Campus who has spent years in the field with cameras, scripting timelines, commercial clients, and code.
@@ -816,13 +971,116 @@
             </div>
 
             <div style="margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid var(--border-subtle);">
-              <span class="label-mono" style="margin-bottom: 0.5rem;">PHILOSOPHY</span>
-              <p class="body-standard" style="font-size: 0.95rem; color: var(--text-muted);">
-                "Confidence without arrogance. Creativity without chaos. Technology without gimmicks. Professionalism without being boring."
+              <span class="label-mono" style="margin-bottom: 0.5rem;">CORE PHILOSOPHY</span>
+              <p class="body-standard" style="font-size: 0.95rem; color: var(--text-muted); margin: 0;">
+                “Confidence without arrogance. Creativity without chaos. Technology without gimmicks. Professionalism without being boring.”
               </p>
             </div>
           </div>
         </div>
+
+        <!-- Interactive Journey Timeline System -->
+        <div class="interactive-journey-system">
+          <div class="journey-header-row">
+            <div>
+              <span class="label-mono accent">CAREER PROGRESSION</span>
+              <h3 style="color: #ffffff; font-size: 1.75rem; font-weight: 800; margin-top: 0.4rem;">
+                CHRONOLOGICAL MILESTONES.
+              </h3>
+            </div>
+            <div class="journey-instruction-pill">
+              SELECT MILESTONE TO INSPECT EVIDENCE ↓
+            </div>
+          </div>
+
+          <div class="journey-split-interface">
+            <!-- Left: Vertical Illuminated Timeline Line -->
+            <div class="journey-timeline-track" id="journey-track">
+              
+              <div class="journey-node active" data-year="2026" data-role="AI &amp; Data Science Student" data-company="Rathinam Technical Campus" data-skills="Python, PyTorch, Telemetry, SIH Hardware" data-proof="tech-mineguardian">
+                <div class="node-indicator"></div>
+                <div class="node-brief">
+                  <span class="node-year">2026</span>
+                  <h4 class="node-title">AI &amp; Full-Stack Systems</h4>
+                  <span class="node-entity">Rathinam Technical Campus</span>
+                </div>
+              </div>
+
+              <div class="journey-node" data-year="2026" data-role="Digital Marketing Intern" data-company="Digi Marketrix" data-skills="Scripting, Commercial Videography, Client Shoots, Video Editing" data-proof="digi-cert">
+                <div class="node-indicator"></div>
+                <div class="node-brief">
+                  <span class="node-year">2026</span>
+                  <h4 class="node-title">Commercial Agency Videography</h4>
+                  <span class="node-entity">Digi Marketrix</span>
+                </div>
+              </div>
+
+              <div class="journey-node" data-year="2026" data-role="Personal Branding Strategist" data-company="U6NICK Editorial" data-skills="Talent Positioning, Video Reels, Audience Scaling" data-proof="u6nick-analytics">
+                <div class="node-indicator"></div>
+                <div class="node-brief">
+                  <span class="node-year">2026</span>
+                  <h4 class="node-title">Editorial Talent Branding</h4>
+                  <span class="node-entity">U6NICK</span>
+                </div>
+              </div>
+
+              <div class="journey-node" data-year="2025" data-role="Regional Creator Citations" data-company="Tuticorin Creator Recognition" data-skills="Short-form Pacing, Informative Storytelling, Public Presence" data-proof="award-bestreels">
+                <div class="node-indicator"></div>
+                <div class="node-brief">
+                  <span class="node-year">2025</span>
+                  <h4 class="node-title">Regional Creator Honors</h4>
+                  <span class="node-entity">Best Reels &amp; Young Informative Content</span>
+                </div>
+              </div>
+
+              <div class="journey-node" data-year="2023" data-role="Creator &amp; Video Host" data-company="Life With Aakash" data-skills="Audience Retention, Hook Formulation, Narrative Psychology" data-proof="life-reel">
+                <div class="node-indicator"></div>
+                <div class="node-brief">
+                  <span class="node-year">2023</span>
+                  <h4 class="node-title">Audience Psychology Lab</h4>
+                  <span class="node-entity">59K Viral Reach Milestone</span>
+                </div>
+              </div>
+
+              <div class="journey-node" data-year="2020" data-role="Foundational Creator" data-company="Mr Aku Vlogs" data-skills="Camera Operation, Premiere Pro, Local Food &amp; Business Reviews" data-proof="mraku-archive">
+                <div class="node-indicator"></div>
+                <div class="node-brief">
+                  <span class="node-year">2020</span>
+                  <h4 class="node-title">Foundational Videography</h4>
+                  <span class="node-entity">Mr Aku Vlogs</span>
+                </div>
+              </div>
+
+            </div>
+
+            <!-- Right: Contextual Inspection Panel -->
+            <div class="journey-context-panel" id="journey-panel">
+              <span class="context-panel-year" id="panel-year">2026</span>
+              <h3 class="context-panel-role" id="panel-role">AI &amp; Data Science Student</h3>
+              <div class="context-panel-company" id="panel-company">Rathinam Technical Campus</div>
+              
+              <div class="context-panel-section">
+                <span class="label-mono">TECHNICAL SKILLS &amp; FOCUS</span>
+                <div class="role-pills-row" id="panel-skills" style="margin-top: 0.5rem;">
+                  <span class="editorial-role-tag">PYTHON</span>
+                  <span class="editorial-role-tag">PYTORCH</span>
+                  <span class="editorial-role-tag">TELEMETRY</span>
+                  <span class="editorial-role-tag">SIH HARDWARE</span>
+                </div>
+              </div>
+
+              <div class="context-panel-section" style="margin-top: 2rem;">
+                <span class="label-mono">VALIDATION</span>
+                <div style="margin-top: 0.75rem;">
+                  <button type="button" class="btn-editorial" id="panel-proof-btn" data-proof="tech-mineguardian">
+                    <span>Inspect Artifact Proof →</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
       </div>
     </section>
 
@@ -993,7 +1251,20 @@
   <!-- Toast Notification -->
   <div class="toast-msg" id="toast" role="status" aria-live="polite"></div>
 
+  <!-- Scroll Progress Indicator -->
+  <div class="scroll-progress-line" id="scroll-progress" aria-hidden="true"></div>
+
+  <!-- Subtle Contextual Cursor Badge (Only over interactive media) -->
+  <div class="cursor-context-badge" id="cursor-badge" aria-hidden="true">
+    <span class="cursor-badge-text" id="cursor-badge-text">VIEW</span>
+    <span class="cursor-badge-arrow">↗</span>
+  </div>
+
+  <!-- Atmospheric Texture Overlay -->
+  <div class="atmospheric-noise" aria-hidden="true"></div>
+
   <!-- Scripts -->
+  <script src="js/character-scene.js"></script>
   <script src="js/main.js"></script>
 </body>
 </html>

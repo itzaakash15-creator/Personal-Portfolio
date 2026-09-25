@@ -47,6 +47,10 @@ document.addEventListener('DOMContentLoaded', () => {
       pointerRotX: 0,
       pointerRotY: 0,
       pointerScale: 1,
+      lightX: 0,
+      lightY: 0,
+      rimX: 0,
+      rimY: 0,
       scrollX: 0,
       scrollY: 0,
       scrollRotY: 0,
@@ -60,6 +64,10 @@ document.addEventListener('DOMContentLoaded', () => {
       pointerRotX: 0,
       pointerRotY: 0,
       pointerScale: 1,
+      lightX: 0,
+      lightY: 0,
+      rimX: 0,
+      rimY: 0,
       scrollX: 0,
       scrollY: 0,
       scrollRotY: 0,
@@ -71,11 +79,18 @@ document.addEventListener('DOMContentLoaded', () => {
     rafId: null,
     portraitEl: null,
     stageEl: null,
+    radialLightEl: null,
+    dirLightEl: null,
+    rimLightEl: null,
 
     init() {
       this.portraitEl = document.getElementById('character-portrait') || document.querySelector('.character-portrait-asset');
       this.stageEl = document.getElementById('character-scene') || document.querySelector('.character-scene');
-      if (!this.portraitEl) return;
+      this.radialLightEl = document.getElementById('hero-radial-light') || document.querySelector('.character-scene-backdrop');
+      this.dirLightEl = document.querySelector('.character-directional-light');
+      this.rimLightEl = document.querySelector('.character-rim-light');
+
+      if (!this.portraitEl && !this.stageEl) return;
 
       const isTouch = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
       const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -95,7 +110,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const normX = (e.clientX / window.innerWidth) * 2 - 1;
         const normY = (e.clientY / window.innerHeight) * 2 - 1;
 
-        // Exact bounds per user instructions:
+        // Exact bounds per instructions:
+        // Character response = approximately 3–5%
         // translateX: maximum ±8px
         // translateY: maximum ±5px
         // rotateY simulation: maximum ±1.2deg
@@ -106,6 +122,12 @@ document.addEventListener('DOMContentLoaded', () => {
         this.target.pointerRotY = normX * 1.2;
         this.target.pointerRotX = -normY * 0.6;
         this.target.pointerScale = 1 + (Math.abs(normX) + Math.abs(normY)) * 0.0025;
+
+        // Background light movement = approximately 1–2%
+        this.target.lightX = normX * 12;
+        this.target.lightY = normY * 8;
+        this.target.rimX = normX * 18;
+        this.target.rimY = normY * 12;
 
         this.requestTick();
       };
@@ -118,6 +140,10 @@ document.addEventListener('DOMContentLoaded', () => {
         this.target.pointerRotY = 0;
         this.target.pointerRotX = 0;
         this.target.pointerScale = 1;
+        this.target.lightX = 0;
+        this.target.lightY = 0;
+        this.target.rimX = 0;
+        this.target.rimY = 0;
         this.requestTick();
       };
 
@@ -149,6 +175,11 @@ document.addEventListener('DOMContentLoaded', () => {
       c.pointerRotY += (t.pointerRotY - c.pointerRotY) * lf;
       c.pointerScale += (t.pointerScale - c.pointerScale) * lf;
 
+      c.lightX += (t.lightX - c.lightX) * lf;
+      c.lightY += (t.lightY - c.lightY) * lf;
+      c.rimX += (t.rimX - c.rimX) * lf;
+      c.rimY += (t.rimY - c.rimY) * lf;
+
       c.scrollX += (t.scrollX - c.scrollX) * lf;
       c.scrollY += (t.scrollY - c.scrollY) * lf;
       c.scrollRotY += (t.scrollRotY - c.scrollRotY) * lf;
@@ -160,6 +191,8 @@ document.addEventListener('DOMContentLoaded', () => {
       const diff = Math.abs(t.pointerX - c.pointerX) +
                    Math.abs(t.pointerY - c.pointerY) +
                    Math.abs(t.pointerRotY - c.pointerRotY) +
+                   Math.abs(t.lightX - c.lightX) +
+                   Math.abs(t.lightY - c.lightY) +
                    Math.abs(t.scrollX - c.scrollX) +
                    Math.abs(t.scrollY - c.scrollY) +
                    Math.abs(t.scrollOpacity - c.scrollOpacity);
@@ -172,32 +205,31 @@ document.addEventListener('DOMContentLoaded', () => {
     },
 
     render() {
-      if (!this.portraitEl) return;
+      // 1. Move Background Lighting Layers with subtle inertia
+      if (this.radialLightEl) {
+        this.radialLightEl.style.transform = `translate3d(calc(-50% + ${this.current.lightX.toFixed(2)}px), ${this.current.lightY.toFixed(2)}px, 0)`;
+      }
+      if (this.dirLightEl) {
+        this.dirLightEl.style.transform = `translate3d(${(-this.current.lightX * 1.2).toFixed(2)}px, ${(-this.current.lightY * 1.2).toFixed(2)}px, 0)`;
+      }
+      if (this.rimLightEl) {
+        this.rimLightEl.style.transform = `translate3d(calc(-50% + ${this.current.rimX.toFixed(2)}px), ${this.current.rimY.toFixed(2)}px, 0)`;
+      }
 
-      const totalX = this.current.pointerX + this.current.scrollX;
-      const totalY = this.current.pointerY + this.current.scrollY;
-      const totalRotX = this.current.pointerRotX;
-      const totalRotY = this.current.pointerRotY + this.current.scrollRotY;
-      const totalScale = this.current.pointerScale * this.current.scrollScale;
+      // 2. Move 2D Portrait Fallback
+      if (this.portraitEl) {
+        const totalX = this.current.pointerX + this.current.scrollX;
+        const totalY = this.current.pointerY + this.current.scrollY;
+        const totalRotX = this.current.pointerRotX;
+        const totalRotY = this.current.pointerRotY + this.current.scrollRotY;
+        const totalScale = this.current.pointerScale * this.current.scrollScale;
 
-      this.portraitEl.style.transform = 
-        `translate3d(${totalX.toFixed(2)}px, ${totalY.toFixed(2)}px, 0) ` +
-        `rotateX(${totalRotX.toFixed(2)}deg) rotateY(${totalRotY.toFixed(2)}deg) ` +
-        `scale(${totalScale.toFixed(4)})`;
+        this.portraitEl.style.transform = 
+          `translate3d(${totalX.toFixed(2)}px, ${totalY.toFixed(2)}px, 0) ` +
+          `rotateX(${totalRotX.toFixed(2)}deg) rotateY(${totalRotY.toFixed(2)}deg) ` +
+          `scale(${totalScale.toFixed(4)})`;
 
-      this.portraitEl.style.opacity = this.current.scrollOpacity.toFixed(3);
-
-      // Future 3D Character Model mapping:
-      // portrait translateX → model.position.x
-      // portrait translateY → model.position.y
-      // portrait scale → camera/model scale
-      // portrait simulated rotation → model.rotation
-      if (window.Character3DScene && window.Character3DScene.model) {
-        window.Character3DScene.model.position.x = totalX * 0.01;
-        window.Character3DScene.model.position.y = -totalY * 0.01;
-        window.Character3DScene.model.rotation.y = (totalRotY * Math.PI) / 180;
-        window.Character3DScene.model.rotation.x = (totalRotX * Math.PI) / 180;
-        window.Character3DScene.model.scale.setScalar(totalScale);
+        this.portraitEl.style.opacity = this.current.scrollOpacity.toFixed(3);
       }
     },
 
@@ -207,6 +239,12 @@ document.addEventListener('DOMContentLoaded', () => {
       this.target.scrollRotY = rotY;
       this.target.scrollScale = scale;
       this.target.scrollOpacity = opacity;
+
+      // Also forward directly to 3D character scene
+      if (window.Character3DScene && typeof window.Character3DScene.setScrollKinematics === 'function') {
+        window.Character3DScene.setScrollKinematics(x, y, rotY, scale, opacity);
+      }
+
       this.requestTick();
     },
 
@@ -216,15 +254,28 @@ document.addEventListener('DOMContentLoaded', () => {
       this.target.pointerRotX = 0;
       this.target.pointerRotY = 0;
       this.target.pointerScale = 1;
+      this.target.lightX = 0;
+      this.target.lightY = 0;
+      this.target.rimX = 0;
+      this.target.rimY = 0;
       this.current.pointerX = 0;
       this.current.pointerY = 0;
       this.current.pointerRotX = 0;
       this.current.pointerRotY = 0;
       this.current.pointerScale = 1;
+      this.current.lightX = 0;
+      this.current.lightY = 0;
+      this.current.rimX = 0;
+      this.current.rimY = 0;
+
       if (this.portraitEl) {
         this.portraitEl.style.transform = 'none';
         this.portraitEl.style.opacity = '1';
       }
+      if (this.radialLightEl) this.radialLightEl.style.transform = 'translateX(-50%)';
+      if (this.dirLightEl) this.dirLightEl.style.transform = 'none';
+      if (this.rimLightEl) this.rimLightEl.style.transform = 'translateX(-50%)';
+
       this.isTicking = false;
     }
   };
@@ -631,7 +682,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (e.key === 'Escape') closeProofModal();
   });
 
-  // 6. Proof Vault Tab Filtering
+  // 6. Proof Vault Tab Filtering (Multi-category support)
   const filterBtns = document.querySelectorAll('.proof-filter-btn');
   const proofCards = document.querySelectorAll('.proof-card');
 
@@ -643,8 +694,9 @@ document.addEventListener('DOMContentLoaded', () => {
         const filter = btn.getAttribute('data-filter');
 
         proofCards.forEach(card => {
-          const category = card.getAttribute('data-category');
-          if (filter === 'all' || category === filter) {
+          const category = card.getAttribute('data-category') || '';
+          const categories = category.toLowerCase().split(/\s+/);
+          if (filter === 'all' || categories.includes(filter.toLowerCase())) {
             card.style.display = 'flex';
             setTimeout(() => { card.style.opacity = '1'; }, 20);
           } else {
@@ -656,14 +708,179 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // 7. Subtle Desktop Magnetic Button Interaction
+  // 7. Interactive Journey System (Career Progression & Inspector Panel)
+  const journeyNodes = document.querySelectorAll('.journey-node');
+  const panelYear = document.getElementById('panel-year');
+  const panelRole = document.getElementById('panel-role');
+  const panelCompany = document.getElementById('panel-company');
+  const panelSkills = document.getElementById('panel-skills');
+  const panelProofBtn = document.getElementById('panel-proof-btn');
+
+  if (journeyNodes.length > 0) {
+    journeyNodes.forEach(node => {
+      node.addEventListener('click', () => {
+        journeyNodes.forEach(n => n.classList.remove('active'));
+        node.classList.add('active');
+
+        const year = node.getAttribute('data-year') || '';
+        const role = node.getAttribute('data-role') || '';
+        const company = node.getAttribute('data-company') || '';
+        const rawSkills = node.getAttribute('data-skills') || '';
+        const skills = rawSkills.split(',').map(s => s.trim()).filter(Boolean);
+        const proofKey = node.getAttribute('data-proof') || '';
+
+        if (panelYear) panelYear.textContent = year;
+        if (panelRole) panelRole.textContent = role;
+        if (panelCompany) panelCompany.textContent = company;
+
+        if (panelSkills) {
+          panelSkills.innerHTML = skills.map(skill => `<span class="editorial-role-tag">${skill.toUpperCase()}</span>`).join('');
+        }
+
+        if (panelProofBtn) {
+          if (proofKey) {
+            panelProofBtn.setAttribute('data-proof', proofKey);
+            panelProofBtn.style.display = 'inline-flex';
+          } else {
+            panelProofBtn.style.display = 'none';
+          }
+        }
+      });
+    });
+  }
+
+  // 8. Digi Marketrix Chapter Scroll Spy & Smooth Navigation
+  const chapterNavLinks = document.querySelectorAll('.chapter-nav-item');
+  const chapterCards = document.querySelectorAll('.case-chapter-card');
+
+  if (chapterNavLinks.length > 0 && chapterCards.length > 0) {
+    chapterNavLinks.forEach(link => {
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        const targetId = link.getAttribute('href');
+        const targetEl = targetId ? document.querySelector(targetId) : null;
+        if (targetEl) {
+          const headerOffset = 115;
+          const elementPosition = targetEl.getBoundingClientRect().top + window.scrollY;
+          window.scrollTo({
+            top: elementPosition - headerOffset,
+            behavior: 'smooth'
+          });
+        }
+      });
+    });
+
+    if ('IntersectionObserver' in window) {
+      const chapterObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            const id = entry.target.getAttribute('id');
+            chapterNavLinks.forEach(link => {
+              const href = (link.getAttribute('href') || '').replace('#', '');
+              link.classList.toggle('active', href === id);
+            });
+          }
+        });
+      }, {
+        rootMargin: '-20% 0px -55% 0px',
+        threshold: 0.1
+      });
+
+      chapterCards.forEach(card => chapterObserver.observe(card));
+    }
+  }
+
+  // 9. Motivational Speaking Horizontal Gallery Wheel & Drag Handling
+  const speakingViewport = document.querySelector('.speaking-horizontal-viewport');
+  if (speakingViewport) {
+    let isDown = false;
+    let startX = 0;
+    let scrollLeft = 0;
+
+    speakingViewport.addEventListener('mousedown', (e) => {
+      isDown = true;
+      startX = e.pageX - speakingViewport.offsetLeft;
+      scrollLeft = speakingViewport.scrollLeft;
+    });
+
+    window.addEventListener('mouseup', () => {
+      isDown = false;
+    });
+
+    speakingViewport.addEventListener('mousemove', (e) => {
+      if (!isDown) return;
+      e.preventDefault();
+      const x = e.pageX - speakingViewport.offsetLeft;
+      const walk = (x - startX) * 1.6;
+      speakingViewport.scrollLeft = scrollLeft - walk;
+    });
+  }
+
+  // 10. Scroll Progress Indicator Line
+  const scrollProgress = document.getElementById('scroll-progress');
+  function updateScrollProgress() {
+    if (!scrollProgress) return;
+    const totalHeight = document.documentElement.scrollHeight - window.innerHeight;
+    const progress = totalHeight > 0 ? (window.scrollY / totalHeight) * 100 : 0;
+    scrollProgress.style.width = `${Math.min(100, Math.max(0, progress))}%`;
+  }
+  window.addEventListener('scroll', updateScrollProgress, { passive: true });
+  updateScrollProgress();
+
+  // 11. Subtle Contextual Cursor Badge ([data-cursor])
+  const cursorBadge = document.getElementById('cursor-badge');
+  const cursorBadgeText = document.getElementById('cursor-badge-text');
+  const isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+
+  if (cursorBadge && !isTouchDevice && window.innerWidth > 960) {
+    let badgeX = 0;
+    let badgeY = 0;
+    let targetBadgeX = 0;
+    let targetBadgeY = 0;
+    let isBadgeMoving = false;
+
+    const renderBadge = () => {
+      badgeX += (targetBadgeX - badgeX) * 0.25;
+      badgeY += (targetBadgeY - badgeY) * 0.25;
+      cursorBadge.style.left = `${badgeX}px`;
+      cursorBadge.style.top = `${badgeY}px`;
+
+      if (Math.abs(targetBadgeX - badgeX) > 0.1 || Math.abs(targetBadgeY - badgeY) > 0.1) {
+        requestAnimationFrame(renderBadge);
+      } else {
+        isBadgeMoving = false;
+      }
+    };
+
+    window.addEventListener('mousemove', (e) => {
+      targetBadgeX = e.clientX + 16;
+      targetBadgeY = e.clientY + 16;
+      if (!isBadgeMoving) {
+        isBadgeMoving = true;
+        requestAnimationFrame(renderBadge);
+      }
+    }, { passive: true });
+
+    document.querySelectorAll('[data-cursor]').forEach(item => {
+      item.addEventListener('mouseenter', () => {
+        const text = item.getAttribute('data-cursor') || 'VIEW';
+        if (cursorBadgeText) cursorBadgeText.textContent = text;
+        cursorBadge.classList.add('visible');
+      });
+      item.addEventListener('mouseleave', () => {
+        cursorBadge.classList.remove('visible');
+      });
+    });
+  }
+
+  // 12. Subtle Desktop Magnetic Button Interaction
   if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches && window.innerWidth > 960) {
-    document.querySelectorAll('.btn-editorial, .nav-connect-btn').forEach(btn => {
+    document.querySelectorAll('.btn-editorial, .btn-editorial-outline, .nav-connect-btn, .proof-pill-btn').forEach(btn => {
       btn.addEventListener('mousemove', (e) => {
         const rect = btn.getBoundingClientRect();
-        const x = (e.clientX - rect.left - rect.width / 2) * 0.2;
-        const y = (e.clientY - rect.top - rect.height / 2) * 0.2;
-        btn.style.transform = `translate3d(${x}px, ${y}px, 0)`;
+        const x = (e.clientX - rect.left - rect.width / 2) * 0.18;
+        const y = (e.clientY - rect.top - rect.height / 2) * 0.18;
+        btn.style.transform = `translate3d(${x.toFixed(2)}px, ${y.toFixed(2)}px, 0)`;
       });
       btn.addEventListener('mouseleave', () => {
         btn.style.transform = 'translate3d(0, 0, 0)';
@@ -671,7 +888,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // 8. Contact Form Handler
+  // 13. Contact Form Handler
   const contactForm = document.getElementById('contact-form');
   if (contactForm) {
     contactForm.addEventListener('submit', (e) => {
@@ -697,7 +914,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // 9. Dynamic Year
+  // 14. Dynamic Year
   const yearEl = document.getElementById('current-year');
   if (yearEl) {
     yearEl.textContent = new Date().getFullYear();
