@@ -109,7 +109,7 @@ document.addEventListener('DOMContentLoaded', () => {
       title: 'Digi Marketrix — Certified Internship Completion',
       category: 'PROFESSIONAL CREDENTIAL',
       period: 'May 1, 2026 — July 1, 2026 // Tuticorin',
-      image: 'assets/experience_digi_marketrix.jpg',
+      image: 'assets/digi_marketrix_cert.jpg',
       desc: 'Official credential verifying completion of full-time digital marketing & creative internship at Digi Marketrix. Covered end-to-end commercial scripting, videography, on-location client shoots, and post-production video editing for regional businesses and personal brands.',
       linkText: 'Explore Experience Chapter →',
       linkUrl: 'experience.html'
@@ -167,6 +167,42 @@ document.addEventListener('DOMContentLoaded', () => {
       desc: 'Production travel business web platform featuring responsive fleet showcase, interactive booking flow, and private administrative portal for route management and booking inquiries.',
       linkText: 'Visit Live Website ↗',
       linkUrl: 'https://www.jayashakthitoursandtravels.com/'
+    },
+    'award-bestreels': {
+      title: 'Best Reels Creator — 2025 Regional Award',
+      category: 'VERIFIED RECOGNITION',
+      period: '2025 // Tuticorin Content Honors',
+      image: 'assets/life_with_aakash.jpg',
+      desc: 'Awarded for creative short-form visual storytelling, dynamic pacing, and audience retention metrics on Life With Aakash and commercial video productions.',
+      linkText: 'Explore Journey Timeline →',
+      linkUrl: 'journey.html'
+    },
+    'award-younginfo': {
+      title: 'Young Informative Content — 2025 Citation',
+      category: 'VERIFIED RECOGNITION',
+      period: '2025 // Regional Digital Honors',
+      image: 'assets/mraku_vlogs.jpg',
+      desc: 'Recognized for informative, value-driven lifestyle and personal growth content, bridging youth motivation with real-world execution.',
+      linkText: 'Explore Journey Timeline →',
+      linkUrl: 'journey.html'
+    },
+    'chinnadurai-textiles': {
+      title: 'Chinnadurai Textiles — Commercial Campaign Strategy',
+      category: 'COMMERCIAL CONTENT & SCRIPTING',
+      period: '10K–15K Organic Views // Thoothukudi',
+      image: 'assets/project_textile.jpg',
+      desc: 'Full content research, scriptwriting, and promotional reel direction for retail textile brand, yielding 10,000–15,000 organic impressions without paid ad spend.',
+      linkText: 'Read Full Case Study →',
+      linkUrl: 'work.html#chinnadurai'
+    },
+    'salemrr-food': {
+      title: 'SalemRR Biriyani — Commercial Video VJ & Food Promotion',
+      category: 'BRAND PROMOTION & VIDEO VJ',
+      period: 'Cinematic Food Production // 2026',
+      image: 'assets/project_food.jpg',
+      desc: 'On-camera VJ presentation, commercial scripting, and culinary cinematography capturing store ambiance, dish presentation, and promotional reach.',
+      linkText: 'Read Full Case Study →',
+      linkUrl: 'work.html#salemrr'
     }
   };
 
@@ -224,7 +260,47 @@ document.addEventListener('DOMContentLoaded', () => {
     if (e.key === 'Escape') closeProofModal();
   });
 
-  // 6. Contact Form Handler
+  // 6. Proof Vault Tab Filtering
+  const filterBtns = document.querySelectorAll('.proof-filter-btn');
+  const proofCards = document.querySelectorAll('.proof-card');
+
+  if (filterBtns.length > 0 && proofCards.length > 0) {
+    filterBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        filterBtns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        const filter = btn.getAttribute('data-filter');
+
+        proofCards.forEach(card => {
+          const category = card.getAttribute('data-category');
+          if (filter === 'all' || category === filter) {
+            card.style.display = 'flex';
+            setTimeout(() => { card.style.opacity = '1'; }, 20);
+          } else {
+            card.style.opacity = '0';
+            setTimeout(() => { card.style.display = 'none'; }, 200);
+          }
+        });
+      });
+    });
+  }
+
+  // 7. Subtle Desktop Magnetic Button Interaction
+  if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches && window.innerWidth > 960) {
+    document.querySelectorAll('.btn-editorial, .nav-connect-btn').forEach(btn => {
+      btn.addEventListener('mousemove', (e) => {
+        const rect = btn.getBoundingClientRect();
+        const x = (e.clientX - rect.left - rect.width / 2) * 0.2;
+        const y = (e.clientY - rect.top - rect.height / 2) * 0.2;
+        btn.style.transform = `translate3d(${x}px, ${y}px, 0)`;
+      });
+      btn.addEventListener('mouseleave', () => {
+        btn.style.transform = 'translate3d(0, 0, 0)';
+      });
+    });
+  }
+
+  // 8. Contact Form Handler
   const contactForm = document.getElementById('contact-form');
   if (contactForm) {
     contactForm.addEventListener('submit', (e) => {
@@ -241,7 +317,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
       showToast('Opening email client...');
       const subject = `[${category}] Inquiry from ${name}`;
-      const body = `Hi Aakash,\n\nName: ${name}\nEmail: ${email}\nCategory: ${category}\n\nMessage:\n${message}\n`;
+      const body = `Hi AKU,\n\nName: ${name}\nEmail: ${email}\nCategory: ${category}\n\nMessage:\n${message}\n`;
       const mailtoUrl = `mailto:${directEmail}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
       setTimeout(() => {
         window.location.href = mailtoUrl;
@@ -250,7 +326,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // 7. Dynamic Year
+  // 9. Dynamic Year
   const yearEl = document.getElementById('current-year');
   if (yearEl) {
     yearEl.textContent = new Date().getFullYear();

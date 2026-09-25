@@ -1,7 +1,7 @@
 /* ==========================================================================
-   AAKASH K — Minimal Navigation Bar
-   Desktop: Left Brand, Center/Right Pages, Far Right Contact
-   Clean, Restrained, Studio Caliber
+   AKU — Minimal Navigation Bar
+   Desktop: Left Brand "AKU", Center Links, Right "Let's Connect →"
+   Mobile: Minimal Full-Screen Menu with Large Typography
    ========================================================================== */
 
 .site-header {
@@ -18,7 +18,7 @@
 }
 
 .site-header.scrolled {
-  background-color: rgba(8, 8, 10, 0.85);
+  background-color: rgba(10, 10, 12, 0.9);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   border-color: var(--border-subtle);
@@ -37,24 +37,25 @@
 /* Left: Brand */
 .nav-brand {
   font-family: var(--font-sans);
-  font-weight: 800;
-  font-size: 1.05rem;
-  letter-spacing: -0.01em;
+  font-weight: 900;
+  font-size: 1.15rem;
+  letter-spacing: 0.05em;
   color: #ffffff;
   display: flex;
   align-items: center;
   gap: 0.6rem;
+  text-transform: uppercase;
 }
 
 .brand-dot {
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  background-color: var(--accent-light);
-  box-shadow: 0 0 10px rgba(139, 92, 246, 0.5);
+  background-color: var(--accent-gold);
+  box-shadow: 0 0 10px rgba(216, 195, 165, 0.6);
 }
 
-/* Center / Right Links */
+/* Center Links */
 .nav-center-links {
   display: flex;
   align-items: center;
@@ -65,7 +66,7 @@
   font-family: var(--font-mono);
   font-size: 0.8125rem;
   font-weight: 500;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--text-secondary);
   position: relative;
@@ -85,27 +86,28 @@
   left: 0;
   right: 0;
   height: 1px;
-  background-color: var(--accent-light);
+  background-color: var(--accent-gold);
 }
 
-/* Right: Resume & Action */
+/* Right: Action CTA */
 .nav-right-action {
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: 1.25rem;
 }
 
+.nav-connect-btn,
 .nav-resume-btn {
   font-family: var(--font-mono);
   font-size: 0.8125rem;
   font-weight: 600;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: #0b0b0d;
-  background-color: #f4f3ef;
-  padding: 0.55rem 1.25rem;
+  color: #0a0a0c;
+  background-color: var(--accent-gold);
+  padding: 0.6rem 1.35rem;
   border-radius: var(--radius-xs);
-  border: 1px solid #f4f3ef;
+  border: 1px solid var(--accent-gold);
   transition: all var(--transition-fast);
   white-space: nowrap;
   display: inline-flex;
@@ -113,11 +115,12 @@
   gap: 0.45rem;
 }
 
+.nav-connect-btn:hover,
 .nav-resume-btn:hover {
   background-color: #ffffff;
   border-color: #ffffff;
   transform: translateY(-1px);
-  box-shadow: 0 4px 14px rgba(244, 243, 239, 0.15);
+  box-shadow: 0 4px 18px rgba(216, 195, 165, 0.25);
 }
 
 /* Mobile Toggle */
@@ -133,7 +136,7 @@
 }
 
 .mobile-nav-toggle span {
-  width: 22px;
+  width: 24px;
   height: 1.5px;
   background-color: #ffffff;
   transition: transform 0.25s ease, opacity 0.25s ease;
@@ -147,33 +150,56 @@
   transform: translateY(-7.5px) rotate(-45deg);
 }
 
-/* Mobile Dropdown Drawer */
+/* Mobile Full-Screen Menu with Large Typography */
 .mobile-drawer {
   display: none;
   position: fixed;
-  top: var(--header-height);
-  left: 0;
-  right: 0;
-  background-color: rgba(8, 8, 10, 0.98);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
-  border-bottom: 1px solid var(--border-subtle);
-  padding: 2rem clamp(1.5rem, 5vw, 4.5rem) 2.5rem;
+  inset: 0;
+  top: 0;
+  background-color: rgba(10, 10, 12, 0.98);
+  backdrop-filter: blur(30px);
+  -webkit-backdrop-filter: blur(30px);
+  padding: calc(var(--header-height) + 2rem) clamp(2rem, 6vw, 4rem) 3rem;
   flex-direction: column;
-  gap: 1.5rem;
+  justify-content: space-between;
   z-index: 999;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s var(--ease-smooth);
 }
 
 .mobile-drawer.open {
   display: flex;
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.mobile-drawer-links {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
 }
 
 .mobile-drawer .nav-link {
-  font-size: 1.15rem;
-  font-weight: 600;
-  letter-spacing: 0.08em;
-  padding-block: 0.5rem;
-  border-bottom: 1px solid var(--border-subtle);
+  font-family: var(--font-sans);
+  font-size: clamp(2rem, 7vw, 3.25rem);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+  color: var(--text-primary);
+  padding-block: 0.25rem;
+}
+
+.mobile-drawer .nav-link:hover {
+  color: var(--accent-gold);
+}
+
+.mobile-drawer-footer {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--border-subtle);
 }
 
 /* Responsive */
@@ -181,10 +207,11 @@
   .nav-center-links {
     display: none;
   }
-  .nav-resume-btn {
+  .nav-connect-btn {
     display: none;
   }
   .mobile-nav-toggle {
     display: flex;
+    z-index: 1001;
   }
 }
