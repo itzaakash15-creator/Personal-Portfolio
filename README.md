@@ -8,8 +8,9 @@ Crafted with the visual restraint and art direction of award-winning digital stu
 ---
 
 ## ⚡ Design Philosophy
+- **Authentic Personal Presence:** Master hero dominated by Aakash's authentic professional editorial portrait (`assets/aakash_authentic_portrait.png`) on an asymmetric grid with subtle contrast grading and background fade, establishing immediate real human identity.
 - **Content First. Design Second. Effects Third:** Every visual element, layout choice, and subtle motion cue serves readability, narrative truth, and editorial clarity.
-- **Visual Identity:** Near-black / charcoal canvas (`#0B0B0D`), off-white typography (`#F4F3EF`), and extremely subtle violet/purple accents (`#8B5CF6`). No rainbow gradients, no excessive neon, no dashboard clutter.
+- **Visual Identity:** Near-black / charcoal canvas (`#0A0A0A`), off-white typography (`#F3F2EE`), and restrained violet/purple accents (`#8B5CF6`). No rainbow gradients, no excessive neon, no dashboard clutter.
 - **Typography & Grid:** Strict 1400px global alignment grid with Inter typography, JetBrains Mono metadata labels, and generous whitespace.
 - **10–30 Second CEO / Recruiter Story:**
   - **First 5–10 Seconds:** Immediate clarity of identity (`AAKASH K / AI & DATA SCIENCE × DIGITAL × CREATIVE`) and clear call-to-actions (`VIEW MY WORK` & `DOWNLOAD RESUME`).
@@ -34,7 +35,7 @@ Crafted with the visual restraint and art direction of award-winning digital stu
 ## 📂 Page Directory & Multi-Page Architecture
 ```
 Portfolio/
-├── index.html                 # Master Flagship: Hero, Who I Am, Capabilities, Digi Marketrix, U6NICK, Mr Aku Vlogs, Life With Aakash, Supporting Work, Tech Lab, Education, Journey, Vision, Contact
+├── index.html                 # Master Flagship: Hero with Authentic Portrait, Who I Am, Capabilities, Digi Marketrix, U6NICK, Mr Aku Vlogs, Life With Aakash, Other Work, Tech Lab, Education, Journey, Vision, Contact
 ├── resume.html                # Executive Printable Digital Resume (Cmd+P print-to-PDF ready, clean typography)
 ├── work.html                  # 7 In-Depth Case Studies (U6NICK, Digi Marketrix, Jayashakthi, Chinnadurai, SalemRR, Life With Aakash, Vedha Rice)
 ├── experience.html            # Digi Marketrix Agency Internship & Selected Freelance Track Record
@@ -44,13 +45,13 @@ Portfolio/
 ├── contact.html               # Minimal Contact Page: Direct Channels (Email, Phone, LinkedIn, IG, GitHub) & Project Form
 ├── README.md                  # Master System Documentation
 ├── css/
-│   ├── main.css               # Design tokens, Inter typography, #0B0B0D / #F4F3EF palette
-│   ├── nav.css                # Top navigation header & RESUME button
-│   └── editorial.css          # Editorial 12-column layouts, proof strips, lightbox styles
+│   ├── main.css               # Design tokens, Inter typography, #0A0A0A / #F3F2EE palette
+│   ├── nav.css                # Minimal top navigation header & RESUME button
+│   └── editorial.css          # Editorial layouts, asymmetric hero, horizontal project list, proof modal
 ├── js/
 │   └── main.js                # Lean controller: Proof Lightbox Engine, subtle portrait tilt, toast, contact form, clipboard copy
-└── assets/                    # Editorial studio assets & verified project photography
-    ├── aakash_portrait.jpg      # Editorial studio portrait
+└── assets/                    # Authentic portrait asset & verified project photography
+    ├── aakash_authentic_portrait.png # High-contrast authentic editorial portrait
     ├── experience_digi_marketrix.jpg # Digi Marketrix production shoot
     ├── project_fashion.jpg      # U6NICK editorial model showcase
     ├── mraku_vlogs.jpg          # Mr Aku Vlogs creator foundation setup

@@ -36,25 +36,25 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // 3. Subtle Hero Portrait Cursor Interaction
-  const portraitCard = document.querySelector('.hero-portrait-card');
+  const portraitEl = document.querySelector('.hero-authentic-portrait') || document.querySelector('.hero-portrait-card');
   const heroSection = document.querySelector('.home-hero-section');
 
-  if (portraitCard && heroSection && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+  if (portraitEl && heroSection && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
     heroSection.addEventListener('mousemove', (e) => {
-      const rect = portraitCard.getBoundingClientRect();
+      const rect = portraitEl.getBoundingClientRect();
       const centerX = rect.left + rect.width / 2;
       const centerY = rect.top + rect.height / 2;
       const deltaX = (e.clientX - centerX) / (window.innerWidth / 2);
       const deltaY = (e.clientY - centerY) / (window.innerHeight / 2);
 
-      // Subtle rotation and shift (restrained, 3.5 degrees max)
-      const rotateY = deltaX * 3.5;
-      const rotateX = -deltaY * 3.5;
-      portraitCard.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translate3d(0, 0, 8px)`;
+      // Subtle rotation and parallax shift (restrained, 2.5 degrees max)
+      const rotateY = deltaX * 2.5;
+      const rotateX = -deltaY * 2.5;
+      portraitEl.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translate3d(${deltaX * 4}px, ${deltaY * 3}px, 0)`;
     });
 
     heroSection.addEventListener('mouseleave', () => {
-      portraitCard.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) translate3d(0, 0, 0)';
+      portraitEl.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) translate3d(0, 0, 0)';
     });
   }
 

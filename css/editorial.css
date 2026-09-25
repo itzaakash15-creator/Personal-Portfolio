@@ -79,23 +79,34 @@
 /* ==========================================================================
    2. Home: Hero Section
    ========================================================================== */
+/* ==========================================================================
+   2. Home: Hero Section (Editorial Portrait × Typography)
+   ========================================================================== */
 .home-hero-section {
-  padding-top: calc(var(--header-height) + clamp(3.5rem, 7vw, 6.5rem));
-  padding-bottom: clamp(5rem, 9vw, 8.5rem);
+  padding-top: calc(var(--header-height) + clamp(2.5rem, 5vw, 4.5rem));
+  padding-bottom: 0;
   border-bottom: 1px solid var(--border-subtle);
   position: relative;
+  min-height: calc(100vh - var(--header-height));
+  display: flex;
+  align-items: flex-end;
+  overflow: hidden;
+  background-color: var(--bg-primary);
 }
 
 .home-hero-grid {
   display: grid;
-  grid-template-columns: 1.18fr 0.82fr;
-  gap: clamp(3rem, 6vw, 6rem);
-  align-items: center;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: clamp(2rem, 5vw, 5rem);
+  align-items: flex-end;
+  width: 100%;
 }
 
 .hero-left-column {
   display: flex;
   flex-direction: column;
+  padding-bottom: clamp(3.5rem, 7vw, 6.5rem);
+  z-index: 2;
 }
 
 .hero-metadata-tag {
@@ -108,13 +119,20 @@
 }
 
 .hero-main-title {
-  margin-bottom: 2rem;
+  margin-bottom: 1.75rem;
+  font-size: clamp(2.75rem, 5.8vw, 5.2rem);
+  line-height: 0.98;
+  letter-spacing: -0.04em;
+  font-weight: 900;
+  text-transform: uppercase;
 }
 
 .hero-description-text {
-  max-width: 600px;
-  margin-bottom: 2.75rem;
+  max-width: 540px;
+  margin-bottom: 2.5rem;
   color: var(--text-secondary);
+  font-size: clamp(1.05rem, 1.8vw, 1.25rem);
+  line-height: 1.65;
 }
 
 .hero-cta-group {
@@ -124,53 +142,69 @@
   flex-wrap: wrap;
 }
 
-/* Hero Editorial Photograph Treatment */
+/* Authentic Dominant Portrait Treatment */
 .hero-portrait-stage {
   position: relative;
   width: 100%;
-  max-width: 480px;
-  margin-left: auto;
-}
-
-.hero-portrait-card {
-  position: relative;
-  border-radius: var(--radius-md);
-  overflow: hidden;
-  border: 1px solid var(--border-subtle);
-  background-color: var(--bg-surface);
-  aspect-ratio: 4 / 5;
-  box-shadow: 0 30px 60px -20px rgba(0, 0, 0, 0.8),
-              0 0 40px -10px rgba(139, 92, 246, 0.08);
-  transition: transform 0.4s var(--ease-smooth);
-}
-
-.hero-portrait-media {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  filter: contrast(1.04) brightness(0.96);
-  transition: transform 0.8s var(--ease-smooth);
-}
-
-.hero-portrait-card:hover .hero-portrait-media {
-  transform: scale(1.03);
-}
-
-.hero-portrait-vignette {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(180deg, transparent 65%, rgba(8, 8, 10, 0.6) 100%);
-  pointer-events: none;
-}
-
-.hero-portrait-footer-meta {
-  margin-top: 1rem;
   display: flex;
-  justify-content: space-between;
+  align-items: flex-end;
+  justify-content: center;
+  z-index: 1;
+}
+
+.hero-portrait-backdrop-glow {
+  position: absolute;
+  bottom: 20%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: clamp(280px, 35vw, 460px);
+  height: clamp(280px, 35vw, 460px);
+  background: radial-gradient(circle, rgba(139, 92, 246, 0.1) 0%, rgba(21, 21, 28, 0.6) 50%, transparent 75%);
+  filter: blur(50px);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.hero-authentic-portrait {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 560px;
+  height: auto;
+  max-height: 84vh;
+  object-fit: contain;
+  object-position: bottom center;
+  display: block;
+  /* Authentic professional editorial grading: low saturation, rich contrast, natural skin tone */
+  filter: contrast(1.08) brightness(0.96) saturate(0.85);
+  /* Bottom fade blending smoothly into background */
+  -webkit-mask-image: linear-gradient(to bottom, black 82%, transparent 100%);
+  mask-image: linear-gradient(to bottom, black 82%, transparent 100%);
+  transition: filter 0.4s var(--ease-smooth), transform 0.4s var(--ease-smooth);
+}
+
+.hero-authentic-portrait:hover {
+  filter: contrast(1.1) brightness(1) saturate(0.95);
+}
+
+.hero-portrait-badge-meta {
+  position: absolute;
+  bottom: 1.5rem;
+  right: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
   font-family: var(--font-mono);
-  font-size: 0.75rem;
-  letter-spacing: 0.1em;
+  font-size: 0.72rem;
   color: var(--text-muted);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  z-index: 3;
+  background-color: rgba(10, 10, 10, 0.75);
+  backdrop-filter: blur(12px);
+  padding: 0.55rem 0.95rem;
+  border-radius: var(--radius-xs);
+  border: 1px solid var(--border-subtle);
 }
 
 /* ==========================================================================
@@ -420,6 +454,57 @@
   font-size: 0.95rem;
   color: var(--text-secondary);
   line-height: 1.6;
+}
+
+/* Refined Horizontal Project List */
+.horizontal-project-list {
+  display: flex;
+  flex-direction: column;
+  border-top: 1px solid var(--border-medium);
+  margin-top: 2.5rem;
+}
+
+.horizontal-project-row {
+  display: grid;
+  grid-template-columns: 70px 1.4fr 1.6fr auto;
+  gap: clamp(1rem, 2.5vw, 2rem);
+  align-items: center;
+  padding-block: 1.85rem;
+  border-bottom: 1px solid var(--border-subtle);
+  transition: all var(--transition-fast);
+}
+
+.horizontal-project-row:hover {
+  background-color: rgba(255, 255, 255, 0.02);
+  padding-inline: 1rem;
+}
+
+.horizontal-proj-num {
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  font-weight: 700;
+  color: var(--accent-light);
+  letter-spacing: 0.12em;
+}
+
+.horizontal-proj-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: -0.015em;
+}
+
+.horizontal-proj-desc {
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+  line-height: 1.55;
+}
+
+.horizontal-proj-actions {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+  justify-content: flex-end;
 }
 
 /* ==========================================================================
@@ -1235,6 +1320,28 @@ textarea.form-input-clean {
 }
 
 /* Vision Track */
+.vision-huge-typography {
+  font-size: clamp(2.75rem, 6.5vw, 5.25rem);
+  font-weight: 900;
+  line-height: 1.02;
+  letter-spacing: -0.04em;
+  color: #ffffff;
+  margin-block: 1.5rem 2rem;
+  text-transform: uppercase;
+}
+
+.timeline-connector-arrow {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding-left: clamp(2rem, 5vw, 4rem);
+  padding-block: 0.75rem;
+  color: var(--accent-light);
+  font-size: 1.5rem;
+  font-weight: 700;
+  opacity: 0.65;
+}
+
 .vision-progression-track {
   display: flex;
   align-items: center;
@@ -1427,6 +1534,13 @@ textarea.form-input-clean {
   }
   .mraku-showcase-grid {
     grid-template-columns: 1fr;
+  }
+  .horizontal-project-row {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+  .horizontal-proj-actions {
+    justify-content: flex-start;
   }
 }
 
