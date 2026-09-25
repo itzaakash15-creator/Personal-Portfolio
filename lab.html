@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Digital Lab of Aakash K — Web development, AI & Data Science experiments, ESP32 IoT hardware, SolidWorks engineering, and Smart India Hackathon projects." />
+  <title>Digital Lab — Aakash K</title>
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>" />
+
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="css/main.css" />
+  <link rel="stylesheet" href="css/nav.css" />
+  <link rel="stylesheet" href="css/editorial.css" />
+</head>
+<body>
+
+  <!-- Navigation Bar -->
+  <header class="site-header" id="site-header">
+    <nav class="nav-container" aria-label="Main Navigation">
+      <a href="index.html" class="nav-brand" aria-label="Aakash K Home">
+        <span class="brand-dot" aria-hidden="true"></span>
+        <span>AAKASH K</span>
+      </a>
+
+      <div class="nav-center-links">
+        <a href="work.html" class="nav-link">WORK</a>
+        <a href="experience.html" class="nav-link">EXPERIENCE</a>
+        <a href="lab.html" class="nav-link active">LAB</a>
+        <a href="journey.html" class="nav-link">JOURNEY</a>
+        <a href="about.html" class="nav-link">ABOUT</a>
+      </div>
+
+      <div class="nav-right-action">
+        <a href="contact.html" class="nav-contact-btn">CONTACT</a>
+        <button type="button" class="mobile-nav-toggle" id="mobile-toggle" aria-label="Toggle mobile menu" aria-expanded="false">
+          <span></span>
+          <span></span>
+        </button>
+      </div>
+    </nav>
+
+    <!-- Mobile Drawer -->
+    <div class="mobile-drawer" id="mobile-drawer">
+      <a href="index.html" class="nav-link">HOME</a>
+      <a href="work.html" class="nav-link">WORK</a>
+      <a href="experience.html" class="nav-link">EXPERIENCE</a>
+      <a href="lab.html" class="nav-link active">LAB</a>
+      <a href="journey.html" class="nav-link">JOURNEY</a>
+      <a href="about.html" class="nav-link">ABOUT</a>
+      <a href="contact.html" class="nav-link" style="color: var(--accent-light);">CONTACT →</a>
+    </div>
+  </header>
+
+  <main>
+    <!-- Header -->
+    <header class="page-intro-header">
+      <div class="container">
+        <span class="label-mono">EXPERIMENTS / TECHNOLOGY / BUILDING</span>
+        <h1 class="display-title" style="margin-bottom: 1.5rem;">DIGITAL LAB.</h1>
+        <p class="body-large" style="max-width: 780px;">
+          The technical side of Aakash. Studying B.Tech AI &amp; Data Science at Rathinam Technical Campus while building web applications, programming ESP32 microcontrollers, 3D modeling mechanical CAD, and competing in the Smart India Hackathon.
+        </p>
+      </div>
+    </header>
+
+    <!-- Featured Lab Prototype: MineGuardian -->
+    <section class="section-spacer" id="sih-mineguardian">
+      <div class="container">
+        <div class="project-editorial-header">
+          <div>
+            <span class="label-mono accent">FEATURED SIH &amp; AI INITIATIVE</span>
+            <div class="project-category-tag">SMART INDIA HACKATHON / IOT TELEMETRY / SAFETY</div>
+          </div>
+          <div class="project-dates-loc">
+            <span>HARDWARE + DASHBOARD</span> • <span>PROTOTYPE</span>
+          </div>
+        </div>
+
+        <h2 class="project-title-large">MINEGUARDIAN / MINECORE</h2>
+        <p class="project-lead-desc">
+          Integrated sensor network and telemetry dashboard designed for underground miner safety, real-time hazardous gas detection (CH4, CO, O2 levels), and seismic activity alerting.
+        </p>
+
+        <!-- Media Frame -->
+        <div class="project-immersive-media">
+          <img src="assets/lab_mineguardian.jpg" alt="MineGuardian Underground IoT Telemetry Dashboard" loading="lazy" />
+        </div>
+
+        <div class="capabilities-3col-grid" style="margin-bottom: 0;">
+          <div class="capability-column">
+            <span class="capability-title-mono">THE PROBLEM</span>
+            <p class="capability-body-text">
+              Underground coal and metal mines suffer from hazardous gas pockets (methane, carbon monoxide) and unstable shafts with zero line-of-sight communication.
+            </p>
+          </div>
+
+          <div class="capability-column">
+            <span class="capability-title-mono">THE CONCEPT</span>
+            <p class="capability-body-text">
+              A distributed mesh of ruggedized sensor nodes monitoring atmospheric ppm thresholds and streaming telemetry to a surface command dashboard with automated emergency sirens.
+            </p>
+          </div>
+
+          <div class="capability-column">
+            <span class="capability-title-mono">TECHNOLOGY &amp; STATUS</span>
+            <p class="capability-body-text">
+              <strong>Tech:</strong> ESP32, MQ-4/MQ-7 gas sensors, MQTT, Node-RED dashboard, Python.<br />
+              <strong>Status:</strong> Hackathon prototype &amp; telemetry simulation completed.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Detailed Lab Projects Grid -->
+    <section class="section-spacer alt-bg" id="all-lab-projects">
+      <div class="container">
+        <span class="label-mono">TECHNICAL ARSENAL</span>
+        <h2 class="section-title">HARDWARE, WEB &amp; ENGINEERING.</h2>
+
+        <div class="lab-experiments-grid">
+
+          <!-- 1. Web: Jayashakthi Tours -->
+          <div class="lab-project-card">
+            <div>
+              <div class="lab-meta-top">
+                <span class="label-mono accent" style="margin-bottom: 0;">01 // WEB</span>
+                <span class="lab-status-badge">PRODUCTION ACTIVE</span>
+              </div>
+              <h3 class="lab-card-title">Jayashakthi Tours &amp; Travels Platform</h3>
+              <p class="body-standard">
+                Commercial web portal and admin dispatch system facilitating real-time route discovery, fleet booking, and lead management.
+              </p>
+            </div>
+
+            <div class="lab-breakdown-row">
+              <div class="lab-subfield"><strong>Problem:</strong> Lack of searchable digital fleet catalog for corporate travel coordinators.</div>
+              <div class="lab-subfield"><strong>Concept:</strong> Frictionless, lightweight responsive booking portal with dynamic fleet cards and back-office inquiry viewer.</div>
+              <div class="lab-subfield"><strong>Technology:</strong> Semantic HTML5, CSS3, JavaScript ES6+, SEO schema, Vercel infrastructure.</div>
+              <div class="lab-subfield"><strong>Current Status:</strong> Live and receiving inquiries at <a href="https://www.jayashakthitoursandtravels.com/" target="_blank" rel="noopener noreferrer" style="color: var(--accent-light); text-decoration: underline;">jayashakthitoursandtravels.com ↗</a>.</div>
+            </div>
+          </div>
+
+          <!-- 2. Hardware: ESP32 Fire Hub -->
+          <div class="lab-project-card">
+            <div>
+              <div class="lab-meta-top">
+                <span class="label-mono accent" style="margin-bottom: 0;">02 // HARDWARE &amp; IOT</span>
+                <span class="lab-status-badge">HARDWARE LAB</span>
+              </div>
+              <h3 class="lab-card-title">ESP32 Fire &amp; Thermal Telemetry Hub</h3>
+              <p class="body-standard">
+                Remote environmental sensor station equipped with flame sensors, ambient DHT22 probes, and cloud-linked notification triggers.
+              </p>
+            </div>
+
+            <div class="lab-breakdown-row">
+              <div class="lab-subfield"><strong>Problem:</strong> Delayed response to electrical fires and anomalous temperature rises in server or storage rooms.</div>
+              <div class="lab-subfield"><strong>Concept:</strong> Microcontroller hub polling analog IR flame detectors and streaming alert webhooks to mobile devices.</div>
+              <div class="lab-subfield"><strong>Technology:</strong> ESP32, C++ / Arduino IDE, DHT22 sensor, IR Flame sensor, MQTT protocol, Firebase.</div>
+              <div class="lab-subfield"><strong>Current Status:</strong> Functional breadboard prototype validated with remote dashboard telemetry.</div>
+            </div>
+          </div>
+
+          <!-- 3. Engineering: SolidWorks & Tinkercad CAD -->
+          <div class="lab-project-card">
+            <div>
+              <div class="lab-meta-top">
+                <span class="label-mono accent" style="margin-bottom: 0;">03 // ENGINEERING</span>
+                <span class="lab-status-badge">CAD / FABRICATION</span>
+              </div>
+              <h3 class="lab-card-title">SolidWorks, Tinkercad, Lathe &amp; 3D Printing</h3>
+              <p class="body-standard">
+                Mechanical component modeling, circuit schematic simulation, metal lathe turning, and rapid additive prototyping for sensor enclosures.
+              </p>
+            </div>
+
+            <div class="lab-breakdown-row">
+              <div class="lab-subfield"><strong>Problem:</strong> Off-the-shelf sensor brackets rarely fit custom enclosures and industrial field fixtures.</div>
+              <div class="lab-subfield"><strong>Concept:</strong> Rapid iterative parametric modeling in SolidWorks followed by 3D printing and manual lathe fabrication.</div>
+              <div class="lab-subfield"><strong>Technology:</strong> SolidWorks 3D CAD, Tinkercad circuits, FDM 3D printing (PLA/PETG), manual engine lathe.</div>
+              <div class="lab-subfield"><strong>Current Status:</strong> Active prototyping workflow in college engineering workshops.</div>
+            </div>
+          </div>
+
+          <!-- 4. Assistive Tech: GrandCare & PowerSense -->
+          <div class="lab-project-card">
+            <div>
+              <div class="lab-meta-top">
+                <span class="label-mono accent" style="margin-bottom: 0;">04 // SIH / ASSISTIVE IOT</span>
+                <span class="lab-status-badge">RESEARCH STAGE</span>
+              </div>
+              <h3 class="lab-card-title">GrandCare &amp; PowerSense Concepts</h3>
+              <p class="body-standard">
+                Wearable fall-detection telemetry for geriatric healthcare (GrandCare) and non-invasive current profiler for residential energy auditing (PowerSense).
+              </p>
+            </div>
+
+            <div class="lab-breakdown-row">
+              <div class="lab-subfield"><strong>Problem:</strong> Silent geriatric falls at home without immediate caregiver notification.</div>
+              <div class="lab-subfield"><strong>Concept:</strong> MPU-6050 accelerometer tracking abrupt g-force spikes followed by inactivity, triggering emergency SOS.</div>
+              <div class="lab-subfield"><strong>Technology:</strong> ESP32, MPU-6050 IMU, SCT-013 current sensor, Webhooks.</div>
+              <div class="lab-subfield"><strong>Current Status:</strong> Concept architecture and schematic design completed.</div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- Transition to Journey -->
+    <section class="section-spacer no-border">
+      <div class="container" style="display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 2rem;">
+        <div>
+          <span class="label-mono">CHRONOLOGY</span>
+          <h2 class="section-title" style="margin-bottom: 0;">EXPLORE THE TIMELINE →</h2>
+        </div>
+        <a href="journey.html" class="btn-editorial">
+          <span>VIEW THE JOURNEY →</span>
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <!-- Minimal Footer -->
+  <footer class="minimal-site-footer">
+    <div class="container footer-inner-grid">
+      <div>AAKASH K — © <span id="current-year">2026</span>.</div>
+      <div class="footer-quote-text">“Nothing changes if nothing changes.”</div>
+      <div><a href="#sih-mineguardian" style="color: var(--text-muted);">Back to top ↑</a></div>
+    </div>
+  </footer>
+
+  <script src="js/main.js"></script>
+</body>
+</html>

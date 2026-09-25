@@ -1,0 +1,186 @@
+/* ==========================================================================
+   AAKASH K — Minimal Navigation Bar
+   Desktop: Left Brand, Center/Right Pages, Far Right Contact
+   Clean, Restrained, Studio Caliber
+   ========================================================================== */
+
+.site-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: var(--header-height);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid transparent;
+  transition: background-color var(--transition-normal), border-color var(--transition-normal);
+}
+
+.site-header.scrolled {
+  background-color: rgba(8, 8, 10, 0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-color: var(--border-subtle);
+}
+
+.nav-container {
+  width: 100%;
+  max-width: var(--container-max);
+  margin-inline: auto;
+  padding-inline: clamp(1.5rem, 5vw, 4.5rem);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* Left: Brand */
+.nav-brand {
+  font-family: var(--font-sans);
+  font-weight: 800;
+  font-size: 1.05rem;
+  letter-spacing: -0.01em;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.brand-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: var(--accent-light);
+  box-shadow: 0 0 10px rgba(139, 92, 246, 0.5);
+}
+
+/* Center / Right Links */
+.nav-center-links {
+  display: flex;
+  align-items: center;
+  gap: 2.25rem;
+}
+
+.nav-link {
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  position: relative;
+  padding-block: 0.35rem;
+  transition: color var(--transition-fast);
+}
+
+.nav-link:hover,
+.nav-link.active {
+  color: #ffffff;
+}
+
+.nav-link.active::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background-color: var(--accent-light);
+}
+
+/* Right: Contact CTA */
+.nav-right-action {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+}
+
+.nav-contact-btn {
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #ffffff;
+  padding: 0.55rem 1.25rem;
+  border-radius: var(--radius-xs);
+  border: 1px solid var(--border-medium);
+  background-color: rgba(255, 255, 255, 0.03);
+  transition: all var(--transition-fast);
+}
+
+.nav-contact-btn:hover,
+.nav-contact-btn.active {
+  background-color: #ffffff;
+  color: #08080a;
+  border-color: #ffffff;
+}
+
+/* Mobile Toggle */
+.mobile-nav-toggle {
+  display: none;
+  width: 44px;
+  height: 44px;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 6px;
+  color: #ffffff;
+}
+
+.mobile-nav-toggle span {
+  width: 22px;
+  height: 1.5px;
+  background-color: #ffffff;
+  transition: transform 0.25s ease, opacity 0.25s ease;
+}
+
+.mobile-nav-toggle.open span:nth-child(1) {
+  transform: translateY(7.5px) rotate(45deg);
+}
+
+.mobile-nav-toggle.open span:nth-child(2) {
+  transform: translateY(-7.5px) rotate(-45deg);
+}
+
+/* Mobile Dropdown Drawer */
+.mobile-drawer {
+  display: none;
+  position: fixed;
+  top: var(--header-height);
+  left: 0;
+  right: 0;
+  background-color: rgba(8, 8, 10, 0.98);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border-bottom: 1px solid var(--border-subtle);
+  padding: 2rem clamp(1.5rem, 5vw, 4.5rem) 2.5rem;
+  flex-direction: column;
+  gap: 1.5rem;
+  z-index: 999;
+}
+
+.mobile-drawer.open {
+  display: flex;
+}
+
+.mobile-drawer .nav-link {
+  font-size: 1.15rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  padding-block: 0.5rem;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+/* Responsive */
+@media (max-width: 960px) {
+  .nav-center-links {
+    display: none;
+  }
+  .nav-contact-btn {
+    display: none;
+  }
+  .mobile-nav-toggle {
+    display: flex;
+  }
+}

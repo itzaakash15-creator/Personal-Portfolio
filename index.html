@@ -3,26 +3,26 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Aakash K — AI & Data Science Student, Digital Marketer, Content Creator, and Personal Branding Strategist. Minimalist, editorial personal portfolio." />
-  <meta name="keywords" content="Aakash K, Personal Branding, Digital Marketing, AI and Data Science, U6NICK, Life With Aakash, Digi Marketrix, Rathinam Technical Campus" />
+  <meta name="description" content="Aakash K — Digital Marketer, Creator & AI & Data Science Student. High-end personal brand portfolio." />
+  <meta name="keywords" content="Aakash K, Personal Branding, Digital Marketing, AI and Data Science, U6NICK, Life With Aakash, Digi Marketrix, Creative Director" />
   <meta name="author" content="Aakash K" />
 
   <!-- Open Graph -->
-  <meta property="og:title" content="AAKASH K — Personal Portfolio" />
-  <meta property="og:description" content="I build digital presence that people remember. Minimalistic, premium editorial portfolio." />
+  <meta property="og:title" content="Aakash K — Digital Marketer, Creator & AI & Data Science Student" />
+  <meta property="og:description" content="Portfolio of Aakash K — digital marketing, personal branding, content creation, technology and AI & Data Science." />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://aakashk.vercel.app/" />
   <meta property="og:image" content="assets/aakash_portrait.jpg" />
 
-  <title>AAKASH K — Personal Portfolio | AI & Data Science • Digital Marketing • Personal Branding</title>
+  <title>Aakash K — Digital Marketer, Creator & AI & Data Science Student</title>
 
   <!-- Favicon -->
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>" />
 
   <!-- Stylesheets -->
   <link rel="stylesheet" href="css/main.css" />
-  <link rel="stylesheet" href="css/components.css" />
-  <link rel="stylesheet" href="css/sections.css" />
+  <link rel="stylesheet" href="css/nav.css" />
+  <link rel="stylesheet" href="css/editorial.css" />
 </head>
 <body>
 
@@ -30,23 +30,22 @@
        Minimal Navigation Bar
        ======================================================================== -->
   <header class="site-header" id="site-header">
-    <nav class="nav-container" aria-label="Primary Navigation">
-      <a href="#hero" class="nav-brand" aria-label="Aakash K Home">
-        <span class="nav-brand-dot" aria-hidden="true"></span>
+    <nav class="nav-container" aria-label="Main Navigation">
+      <a href="index.html" class="nav-brand" aria-label="Aakash K Home">
+        <span class="brand-dot" aria-hidden="true"></span>
         <span>AAKASH K</span>
       </a>
 
-      <div class="nav-links">
-        <a href="#experience" class="nav-link">EXPERIENCE</a>
-        <a href="#u6nick" class="nav-link">U6NICK</a>
-        <a href="#life-with-aakash" class="nav-link">LIFE WITH AAKASH</a>
-        <a href="#more-explore" class="nav-link">EXPLORE</a>
+      <div class="nav-center-links">
+        <a href="work.html" class="nav-link">WORK</a>
+        <a href="experience.html" class="nav-link">EXPERIENCE</a>
+        <a href="lab.html" class="nav-link">LAB</a>
+        <a href="journey.html" class="nav-link">JOURNEY</a>
+        <a href="about.html" class="nav-link">ABOUT</a>
       </div>
 
-      <div class="nav-actions">
-        <a href="#contact" class="btn btn-primary">
-          <span>CONTACT →</span>
-        </a>
+      <div class="nav-right-action">
+        <a href="contact.html" class="nav-contact-btn">CONTACT</a>
         <button type="button" class="mobile-nav-toggle" id="mobile-toggle" aria-label="Toggle mobile menu" aria-expanded="false">
           <span></span>
           <span></span>
@@ -54,13 +53,15 @@
       </div>
     </nav>
 
-    <!-- Mobile Dropdown Navigation -->
-    <div class="mobile-menu" id="mobile-menu" aria-label="Mobile Navigation">
-      <a href="#experience" class="nav-link">EXPERIENCE</a>
-      <a href="#u6nick" class="nav-link">U6NICK</a>
-      <a href="#life-with-aakash" class="nav-link">LIFE WITH AAKASH</a>
-      <a href="#more-explore" class="nav-link">EXPLORE</a>
-      <a href="#contact" class="nav-link" style="color: var(--accent-light);">CONTACT →</a>
+    <!-- Mobile Drawer -->
+    <div class="mobile-drawer" id="mobile-drawer">
+      <a href="index.html" class="nav-link active">HOME</a>
+      <a href="work.html" class="nav-link">WORK</a>
+      <a href="experience.html" class="nav-link">EXPERIENCE</a>
+      <a href="lab.html" class="nav-link">LAB</a>
+      <a href="journey.html" class="nav-link">JOURNEY</a>
+      <a href="about.html" class="nav-link">ABOUT</a>
+      <a href="contact.html" class="nav-link" style="color: var(--accent-light);">CONTACT →</a>
     </div>
   </header>
 
@@ -69,36 +70,38 @@
     <!-- ======================================================================
          1. HERO SECTION
          ====================================================================== -->
-    <section class="hero-section" id="hero">
-      <div class="container hero-grid">
-        <div class="hero-content">
-          <span class="hero-eyebrow">AI &amp; DATA SCIENCE × DIGITAL × CREATIVE</span>
+    <section class="home-hero-section" id="hero">
+      <div class="container home-hero-grid">
+        <div class="hero-left-column">
+          <span class="hero-metadata-tag">AAKASH K / DIGITAL × CREATIVE × TECHNOLOGY</span>
 
-          <h1 class="hero-title">
+          <h1 class="display-title hero-main-title">
             I BUILD DIGITAL PRESENCE<br />
             THAT PEOPLE REMEMBER.
           </h1>
 
-          <p class="hero-supporting">
-            AI &amp; Data Science student working across digital marketing, personal branding, content and technology.
+          <p class="body-large hero-description-text">
+            AI &amp; Data Science student exploring digital marketing, personal branding, content and technology.
           </p>
 
-          <div class="hero-actions">
-            <a href="#experience" class="btn btn-primary">
-              <span>EXPLORE MY WORK →</span>
+          <div class="hero-cta-group">
+            <a href="work.html" class="btn-editorial">
+              <span>EXPLORE WORK →</span>
             </a>
-            <button type="button" class="btn btn-secondary" data-open-modal="about">
-              <span>ABOUT AAKASH</span>
-            </button>
+            <a href="about.html" class="btn-editorial-outline">
+              <span>ABOUT ME →</span>
+            </a>
           </div>
         </div>
 
-        <div class="hero-portrait-wrapper">
-          <div class="hero-portrait-frame">
-            <img src="assets/aakash_portrait.jpg" alt="Aakash K — AI & Data Science Student, Digital Marketer and Content Creator" class="hero-portrait-img" />
+        <!-- Editorial Photograph with Subtle Hover & Motion -->
+        <div class="hero-portrait-stage">
+          <div class="hero-portrait-card">
+            <img src="assets/aakash_portrait.jpg" alt="Aakash K — Editorial Studio Portrait" class="hero-portrait-media" />
+            <div class="hero-portrait-vignette"></div>
           </div>
-          <div class="portrait-caption">
-            <span>AAKASH K</span>
+          <div class="hero-portrait-footer-meta">
+            <span>AAKASH K // 2026</span>
             <span>TUTICORIN / RATHINAM</span>
           </div>
         </div>
@@ -106,285 +109,335 @@
     </section>
 
     <!-- ======================================================================
-         2. INTRODUCTION (01 / ABOUT THE WORK)
+         2. HOME INTRO SECTION
          ====================================================================== -->
-    <section class="section-spacer intro-section" id="intro">
+    <section class="section-spacer home-intro-section" id="intro">
       <div class="container">
-        <div class="intro-content">
-          <span class="section-label">01 / ABOUT THE WORK</span>
+        <div class="intro-container-block">
+          <span class="label-mono">01 / THE PERSON BEHIND THE WORK</span>
 
-          <h2 class="intro-statement">
-            FROM CREATING CONTENT<br />
-            TO BUILDING DIGITAL PRESENCE.
+          <h2 class="intro-huge-statement">
+            CREATOR.<br />
+            MARKETER.<br />
+            BUILDER.
           </h2>
 
-          <p class="intro-text">
-            Aakash started through content creation and video editing, developed experience in scripting and digital marketing, and now works across personal branding, digital projects and technology while pursuing B.Tech AI &amp; Data Science.
+          <p class="intro-narrative-p">
+            Aakash began with content creation and video editing, moved into scripting and digital marketing, started working with clients and personal brands, and is now studying AI &amp; Data Science while exploring technology and entrepreneurship.
           </p>
         </div>
       </div>
     </section>
 
     <!-- ======================================================================
-         3. FEATURED EXPERIENCE — DIGI MARKETRIX (02 / EXPERIENCE)
+         3. FEATURE 01 — DIGI MARKETRIX
          ====================================================================== -->
-    <section class="section-spacer experience-section" id="experience">
+    <section class="featured-project-section alt-bg" id="experience-feature">
       <div class="container">
-        <div class="section-header-block">
-          <span class="section-label">02 / EXPERIENCE</span>
-          <h2 class="section-heading">
-            REAL WORK.<br />
-            REAL CLIENTS.<br />
-            REAL EXPERIENCE.
-          </h2>
-        </div>
-
-        <div class="experience-hero-card">
-          <div class="exp-left-content">
-            <div class="meta-strip">
-              <span class="meta-pill highlight">INTERNSHIP / DIGITAL MARKETING / CREATIVE</span>
-              <span class="meta-pill">MAY 2026 — JULY 2026</span>
-            </div>
-
-            <h3 class="exp-company-name">DIGI MARKETRIX</h3>
-
-            <p class="exp-description">
-              Worked across scripting, videography, client shoots, editing, content research and digital marketing while creating content for real businesses and personal brands.
-            </p>
-
-            <div>
-              <button type="button" class="btn-text" data-open-modal="digi-marketrix">
-                <span>VIEW EXPERIENCE →</span>
-              </button>
-            </div>
-          </div>
-
-          <div class="exp-media-frame">
-            <img src="assets/experience_digi_marketrix.jpg" alt="Digi Marketrix Commercial Studio Production & Client Shoot" class="exp-media-img" loading="lazy" />
-          </div>
-        </div>
-
-        <!-- Three Key Capability Areas -->
-        <div class="capabilities-grid">
-          <div class="capability-card">
-            <span class="capability-title">SCRIPTING</span>
-            <p class="capability-desc">Research, concepts, scripts and content development.</p>
-          </div>
-
-          <div class="capability-card">
-            <span class="capability-title">PRODUCTION</span>
-            <p class="capability-desc">Videography, framing, lighting, audio, gimbal and client shoots.</p>
-          </div>
-
-          <div class="capability-card">
-            <span class="capability-title">EDITING</span>
-            <p class="capability-desc">Short-form editing, captions, transitions, music and visual storytelling.</p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ======================================================================
-         4. FEATURED PERSONAL BRANDING WORK — U6NICK (03 / PERSONAL BRANDING)
-         ====================================================================== -->
-    <section class="section-spacer u6nick-section" id="u6nick">
-      <div class="container">
-        <span class="section-label">03 / PERSONAL BRANDING</span>
-
-        <div class="u6nick-intro-grid">
+        <div class="project-editorial-header">
           <div>
-            <div class="meta-strip">
-              <span class="meta-pill highlight">PERSONAL BRANDING / FASHION / CONTENT</span>
-            </div>
-            <h2 class="u6nick-title">
-              U6NICK — EDITORIAL MODEL PERSONAL BRANDING
-            </h2>
+            <span class="label-mono">02 / PROFESSIONAL CHAPTER</span>
+            <div class="project-category-tag">DIGITAL MARKETING / CONTENT / CREATIVE</div>
           </div>
-
-          <p class="u6nick-summary">
-            Personal branding and digital content work created for an editorial model, focused on building a stronger online identity, content presence and audience connection.
-          </p>
+          <div class="project-dates-loc">
+            <span>MAY 2026 — JULY 2026</span> • <span>TUTICORIN</span>
+          </div>
         </div>
 
-        <!-- Aakash's Role Checklist -->
-        <div class="u6nick-roles-list">
-          <span class="u6nick-role-pill">Content strategy</span>
-          <span class="u6nick-role-pill">Script writing</span>
-          <span class="u6nick-role-pill">Videography</span>
-          <span class="u6nick-role-pill">Video editing</span>
-          <span class="u6nick-role-pill">Instagram management</span>
-          <span class="u6nick-role-pill">Competitor research</span>
-          <span class="u6nick-role-pill">Profile optimization</span>
-          <span class="u6nick-role-pill">Content planning</span>
+        <h2 class="project-title-large">DIGI MARKETRIX</h2>
+
+        <p class="project-lead-desc">
+          Worked across scripting, videography, client shoots, editing, content research and digital marketing for real businesses and personal brands.
+        </p>
+
+        <!-- Large Production Frame -->
+        <div class="project-immersive-media">
+          <img src="assets/experience_digi_marketrix.jpg" alt="Digi Marketrix Commercial Video Production & Client Shoot" loading="lazy" />
         </div>
 
-        <!-- Large Immersive Media Visual -->
-        <div class="u6nick-media-hero">
-          <img src="assets/project_fashion.jpg" alt="U6NICK Editorial Model Personal Branding Shoot" class="u6nick-media-img" loading="lazy" />
+        <!-- Selected Capabilities -->
+        <div class="capabilities-3col-grid">
+          <div class="capability-column">
+            <span class="capability-title-mono">SCRIPTING</span>
+            <p class="capability-body-text">Research, hooks, narrative concepts, and structured commercial scripts tailored for client conversion.</p>
+          </div>
+
+          <div class="capability-column">
+            <span class="capability-title-mono">VIDEOGRAPHY &amp; CLIENT SHOOTS</span>
+            <p class="capability-body-text">On-location framing, cinema camera operation, gimbal stabilization, lighting setup, and directing clients.</p>
+          </div>
+
+          <div class="capability-column">
+            <span class="capability-title-mono">EDITING &amp; RESEARCH</span>
+            <p class="capability-body-text">Short-form video editing, sound design, retention pacing, competitive market research, and personal branding.</p>
+          </div>
         </div>
 
-        <!-- U6NICK Case Study Preview (The Work, Result, Proof) -->
-        <div class="u6nick-case-preview">
-          <div class="case-preview-col">
-            <span class="case-col-label">THE WORK</span>
-            <p class="case-col-text">
-              Content strategy, scripting, shooting, editing and Instagram management.
-            </p>
-          </div>
-
-          <div class="case-preview-col">
-            <span class="case-col-label">THE RESULT</span>
-            <p class="case-col-text">
-              Built the profile to approximately 3,000 followers with multiple high-performing reels.
-            </p>
-          </div>
-
-          <div class="case-preview-col">
-            <span class="case-col-label">THE PROOF</span>
-            <p class="case-col-text">
-              Published work + analytics + client feedback.
-            </p>
-          </div>
-
-          <div class="case-preview-cta">
-            <button type="button" class="btn-text" data-open-modal="u6nick">
-              <span>VIEW U6NICK CASE STUDY →</span>
-            </button>
-          </div>
+        <div>
+          <a href="experience.html" class="btn-editorial">
+            <span>EXPLORE EXPERIENCE →</span>
+          </a>
         </div>
       </div>
     </section>
 
     <!-- ======================================================================
-         5. LIFE WITH AAKASH (04 / LIFE WITH AAKASH)
+         4. FEATURE 02 — U6NICK (EDITORIAL MODEL PERSONAL BRANDING)
          ====================================================================== -->
-    <section class="section-spacer lwa-section" id="life-with-aakash">
+    <section class="featured-project-section" id="u6nick-feature">
       <div class="container">
-        <span class="section-label">04 / LIFE WITH AAKASH</span>
-
-        <div class="lwa-grid">
-          <div class="lwa-left">
-            <div class="meta-strip">
-              <span class="meta-pill highlight">PERSONAL BRAND / CONTENT / MOTIVATIONAL SPEAKING</span>
-            </div>
-
-            <h2 class="lwa-heading">
-              MY OWN BRAND<br />
-              IS ALSO A CASE STUDY.
-            </h2>
-
-            <p class="lwa-description">
-              Life With Aakash is my personal platform focused on motivation, life lessons, personal growth and storytelling.
-            </p>
-
-            <a href="https://www.instagram.com/life.with_aakash/" target="_blank" rel="noopener noreferrer" class="btn-text" style="width: fit-content;">
-              <span>VISIT @LIFE.WITH_AAKASH ↗</span>
-            </a>
+        <div class="project-editorial-header">
+          <div>
+            <span class="label-mono">03 / PERSONAL BRANDING CASE STUDY</span>
+            <div class="project-category-tag">PERSONAL BRANDING / EDITORIAL / SOCIAL</div>
           </div>
-
-          <div class="lwa-media-frame">
-            <img src="assets/life_with_aakash.jpg" alt="Life With Aakash Studio Reel — 59K Views Milestone" class="lwa-media-img" loading="lazy" />
+          <div class="project-dates-loc">
+            <span>EDITORIAL MODEL</span> • <span>STRATEGY &amp; PRODUCTION</span>
           </div>
         </div>
 
-        <!-- Verified Metrics Strip (Editorial, Not a Dashboard) -->
-        <div class="lwa-metrics-strip">
-          <div class="lwa-metric-item">
-            <div class="lwa-metric-number">59K</div>
-            <div class="lwa-metric-label">Highest reel</div>
+        <h2 class="project-title-large">U6NICK</h2>
+
+        <p class="project-lead-desc">
+          Personal branding and content work created for an editorial model, focused on developing a stronger digital identity, high-fashion positioning, and verified social presence.
+        </p>
+
+        <!-- Roles Checklist -->
+        <div class="role-pills-row">
+          <span class="editorial-role-tag">Content Strategy</span>
+          <span class="editorial-role-tag">Scriptwriting</span>
+          <span class="editorial-role-tag">Videography</span>
+          <span class="editorial-role-tag">Video Editing</span>
+          <span class="editorial-role-tag">Instagram Management</span>
+          <span class="editorial-role-tag">Competitor Research</span>
+          <span class="editorial-role-tag">Profile Optimization</span>
+          <span class="editorial-role-tag">Content Planning</span>
+        </div>
+
+        <!-- Large Immersive Visual -->
+        <div class="project-immersive-media">
+          <img src="assets/project_fashion.jpg" alt="U6NICK Editorial Model Personal Branding Shoot" loading="lazy" />
+        </div>
+
+        <!-- Case Study Preview Columns -->
+        <div class="capabilities-3col-grid">
+          <div class="capability-column">
+            <span class="capability-title-mono">THE WORK</span>
+            <p class="capability-body-text">Content strategy, scripting, shooting, editing and Instagram management designed to establish authentic luxury editorial authority.</p>
           </div>
 
-          <div class="lwa-metric-item">
-            <div class="lwa-metric-number">17</div>
-            <div class="lwa-metric-label">Published reels</div>
+          <div class="capability-column">
+            <span class="capability-title-mono">THE RESULT</span>
+            <p class="capability-body-text">Built the profile to approximately 3,000 followers with multiple high-performing reels and consistent visual positioning.</p>
           </div>
 
-          <div class="lwa-metric-item">
-            <div class="lwa-metric-number">453</div>
-            <div class="lwa-metric-label">Current followers</div>
+          <div class="capability-column">
+            <span class="capability-title-mono">THE PROOF</span>
+            <p class="capability-body-text">Published work + verified engagement analytics + direct client feedback establishing industry credibility.</p>
           </div>
         </div>
 
-        <!-- Subtle Motivational Speaking Subsection -->
-        <div class="motivational-subsection">
-          <h3 class="speaking-title">MOTIVATIONAL SPEAKING</h3>
-          <p class="speaking-body">
+        <div>
+          <a href="work.html#u6nick" class="btn-editorial">
+            <span>VIEW U6NICK CASE STUDY →</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================================================================
+         5. FEATURE 03 — LIFE WITH AAKASH
+         ====================================================================== -->
+    <section class="featured-project-section alt-bg" id="lwa-feature">
+      <div class="container">
+        <div class="project-editorial-header">
+          <div>
+            <span class="label-mono">04 / CREATOR PLATFORM</span>
+            <div class="project-category-tag">PERSONAL BRAND / CONTENT / MOTIVATIONAL SPEAKING</div>
+          </div>
+          <div class="project-dates-loc">
+            <span>FOUNDER &amp; CREATOR</span> • <span>INSTAGRAM REELS</span>
+          </div>
+        </div>
+
+        <h2 class="project-title-large">
+          MY OWN BRAND IS PART OF THE EXPERIMENT.
+        </h2>
+
+        <p class="project-lead-desc">
+          Life With Aakash is Aakash's personal platform focused on motivation, life lessons, personal growth and storytelling.
+        </p>
+
+        <!-- Large Content Visual -->
+        <div class="project-immersive-media">
+          <img src="assets/life_with_aakash.jpg" alt="Life With Aakash Studio Reel — 59K Views Milestone" loading="lazy" />
+        </div>
+
+        <!-- Verified Metrics Strip -->
+        <div class="verified-metrics-strip">
+          <div class="metric-strip-item">
+            <div class="metric-huge-number">59K</div>
+            <span class="metric-legend-mono">HIGHEST REEL VIEWS</span>
+          </div>
+
+          <div class="metric-strip-item">
+            <div class="metric-huge-number">17</div>
+            <span class="metric-legend-mono">PUBLISHED REELS</span>
+          </div>
+
+          <div class="metric-strip-item">
+            <div class="metric-huge-number">453</div>
+            <span class="metric-legend-mono">CURRENT FOLLOWERS</span>
+          </div>
+        </div>
+
+        <!-- Motivational Speaking Subsection -->
+        <div class="motivational-voice-box" style="margin-bottom: 2.5rem;">
+          <span class="capability-title-mono">MOTIVATIONAL SPEAKING</span>
+          <p class="capability-body-text">
             Aakash creates motivational and reflective content around life, growth, self-belief and personal experiences. Creator → Storyteller → Motivational voice.
           </p>
         </div>
-      </div>
-    </section>
 
-    <!-- ======================================================================
-         6. MORE TO EXPLORE (Transition Section)
-         ====================================================================== -->
-    <section class="section-spacer more-explore-section" id="more-explore">
-      <div class="container">
-        <span class="section-label">MORE TO EXPLORE</span>
-
-        <div class="more-explore-grid">
-          <!-- Card 1: Web & Digital -->
-          <div class="explore-card" data-open-modal="jayashakthi" role="button" tabindex="0">
-            <div class="explore-card-top">
-              <span class="explore-card-category">WEB &amp; DIGITAL</span>
-              <h3 class="explore-card-title">Jayashakthi Tours &amp; Travels</h3>
-              <p class="explore-card-desc">Production business website, booking information architecture and administrative portal.</p>
-            </div>
-            <span class="explore-card-cta">EXPLORE →</span>
-          </div>
-
-          <!-- Card 2: AI & Hardware -->
-          <div class="explore-card" data-open-modal="ai-hardware" role="button" tabindex="0">
-            <div class="explore-card-top">
-              <span class="explore-card-category">AI &amp; HARDWARE</span>
-              <h3 class="explore-card-title">SIH / AI / IoT Projects</h3>
-              <p class="explore-card-desc">MineGuardian underground mine telemetry, ESP32 fire hub, sensor prototypes and machine learning.</p>
-            </div>
-            <span class="explore-card-cta">EXPLORE →</span>
-          </div>
-
-          <!-- Card 3: The Journey -->
-          <div class="explore-card" data-open-modal="journey" role="button" tabindex="0">
-            <div class="explore-card-top">
-              <span class="explore-card-category">THE JOURNEY</span>
-              <h3 class="explore-card-title">Evolution &amp; Path</h3>
-              <p class="explore-card-desc">From content creation and video editing to technology, B.Tech AI &amp; Data Science, and entrepreneurship.</p>
-            </div>
-            <span class="explore-card-cta">EXPLORE →</span>
-          </div>
+        <div>
+          <a href="https://www.instagram.com/life.with_aakash/" target="_blank" rel="noopener noreferrer" class="btn-editorial">
+            <span>VISIT @LIFE.WITH_AAKASH ↗</span>
+          </a>
         </div>
       </div>
     </section>
 
     <!-- ======================================================================
-         7. CONTACT CTA SECTION
+         6. HOME: SELECTED WORK CONTINUATION
          ====================================================================== -->
-    <section class="section-spacer contact-section" id="contact">
+    <section class="section-spacer" id="more-work">
       <div class="container">
-        <div class="contact-layout">
-          <span class="section-label">GET IN TOUCH</span>
+        <span class="label-mono">SELECTED WORK CONTINUATION</span>
+        <h2 class="section-title">OTHER STORIES &amp; DELIVERABLES.</h2>
 
-          <h2 class="contact-heading-huge">
-            HAVE SOMETHING<br />
-            WORTH BUILDING?<br />
-            LET’S TALK →
-          </h2>
+        <div class="secondary-projects-grid">
+          <!-- Item 1: Jayashakthi Tours & Travels -->
+          <article class="secondary-project-card">
+            <div class="secondary-card-img-wrap">
+              <img src="assets/project_jayashakthi.jpg" alt="Jayashakthi Tours and Travels Website UI" loading="lazy" />
+            </div>
+            <span class="label-mono accent" style="margin-bottom: 0;">WEB / DIGITAL</span>
+            <h3 class="secondary-card-title">Jayashakthi Tours &amp; Travels</h3>
+            <p class="secondary-card-desc">Business website and admin portal for regional fleet travel and route dispatch operations.</p>
+            <a href="work.html#jayashakthi" class="btn-inline-link">EXPLORE CASE STUDY →</a>
+          </article>
 
-          <div class="contact-email-action">
-            <span class="email-display-text">itzaakash15@gmail.com</span>
-            <button type="button" class="btn btn-secondary" id="copy-email-btn">
-              <span>Copy Email</span>
-            </button>
-            <a href="mailto:itzaakash15@gmail.com" class="btn btn-primary">
-              <span>Write Email →</span>
-            </a>
+          <!-- Item 2: Chinnadurai Textiles -->
+          <article class="secondary-project-card">
+            <div class="secondary-card-img-wrap">
+              <img src="assets/project_textile.jpg" alt="Chinnadurai Textiles Heritage Scripting" loading="lazy" />
+            </div>
+            <span class="label-mono accent" style="margin-bottom: 0;">SCRIPTWRITING / CONTENT</span>
+            <h3 class="secondary-card-title">Chinnadurai Textiles</h3>
+            <p class="secondary-card-desc">Translating artisanal heritage weaving into high-retention storytelling (10K–15K verified views).</p>
+            <a href="work.html#chinnadurai" class="btn-inline-link">EXPLORE CASE STUDY →</a>
+          </article>
+
+          <!-- Item 3: SalemRR Biriyani -->
+          <article class="secondary-project-card">
+            <div class="secondary-card-img-wrap">
+              <img src="assets/project_food.jpg" alt="SalemRR Biriyani Sensory Video" loading="lazy" />
+            </div>
+            <span class="label-mono accent" style="margin-bottom: 0;">VIDEO / BRAND PROMOTION</span>
+            <h3 class="secondary-card-title">SalemRR Biriyani</h3>
+            <p class="secondary-card-desc">Cinematic food videography, on-screen video VJ hosting, and high-energy commercial promo.</p>
+            <a href="work.html#salemrr" class="btn-inline-link">EXPLORE CASE STUDY →</a>
+          </article>
+        </div>
+
+        <div style="text-align: left; margin-top: 1.5rem;">
+          <a href="work.html" class="btn-editorial-outline">
+            <span>VIEW ALL SELECTED WORK →</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================================================================
+         7. HOME: TECHNOLOGY TRANSITION
+         ====================================================================== -->
+    <section class="section-spacer tech-transition-section" id="technology-bridge">
+      <div class="container">
+        <span class="label-mono">THE TECHNICAL EXPANSION</span>
+        <h2 class="section-title">NOW I'M BUILDING WITH TECHNOLOGY.</h2>
+        <p class="body-large" style="max-width: 760px;">
+          Studying AI &amp; Data Science while experimenting with web development, hardware, IoT and AI-driven projects.
+        </p>
+
+        <div class="tech-categories-strip">
+          <div class="tech-cat-card">
+            <span class="tech-cat-name">WEB</span>
+            <p class="tech-cat-desc">Production web development, business booking architecture, and responsive user experiences.</p>
           </div>
 
-          <div class="contact-social-row">
-            <a href="https://www.linkedin.com/in/aakash-k-028a2b389/" target="_blank" rel="noopener noreferrer" class="contact-social-link">LinkedIn ↗</a>
-            <a href="https://www.instagram.com/life.with_aakash/" target="_blank" rel="noopener noreferrer" class="contact-social-link">Instagram ↗</a>
-            <a href="https://github.com/itzaakash15-creator" target="_blank" rel="noopener noreferrer" class="contact-social-link">GitHub ↗</a>
+          <div class="tech-cat-card">
+            <span class="tech-cat-name">AI / DATA</span>
+            <p class="tech-cat-desc">Machine learning models, exploratory data analytics, and intelligent telemetry pipelines.</p>
           </div>
+
+          <div class="tech-cat-card">
+            <span class="tech-cat-name">HARDWARE</span>
+            <p class="tech-cat-desc">ESP32 microcontrollers, environmental gas &amp; flame sensors, and Smart India Hackathon prototypes.</p>
+          </div>
+        </div>
+
+        <div>
+          <a href="lab.html" class="btn-editorial">
+            <span>ENTER THE LAB →</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================================================================
+         8. HOME: FINAL STATEMENT
+         ====================================================================== -->
+    <section class="section-spacer final-statement-section" id="final-statement">
+      <div class="container">
+        <h2 class="final-statement-title">
+          FROM CREATING<br />
+          TO BUILDING.
+        </h2>
+        <p class="body-large" style="margin-bottom: 2.5rem; color: var(--text-muted);">
+          The work is evolving.
+        </p>
+        <div>
+          <a href="journey.html" class="btn-editorial">
+            <span>EXPLORE THE JOURNEY →</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================================================================
+         9. CONTACT CTA SECTION
+         ====================================================================== -->
+    <section class="section-spacer alt-bg no-border" id="contact-cta">
+      <div class="container">
+        <span class="label-mono">GET IN TOUCH</span>
+        <h2 class="section-title" style="margin-bottom: 2rem;">
+          HAVE SOMETHING WORTH BUILDING?<br />
+          LET'S TALK →
+        </h2>
+
+        <div style="display: flex; gap: 1.25rem; flex-wrap: wrap; margin-bottom: 2.5rem;">
+          <a href="contact.html" class="btn-editorial">
+            <span>SEND A MESSAGE →</span>
+          </a>
+          <button type="button" class="btn-editorial-outline" id="copy-email-btn">
+            <span>COPY itzaakash15@gmail.com</span>
+          </button>
+        </div>
+
+        <div style="display: flex; gap: 2rem; flex-wrap: wrap; font-family: var(--font-mono); font-size: 0.8125rem;">
+          <a href="https://www.linkedin.com/in/aakash-k-028a2b389/" target="_blank" rel="noopener noreferrer" style="color: var(--text-secondary);">LINKEDIN ↗</a>
+          <a href="https://www.instagram.com/life.with_aakash/" target="_blank" rel="noopener noreferrer" style="color: var(--text-secondary);">INSTAGRAM ↗</a>
+          <a href="https://github.com/itzaakash15-creator" target="_blank" rel="noopener noreferrer" style="color: var(--text-secondary);">GITHUB ↗</a>
         </div>
       </div>
     </section>
@@ -394,12 +447,12 @@
   <!-- ========================================================================
        Minimal Footer
        ======================================================================== -->
-  <footer class="site-footer">
-    <div class="container footer-content">
+  <footer class="minimal-site-footer">
+    <div class="container footer-inner-grid">
       <div>
         <span>AAKASH K — © <span id="current-year">2026</span>.</span>
       </div>
-      <div class="footer-quote">
+      <div class="footer-quote-text">
         “Nothing changes if nothing changes.”
       </div>
       <div>
@@ -408,22 +461,10 @@
     </div>
   </footer>
 
-  <!-- ========================================================================
-       Editorial Detail Modal
-       ======================================================================== -->
-  <div class="modal-overlay" id="project-modal" role="dialog" aria-modal="true" aria-hidden="true">
-    <button type="button" class="modal-close-btn" aria-label="Close modal">✕</button>
-    <div class="modal-container">
-      <div class="modal-dynamic-content">
-        <!-- Injected via js/project-modal.js -->
-      </div>
-    </div>
-  </div>
+  <!-- Toast Notification -->
+  <div class="toast-msg" id="toast" role="status" aria-live="polite"></div>
 
-  <!-- Toast Container -->
-  <div class="toast" id="toast" role="status" aria-live="polite"></div>
-
-  <!-- Bootstrap Script -->
-  <script type="module" src="js/app.js"></script>
+  <!-- Scripts -->
+  <script src="js/main.js"></script>
 </body>
 </html>
