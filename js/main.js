@@ -40,37 +40,34 @@ document.addEventListener('DOMContentLoaded', () => {
   // Architecture ready for React Three Fiber / WebGL 3D GLB Model
   // ==========================================================================
   const CharacterController = {
-    // Current interpolated state applied to DOM or 3D character
+    // Layered state for physical depth (portrait, background light, shadow)
     current: {
       pointerX: 0,
       pointerY: 0,
-      pointerRotX: 0,
-      pointerRotY: 0,
       pointerScale: 1,
       lightX: 0,
       lightY: 0,
-      rimX: 0,
-      rimY: 0,
+      dirLightX: 0,
+      dirLightY: 0,
+      shadowX: 0,
+      shadowY: 18,
       scrollX: 0,
       scrollY: 0,
-      scrollRotY: 0,
       scrollScale: 1,
       scrollOpacity: 1
     },
-    // Target state driven by pointer and scroll
     target: {
       pointerX: 0,
       pointerY: 0,
-      pointerRotX: 0,
-      pointerRotY: 0,
       pointerScale: 1,
       lightX: 0,
       lightY: 0,
-      rimX: 0,
-      rimY: 0,
+      dirLightX: 0,
+      dirLightY: 0,
+      shadowX: 0,
+      shadowY: 18,
       scrollX: 0,
       scrollY: 0,
-      scrollRotY: 0,
       scrollScale: 1,
       scrollOpacity: 1
     },
@@ -90,7 +87,12 @@ document.addEventListener('DOMContentLoaded', () => {
       this.dirLightEl = document.querySelector('.character-directional-light');
       this.rimLightEl = document.querySelector('.character-rim-light');
 
-      if (!this.portraitEl && !this.stageEl) return;
+      // Ensure portrait is visible and highlighted
+      if (this.portraitEl) {
+        this.portraitEl.style.opacity = '1';
+        this.portraitEl.style.visibility = 'visible';
+        this.portraitEl.style.display = 'block';
+      }
 
       const isTouch = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
       const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -111,39 +113,48 @@ document.addEventListener('DOMContentLoaded', () => {
         const normY = (e.clientY / window.innerHeight) * 2 - 1;
 
         // Exact bounds per instructions:
-        // Character response = approximately 3–5%
-        // translateX: maximum ±8px
-        // translateY: maximum ±5px
-        // rotateY simulation: maximum ±1.2deg
-        // rotateX simulation: maximum ±0.6deg
-        // scale: extremely subtle, maximum approximately 1.005
+        // 1. Portrait movement: translateX ±8px, translateY ±5px
         this.target.pointerX = normX * 8;
         this.target.pointerY = normY * 5;
-        this.target.pointerRotY = normX * 1.2;
-        this.target.pointerRotX = -normY * 0.6;
-        this.target.pointerScale = 1 + (Math.abs(normX) + Math.abs(normY)) * 0.0025;
 
-        // Background light movement = approximately 1–2%
-        this.target.lightX = normX * 12;
-        this.target.lightY = normY * 8;
-        this.target.rimX = normX * 18;
-        this.target.rimY = normY * 12;
+        // 2. Portrait scale: 1 → maximum 1.008
+        this.target.pointerScale = 1 + (Math.abs(normX) + Math.abs(normY)) * 0.004;
+
+        // 3. Background light movement: ±15px horizontally, ±10px vertically
+        this.target.lightX = normX * 15;
+        this.target.lightY = normY * 10;
+        this.target.dirLightX = -normX * 18;
+        this.target.dirLightY = -normY * 12;
+
+        // 4. Subtle physical shadow movement (shifts opposite to light origin)
+        this.target.shadowX = -normX * 12;
+        this.target.shadowY = 18 - normY * 6;
+
+        // Forward to CharacterScene modular interaction API for future 3D model
+        if (window.Character3DScene && typeof window.Character3DScene.setPointer === 'function') {
+          window.Character3DScene.setPointer(normX, normY);
+        }
 
         this.requestTick();
       };
 
       const onPointerLeave = () => {
         if (!isDesktop()) return;
-        // Smooth neutral return with slight inertia
+        // Smooth neutral return with gentle damping
         this.target.pointerX = 0;
         this.target.pointerY = 0;
-        this.target.pointerRotY = 0;
-        this.target.pointerRotX = 0;
         this.target.pointerScale = 1;
         this.target.lightX = 0;
         this.target.lightY = 0;
-        this.target.rimX = 0;
-        this.target.rimY = 0;
+        this.target.dirLightX = 0;
+        this.target.dirLightY = 0;
+        this.target.shadowX = 0;
+        this.target.shadowY = 18;
+
+        if (window.Character3DScene && typeof window.Character3DScene.setPointer === 'function') {
+          window.Character3DScene.setPointer(0, 0);
+        }
+
         this.requestTick();
       };
 
@@ -169,20 +180,21 @@ document.addEventListener('DOMContentLoaded', () => {
       const c = this.current;
       const t = this.target;
 
+      // Smooth damping interpolation (different speeds for distinct physical layers)
       c.pointerX += (t.pointerX - c.pointerX) * lf;
       c.pointerY += (t.pointerY - c.pointerY) * lf;
-      c.pointerRotX += (t.pointerRotX - c.pointerRotX) * lf;
-      c.pointerRotY += (t.pointerRotY - c.pointerRotY) * lf;
       c.pointerScale += (t.pointerScale - c.pointerScale) * lf;
 
-      c.lightX += (t.lightX - c.lightX) * lf;
-      c.lightY += (t.lightY - c.lightY) * lf;
-      c.rimX += (t.rimX - c.rimX) * lf;
-      c.rimY += (t.rimY - c.rimY) * lf;
+      c.lightX += (t.lightX - c.lightX) * (lf * 0.85);
+      c.lightY += (t.lightY - c.lightY) * (lf * 0.85);
+      c.dirLightX += (t.dirLightX - c.dirLightX) * (lf * 0.85);
+      c.dirLightY += (t.dirLightY - c.dirLightY) * (lf * 0.85);
+
+      c.shadowX += (t.shadowX - c.shadowX) * lf;
+      c.shadowY += (t.shadowY - c.shadowY) * lf;
 
       c.scrollX += (t.scrollX - c.scrollX) * lf;
       c.scrollY += (t.scrollY - c.scrollY) * lf;
-      c.scrollRotY += (t.scrollRotY - c.scrollRotY) * lf;
       c.scrollScale += (t.scrollScale - c.scrollScale) * lf;
       c.scrollOpacity += (t.scrollOpacity - c.scrollOpacity) * lf;
 
@@ -190,7 +202,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
       const diff = Math.abs(t.pointerX - c.pointerX) +
                    Math.abs(t.pointerY - c.pointerY) +
-                   Math.abs(t.pointerRotY - c.pointerRotY) +
                    Math.abs(t.lightX - c.lightX) +
                    Math.abs(t.lightY - c.lightY) +
                    Math.abs(t.scrollX - c.scrollX) +
@@ -205,29 +216,30 @@ document.addEventListener('DOMContentLoaded', () => {
     },
 
     render() {
-      // 1. Move Background Lighting Layers with subtle inertia
+      // 1. Move Background Lighting Layers (smooth ambient shift)
       if (this.radialLightEl) {
-        this.radialLightEl.style.transform = `translate3d(calc(-50% + ${this.current.lightX.toFixed(2)}px), ${this.current.lightY.toFixed(2)}px, 0)`;
+        this.radialLightEl.style.transform = `translate3d(calc(-50% + ${this.current.lightX.toFixed(2)}px), calc(-50% + ${this.current.lightY.toFixed(2)}px), 0)`;
       }
       if (this.dirLightEl) {
-        this.dirLightEl.style.transform = `translate3d(${(-this.current.lightX * 1.2).toFixed(2)}px, ${(-this.current.lightY * 1.2).toFixed(2)}px, 0)`;
+        this.dirLightEl.style.transform = `translate3d(${this.current.dirLightX.toFixed(2)}px, ${this.current.dirLightY.toFixed(2)}px, 0)`;
       }
       if (this.rimLightEl) {
-        this.rimLightEl.style.transform = `translate3d(calc(-50% + ${this.current.rimX.toFixed(2)}px), ${this.current.rimY.toFixed(2)}px, 0)`;
+        this.rimLightEl.style.transform = `translate3d(calc(-50% + ${(this.current.lightX * 0.8).toFixed(2)}px), ${this.current.lightY.toFixed(2)}px, 0)`;
       }
 
-      // 2. Move 2D Portrait Fallback
+      // 2. Move 2D Portrait with subtle shadow movement (depth simulation without flat rotation)
       if (this.portraitEl) {
         const totalX = this.current.pointerX + this.current.scrollX;
         const totalY = this.current.pointerY + this.current.scrollY;
-        const totalRotX = this.current.pointerRotX;
-        const totalRotY = this.current.pointerRotY + this.current.scrollRotY;
         const totalScale = this.current.pointerScale * this.current.scrollScale;
 
         this.portraitEl.style.transform = 
           `translate3d(${totalX.toFixed(2)}px, ${totalY.toFixed(2)}px, 0) ` +
-          `rotateX(${totalRotX.toFixed(2)}deg) rotateY(${totalRotY.toFixed(2)}deg) ` +
           `scale(${totalScale.toFixed(4)})`;
+
+        this.portraitEl.style.filter = 
+          `contrast(1.08) brightness(0.96) saturate(0.88) ` +
+          `drop-shadow(${this.current.shadowX.toFixed(1)}px ${this.current.shadowY.toFixed(1)}px 28px rgba(0, 0, 0, 0.6))`;
 
         this.portraitEl.style.opacity = this.current.scrollOpacity.toFixed(3);
       }
@@ -236,11 +248,10 @@ document.addEventListener('DOMContentLoaded', () => {
     setScrollKinematics(x = 0, y = 0, rotY = 0, scale = 1, opacity = 1) {
       this.target.scrollX = x;
       this.target.scrollY = y;
-      this.target.scrollRotY = rotY;
       this.target.scrollScale = scale;
       this.target.scrollOpacity = opacity;
 
-      // Also forward directly to 3D character scene
+      // Forward kinematics to CharacterScene for 3D model API
       if (window.Character3DScene && typeof window.Character3DScene.setScrollKinematics === 'function') {
         window.Character3DScene.setScrollKinematics(x, y, rotY, scale, opacity);
       }
@@ -251,30 +262,32 @@ document.addEventListener('DOMContentLoaded', () => {
     reset() {
       this.target.pointerX = 0;
       this.target.pointerY = 0;
-      this.target.pointerRotX = 0;
-      this.target.pointerRotY = 0;
       this.target.pointerScale = 1;
       this.target.lightX = 0;
       this.target.lightY = 0;
-      this.target.rimX = 0;
-      this.target.rimY = 0;
+      this.target.dirLightX = 0;
+      this.target.dirLightY = 0;
+      this.target.shadowX = 0;
+      this.target.shadowY = 18;
+
       this.current.pointerX = 0;
       this.current.pointerY = 0;
-      this.current.pointerRotX = 0;
-      this.current.pointerRotY = 0;
       this.current.pointerScale = 1;
       this.current.lightX = 0;
       this.current.lightY = 0;
-      this.current.rimX = 0;
-      this.current.rimY = 0;
+      this.current.dirLightX = 0;
+      this.current.dirLightY = 0;
+      this.current.shadowX = 0;
+      this.current.shadowY = 18;
 
       if (this.portraitEl) {
         this.portraitEl.style.transform = 'none';
+        this.portraitEl.style.filter = 'contrast(1.08) brightness(0.96) saturate(0.88) drop-shadow(0 18px 30px rgba(0, 0, 0, 0.6))';
         this.portraitEl.style.opacity = '1';
       }
-      if (this.radialLightEl) this.radialLightEl.style.transform = 'translateX(-50%)';
+      if (this.radialLightEl) this.radialLightEl.style.transform = 'translate3d(-50%, -50%, 0)';
       if (this.dirLightEl) this.dirLightEl.style.transform = 'none';
-      if (this.rimLightEl) this.rimLightEl.style.transform = 'translateX(-50%)';
+      if (this.rimLightEl) this.rimLightEl.style.transform = 'translate3d(-50%, 0, 0)';
 
       this.isTicking = false;
     }
@@ -318,27 +331,34 @@ document.addEventListener('DOMContentLoaded', () => {
           anticipatePin: 1,
           onUpdate: (self) => {
             const p = self.progress;
+            let section = 'hero';
             // Character continuity kinematics mapped to scroll progress
             if (p < 0.15) {
+              section = 'hero';
               CharacterController.setScrollKinematics(0, 0, 0, 1, 1);
             } else if (p >= 0.15 && p < 0.32) {
-              // Identity: "I DON'T FIT INTO ONE BOX."
-              CharacterController.setScrollKinematics(-22, -10, -2, 1.03, 1);
+              section = 'identity';
+              CharacterController.setScrollKinematics(-22, -10, 0, 1.03, 1);
             } else if (p >= 0.32 && p < 0.45) {
-              // Role 1: MARKETER
-              CharacterController.setScrollKinematics(-15, -6, -1.4, 1.02, 1);
+              section = 'marketer';
+              CharacterController.setScrollKinematics(-15, -6, 0, 1.02, 1);
             } else if (p >= 0.45 && p < 0.58) {
-              // Role 2: BRAND BUILDER
-              CharacterController.setScrollKinematics(-28, -12, -2.4, 1.035, 1);
+              section = 'brandbuilder';
+              CharacterController.setScrollKinematics(-28, -12, 0, 1.035, 1);
             } else if (p >= 0.58 && p < 0.70) {
-              // Role 3: CREATOR
-              CharacterController.setScrollKinematics(-12, -5, -1, 1.02, 1);
+              section = 'creator';
+              CharacterController.setScrollKinematics(-12, -5, 0, 1.02, 1);
             } else if (p >= 0.70 && p < 0.82) {
-              // Role 4: SPEAKER
-              CharacterController.setScrollKinematics(-20, -8, -1.8, 1.03, 1);
+              section = 'speaker';
+              CharacterController.setScrollKinematics(-20, -8, 0, 1.03, 1);
             } else {
-              // Transition to Selected Work: DIGI MARKETRIX
-              CharacterController.setScrollKinematics(30, 25, 1.5, 0.98, 0.25);
+              section = 'work';
+              CharacterController.setScrollKinematics(30, 25, 0, 0.98, 0.25);
+            }
+
+            // Sync scroll progress and active section with CharacterScene
+            if (window.Character3DScene && typeof window.Character3DScene.setScroll === 'function') {
+              window.Character3DScene.setScroll(p, section);
             }
           }
         }

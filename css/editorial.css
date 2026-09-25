@@ -317,63 +317,77 @@
 }
 
 /* ==========================================================================
+/* ==========================================================================
    Hero Cinematic Studio Lighting System
-   - Soft warm radial light behind upper body/head
-   - Subtle directional key light from one side
-   - Faint ambient gradients in deep charcoal black
-   - Subtle rim-light feeling around character silhouette
+   - One large soft warm light behind AKU's head and shoulders
+   - Extremely subtle second directional illumination from one side
+   - Fades smoothly into deep black background (no visible circle, no hard edges)
    ========================================================================== */
 .character-scene-backdrop,
 #hero-radial-light {
   position: absolute;
-  bottom: 18%;
+  top: 36%;
   left: 50%;
-  transform: translateX(-50%);
-  width: clamp(480px, 55vw, 820px);
-  height: clamp(480px, 55vw, 820px);
-  background: radial-gradient(circle, rgba(216, 195, 165, 0.16) 0%, rgba(185, 160, 125, 0.08) 35%, rgba(16, 16, 20, 0.28) 60%, transparent 75%);
-  filter: blur(80px);
+  transform: translate3d(-50%, -50%, 0);
+  width: clamp(560px, 64vw, 980px);
+  height: clamp(560px, 64vw, 980px);
+  background: radial-gradient(
+    circle closest-side,
+    rgba(216, 195, 165, 0.12) 0%,
+    rgba(195, 172, 140, 0.07) 28%,
+    rgba(150, 130, 100, 0.035) 52%,
+    rgba(20, 20, 26, 0.01) 75%,
+    transparent 100%
+  );
+  filter: blur(100px);
   pointer-events: none;
   z-index: 0;
   will-change: transform;
-  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .character-directional-light {
   position: absolute;
-  top: -8%;
-  left: 8%;
-  width: clamp(380px, 45vw, 650px);
-  height: clamp(450px, 55vh, 750px);
-  background: radial-gradient(ellipse at 25% 25%, rgba(255, 245, 230, 0.07) 0%, rgba(216, 195, 165, 0.03) 45%, transparent 68%);
-  filter: blur(70px);
+  top: 8%;
+  left: 14%;
+  width: clamp(420px, 50vw, 760px);
+  height: clamp(520px, 62vh, 840px);
+  background: radial-gradient(
+    ellipse at 35% 35%,
+    rgba(255, 246, 234, 0.055) 0%,
+    rgba(216, 195, 165, 0.02) 42%,
+    transparent 74%
+  );
+  filter: blur(90px);
   pointer-events: none;
   z-index: 0;
   will-change: transform;
-  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .character-ambient-gradient {
   position: absolute;
   inset: 0;
-  background: radial-gradient(circle at 65% 75%, rgba(18, 18, 24, 0.85) 0%, transparent 72%);
+  background: radial-gradient(circle at 65% 75%, rgba(18, 18, 24, 0.75) 0%, transparent 72%);
   pointer-events: none;
   z-index: 0;
 }
 
 .character-rim-light {
   position: absolute;
-  bottom: 8%;
-  left: 48%;
-  transform: translateX(-50%);
-  width: clamp(340px, 38vw, 540px);
+  bottom: 12%;
+  left: 50%;
+  transform: translate3d(-50%, 0, 0);
+  width: clamp(340px, 40vw, 560px);
   height: clamp(480px, 58vh, 720px);
-  background: radial-gradient(ellipse at 50% 60%, rgba(216, 195, 165, 0.09) 0%, rgba(216, 195, 165, 0.02) 48%, transparent 65%);
-  filter: blur(45px);
+  background: radial-gradient(
+    ellipse at 50% 60%,
+    rgba(216, 195, 165, 0.06) 0%,
+    rgba(216, 195, 165, 0.015) 45%,
+    transparent 65%
+  );
+  filter: blur(60px);
   pointer-events: none;
   z-index: 0;
   will-change: transform;
-  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .character-scene-stage {
@@ -396,11 +410,13 @@
   object-fit: contain;
   object-position: bottom center;
   display: block;
-  /* Authentic high-contrast low-saturation editorial grading */
-  filter: contrast(1.08) brightness(0.96) saturate(0.85);
+  opacity: 1;
+  visibility: visible;
+  /* Authentic high-contrast editorial grading with subtle physical depth shadow */
+  filter: contrast(1.08) brightness(0.96) saturate(0.88) drop-shadow(0 18px 30px rgba(0, 0, 0, 0.6));
   -webkit-mask-image: linear-gradient(to bottom, black 86%, transparent 100%);
   mask-image: linear-gradient(to bottom, black 86%, transparent 100%);
-  will-change: transform, opacity;
+  will-change: transform, filter, opacity;
   transform: translate3d(0, 0, 0);
   pointer-events: none;
   user-select: none;
