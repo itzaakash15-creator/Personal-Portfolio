@@ -78,98 +78,111 @@
   <main>
 
     <!-- ======================================================================
-         2. HERO SECTION (Two-Column Editorial Composition)
+         2. HERO & SIGNATURE IDENTITY EXPERIENCE
+         Cinematic Desktop Stage + Native Mobile Flow
          ====================================================================== -->
-    <section class="home-hero-section" id="hero">
-      <div class="container home-hero-grid">
-        
-        <!-- Left: Pure Editorial Typography -->
-        <div class="hero-left-column">
-          <span class="hero-eyebrow">MARKETER &nbsp;•&nbsp; CREATOR &nbsp;•&nbsp; BUILDER &nbsp;•&nbsp; SPEAKER</span>
-
-          <h1 class="hero-title-aku">AKU</h1>
-
-          <div class="hero-statement-box">
-            <p class="hero-statement-lead">
-              I build brands, digital experiences<br />
-              and <span class="hero-serif-accent">ideas that move people.</span>
-            </p>
-            <p class="hero-description-text">
-              A marketer, creator, web builder and motivational speaker turning ideas into real opportunities.
-            </p>
-          </div>
-
-          <div class="hero-cta-group">
-            <a href="#work" class="btn-editorial">
-              <span>Explore My Work →</span>
-            </a>
-            <a href="#about" class="btn-editorial-outline">
-              <span>About Me →</span>
-            </a>
-          </div>
-        </div>
-
-        <!-- Right: Reusable CharacterScene Component (Architecture for 3D GLB / Portrait Fallback) -->
-        <div class="character-scene" id="character-scene">
-          <!-- Soft warm directional light behind the subject -->
-          <div class="character-scene-backdrop" aria-hidden="true"></div>
+    <div class="hero-signature-wrapper" id="hero-experience">
+      <section class="home-hero-section" id="hero">
+        <div class="container home-hero-grid">
           
-          <div class="character-scene-stage" id="character-stage">
-            <!-- Authentic Editorial Portrait with subtle desktop parallax -->
-            <img 
-              src="assets/aakash_authentic_portrait.png" 
-              alt="AKU — Editorial Portrait" 
-              class="character-portrait-asset" 
-              id="character-portrait" 
-            />
+          <!-- Left: Narrative Stage Layer (Holds Hero Content, Identity Statement, Roles, and Work Transition) -->
+          <div class="hero-left-column">
             
-            <!-- Future WebGL 3D GLB / React Three Fiber Canvas Mount -->
-            <div class="character-3d-mount" id="character-3d-mount"></div>
+            <!-- Phase 1: Hero Primary Information -->
+            <div class="hero-intro-phase" id="hero-intro-phase">
+              <span class="hero-eyebrow">CREATIVE MIND &nbsp;·&nbsp; STRATEGIC THINKER &nbsp;·&nbsp; ALWAYS BUILDING</span>
+
+              <h1 class="hero-title-aku" id="hero-aku-title">AKU</h1>
+
+              <div class="hero-statement-box" id="hero-statement-box">
+                <p class="hero-statement-lead">
+                  I build brands, digital experiences<br />
+                  and <span class="hero-serif-accent">ideas that move people.</span>
+                </p>
+                <p class="hero-description-text">
+                  A marketer, creator, web builder and motivational speaker turning ideas into real opportunities.
+                </p>
+              </div>
+
+              <div class="hero-cta-group" id="hero-cta-group">
+                <a href="#experience" class="btn-editorial">
+                  <span>Explore My Work →</span>
+                </a>
+                <a href="#about" class="btn-editorial-outline">
+                  <span>About Me →</span>
+                </a>
+              </div>
+            </div>
+
+            <!-- Phase 2: "I DON'T FIT INTO ONE BOX." Statement -->
+            <div class="identity-box-phase" id="identity-box-phase">
+              <h2 class="identity-huge-statement">
+                I DON'T FIT<br />
+                INTO ONE BOX.
+              </h2>
+            </div>
+
+            <!-- Phase 3: Sequential Dominant Roles (One at a time) -->
+            <div class="role-sequence-phase" id="role-sequence-phase">
+              <!-- Role 01: MARKETER -->
+              <div class="role-slide-item" id="role-slide-1">
+                <span class="role-pre-lead">I THINK LIKE A</span>
+                <h3 class="role-huge-title">MARKETER.</h3>
+              </div>
+
+              <!-- Role 02: BRAND BUILDER -->
+              <div class="role-slide-item" id="role-slide-2">
+                <span class="role-pre-lead">I BUILD LIKE A</span>
+                <h3 class="role-huge-title">BRAND BUILDER.</h3>
+              </div>
+
+              <!-- Role 03: CREATOR -->
+              <div class="role-slide-item" id="role-slide-3">
+                <span class="role-pre-lead">I CREATE LIKE A</span>
+                <h3 class="role-huge-title">CREATOR.</h3>
+              </div>
+
+              <!-- Role 04: SPEAKER -->
+              <div class="role-slide-item" id="role-slide-4">
+                <span class="role-pre-lead">I CONNECT LIKE A</span>
+                <h3 class="role-huge-title">SPEAKER.</h3>
+              </div>
+            </div>
+
+            <!-- Phase 4: Transition into Selected Work -->
+            <div class="work-transition-phase" id="work-transition-phase">
+              <span class="work-transition-label">SELECTED WORK / 01</span>
+              <h2 class="work-transition-title">DIGI<br />MARKETRIX</h2>
+              <p class="work-transition-subtitle">Digital Marketing &nbsp;·&nbsp; Strategy &nbsp;·&nbsp; Brand Growth</p>
+            </div>
+
           </div>
+
+          <!-- Right: Reusable CharacterScene Component (Architecture for 3D GLB / Portrait Fallback) -->
+          <div class="character-scene" id="character-scene">
+            <!-- Soft warm directional light behind the subject -->
+            <div class="character-scene-backdrop" aria-hidden="true"></div>
+            
+            <div class="character-scene-stage" id="character-stage">
+              <!-- Authentic Editorial Portrait with pointer parallax and scroll kinematics -->
+              <img 
+                src="assets/aakash_authentic_portrait.png" 
+                alt="AKU — Editorial Portrait" 
+                class="character-portrait-asset" 
+                id="character-portrait" 
+              />
+              
+              <!-- Future WebGL 3D GLB / React Three Fiber Canvas Mount -->
+              <div class="character-3d-mount" id="character-3d-mount"></div>
+            </div>
+          </div>
+
         </div>
+      </section>
+    </div>
 
-      </div>
-    </section>
-
-    <!-- ======================================================================
-         4. NEXT SCROLL SECTION: "I DON'T FIT INTO ONE BOX." (Pure Typography, No Cards)
-         ====================================================================== -->
-    <section class="identity-sequence-section" id="identity-sequence">
-      <div class="container">
-        <div class="identity-sequence-header">
-          <h2 class="identity-huge-statement">
-            I DON'T FIT<br />
-            INTO ONE BOX.
-          </h2>
-        </div>
-
-        <div class="identity-sequence-flow">
-          <!-- 01: MARKETER -->
-          <div class="identity-flow-item">
-            <span class="identity-flow-title">MARKETER</span>
-            <span class="identity-flow-num">01</span>
-          </div>
-
-          <!-- 02: BRAND BUILDER -->
-          <div class="identity-flow-item">
-            <span class="identity-flow-title">BRAND BUILDER</span>
-            <span class="identity-flow-num">02</span>
-          </div>
-
-          <!-- 03: CREATOR -->
-          <div class="identity-flow-item">
-            <span class="identity-flow-title">CREATOR</span>
-            <span class="identity-flow-num">03</span>
-          </div>
-
-          <!-- 04: SPEAKER -->
-          <div class="identity-flow-item">
-            <span class="identity-flow-title">SPEAKER</span>
-            <span class="identity-flow-num">04</span>
-          </div>
-        </div>
-      </div>
-    </section>
+    <!-- Anchor for #work navigation link -->
+    <div id="work"></div>
 
     <!-- ======================================================================
          5. FIRST FEATURED CASE STUDY: DIGI MARKETRIX
@@ -178,11 +191,11 @@
       <div class="container">
         <div class="project-editorial-header">
           <div>
-            <span class="project-category-tag">FEATURED CASE STUDY // 01</span>
+            <span class="project-category-tag">SELECTED WORK / 01</span>
             <div class="project-dates-loc">MAY 2026 — JULY 2026 // TUTICORIN</div>
           </div>
           <div>
-            <span class="label-mono accent">DIGITAL MARKETING / CONTENT / CREATIVE</span>
+            <span class="label-mono accent">DIGITAL MARKETING &nbsp;·&nbsp; STRATEGY &nbsp;·&nbsp; BRAND GROWTH</span>
           </div>
         </div>
 

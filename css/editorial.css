@@ -82,8 +82,17 @@
 /* ==========================================================================
    2. Home: Hero Section (Editorial Portrait × Typography)
    ========================================================================== */
+/* ==========================================================================
+   2. Home: Hero & Signature Experience Viewport
+   ========================================================================== */
+.hero-signature-wrapper {
+  position: relative;
+  background-color: var(--bg-primary);
+  width: 100%;
+}
+
 .home-hero-section {
-  padding-top: calc(var(--header-height) + clamp(2.5rem, 5vw, 4.5rem));
+  padding-top: calc(var(--header-height) + clamp(1.2rem, 2.6vw, 2.2rem));
   padding-bottom: 0;
   border-bottom: 1px solid var(--border-subtle);
   position: relative;
@@ -92,31 +101,44 @@
   align-items: flex-end;
   overflow: hidden;
   background-color: var(--bg-primary);
+  width: 100%;
 }
 
 .home-hero-grid {
   display: grid;
-  grid-template-columns: 1.1fr 0.9fr;
-  gap: clamp(2rem, 5vw, 5rem);
+  grid-template-columns: 1.15fr 0.85fr;
+  gap: clamp(2rem, 4.5vw, 4.5rem);
   align-items: flex-end;
   width: 100%;
+  position: relative;
 }
 
 .hero-left-column {
   display: flex;
   flex-direction: column;
-  padding-bottom: clamp(3.5rem, 7vw, 6.5rem);
+  justify-content: flex-end;
+  padding-bottom: clamp(3rem, 6vw, 5.5rem);
   z-index: 2;
+  position: relative;
+  min-height: 100%;
+}
+
+/* Phase 1: Hero Primary Information */
+.hero-intro-phase {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  will-change: transform, opacity;
 }
 
 .hero-eyebrow {
   font-family: var(--font-mono);
-  font-size: 0.8125rem;
+  font-size: 0.75rem;
   font-weight: 600;
-  letter-spacing: 0.22em;
+  letter-spacing: 0.2em;
   text-transform: uppercase;
   color: var(--accent-gold);
-  margin-bottom: 1.5rem;
+  margin-bottom: 1.25rem;
   display: inline-block;
 }
 
@@ -126,12 +148,14 @@
   letter-spacing: -0.055em;
   font-weight: 900;
   color: #ffffff;
-  margin-block: 0.5rem 1.75rem;
+  margin-block: 0.4rem 1.6rem;
   text-transform: uppercase;
+  will-change: transform, opacity;
 }
 
 .hero-statement-box {
-  margin-bottom: 2.5rem;
+  margin-bottom: 2.25rem;
+  will-change: transform, opacity;
 }
 
 .hero-statement-lead {
@@ -140,7 +164,7 @@
   font-weight: 600;
   letter-spacing: -0.025em;
   color: var(--text-primary);
-  margin-bottom: 1.25rem;
+  margin-bottom: 1.15rem;
   max-width: 580px;
 }
 
@@ -164,31 +188,144 @@
   align-items: center;
   gap: 1.25rem;
   flex-wrap: wrap;
+  will-change: transform, opacity;
 }
 
-/* ==========================================================================
-   CharacterScene: Reusable 3D Stage & Editorial Fallback Architecture
-   ========================================================================== */
+/* Phase 2: "I DON'T FIT INTO ONE BOX." Statement */
+.identity-box-phase {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  transform: translateY(-50%);
+  width: 100%;
+  max-width: 720px;
+  opacity: 0;
+  pointer-events: none;
+  z-index: 3;
+  will-change: transform, opacity;
+}
+
+.identity-huge-statement {
+  font-family: var(--font-sans);
+  font-size: clamp(4rem, 9.5vw, 9.8rem);
+  font-weight: 900;
+  line-height: 0.90;
+  letter-spacing: -0.045em;
+  text-transform: uppercase;
+  color: #ffffff;
+  margin: 0;
+}
+
+/* Phase 3: Sequential Dominant Roles (One at a time) */
+.role-sequence-phase {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  transform: translateY(-50%);
+  width: 100%;
+  max-width: 760px;
+  pointer-events: none;
+  z-index: 4;
+}
+
+.role-slide-item {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  opacity: 0;
+  transform: translateY(30px);
+  will-change: transform, opacity;
+}
+
+.role-pre-lead {
+  font-family: var(--font-mono);
+  font-size: clamp(0.85rem, 1.6vw, 1.25rem);
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--accent-gold);
+  display: block;
+  margin-bottom: 0.75rem;
+}
+
+.role-huge-title {
+  font-family: var(--font-sans);
+  font-size: clamp(3.6rem, 8.8vw, 8.5rem);
+  font-weight: 900;
+  line-height: 0.88;
+  letter-spacing: -0.045em;
+  text-transform: uppercase;
+  color: #ffffff;
+  margin: 0;
+}
+
+/* Phase 4: Transition into Selected Work */
+.work-transition-phase {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  transform: translateY(-50%);
+  width: 100%;
+  max-width: 720px;
+  opacity: 0;
+  pointer-events: none;
+  z-index: 5;
+  will-change: transform, opacity;
+}
+
+.work-transition-label {
+  font-family: var(--font-mono);
+  font-size: clamp(0.75rem, 1.2vw, 0.875rem);
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--accent-light);
+  display: block;
+  margin-bottom: 1rem;
+}
+
+.work-transition-title {
+  font-family: var(--font-sans);
+  font-size: clamp(4.5rem, 11vw, 10.5rem);
+  font-weight: 900;
+  line-height: 0.85;
+  letter-spacing: -0.05em;
+  text-transform: uppercase;
+  color: #ffffff;
+  margin-bottom: 1.25rem;
+}
+
+.work-transition-subtitle {
+  font-family: var(--font-mono);
+  font-size: clamp(0.9rem, 1.6vw, 1.2rem);
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  color: var(--accent-champagne);
+  margin: 0;
+}
+
+/* CharacterScene: 10-15% visual increase, anchored to bottom */
 .character-scene {
   position: relative;
   width: 100%;
-  min-height: clamp(520px, 78vh, 880px);
+  min-height: clamp(560px, 82vh, 920px);
   display: flex;
   align-items: flex-end;
   justify-content: center;
-  z-index: 1;
+  z-index: 2;
 }
 
-/* Soft warm directional light behind the subject (No rings/circles) */
+/* Soft warm directional light behind the subject */
 .character-scene-backdrop {
   position: absolute;
   bottom: 15%;
   left: 50%;
   transform: translateX(-50%);
-  width: clamp(380px, 46vw, 680px);
-  height: clamp(380px, 46vw, 680px);
-  background: radial-gradient(circle, rgba(216, 195, 165, 0.09) 0%, rgba(18, 18, 22, 0.25) 50%, transparent 75%);
-  filter: blur(80px);
+  width: clamp(420px, 50vw, 750px);
+  height: clamp(420px, 50vw, 750px);
+  background: radial-gradient(circle, rgba(216, 195, 165, 0.10) 0%, rgba(18, 18, 22, 0.25) 55%, transparent 75%);
+  filter: blur(85px);
   pointer-events: none;
   z-index: 0;
 }
@@ -207,19 +344,18 @@
   position: relative;
   z-index: 1;
   width: 100%;
-  max-width: 580px;
+  max-width: 660px;
   height: auto;
-  max-height: 85vh;
+  max-height: 90vh;
   object-fit: contain;
   object-position: bottom center;
   display: block;
   /* Authentic high-contrast low-saturation editorial grading */
   filter: contrast(1.08) brightness(0.96) saturate(0.85);
-  -webkit-mask-image: linear-gradient(to bottom, black 84%, transparent 100%);
-  mask-image: linear-gradient(to bottom, black 84%, transparent 100%);
-  will-change: transform;
+  -webkit-mask-image: linear-gradient(to bottom, black 86%, transparent 100%);
+  mask-image: linear-gradient(to bottom, black 86%, transparent 100%);
+  will-change: transform, opacity;
   transform: translate3d(0, 0, 0);
-  transition: transform 0.15s cubic-bezier(0.16, 1, 0.3, 1);
   pointer-events: none;
   user-select: none;
 }
@@ -232,71 +368,6 @@
   height: 100%;
   z-index: 2;
   pointer-events: none;
-}
-
-/* ==========================================================================
-   3. Next Scroll Section: "I DON'T FIT INTO ONE BOX." (Pure Typography, No Cards)
-   ========================================================================== */
-.identity-sequence-section {
-  padding-block: clamp(7rem, 14vw, 13rem);
-  background-color: var(--bg-primary);
-  border-bottom: 1px solid var(--border-subtle);
-  position: relative;
-}
-
-.identity-huge-statement {
-  font-size: clamp(3.2rem, 8.8vw, 7.5rem);
-  font-weight: 900;
-  line-height: 0.92;
-  letter-spacing: -0.045em;
-  text-transform: uppercase;
-  color: #ffffff;
-  margin-bottom: clamp(4rem, 9vw, 8.5rem);
-}
-
-.identity-sequence-flow {
-  display: flex;
-  flex-direction: column;
-}
-
-.identity-flow-item {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  padding-block: clamp(2.5rem, 5.5vw, 4.5rem);
-  border-top: 1px solid var(--border-subtle);
-  transition: border-color var(--transition-normal);
-}
-
-.identity-flow-item:last-child {
-  border-bottom: 1px solid var(--border-subtle);
-}
-
-.identity-flow-item:hover {
-  border-color: var(--border-gold);
-}
-
-.identity-flow-title {
-  font-size: clamp(2.8rem, 6.8vw, 6.2rem);
-  font-weight: 900;
-  letter-spacing: -0.035em;
-  text-transform: uppercase;
-  color: #ffffff;
-  line-height: 1;
-  transition: color var(--transition-fast), transform var(--transition-normal);
-}
-
-.identity-flow-item:hover .identity-flow-title {
-  color: var(--accent-champagne);
-  transform: translateX(12px);
-}
-
-.identity-flow-num {
-  font-family: var(--font-mono);
-  font-size: clamp(0.9rem, 1.5vw, 1.15rem);
-  font-weight: 600;
-  letter-spacing: 0.1em;
-  color: var(--accent-gold);
 }
 
 /* ==========================================================================
@@ -1809,17 +1880,37 @@ textarea.form-input-clean {
 }
 
 @media (max-width: 960px) {
+  .hero-signature-wrapper {
+    height: auto !important;
+  }
   .home-hero-section {
-    padding-top: calc(var(--header-height) + 2rem);
-    padding-bottom: 3rem;
+    padding-top: calc(var(--header-height) + 1.5rem);
+    padding-bottom: 3.5rem;
     min-height: auto;
+    overflow: visible;
   }
   .home-hero-grid {
     grid-template-columns: 1fr;
-    gap: 2.5rem;
+    gap: 0;
+    display: flex;
+    flex-direction: column;
   }
   .hero-left-column {
-    padding-bottom: 1rem;
+    padding-bottom: 0;
+    display: flex;
+    flex-direction: column;
+    min-height: auto;
+  }
+  .hero-intro-phase {
+    order: 1;
+    position: relative;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+  .hero-eyebrow {
+    font-size: 0.7rem;
+    letter-spacing: 0.16em;
+    margin-bottom: 1rem;
   }
   .hero-title-aku {
     font-size: clamp(4.5rem, 20vw, 8rem);
@@ -1830,29 +1921,110 @@ textarea.form-input-clean {
   }
   .hero-cta-group {
     gap: 1rem;
+    margin-bottom: 2rem;
   }
   .character-scene {
+    order: 2;
     min-height: auto;
-    max-width: min(85vw, 440px);
+    max-width: min(88vw, 460px);
     margin-inline: auto;
     margin-top: 1rem;
+    margin-bottom: 4rem;
   }
   .character-portrait-asset {
     transform: none !important;
-    max-height: 55vh;
+    max-height: 58vh;
+    opacity: 1 !important;
   }
-  .identity-sequence-section {
-    padding-block: clamp(4.5rem, 10vw, 7rem);
+  .identity-box-phase {
+    order: 3;
+    position: static;
+    transform: none !important;
+    opacity: 1 !important;
+    pointer-events: auto;
+    margin-bottom: 3.5rem;
+    padding-top: 2.5rem;
+    border-top: 1px solid var(--border-subtle);
   }
   .identity-huge-statement {
-    font-size: clamp(2.5rem, 10vw, 4.8rem);
-    margin-bottom: 3rem;
+    font-size: clamp(2.6rem, 10vw, 4.5rem);
+    line-height: 0.94;
   }
-  .identity-flow-item {
-    padding-block: 1.75rem;
+  .role-sequence-phase {
+    order: 4;
+    position: static;
+    transform: none !important;
+    pointer-events: auto;
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 3.5rem;
   }
-  .identity-flow-title {
-    font-size: clamp(2rem, 8vw, 3.4rem);
+  .role-slide-item {
+    position: static;
+    opacity: 1 !important;
+    transform: none !important;
+    padding-block: 2.25rem;
+    border-top: 1px solid var(--border-subtle);
+  }
+  .role-slide-item:last-child {
+    border-bottom: 1px solid var(--border-subtle);
+  }
+  .role-pre-lead {
+    font-size: 0.8125rem;
+    letter-spacing: 0.16em;
+    margin-bottom: 0.4rem;
+  }
+  .role-huge-title {
+    font-size: clamp(2.2rem, 8.5vw, 3.8rem);
+    line-height: 0.95;
+  }
+  .work-transition-phase {
+    order: 5;
+    position: static;
+    transform: none !important;
+    opacity: 1 !important;
+    pointer-events: auto;
+    padding-block: 2.75rem 1.5rem;
+    border-top: 1px solid var(--border-subtle);
+  }
+  .work-transition-label {
+    font-size: 0.75rem;
+    letter-spacing: 0.16em;
+    margin-bottom: 0.75rem;
+  }
+  .work-transition-title {
+    font-size: clamp(3.2rem, 12vw, 5.5rem);
+    line-height: 0.9;
+  }
+  .work-transition-subtitle {
+    font-size: 0.9rem;
+  }
+}
+
+/* ==========================================================================
+   Prefers Reduced Motion: Accessible Minimal Presentation
+   ========================================================================== */
+@media (prefers-reduced-motion: reduce) {
+  .hero-signature-wrapper,
+  .home-hero-section {
+    height: auto !important;
+  }
+  .identity-box-phase,
+  .role-sequence-phase,
+  .work-transition-phase {
+    position: static !important;
+    transform: none !important;
+    opacity: 1 !important;
+    pointer-events: auto !important;
+  }
+  .role-slide-item {
+    position: static !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+  .character-portrait-asset {
+    transform: none !important;
+    opacity: 1 !important;
   }
 }
 

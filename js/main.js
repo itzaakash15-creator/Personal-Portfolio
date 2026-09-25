@@ -35,131 +35,397 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // 3. CharacterScene: Desktop Pointer-Based Parallax Engine
-  // Exact bounds: max translate X ±6px, translate Y ±4px, rotation ±1 degree
-  // Smooth lerp interpolation, disabled on mobile and reduced motion
-  const characterPortrait = document.getElementById('character-portrait') || document.querySelector('.character-portrait-asset');
-  const heroSection = document.getElementById('hero') || document.querySelector('.home-hero-section');
+  // ==========================================================================
+  // 3. CharacterScene Controller: Responsive Parallax & Scroll Kinematics
+  // Architecture ready for React Three Fiber / WebGL 3D GLB Model
+  // ==========================================================================
+  const CharacterController = {
+    // Current interpolated state applied to DOM or 3D character
+    current: {
+      pointerX: 0,
+      pointerY: 0,
+      pointerRotX: 0,
+      pointerRotY: 0,
+      pointerScale: 1,
+      scrollX: 0,
+      scrollY: 0,
+      scrollRotY: 0,
+      scrollScale: 1,
+      scrollOpacity: 1
+    },
+    // Target state driven by pointer and scroll
+    target: {
+      pointerX: 0,
+      pointerY: 0,
+      pointerRotX: 0,
+      pointerRotY: 0,
+      pointerScale: 1,
+      scrollX: 0,
+      scrollY: 0,
+      scrollRotY: 0,
+      scrollScale: 1,
+      scrollOpacity: 1
+    },
+    lerpFactor: 0.055,
+    isTicking: false,
+    rafId: null,
+    portraitEl: null,
+    stageEl: null,
 
-  if (characterPortrait && heroSection) {
-    let mouseX = 0;
-    let mouseY = 0;
-    let targetX = 0;
-    let targetY = 0;
-    let targetRot = 0;
-    let currentX = 0;
-    let currentY = 0;
-    let currentRot = 0;
-    let isTicking = false;
-    let rafId = null;
+    init() {
+      this.portraitEl = document.getElementById('character-portrait') || document.querySelector('.character-portrait-asset');
+      this.stageEl = document.getElementById('character-scene') || document.querySelector('.character-scene');
+      if (!this.portraitEl) return;
 
-    const isDesktop = () => window.innerWidth > 960 && !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const isTouch = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+      const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-    function renderParallax() {
-      if (!isDesktop()) {
-        characterPortrait.style.transform = 'none';
-        isTicking = false;
-        return;
+      if (!isTouch && !prefersReducedMotion) {
+        this.bindPointerEvents();
       }
+    },
 
-      currentX += (targetX - currentX) * 0.06;
-      currentY += (targetY - currentY) * 0.06;
-      currentRot += (targetRot - currentRot) * 0.06;
+    bindPointerEvents() {
+      const isDesktop = () => window.innerWidth > 960 && !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-      characterPortrait.style.transform = `translate3d(${currentX.toFixed(2)}px, ${currentY.toFixed(2)}px, 0) rotate(${currentRot.toFixed(2)}deg)`;
+      const onPointerMove = (e) => {
+        if (!isDesktop()) return;
 
-      // Continue animating until settled
-      if (Math.abs(targetX - currentX) > 0.02 || Math.abs(targetY - currentY) > 0.02) {
-        rafId = requestAnimationFrame(renderParallax);
+        // Normalized mouse coordinates from -1 to +1
+        const normX = (e.clientX / window.innerWidth) * 2 - 1;
+        const normY = (e.clientY / window.innerHeight) * 2 - 1;
+
+        // Exact bounds per user instructions:
+        // translateX: maximum ±8px
+        // translateY: maximum ±5px
+        // rotateY simulation: maximum ±1.2deg
+        // rotateX simulation: maximum ±0.6deg
+        // scale: extremely subtle, maximum approximately 1.005
+        this.target.pointerX = normX * 8;
+        this.target.pointerY = normY * 5;
+        this.target.pointerRotY = normX * 1.2;
+        this.target.pointerRotX = -normY * 0.6;
+        this.target.pointerScale = 1 + (Math.abs(normX) + Math.abs(normY)) * 0.0025;
+
+        this.requestTick();
+      };
+
+      const onPointerLeave = () => {
+        if (!isDesktop()) return;
+        // Smooth neutral return with slight inertia
+        this.target.pointerX = 0;
+        this.target.pointerY = 0;
+        this.target.pointerRotY = 0;
+        this.target.pointerRotX = 0;
+        this.target.pointerScale = 1;
+        this.requestTick();
+      };
+
+      window.addEventListener('mousemove', onPointerMove, { passive: true });
+      window.addEventListener('mouseleave', onPointerLeave, { passive: true });
+
+      window.addEventListener('resize', () => {
+        if (!isDesktop()) {
+          this.reset();
+        }
+      });
+    },
+
+    requestTick() {
+      if (!this.isTicking) {
+        this.isTicking = true;
+        this.rafId = requestAnimationFrame(() => this.update());
+      }
+    },
+
+    update() {
+      const lf = this.lerpFactor;
+      const c = this.current;
+      const t = this.target;
+
+      c.pointerX += (t.pointerX - c.pointerX) * lf;
+      c.pointerY += (t.pointerY - c.pointerY) * lf;
+      c.pointerRotX += (t.pointerRotX - c.pointerRotX) * lf;
+      c.pointerRotY += (t.pointerRotY - c.pointerRotY) * lf;
+      c.pointerScale += (t.pointerScale - c.pointerScale) * lf;
+
+      c.scrollX += (t.scrollX - c.scrollX) * lf;
+      c.scrollY += (t.scrollY - c.scrollY) * lf;
+      c.scrollRotY += (t.scrollRotY - c.scrollRotY) * lf;
+      c.scrollScale += (t.scrollScale - c.scrollScale) * lf;
+      c.scrollOpacity += (t.scrollOpacity - c.scrollOpacity) * lf;
+
+      this.render();
+
+      const diff = Math.abs(t.pointerX - c.pointerX) +
+                   Math.abs(t.pointerY - c.pointerY) +
+                   Math.abs(t.pointerRotY - c.pointerRotY) +
+                   Math.abs(t.scrollX - c.scrollX) +
+                   Math.abs(t.scrollY - c.scrollY) +
+                   Math.abs(t.scrollOpacity - c.scrollOpacity);
+
+      if (diff > 0.005) {
+        this.rafId = requestAnimationFrame(() => this.update());
       } else {
-        isTicking = false;
+        this.isTicking = false;
       }
+    },
+
+    render() {
+      if (!this.portraitEl) return;
+
+      const totalX = this.current.pointerX + this.current.scrollX;
+      const totalY = this.current.pointerY + this.current.scrollY;
+      const totalRotX = this.current.pointerRotX;
+      const totalRotY = this.current.pointerRotY + this.current.scrollRotY;
+      const totalScale = this.current.pointerScale * this.current.scrollScale;
+
+      this.portraitEl.style.transform = 
+        `translate3d(${totalX.toFixed(2)}px, ${totalY.toFixed(2)}px, 0) ` +
+        `rotateX(${totalRotX.toFixed(2)}deg) rotateY(${totalRotY.toFixed(2)}deg) ` +
+        `scale(${totalScale.toFixed(4)})`;
+
+      this.portraitEl.style.opacity = this.current.scrollOpacity.toFixed(3);
+
+      // Future 3D Character Model mapping:
+      // portrait translateX → model.position.x
+      // portrait translateY → model.position.y
+      // portrait scale → camera/model scale
+      // portrait simulated rotation → model.rotation
+      if (window.Character3DScene && window.Character3DScene.model) {
+        window.Character3DScene.model.position.x = totalX * 0.01;
+        window.Character3DScene.model.position.y = -totalY * 0.01;
+        window.Character3DScene.model.rotation.y = (totalRotY * Math.PI) / 180;
+        window.Character3DScene.model.rotation.x = (totalRotX * Math.PI) / 180;
+        window.Character3DScene.model.scale.setScalar(totalScale);
+      }
+    },
+
+    setScrollKinematics(x = 0, y = 0, rotY = 0, scale = 1, opacity = 1) {
+      this.target.scrollX = x;
+      this.target.scrollY = y;
+      this.target.scrollRotY = rotY;
+      this.target.scrollScale = scale;
+      this.target.scrollOpacity = opacity;
+      this.requestTick();
+    },
+
+    reset() {
+      this.target.pointerX = 0;
+      this.target.pointerY = 0;
+      this.target.pointerRotX = 0;
+      this.target.pointerRotY = 0;
+      this.target.pointerScale = 1;
+      this.current.pointerX = 0;
+      this.current.pointerY = 0;
+      this.current.pointerRotX = 0;
+      this.current.pointerRotY = 0;
+      this.current.pointerScale = 1;
+      if (this.portraitEl) {
+        this.portraitEl.style.transform = 'none';
+        this.portraitEl.style.opacity = '1';
+      }
+      this.isTicking = false;
     }
+  };
 
-    function onPointerMove(e) {
-      if (!isDesktop()) return;
+  CharacterController.init();
 
-      const normX = (e.clientX / window.innerWidth) * 2 - 1;
-      const normY = (e.clientY / window.innerHeight) * 2 - 1;
-
-      // Restrained bounds: X approx ±6px, Y approx ±4px, rotation approx ±1 deg
-      targetX = normX * 6;
-      targetY = normY * 4;
-      targetRot = normX * 1;
-
-      if (!isTicking) {
-        isTicking = true;
-        rafId = requestAnimationFrame(renderParallax);
-      }
-    }
-
-    function onPointerLeave() {
-      if (!isDesktop()) return;
-      targetX = 0;
-      targetY = 0;
-      targetRot = 0;
-      if (!isTicking) {
-        isTicking = true;
-        rafId = requestAnimationFrame(renderParallax);
-      }
-    }
-
-    window.addEventListener('mousemove', onPointerMove, { passive: true });
-    window.addEventListener('mouseleave', onPointerLeave, { passive: true });
-
-    window.addEventListener('resize', () => {
-      if (!isDesktop()) {
-        characterPortrait.style.transform = 'none';
-        targetX = 0;
-        targetY = 0;
-        targetRot = 0;
-        currentX = 0;
-        currentY = 0;
-        currentRot = 0;
-      }
-    });
-  }
-
-  // 4. Next Section: Restrained Scroll Storytelling Animation
-  if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined' && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+  // ==========================================================================
+  // 4. Signature Identity Experience Choreography (GSAP ScrollTrigger)
+  // ==========================================================================
+  if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
     gsap.registerPlugin(ScrollTrigger);
 
-    const statementEl = document.querySelector('.identity-huge-statement');
-    if (statementEl) {
-      gsap.fromTo(statementEl,
-        { opacity: 0.18, y: 35 },
-        {
-          opacity: 1,
-          y: 0,
-          duration: 0.8,
-          ease: 'power2.out',
-          scrollTrigger: {
-            trigger: statementEl,
-            start: 'top 85%',
-            end: 'top 45%',
-            scrub: 0.4
-          }
-        }
-      );
-    }
+    const mm = gsap.matchMedia();
 
-    const flowItems = document.querySelectorAll('.identity-flow-item');
-    flowItems.forEach((item) => {
-      gsap.fromTo(item,
-        { opacity: 0.22, y: 30 },
-        {
-          opacity: 1,
-          y: 0,
-          duration: 0.7,
-          ease: 'power2.out',
-          scrollTrigger: {
-            trigger: item,
-            start: 'top 88%',
-            end: 'top 60%',
-            scrub: 0.35
+    // Desktop: Pinned Cinematic Scroll-Driven Experience
+    mm.add("(min-width: 961px) and (prefers-reduced-motion: no-preference)", () => {
+      const wrapper = document.getElementById('hero-experience');
+      const introPhase = document.getElementById('hero-intro-phase');
+      const akuTitle = document.getElementById('hero-aku-title');
+      const statementBox = document.getElementById('hero-statement-box');
+      const ctaGroup = document.getElementById('hero-cta-group');
+      const eyebrow = introPhase ? introPhase.querySelector('.hero-eyebrow') : null;
+      
+      const identityPhase = document.getElementById('identity-box-phase');
+      const role1 = document.getElementById('role-slide-1');
+      const role2 = document.getElementById('role-slide-2');
+      const role3 = document.getElementById('role-slide-3');
+      const role4 = document.getElementById('role-slide-4');
+      const workTransition = document.getElementById('work-transition-phase');
+
+      if (!wrapper || !introPhase) return;
+
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: wrapper,
+          start: "top top",
+          end: "+=4200",
+          pin: true,
+          scrub: 0.8,
+          anticipatePin: 1,
+          onUpdate: (self) => {
+            const p = self.progress;
+            // Character continuity kinematics mapped to scroll progress
+            if (p < 0.15) {
+              CharacterController.setScrollKinematics(0, 0, 0, 1, 1);
+            } else if (p >= 0.15 && p < 0.32) {
+              // Identity: "I DON'T FIT INTO ONE BOX."
+              CharacterController.setScrollKinematics(-22, -10, -2, 1.03, 1);
+            } else if (p >= 0.32 && p < 0.45) {
+              // Role 1: MARKETER
+              CharacterController.setScrollKinematics(-15, -6, -1.4, 1.02, 1);
+            } else if (p >= 0.45 && p < 0.58) {
+              // Role 2: BRAND BUILDER
+              CharacterController.setScrollKinematics(-28, -12, -2.4, 1.035, 1);
+            } else if (p >= 0.58 && p < 0.70) {
+              // Role 3: CREATOR
+              CharacterController.setScrollKinematics(-12, -5, -1, 1.02, 1);
+            } else if (p >= 0.70 && p < 0.82) {
+              // Role 4: SPEAKER
+              CharacterController.setScrollKinematics(-20, -8, -1.8, 1.03, 1);
+            } else {
+              // Transition to Selected Work: DIGI MARKETRIX
+              CharacterController.setScrollKinematics(30, 25, 1.5, 0.98, 0.25);
+            }
           }
         }
+      });
+
+      // Step 3: Transition out Hero Content
+      // Hero supporting text and CTA visibility gradually reduces
+      tl.to([statementBox, ctaGroup, eyebrow], {
+        opacity: 0,
+        y: -25,
+        duration: 0.8,
+        ease: "power2.inOut"
+      }, 0);
+
+      // AKU title moves slightly upward/left and fades out
+      tl.to(akuTitle, {
+        x: -55,
+        y: -30,
+        opacity: 0,
+        duration: 1.0,
+        ease: "power2.inOut"
+      }, 0.1);
+
+      // Character remains visible; dark transition into "I DON'T FIT INTO ONE BOX."
+      tl.fromTo(identityPhase,
+        { opacity: 0, y: 50 },
+        { opacity: 1, y: 0, duration: 1.2, ease: "power2.out" },
+        1.2
       );
+      // Hold identity statement
+      tl.to(identityPhase, { opacity: 1, duration: 0.8 }, 2.4);
+      // Fade out identity statement
+      tl.to(identityPhase, { opacity: 0, y: -40, duration: 0.9, ease: "power2.in" }, 3.2);
+
+      // Step 4: Role 1 — MARKETER (Only ONE role dominates)
+      tl.fromTo(role1,
+        { opacity: 0, y: 45 },
+        { opacity: 1, y: 0, duration: 1.1, ease: "power2.out" },
+        4.1
+      );
+      tl.to(role1, { opacity: 1, duration: 0.8 }, 5.2);
+      tl.to(role1, { opacity: 0, y: -35, duration: 0.9, ease: "power2.in" }, 6.0);
+
+      // Role 2 — BRAND BUILDER
+      tl.fromTo(role2,
+        { opacity: 0, y: 45 },
+        { opacity: 1, y: 0, duration: 1.1, ease: "power2.out" },
+        6.9
+      );
+      tl.to(role2, { opacity: 1, duration: 0.8 }, 8.0);
+      tl.to(role2, { opacity: 0, y: -35, duration: 0.9, ease: "power2.in" }, 8.8);
+
+      // Role 3 — CREATOR
+      tl.fromTo(role3,
+        { opacity: 0, y: 45 },
+        { opacity: 1, y: 0, duration: 1.1, ease: "power2.out" },
+        9.7
+      );
+      tl.to(role3, { opacity: 1, duration: 0.8 }, 10.8);
+      tl.to(role3, { opacity: 0, y: -35, duration: 0.9, ease: "power2.in" }, 11.6);
+
+      // Role 4 — SPEAKER
+      tl.fromTo(role4,
+        { opacity: 0, y: 45 },
+        { opacity: 1, y: 0, duration: 1.1, ease: "power2.out" },
+        12.5
+      );
+      tl.to(role4, { opacity: 1, duration: 0.8 }, 13.6);
+      // Reduce role typography
+      tl.to(role4, { opacity: 0, scale: 0.93, y: -30, duration: 0.9, ease: "power2.in" }, 14.4);
+
+      // Step 6: Transition into Work — DIGI MARKETRIX
+      tl.fromTo(workTransition,
+        { opacity: 0, y: 45 },
+        { opacity: 1, y: 0, duration: 1.2, ease: "power2.out" },
+        15.3
+      );
+      tl.to(workTransition, { opacity: 1, duration: 1.2 }, 16.5);
+    });
+
+    // Mobile: Native Scroll with Elegant Element Reveals (No Pinning, No Glitches)
+    mm.add("(max-width: 960px)", () => {
+      const identityPhase = document.getElementById('identity-box-phase');
+      if (identityPhase) {
+        gsap.fromTo(identityPhase,
+          { opacity: 0.25, y: 30 },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.8,
+            ease: 'power2.out',
+            scrollTrigger: {
+              trigger: identityPhase,
+              start: 'top 85%',
+              end: 'top 55%',
+              scrub: 0.4
+            }
+          }
+        );
+      }
+
+      const roleSlides = document.querySelectorAll('.role-slide-item');
+      roleSlides.forEach((slide) => {
+        gsap.fromTo(slide,
+          { opacity: 0.3, y: 25 },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.7,
+            ease: 'power2.out',
+            scrollTrigger: {
+              trigger: slide,
+              start: 'top 88%',
+              end: 'top 60%',
+              scrub: 0.35
+            }
+          }
+        );
+      });
+
+      const workTransition = document.getElementById('work-transition-phase');
+      if (workTransition) {
+        gsap.fromTo(workTransition,
+          { opacity: 0.3, y: 25 },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.8,
+            ease: 'power2.out',
+            scrollTrigger: {
+              trigger: workTransition,
+              start: 'top 85%',
+              end: 'top 55%',
+              scrub: 0.4
+            }
+          }
+        );
+      }
     });
   }
 
