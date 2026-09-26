@@ -3381,3 +3381,729 @@ section[data-theme="vision"] {
   }
 }
 
+/* ==========================================================================
+   35. Spatial Stage Foundation & 3 Depth Planes (Background, Midground, Foreground)
+   ========================================================================== */
+.spatial-stage {
+  position: relative;
+  perspective: 1200px;
+  perspective-origin: 50% 50%;
+  transform-style: preserve-3d;
+}
+
+/* Core Depth Planes with Damped Physics Variables */
+[data-depth="bg"] {
+  position: relative;
+  will-change: transform;
+  transform: translate3d(var(--depth-bg-x, 0px), var(--depth-bg-y, 0px), -40px);
+  transition: transform 0.15s cubic-bezier(0.2, 0.9, 0.3, 1);
+}
+
+[data-depth="mid"] {
+  position: relative;
+  will-change: transform;
+  transform: translate3d(var(--depth-mid-x, 0px), var(--depth-mid-y, 0px), 0px) rotateX(var(--tilt-x, 0deg)) rotateY(var(--tilt-y, 0deg));
+  transition: transform 0.18s cubic-bezier(0.2, 0.9, 0.3, 1), box-shadow 0.35s ease, border-color 0.3s ease;
+}
+
+[data-depth="fg"] {
+  position: relative;
+  z-index: 5;
+  will-change: transform;
+  transform: translate3d(var(--depth-fg-x, 0px), var(--depth-fg-y, 0px), 20px);
+  transition: transform 0.22s cubic-bezier(0.2, 0.9, 0.3, 1);
+}
+
+/* Atmospheric Glow Behind Spatial Sections */
+.spatial-bg-glow {
+  position: absolute;
+  top: 10%;
+  left: 20%;
+  width: clamp(500px, 60vw, 900px);
+  height: 600px;
+  background: radial-gradient(ellipse at center, rgba(216, 195, 165, 0.04) 0%, transparent 70%);
+  filter: blur(90px);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ==========================================================================
+   36. Digi Marketrix: Spatial Canvas & Unboxed Progression Stream
+   ========================================================================== */
+.project-spatial-stream {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(3.5rem, 7vw, 6.5rem);
+}
+
+.spatial-chapter-cluster {
+  position: relative;
+  border-top: 1px solid var(--border-subtle);
+  padding-top: clamp(2.5rem, 5vw, 4rem);
+}
+
+.spatial-chapter-cluster:first-child {
+  border-top: none;
+  padding-top: 0;
+}
+
+.spatial-watermark-num {
+  font-family: var(--font-sans);
+  font-size: clamp(5.5rem, 14vw, 10.5rem);
+  font-weight: 900;
+  line-height: 0.8;
+  letter-spacing: -0.06em;
+  color: rgba(255, 255, 255, 0.038);
+  position: absolute;
+  right: 0;
+  top: 1rem;
+  user-select: none;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.spatial-cluster-body {
+  position: relative;
+  z-index: 2;
+  max-width: 680px;
+}
+
+.spatial-focus-media {
+  position: relative;
+  border-radius: var(--radius-xs);
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  cursor: pointer;
+  transform-origin: center center;
+  transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.45s ease, border-color 0.3s ease;
+  background: #08080a;
+}
+
+.spatial-focus-media:hover {
+  transform: translate3d(0, -6px, 30px) scale(1.02);
+  border-color: rgba(216, 195, 165, 0.45);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.65), 0 0 35px rgba(216, 195, 165, 0.12);
+}
+
+.spatial-media-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.spatial-focus-media:hover .spatial-media-img {
+  transform: scale(1.035);
+}
+
+.spatial-metrics-spread {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+  background: transparent;
+  border: none;
+  padding: 0;
+}
+
+.spatial-proof-item {
+  border-radius: var(--radius-xs);
+  transition: transform 0.35s ease, border-color 0.3s ease, box-shadow 0.35s ease;
+}
+
+.spatial-proof-item:hover {
+  transform: translateY(-4px);
+  border-color: rgba(216, 195, 165, 0.4);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.45);
+}
+
+/* ==========================================================================
+   37. Personal Branding: Creative Workspace / Desk Canvas
+   ========================================================================== */
+.branding-desk-layout {
+  display: grid;
+  grid-template-columns: 1.05fr 0.95fr;
+  gap: clamp(3rem, 6vw, 6rem);
+  align-items: start;
+  margin-top: 2.5rem;
+}
+
+.branding-process-column {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(2rem, 3.5vw, 3rem);
+  border-left: 1px solid var(--border-subtle);
+  padding-left: clamp(1.5rem, 3vw, 2.5rem);
+  position: relative;
+}
+
+.branding-desk-stage {
+  display: flex;
+  gap: 1.5rem;
+  align-items: baseline;
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.desk-stage-num {
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  font-weight: 700;
+  color: var(--accent-champagne);
+  letter-spacing: 0.14em;
+  flex-shrink: 0;
+}
+
+.desk-stage-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.desk-stage-label {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--accent-gold);
+}
+
+.desk-stage-title {
+  font-family: var(--font-sans);
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #ffffff;
+  margin-block: 0.2rem;
+}
+
+.desk-stage-desc {
+  font-size: 0.95rem;
+  line-height: 1.65;
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+.branding-canvas-workspace {
+  position: sticky;
+  top: calc(var(--header-height) + 2rem);
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.desk-floating-media {
+  position: relative;
+  border-radius: var(--radius-xs);
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+}
+
+.desk-media-tag {
+  position: absolute;
+  bottom: 1rem;
+  left: 1rem;
+  background: rgba(10, 10, 12, 0.88);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(216, 195, 165, 0.3);
+  border-radius: 999px;
+  padding: 0.35rem 0.85rem;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  color: var(--accent-champagne);
+}
+
+.desk-metrics-floating {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  padding: 1.5rem;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-xs);
+}
+
+.desk-metric-node {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.desk-metric-val {
+  font-family: var(--font-sans);
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: #ffffff;
+}
+
+.desk-metric-lbl {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.desk-proof-triggers {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.desk-triggers-title {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+/* ==========================================================================
+   38. Motivational Speaking: Theatrical Stage Moments
+   ========================================================================== */
+.speaking-stage-moments {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: clamp(2rem, 4vw, 3.5rem);
+  margin-top: 3.5rem;
+}
+
+.stage-moment-block {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  border-top: 1px solid var(--border-subtle);
+  padding-top: 2rem;
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.stage-moment-title {
+  font-family: var(--font-sans);
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #ffffff;
+  margin-block: 0.25rem;
+}
+
+.stage-moment-desc {
+  font-size: 0.95rem;
+  line-height: 1.65;
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+.spatial-citations-moment {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.citation-moment-item {
+  padding: 1.5rem;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-xs);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.citation-moment-item:hover {
+  border-color: rgba(216, 195, 165, 0.4);
+  background: rgba(216, 195, 165, 0.03);
+  transform: translateY(-3px);
+}
+
+.spatial-testing-moment {
+  padding: 1.75rem;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-xs);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.spatial-testing-moment:hover {
+  border-color: rgba(216, 195, 165, 0.4);
+  transform: translateY(-3px);
+}
+
+/* ==========================================================================
+   39. Proof Over Promises: Spatial Evidence Wall (Focus & Recede)
+   ========================================================================== */
+.proof-spatial-wall {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: clamp(1.5rem, 3vw, 2.25rem);
+  margin-top: 2rem;
+}
+
+.proof-wall-item {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-xs);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  cursor: pointer;
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.35s ease, filter 0.35s ease, border-color 0.3s ease, box-shadow 0.35s ease;
+  position: relative;
+}
+
+.proof-wall-item:hover,
+.proof-wall-item.proof-focused {
+  border-color: rgba(216, 195, 165, 0.5);
+  transform: translate3d(0, -8px, 30px) scale(1.025);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.65), 0 0 30px rgba(216, 195, 165, 0.15);
+  z-index: 10;
+}
+
+.proof-wall-item.proof-dimmed {
+  opacity: 0.35;
+  filter: grayscale(35%) blur(0.6px);
+  transform: scale(0.98);
+}
+
+.proof-wall-wide {
+  grid-column: span 2;
+}
+
+.proof-wall-tall {
+  grid-row: span 2;
+}
+
+.proof-wall-thumb {
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+  background: #08080a;
+  position: relative;
+}
+
+.proof-wall-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.proof-wall-item:hover .proof-wall-thumb img {
+  transform: scale(1.04);
+}
+
+.proof-wall-info {
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  flex: 1;
+}
+
+.proof-wall-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+  color: var(--text-muted);
+  text-transform: uppercase;
+}
+
+.proof-wall-badge {
+  color: var(--accent-champagne);
+  background: rgba(216, 195, 165, 0.08);
+  padding: 0.2rem 0.55rem;
+  border-radius: 2px;
+  border: 1px solid rgba(216, 195, 165, 0.25);
+}
+
+.proof-wall-title {
+  font-family: var(--font-sans);
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #ffffff;
+  line-height: 1.3;
+}
+
+.proof-wall-desc {
+  font-size: 0.9rem;
+  line-height: 1.6;
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+.proof-wall-action {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  color: var(--accent-champagne);
+  text-transform: uppercase;
+  margin-top: auto;
+  padding-top: 0.75rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+/* ==========================================================================
+   40. About Aakash: Monumental Unboxed Spread
+   ========================================================================== */
+.about-unboxed-spread {
+  display: grid;
+  grid-template-columns: 1.15fr 0.85fr;
+  gap: clamp(3rem, 6vw, 6rem);
+  align-items: start;
+  margin-top: 2.5rem;
+}
+
+.about-narrative-column {
+  display: flex;
+  flex-direction: column;
+}
+
+.about-academic-column {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  border-left: 1px solid var(--border-subtle);
+  padding-left: clamp(1.5rem, 3vw, 2.5rem);
+}
+
+.about-unboxed-records {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.about-unboxed-record {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.about-unboxed-institution {
+  font-family: var(--font-sans);
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #ffffff;
+  margin-block: 0.25rem 0.1rem;
+}
+
+.about-unboxed-degree {
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.about-unboxed-detail {
+  font-size: 0.875rem;
+  color: var(--text-muted);
+  line-height: 1.5;
+  margin: 0;
+}
+
+.about-unboxed-philosophy {
+  padding: 2rem;
+  background: rgba(255, 255, 255, 0.02);
+  border-left: 2px solid var(--accent-champagne);
+  border-radius: 0 var(--radius-xs) var(--radius-xs) 0;
+}
+
+.about-philosophy-quote {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: clamp(1.1rem, 2vw, 1.35rem);
+  line-height: 1.5;
+  color: #ffffff;
+  margin: 0.5rem 0 0 0;
+}
+
+/* ==========================================================================
+   41. Future Vision: Sequential Typographic Flow
+   ========================================================================== */
+.vision-spatial-flow {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(2rem, 4vw, 3.5rem);
+  margin-block: 3.5rem 5rem;
+}
+
+.vision-spatial-pillar {
+  display: grid;
+  grid-template-columns: 80px 1fr;
+  gap: clamp(1.5rem, 3vw, 3rem);
+  align-items: baseline;
+  padding-block: 2.25rem;
+  border-top: 1px solid var(--border-subtle);
+  transition: background 0.3s ease;
+}
+
+.vision-spatial-pillar:hover {
+  background: rgba(255, 255, 255, 0.015);
+}
+
+.vision-pillar-index {
+  font-family: var(--font-mono);
+  font-size: clamp(1.2rem, 2.5vw, 2rem);
+  font-weight: 800;
+  color: var(--accent-champagne);
+  letter-spacing: 0.1em;
+}
+
+.vision-pillar-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.vision-pillar-headline {
+  font-family: var(--font-sans);
+  font-size: clamp(1.4rem, 2.8vw, 2.2rem);
+  font-weight: 800;
+  color: #ffffff;
+  letter-spacing: -0.02em;
+  margin: 0;
+}
+
+.vision-pillar-text {
+  font-size: 1.05rem;
+  line-height: 1.7;
+  color: var(--text-secondary);
+  max-width: 800px;
+  margin: 0;
+}
+
+/* ==========================================================================
+   42. Contact: Final Scene (Visual Closure with LET'S BUILD.)
+   ========================================================================== */
+.contact-final-scene {
+  position: relative;
+  overflow: hidden;
+  min-height: 70vh;
+  display: flex;
+  align-items: center;
+}
+
+.contact-bg-watermark {
+  position: absolute;
+  right: 2%;
+  top: 10%;
+  font-family: var(--font-sans);
+  font-size: clamp(6.5rem, 18vw, 22rem);
+  font-weight: 900;
+  line-height: 0.85;
+  letter-spacing: -0.06em;
+  color: rgba(255, 255, 255, 0.03);
+  user-select: none;
+  pointer-events: none;
+  z-index: 0;
+  text-align: right;
+}
+
+.contact-warm-spotlight {
+  position: absolute;
+  top: -100px;
+  right: 20%;
+  width: clamp(500px, 50vw, 800px);
+  height: 700px;
+  background: radial-gradient(ellipse at 50% 0%, rgba(216, 195, 165, 0.08) 0%, transparent 70%);
+  filter: blur(90px);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ==========================================================================
+   43. Spatial Responsive Choreography (Tablet & Mobile)
+   ========================================================================== */
+@media (max-width: 960px) {
+  [data-depth="bg"],
+  [data-depth="mid"],
+  [data-depth="fg"] {
+    transform: none !important;
+    transition: none !important;
+  }
+
+  .branding-desk-layout {
+    grid-template-columns: 1fr;
+    gap: 3rem;
+  }
+
+  .branding-process-column {
+    border-left: none;
+    padding-left: 0;
+  }
+
+  .branding-canvas-workspace {
+    position: static;
+  }
+
+  .speaking-stage-moments {
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+  }
+
+  .proof-spatial-wall {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .proof-wall-wide {
+    grid-column: span 2;
+  }
+
+  .proof-wall-tall {
+    grid-row: span 1;
+  }
+
+  .about-unboxed-spread {
+    grid-template-columns: 1fr;
+    gap: 3rem;
+  }
+
+  .about-academic-column {
+    border-left: none;
+    padding-left: 0;
+  }
+
+  .vision-spatial-pillar {
+    grid-template-columns: 50px 1fr;
+    gap: 1.5rem;
+  }
+
+  .contact-bg-watermark {
+    display: none;
+  }
+}
+
+@media (max-width: 640px) {
+  .proof-spatial-wall {
+    grid-template-columns: 1fr;
+  }
+
+  .proof-wall-wide {
+    grid-column: span 1;
+  }
+
+  .spatial-metrics-spread {
+    grid-template-columns: 1fr;
+  }
+
+  .desk-metrics-floating {
+    grid-template-columns: 1fr;
+  }
+
+  .vision-spatial-pillar {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+}
+
+

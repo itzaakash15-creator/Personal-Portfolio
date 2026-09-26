@@ -1252,4 +1252,221 @@ document.addEventListener('DOMContentLoaded', () => {
   if (yearEl) {
     yearEl.textContent = new Date().getFullYear();
   }
+
+  // ==========================================================================
+  // 15. Centralized Spatial Pointer & Depth Parallax Engine
+  // Background: 1–2px, Midground: 3–5px with max 1.5° tilt, Foreground: 5–8px
+  // ==========================================================================
+  function initSpatialPointerEngine() {
+    const isDesktop = () => window.innerWidth > 960 && !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const isTouch = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+    if (isTouch || !isDesktop()) return;
+
+    const root = document.documentElement;
+    const spotlightEl = document.getElementById('speaking-spotlight');
+    const contactSpotlight = document.querySelector('.contact-warm-spotlight');
+
+    const state = {
+      // Background (1-2px)
+      bgX: 0, bgY: 0,
+      targetBgX: 0, targetBgY: 0,
+      // Midground (3-5px + tilt)
+      midX: 0, midY: 0, tiltX: 0, tiltY: 0,
+      targetMidX: 0, targetMidY: 0, targetTiltX: 0, targetTiltY: 0,
+      // Foreground (5-8px)
+      fgX: 0, fgY: 0,
+      targetFgX: 0, targetFgY: 0,
+      // Spotlights
+      spotlightX: 0, spotlightY: 0,
+      targetSpotlightX: 0, targetSpotlightY: 0
+    };
+
+    let isRunning = false;
+    const lerp = 0.065; // smooth damping inertia
+
+    function update() {
+      // Background
+      state.bgX += (state.targetBgX - state.bgX) * lerp;
+      state.bgY += (state.targetBgY - state.bgY) * lerp;
+      // Midground
+      state.midX += (state.targetMidX - state.midX) * lerp;
+      state.midY += (state.targetMidY - state.midY) * lerp;
+      state.tiltX += (state.targetTiltX - state.tiltX) * lerp;
+      state.tiltY += (state.targetTiltY - state.tiltY) * lerp;
+      // Foreground
+      state.fgX += (state.targetFgX - state.fgX) * lerp;
+      state.fgY += (state.targetFgY - state.fgY) * lerp;
+      // Spotlights
+      state.spotlightX += (state.targetSpotlightX - state.spotlightX) * (lerp * 0.8);
+      state.spotlightY += (state.targetSpotlightY - state.spotlightY) * (lerp * 0.8);
+
+      // Apply CSS custom properties
+      root.style.setProperty('--depth-bg-x', `${state.bgX.toFixed(2)}px`);
+      root.style.setProperty('--depth-bg-y', `${state.bgY.toFixed(2)}px`);
+      root.style.setProperty('--depth-mid-x', `${state.midX.toFixed(2)}px`);
+      root.style.setProperty('--depth-mid-y', `${state.midY.toFixed(2)}px`);
+      root.style.setProperty('--tilt-x', `${state.tiltX.toFixed(2)}deg`);
+      root.style.setProperty('--tilt-y', `${state.tiltY.toFixed(2)}deg`);
+      root.style.setProperty('--depth-fg-x', `${state.fgX.toFixed(2)}px`);
+      root.style.setProperty('--depth-fg-y', `${state.fgY.toFixed(2)}px`);
+
+      if (spotlightEl) {
+        spotlightEl.style.transform = `translate3d(${state.spotlightX.toFixed(2)}px, ${state.spotlightY.toFixed(2)}px, 0)`;
+      }
+      if (contactSpotlight) {
+        contactSpotlight.style.transform = `translate3d(${state.spotlightX.toFixed(2)}px, ${state.spotlightY.toFixed(2)}px, 0)`;
+      }
+
+      const diff = Math.abs(state.targetBgX - state.bgX) +
+                   Math.abs(state.targetBgY - state.bgY) +
+                   Math.abs(state.targetMidX - state.midX) +
+                   Math.abs(state.targetMidY - state.midY) +
+                   Math.abs(state.targetFgX - state.fgX) +
+                   Math.abs(state.targetFgY - state.fgY);
+
+      if (diff > 0.005) {
+        requestAnimationFrame(update);
+      } else {
+        isRunning = false;
+      }
+    }
+
+    function onPointerMove(e) {
+      if (!isDesktop()) return;
+      const normX = (e.clientX / window.innerWidth) * 2 - 1;
+      const normY = (e.clientY / window.innerHeight) * 2 - 1;
+
+      // Background: 1–2px
+      state.targetBgX = normX * 1.8;
+      state.targetBgY = normY * 1.2;
+
+      // Midground: 3–5px, tilt maximum ~1.4°
+      state.targetMidX = normX * 4.2;
+      state.targetMidY = normY * 3.0;
+      state.targetTiltX = -normY * 1.4;
+      state.targetTiltY = normX * 1.4;
+
+      // Foreground: 5–8px
+      state.targetFgX = normX * 6.5;
+      state.targetFgY = normY * 4.5;
+
+      // Lighting origin shift
+      state.targetSpotlightX = normX * 22;
+      state.targetSpotlightY = normY * 14;
+
+      if (!isRunning) {
+        isRunning = true;
+        requestAnimationFrame(update);
+      }
+    }
+
+    function onPointerLeave() {
+      state.targetBgX = 0; state.targetBgY = 0;
+      state.targetMidX = 0; state.targetMidY = 0;
+      state.targetTiltX = 0; state.targetTiltY = 0;
+      state.targetFgX = 0; state.targetFgY = 0;
+      state.targetSpotlightX = 0; state.targetSpotlightY = 0;
+
+      if (!isRunning) {
+        isRunning = true;
+        requestAnimationFrame(update);
+      }
+    }
+
+    window.addEventListener('mousemove', onPointerMove, { passive: true });
+    window.addEventListener('mouseleave', onPointerLeave, { passive: true });
+    window.addEventListener('resize', () => {
+      if (!isDesktop()) {
+        root.style.setProperty('--depth-bg-x', '0px');
+        root.style.setProperty('--depth-bg-y', '0px');
+        root.style.setProperty('--depth-mid-x', '0px');
+        root.style.setProperty('--depth-mid-y', '0px');
+        root.style.setProperty('--tilt-x', '0deg');
+        root.style.setProperty('--tilt-y', '0deg');
+        root.style.setProperty('--depth-fg-x', '0px');
+        root.style.setProperty('--depth-fg-y', '0px');
+      }
+    });
+  }
+  initSpatialPointerEngine();
+
+  // ==========================================================================
+  // 16. Proof Over Promises: Spatial Evidence Wall (Focus & Recede)
+  // Hovering an artifact brings it forward; surrounding evidence dims & recedes
+  // ==========================================================================
+  function initProofWallFocus() {
+    const wall = document.getElementById('proof-wall');
+    if (!wall) return;
+
+    const items = wall.querySelectorAll('.proof-wall-item');
+    if (!items.length) return;
+
+    items.forEach(item => {
+      item.addEventListener('mouseenter', () => {
+        items.forEach(other => {
+          if (other === item) {
+            other.classList.add('proof-focused');
+            other.classList.remove('proof-dimmed');
+          } else {
+            other.classList.remove('proof-focused');
+            other.classList.add('proof-dimmed');
+          }
+        });
+      });
+    });
+
+    wall.addEventListener('mouseleave', () => {
+      items.forEach(item => {
+        item.classList.remove('proof-focused', 'proof-dimmed');
+      });
+    });
+  }
+  initProofWallFocus();
+
+  // ==========================================================================
+  // 17. Project Index Smooth Spatial Preview Tracking
+  // Constrained pointer tracking with damping within index section
+  // ==========================================================================
+  function initProjectIndexSpatialPreview() {
+    const list = document.getElementById('project-index-list');
+    const pane = document.getElementById('project-preview-pane');
+    if (!list || !pane || window.innerWidth <= 960) return;
+
+    let targetY = 0;
+    let currentY = 0;
+    let isTracking = false;
+
+    function animate() {
+      currentY += (targetY - currentY) * 0.1;
+      pane.style.transform = `translate3d(0, ${currentY.toFixed(2)}px, 0)`;
+
+      if (Math.abs(targetY - currentY) > 0.1) {
+        requestAnimationFrame(animate);
+      } else {
+        isTracking = false;
+      }
+    }
+
+    list.addEventListener('mousemove', (e) => {
+      const rect = list.getBoundingClientRect();
+      const relativeY = e.clientY - rect.top;
+      const progress = (relativeY / rect.height) * 2 - 1; // -1 to 1
+      targetY = progress * 24; // constrained range ±24px
+
+      if (!isTracking) {
+        isTracking = true;
+        requestAnimationFrame(animate);
+      }
+    }, { passive: true });
+
+    list.addEventListener('mouseleave', () => {
+      targetY = 0;
+      if (!isTracking) {
+        isTracking = true;
+        requestAnimationFrame(animate);
+      }
+    });
+  }
+  initProjectIndexSpatialPreview();
 });
+
