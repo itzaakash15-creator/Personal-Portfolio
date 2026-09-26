@@ -39,9 +39,13 @@ document.addEventListener('DOMContentLoaded', () => {
   // 3. CharacterScene Controller: Responsive Parallax & Scroll Kinematics
   // Architecture ready for React Three Fiber / WebGL 3D GLB Model
   // ==========================================================================
+  // ==========================================================================
+  // 3. CharacterScene & Poster Controller: Responsive Depth Parallax & Kinematics
+  // Architecture ready for React Three Fiber / WebGL 3D GLB Model
+  // ==========================================================================
   const CharacterController = {
     isEntrancePlaying: false,
-    // Layered state for physical depth (portrait, background light, shadow)
+    // Layered state for physical depth (portrait, wordmark, flanks, background light)
     current: {
       pointerX: 0,
       pointerY: 0,
@@ -50,6 +54,10 @@ document.addEventListener('DOMContentLoaded', () => {
       lightY: 0,
       dirLightX: 0,
       dirLightY: 0,
+      wordmarkX: 0,
+      wordmarkY: 0,
+      flankX: 0,
+      flankY: 0,
       shadowX: 0,
       shadowY: 18,
       scrollX: 0,
@@ -65,6 +73,10 @@ document.addEventListener('DOMContentLoaded', () => {
       lightY: 0,
       dirLightX: 0,
       dirLightY: 0,
+      wordmarkX: 0,
+      wordmarkY: 0,
+      flankX: 0,
+      flankY: 0,
       shadowX: 0,
       shadowY: 18,
       scrollX: 0,
@@ -77,16 +89,22 @@ document.addEventListener('DOMContentLoaded', () => {
     rafId: null,
     portraitEl: null,
     stageEl: null,
+    wordmarkEl: null,
+    leftFlankEl: null,
+    rightFlankEl: null,
     radialLightEl: null,
     dirLightEl: null,
     rimLightEl: null,
 
     init() {
-      this.portraitEl = document.getElementById('character-portrait') || document.querySelector('.character-portrait-asset');
-      this.stageEl = document.getElementById('character-scene') || document.querySelector('.character-scene');
-      this.radialLightEl = document.getElementById('hero-radial-light') || document.querySelector('.character-scene-backdrop');
-      this.dirLightEl = document.querySelector('.character-directional-light');
-      this.rimLightEl = document.querySelector('.character-rim-light');
+      this.portraitEl = document.getElementById('character-portrait') || document.querySelector('.hero-poster-portrait');
+      this.stageEl = document.getElementById('character-scene') || document.querySelector('.hero-center-subject');
+      this.wordmarkEl = document.getElementById('hero-portfolio-wordmark');
+      this.leftFlankEl = document.getElementById('hero-left-flank');
+      this.rightFlankEl = document.getElementById('hero-right-flank');
+      this.radialLightEl = document.getElementById('hero-radial-light') || document.querySelector('.hero-poster-backlight');
+      this.dirLightEl = document.querySelector('.hero-poster-side-light');
+      this.rimLightEl = document.querySelector('.hero-poster-rim-light');
 
       // Ensure portrait is visible and highlighted
       if (this.portraitEl) {
@@ -107,29 +125,35 @@ document.addEventListener('DOMContentLoaded', () => {
       const isDesktop = () => window.innerWidth > 960 && !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
       const onPointerMove = (e) => {
-        if (!isDesktop()) return;
+        if (!isDesktop() || this.isEntrancePlaying) return;
 
         // Normalized mouse coordinates from -1 to +1
         const normX = (e.clientX / window.innerWidth) * 2 - 1;
         const normY = (e.clientY / window.innerHeight) * 2 - 1;
 
-        // Exact bounds per instructions:
-        // 1. Portrait movement: translateX ±8px, translateY ±5px
-        this.target.pointerX = normX * 8;
-        this.target.pointerY = normY * 5;
+        // Subtle relative depth according to guidelines:
+        // AAKASH portrait: ±5–7px
+        this.target.pointerX = normX * 6.5;
+        this.target.pointerY = normY * 4.5;
+        this.target.pointerScale = 1 + (Math.abs(normX) + Math.abs(normY)) * 0.003;
 
-        // 2. Portrait scale: 1 → maximum 1.008
-        this.target.pointerScale = 1 + (Math.abs(normX) + Math.abs(normY)) * 0.004;
+        // Lighting: ±8–12px
+        this.target.lightX = normX * 11;
+        this.target.lightY = normY * 8;
+        this.target.dirLightX = -normX * 14;
+        this.target.dirLightY = -normY * 9;
 
-        // 3. Background light movement: ±15px horizontally, ±10px vertically
-        this.target.lightX = normX * 15;
-        this.target.lightY = normY * 10;
-        this.target.dirLightX = -normX * 18;
-        this.target.dirLightY = -normY * 12;
+        // PORTFOLIO wordmark: ±2px
+        this.target.wordmarkX = normX * 2.2;
+        this.target.wordmarkY = normY * 1.5;
 
-        // 4. Subtle physical shadow movement (shifts opposite to light origin)
-        this.target.shadowX = -normX * 12;
-        this.target.shadowY = 18 - normY * 6;
+        // Flanks / supporting details: ±2–4px
+        this.target.flankX = normX * 3.0;
+        this.target.flankY = normY * 2.0;
+
+        // Shadow subtle shift
+        this.target.shadowX = -normX * 10;
+        this.target.shadowY = 18 - normY * 5;
 
         // Forward to CharacterScene modular interaction API for future 3D model
         if (window.Character3DScene && typeof window.Character3DScene.setPointer === 'function') {
@@ -141,7 +165,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
       const onPointerLeave = () => {
         if (!isDesktop()) return;
-        // Smooth neutral return with gentle damping
         this.target.pointerX = 0;
         this.target.pointerY = 0;
         this.target.pointerScale = 1;
@@ -149,6 +172,10 @@ document.addEventListener('DOMContentLoaded', () => {
         this.target.lightY = 0;
         this.target.dirLightX = 0;
         this.target.dirLightY = 0;
+        this.target.wordmarkX = 0;
+        this.target.wordmarkY = 0;
+        this.target.flankX = 0;
+        this.target.flankY = 0;
         this.target.shadowX = 0;
         this.target.shadowY = 18;
 
@@ -181,7 +208,6 @@ document.addEventListener('DOMContentLoaded', () => {
       const c = this.current;
       const t = this.target;
 
-      // Smooth damping interpolation (different speeds for distinct physical layers)
       c.pointerX += (t.pointerX - c.pointerX) * lf;
       c.pointerY += (t.pointerY - c.pointerY) * lf;
       c.pointerScale += (t.pointerScale - c.pointerScale) * lf;
@@ -190,6 +216,12 @@ document.addEventListener('DOMContentLoaded', () => {
       c.lightY += (t.lightY - c.lightY) * (lf * 0.85);
       c.dirLightX += (t.dirLightX - c.dirLightX) * (lf * 0.85);
       c.dirLightY += (t.dirLightY - c.dirLightY) * (lf * 0.85);
+
+      c.wordmarkX += (t.wordmarkX - c.wordmarkX) * lf;
+      c.wordmarkY += (t.wordmarkY - c.wordmarkY) * lf;
+
+      c.flankX += (t.flankX - c.flankX) * lf;
+      c.flankY += (t.flankY - c.flankY) * lf;
 
       c.shadowX += (t.shadowX - c.shadowX) * lf;
       c.shadowY += (t.shadowY - c.shadowY) * lf;
@@ -205,6 +237,8 @@ document.addEventListener('DOMContentLoaded', () => {
                    Math.abs(t.pointerY - c.pointerY) +
                    Math.abs(t.lightX - c.lightX) +
                    Math.abs(t.lightY - c.lightY) +
+                   Math.abs(t.wordmarkX - c.wordmarkX) +
+                   Math.abs(t.wordmarkY - c.wordmarkY) +
                    Math.abs(t.scrollX - c.scrollX) +
                    Math.abs(t.scrollY - c.scrollY) +
                    Math.abs(t.scrollOpacity - c.scrollOpacity);
@@ -217,7 +251,7 @@ document.addEventListener('DOMContentLoaded', () => {
     },
 
     render() {
-      // 1. Move Background Lighting Layers (smooth ambient shift)
+      // 1. Move Background Lighting Layers
       if (this.radialLightEl) {
         this.radialLightEl.style.transform = `translate3d(calc(-50% + ${this.current.lightX.toFixed(2)}px), calc(-50% + ${this.current.lightY.toFixed(2)}px), 0)`;
       }
@@ -225,11 +259,23 @@ document.addEventListener('DOMContentLoaded', () => {
         this.dirLightEl.style.transform = `translate3d(${this.current.dirLightX.toFixed(2)}px, ${this.current.dirLightY.toFixed(2)}px, 0)`;
       }
       if (this.rimLightEl) {
-        this.rimLightEl.style.transform = `translate3d(calc(-50% + ${(this.current.lightX * 0.8).toFixed(2)}px), ${this.current.lightY.toFixed(2)}px, 0)`;
+        this.rimLightEl.style.transform = `translate3d(calc(-50% + ${(this.current.lightX * 0.8).toFixed(2)}px), 0, 0)`;
       }
 
-      // 2. Move 2D Portrait with subtle shadow movement (depth simulation without flat rotation)
-      // Skip if entrance animation is actively controlling portrait kinematics
+      // 2. Move PORTFOLIO wordmark (depth layer 3)
+      if (this.wordmarkEl && !this.isEntrancePlaying) {
+        this.wordmarkEl.style.transform = `translate(calc(-50% + ${this.current.wordmarkX.toFixed(2)}px), calc(-50% + ${this.current.wordmarkY.toFixed(2)}px))`;
+      }
+
+      // 3. Move Flanks (micro-depth layer 4 & 6)
+      if (this.leftFlankEl && !this.isEntrancePlaying) {
+        this.leftFlankEl.style.transform = `translate3d(${(-this.current.flankX).toFixed(2)}px, ${this.current.flankY.toFixed(2)}px, 0)`;
+      }
+      if (this.rightFlankEl && !this.isEntrancePlaying) {
+        this.rightFlankEl.style.transform = `translate3d(${this.current.flankX.toFixed(2)}px, ${this.current.flankY.toFixed(2)}px, 0)`;
+      }
+
+      // 4. Move 2D Portrait (depth layer 5)
       if (this.portraitEl && !this.isEntrancePlaying) {
         const totalX = this.current.pointerX + this.current.scrollX;
         const totalY = this.current.pointerY + this.current.scrollY;
@@ -240,8 +286,8 @@ document.addEventListener('DOMContentLoaded', () => {
           `scale(${totalScale.toFixed(4)})`;
 
         this.portraitEl.style.filter = 
-          `contrast(1.08) brightness(0.96) saturate(0.88) ` +
-          `drop-shadow(${this.current.shadowX.toFixed(1)}px ${this.current.shadowY.toFixed(1)}px 28px rgba(0, 0, 0, 0.6))`;
+          `contrast(1.08) brightness(0.97) saturate(0.9) ` +
+          `drop-shadow(${this.current.shadowX.toFixed(1)}px ${this.current.shadowY.toFixed(1)}px 32px rgba(0, 0, 0, 0.7))`;
 
         this.portraitEl.style.opacity = this.current.scrollOpacity.toFixed(3);
       }
@@ -253,7 +299,6 @@ document.addEventListener('DOMContentLoaded', () => {
       this.target.scrollScale = scale;
       this.target.scrollOpacity = opacity;
 
-      // Forward kinematics to CharacterScene for 3D model API
       if (window.Character3DScene && typeof window.Character3DScene.setScrollKinematics === 'function') {
         window.Character3DScene.setScrollKinematics(x, y, rotY, scale, opacity);
       }
@@ -269,6 +314,10 @@ document.addEventListener('DOMContentLoaded', () => {
       this.target.lightY = 0;
       this.target.dirLightX = 0;
       this.target.dirLightY = 0;
+      this.target.wordmarkX = 0;
+      this.target.wordmarkY = 0;
+      this.target.flankX = 0;
+      this.target.flankY = 0;
       this.target.shadowX = 0;
       this.target.shadowY = 18;
 
@@ -279,17 +328,24 @@ document.addEventListener('DOMContentLoaded', () => {
       this.current.lightY = 0;
       this.current.dirLightX = 0;
       this.current.dirLightY = 0;
+      this.current.wordmarkX = 0;
+      this.current.wordmarkY = 0;
+      this.current.flankX = 0;
+      this.current.flankY = 0;
       this.current.shadowX = 0;
       this.current.shadowY = 18;
 
       if (this.portraitEl) {
         this.portraitEl.style.transform = 'none';
-        this.portraitEl.style.filter = 'contrast(1.08) brightness(0.96) saturate(0.88) drop-shadow(0 18px 30px rgba(0, 0, 0, 0.6))';
+        this.portraitEl.style.filter = 'contrast(1.08) brightness(0.97) saturate(0.9) drop-shadow(0 22px 45px rgba(0, 0, 0, 0.75))';
         this.portraitEl.style.opacity = '1';
       }
       if (this.radialLightEl) this.radialLightEl.style.transform = 'translate3d(-50%, -50%, 0)';
       if (this.dirLightEl) this.dirLightEl.style.transform = 'none';
       if (this.rimLightEl) this.rimLightEl.style.transform = 'translate3d(-50%, 0, 0)';
+      if (this.wordmarkEl) this.wordmarkEl.style.transform = 'translate(-50%, -50%)';
+      if (this.leftFlankEl) this.leftFlankEl.style.transform = 'none';
+      if (this.rightFlankEl) this.rightFlankEl.style.transform = 'none';
 
       this.isTicking = false;
     }
@@ -298,50 +354,53 @@ document.addEventListener('DOMContentLoaded', () => {
   CharacterController.init();
 
   // ==========================================================================
-  // 3b. Cinematic Website Entrance Experience (2–3 seconds total, never blocking)
-  // State 01: Warm light blooms + Giant background typography "PORTFOLIO" reveals
-  // State 02: Aakash portrait rises from below viewport in front of PORTFOLIO (depth)
-  // State 03: Identity words sequentially reveal around character
-  // State 04: Settle smoothly into Hero, words fade, PORTFOLIO dims to ambient layer
+  // 3b. Cinematic Personal-Portfolio Poster Entrance (2–2.5 seconds total)
+  // 0.0s: Atmospheric dark background
+  // 0.2s: Warm lighting blooms behind head and shoulders
+  // 0.4s: PORTFOLIO typography reveals
+  // 0.7s: AAKASH rises from below viewport in front of PORTFOLIO (smooth ease, no bounce)
+  // 1.2s: Left-side identity (MARKETER / BRAND BUILDER)
+  // 1.4s: Right-side identity (CREATOR / SPEAKER)
+  // 1.6s: Hello, I'm AAKASH
+  // 1.8s: Positioning statement
+  // 2.0s: Professional anchors & CTAs
   // ==========================================================================
   function initEntranceSequence() {
-    const portfolioWord = document.getElementById('entrance-portfolio-word');
-    const floatingLayer = document.getElementById('entrance-floating-layer') || document.querySelector('.entrance-floating-layer');
-    const wordMarketer = document.getElementById('float-marketer');
-    const wordBuilder = document.getElementById('float-brandbuilder');
-    const wordCreator = document.getElementById('float-creator');
-    const wordSpeaker = document.getElementById('float-speaker');
-    const heroIntroPhase = document.getElementById('hero-intro-phase');
-    const characterPortrait = document.getElementById('character-portrait') || document.querySelector('.character-portrait-asset');
+    const portfolioWord = document.getElementById('hero-portfolio-wordmark');
+    const characterPortrait = document.getElementById('character-portrait') || document.querySelector('.hero-poster-portrait');
     const radialLight = document.getElementById('hero-radial-light');
+    const leftTags = document.getElementById('hero-left-tags');
+    const rightTags = document.getElementById('hero-right-tags');
+    const greeting = document.getElementById('hero-greeting');
+    const positioning = document.getElementById('hero-positioning');
+    const ctaCluster = document.getElementById('hero-cta-cluster');
+    const rightMantra = document.getElementById('hero-right-mantra');
+    const anchors = document.getElementById('hero-anchors');
 
-    const floatWords = [wordMarketer, wordBuilder, wordCreator, wordSpeaker].filter(Boolean);
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
     const settleHeroImmediately = () => {
       CharacterController.isEntrancePlaying = false;
       if (portfolioWord) {
-        portfolioWord.style.opacity = '0.035';
-        portfolioWord.style.transform = 'translate(-50%, -50%) scale(0.94)';
-      }
-      if (floatingLayer) {
-        floatingLayer.style.display = 'none';
+        portfolioWord.style.opacity = '0.9';
+        portfolioWord.style.transform = 'translate(-50%, -50%) scale(1)';
       }
       if (characterPortrait) {
         characterPortrait.style.opacity = '1';
         characterPortrait.style.transform = 'none';
       }
       if (radialLight) {
-        radialLight.style.opacity = '0.55';
+        radialLight.style.opacity = '0.6';
       }
-      if (heroIntroPhase) {
-        heroIntroPhase.style.opacity = '1';
-        heroIntroPhase.style.transform = 'none';
-      }
+      [leftTags, rightTags, greeting, positioning, ctaCluster, rightMantra, anchors].forEach(el => {
+        if (el) {
+          el.style.opacity = '1';
+          el.style.transform = 'none';
+        }
+      });
       CharacterController.requestTick();
     };
 
-    // If reduced motion is requested or already scrolled down, settle immediately
     if (prefersReducedMotion || window.scrollY > 30) {
       settleHeroImmediately();
       return;
@@ -357,16 +416,13 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     if (characterPortrait) {
       characterPortrait.style.opacity = '0';
-      characterPortrait.style.transform = 'translate3d(0, 115%, 0) scale(0.96)';
+      characterPortrait.style.transform = 'translate3d(0, 85%, 0)';
     }
-    if (heroIntroPhase) {
-      heroIntroPhase.style.opacity = '0';
-      heroIntroPhase.style.transform = 'translate3d(0, 18px, 0)';
-    }
-    floatWords.forEach(w => {
-      w.style.opacity = '0';
-      w.style.transform = 'translate3d(0, 14px, 0)';
-      w.style.filter = 'blur(8px)';
+    [leftTags, rightTags, greeting, positioning, ctaCluster, rightMantra, anchors].forEach(el => {
+      if (el) {
+        el.style.opacity = '0';
+        el.style.transform = 'translate3d(0, 16px, 0)';
+      }
     });
 
     let entranceTimeline = null;
@@ -374,76 +430,79 @@ document.addEventListener('DOMContentLoaded', () => {
     if (typeof gsap !== 'undefined') {
       entranceTimeline = gsap.timeline({
         onComplete: () => {
-          settleHeroImmediately();
+          CharacterController.isEntrancePlaying = false;
+          CharacterController.requestTick();
         }
       });
 
-      // State 01: Soft warm atmospheric light blooms + huge PORTFOLIO typography appears
+      // 0.2s: Warm lighting blooms behind head and shoulders
       entranceTimeline.to(radialLight, {
-        opacity: 0.55,
-        duration: 0.65,
-        ease: 'power2.out'
-      }, 0);
-
-      entranceTimeline.to(portfolioWord, {
-        opacity: 0.32,
-        scale: 1,
+        opacity: 0.6,
         duration: 0.75,
         ease: 'power2.out'
-      }, 0.08);
+      }, 0.2);
 
-      // State 02: Aakash portrait rises smoothly from below viewport, in front of PORTFOLIO (creates depth)
+      // 0.4s: PORTFOLIO typography reveals
+      entranceTimeline.to(portfolioWord, {
+        opacity: 0.9,
+        scale: 1,
+        duration: 0.8,
+        ease: 'power2.out'
+      }, 0.4);
+
+      // 0.7s: AAKASH rises smoothly from below viewport, crossing in front of PORTFOLIO (cinematic ease, no bounce)
       entranceTimeline.to(characterPortrait, {
         y: '0%',
         opacity: 1,
-        scale: 1,
         duration: 1.15,
         ease: 'power3.out'
-      }, 0.35);
+      }, 0.7);
 
-      // State 03: Sequential reveal of floating identity words around Aakash
-      floatWords.forEach((wordEl, index) => {
-        entranceTimeline.to(wordEl, {
-          opacity: 0.95,
-          y: 0,
-          filter: 'blur(0px)',
-          duration: 0.38,
-          ease: 'power2.out'
-        }, 0.9 + (index * 0.16));
-      });
-
-      // State 04: Transition naturally into Hero
-      // Floating words fade out gently
-      entranceTimeline.to(floatWords, {
-        opacity: 0,
-        y: -10,
-        filter: 'blur(6px)',
-        duration: 0.45,
-        ease: 'power2.in'
-      }, 1.85);
-
-      // PORTFOLIO moves subtly backward and dims to ambient watermark layer
-      entranceTimeline.to(portfolioWord, {
-        opacity: 0.035,
-        scale: 0.94,
-        duration: 0.75,
-        ease: 'power2.out'
-      }, 1.95);
-
-      // Hero content reveals clearly
-      entranceTimeline.to(heroIntroPhase, {
+      // 1.2s: Left-side identity (MARKETER / BRAND BUILDER)
+      entranceTimeline.to(leftTags, {
         opacity: 1,
         y: 0,
-        duration: 0.7,
+        duration: 0.45,
         ease: 'power2.out'
-      }, 2.05);
+      }, 1.2);
+
+      // 1.4s: Right-side identity (CREATOR / SPEAKER)
+      entranceTimeline.to(rightTags, {
+        opacity: 1,
+        y: 0,
+        duration: 0.45,
+        ease: 'power2.out'
+      }, 1.4);
+
+      // 1.6s: Hello, I'm AAKASH
+      entranceTimeline.to(greeting, {
+        opacity: 1,
+        y: 0,
+        duration: 0.5,
+        ease: 'power2.out'
+      }, 1.6);
+
+      // 1.8s: Positioning statement
+      entranceTimeline.to(positioning, {
+        opacity: 1,
+        y: 0,
+        duration: 0.5,
+        ease: 'power2.out'
+      }, 1.8);
+
+      // 2.0s: Professional anchors & CTAs
+      entranceTimeline.to([rightMantra, anchors, ctaCluster], {
+        opacity: 1,
+        y: 0,
+        duration: 0.55,
+        ease: 'power2.out'
+      }, 2.0);
 
     } else {
-      // Fallback if GSAP is unavailable
       setTimeout(settleHeroImmediately, 2400);
     }
 
-    // Safety Skip Listener: If user scrolls even slightly, presses key, or touches, settle instantly
+    // Safety Skip Listener
     let hasSkipped = false;
     const triggerSkip = () => {
       if (hasSkipped) return;
@@ -470,6 +529,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // ==========================================================================
   // 4. Signature Identity Experience Choreography (GSAP ScrollTrigger)
+  // Continuous transition from Poster Hero -> "I DON'T FIT INTO ONE BOX" -> Dominant Roles
   // ==========================================================================
   if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
     gsap.registerPlugin(ScrollTrigger);
@@ -479,11 +539,9 @@ document.addEventListener('DOMContentLoaded', () => {
     // Desktop: Pinned Cinematic Scroll-Driven Experience
     mm.add("(min-width: 961px) and (prefers-reduced-motion: no-preference)", () => {
       const wrapper = document.getElementById('hero-experience');
-      const introPhase = document.getElementById('hero-intro-phase');
-      const akuTitle = document.getElementById('hero-aku-title');
-      const statementBox = document.getElementById('hero-statement-box');
-      const ctaGroup = document.getElementById('hero-cta-group');
-      const eyebrow = introPhase ? introPhase.querySelector('.hero-eyebrow') : null;
+      const leftFlank = document.getElementById('hero-left-flank');
+      const rightFlank = document.getElementById('hero-right-flank');
+      const portfolioWord = document.getElementById('hero-portfolio-wordmark');
       
       const identityPhase = document.getElementById('identity-box-phase');
       const role1 = document.getElementById('role-slide-1');
@@ -492,7 +550,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const role4 = document.getElementById('role-slide-4');
       const workTransition = document.getElementById('work-transition-phase');
 
-      if (!wrapper || !introPhase) return;
+      if (!wrapper || !leftFlank) return;
 
       const tl = gsap.timeline({
         scrollTrigger: {
@@ -511,19 +569,19 @@ document.addEventListener('DOMContentLoaded', () => {
               CharacterController.setScrollKinematics(0, 0, 0, 1, 1);
             } else if (p >= 0.15 && p < 0.32) {
               section = 'identity';
-              CharacterController.setScrollKinematics(-22, -10, 0, 1.03, 1);
+              CharacterController.setScrollKinematics(0, -10, 0, 1.03, 1);
             } else if (p >= 0.32 && p < 0.45) {
               section = 'marketer';
-              CharacterController.setScrollKinematics(-15, -6, 0, 1.02, 1);
+              CharacterController.setScrollKinematics(15, -6, 0, 1.02, 1);
             } else if (p >= 0.45 && p < 0.58) {
               section = 'brandbuilder';
-              CharacterController.setScrollKinematics(-28, -12, 0, 1.035, 1);
+              CharacterController.setScrollKinematics(-15, -12, 0, 1.035, 1);
             } else if (p >= 0.58 && p < 0.70) {
               section = 'creator';
-              CharacterController.setScrollKinematics(-12, -5, 0, 1.02, 1);
+              CharacterController.setScrollKinematics(12, -5, 0, 1.02, 1);
             } else if (p >= 0.70 && p < 0.82) {
               section = 'speaker';
-              CharacterController.setScrollKinematics(-20, -8, 0, 1.03, 1);
+              CharacterController.setScrollKinematics(-18, -8, 0, 1.03, 1);
             } else {
               section = 'work';
               CharacterController.setScrollKinematics(30, 25, 0, 0.98, 0.25);
@@ -537,25 +595,29 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       });
 
-      // Step 3: Transition out Hero Content
-      // Hero supporting text and CTA visibility gradually reduces
-      tl.to([statementBox, ctaGroup, eyebrow], {
+      // Step 3: Transition out Hero Supporting Content (outward slide & fade)
+      tl.to(leftFlank, {
+        x: -55,
         opacity: 0,
-        y: -25,
-        duration: 0.8,
+        duration: 0.9,
         ease: "power2.inOut"
       }, 0);
 
-      // AKU title moves slightly upward/left and fades out
-      tl.to(akuTitle, {
-        x: -55,
-        y: -30,
+      tl.to(rightFlank, {
+        x: 55,
         opacity: 0,
-        duration: 1.0,
+        duration: 0.9,
         ease: "power2.inOut"
-      }, 0.1);
+      }, 0);
 
-      // Character remains visible; dark transition into "I DON'T FIT INTO ONE BOX."
+      tl.to(portfolioWord, {
+        scale: 0.92,
+        opacity: 0,
+        duration: 0.9,
+        ease: "power2.inOut"
+      }, 0.05);
+
+      // Character remains centered; dark transition into "I DON'T FIT INTO ONE BOX."
       tl.fromTo(identityPhase,
         { opacity: 0, y: 50 },
         { opacity: 1, y: 0, duration: 1.2, ease: "power2.out" },
@@ -600,19 +662,21 @@ document.addEventListener('DOMContentLoaded', () => {
         12.5
       );
       tl.to(role4, { opacity: 1, duration: 0.8 }, 13.6);
-      // Reduce role typography
-      tl.to(role4, { opacity: 0, scale: 0.93, y: -30, duration: 0.9, ease: "power2.in" }, 14.4);
+      tl.to(role4, { opacity: 0, y: -35, duration: 0.9, ease: "power2.in" }, 14.4);
 
-      // Step 6: Transition into Work — DIGI MARKETRIX
+      // Step 5: Transition into First Case Study (DIGI MARKETRIX)
       tl.fromTo(workTransition,
-        { opacity: 0, y: 45 },
-        { opacity: 1, y: 0, duration: 1.2, ease: "power2.out" },
+        { opacity: 0, y: 55, scale: 0.96 },
+        { opacity: 1, y: 0, scale: 1, duration: 1.2, ease: "power2.out" },
         15.3
       );
       tl.to(workTransition, { opacity: 1, duration: 1.2 }, 16.5);
     });
+  }
 
-    // Mobile: Native Scroll with Elegant Element Reveals (No Pinning, No Glitches)
+  // Mobile: Native Scroll with Elegant Element Reveals (No Pinning, No Glitches)
+  if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
+    const mm = gsap.matchMedia();
     mm.add("(max-width: 960px)", () => {
       const identityPhase = document.getElementById('identity-box-phase');
       if (identityPhase) {

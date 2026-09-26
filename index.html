@@ -89,122 +89,168 @@
          01 & 02. HERO & SIGNATURE IDENTITY EXPERIENCE WITH CINEMATIC ENTRANCE
          ====================================================================== -->
     <div class="hero-signature-wrapper" id="hero-experience">
-      <section class="home-hero-section" id="hero">
+      <section class="home-hero-section poster-hero-stage" id="hero">
 
-        <!-- 01 — ENTRANCE STATE 01: Enormous Background Typography PORTFOLIO -->
-        <div class="entrance-portfolio-word" id="entrance-portfolio-word" aria-hidden="true">
+        <!-- LAYER 1 & 2: Atmospheric Studio Background & Cinematic Lighting -->
+        <div class="hero-lighting-stage" aria-hidden="true">
+          <!-- Primary soft warm backlight behind head & shoulders -->
+          <div class="hero-poster-backlight" id="hero-radial-light"></div>
+          <!-- Subtle directional side illumination -->
+          <div class="hero-poster-side-light"></div>
+          <!-- Soft rim light creating silhouette edge separation -->
+          <div class="hero-poster-rim-light"></div>
+        </div>
+
+        <!-- LAYER 3: Enormous Background Typography PORTFOLIO (Behind Aakash) -->
+        <div class="hero-poster-wordmark" id="hero-portfolio-wordmark" aria-hidden="true">
           PORTFOLIO
         </div>
 
-        <!-- 01 — ENTRANCE STATE 03: Floating Identity Words around Character -->
-        <div class="entrance-floating-layer" id="entrance-floating-layer" aria-hidden="true">
-          <span class="entrance-float-word float-left" id="float-marketer">MARKETER.</span>
-          <span class="entrance-float-word float-right" id="float-brandbuilder">BRAND BUILDER.</span>
-          <span class="entrance-float-word float-lower-left" id="float-creator">CREATOR.</span>
-          <span class="entrance-float-word float-lower-right" id="float-speaker">SPEAKER.</span>
-        </div>
+        <!-- LAYER 4, 5 & 6: Poster Grid Composition (Left Flank, Centered Aakash, Right Flank) -->
+        <div class="hero-poster-grid">
 
-        <div class="container home-hero-grid">
-          
-          <!-- Left: Narrative Stage Layer (Hero Content, Identity Statement, Roles, and Work Transition) -->
-          <div class="hero-left-column">
-            
-            <!-- Phase 1: Hero Primary Information -->
-            <div class="hero-intro-phase" id="hero-intro-phase">
-              <span class="hero-eyebrow">CREATIVE MIND &nbsp;·&nbsp; STRATEGIC THINKER &nbsp;·&nbsp; ALWAYS BUILDING</span>
-
-              <h1 class="hero-title-aku" id="hero-aku-title">AAKASH</h1>
-
-              <div class="hero-statement-box" id="hero-statement-box">
-                <p class="hero-statement-lead">
-                  I build brands, digital experiences<br />
-                  and <span class="hero-serif-accent">ideas that move people.</span>
-                </p>
-                <p class="hero-description-text">
-                  A marketer, creator, web builder and motivational speaker turning ideas into real opportunities.
-                </p>
-              </div>
-
-              <div class="hero-cta-group" id="hero-cta-group">
-                <a href="#work" class="btn-editorial">
-                  <span>Explore My Work →</span>
-                </a>
-                <a href="#about" class="btn-editorial-outline">
-                  <span>About Me →</span>
-                </a>
-              </div>
+          <!-- LEFT FLANK: Identity fragments, Greeting, Statement, and CTAs -->
+          <div class="hero-flank hero-flank-left" id="hero-left-flank">
+            <!-- Upper Left: Identity Tags -->
+            <div class="hero-tag-cluster" id="hero-left-tags">
+              <span class="poster-tag">MARKETER</span>
+              <span class="poster-tag-separator">/</span>
+              <span class="poster-tag">BRAND BUILDER</span>
             </div>
 
-            <!-- Phase 2: "I DON'T FIT INTO ONE BOX." Statement -->
-            <div class="identity-box-phase" id="identity-box-phase">
-              <h2 class="identity-huge-statement">
-                I DON'T FIT<br />
-                INTO ONE BOX.
-              </h2>
+            <!-- Main Greeting & AAKASH Name -->
+            <div class="hero-greeting-block" id="hero-greeting">
+              <span class="hero-salutation">Hello, I'm</span>
+              <h1 class="hero-poster-name">AAKASH.</h1>
             </div>
 
-            <!-- Phase 3: Sequential Dominant Roles (One at a time) -->
-            <div class="role-sequence-phase" id="role-sequence-phase">
-              <!-- Role 01: MARKETER -->
-              <div class="role-slide-item" id="role-slide-1">
-                <span class="role-pre-lead">I THINK LIKE A</span>
-                <h3 class="role-huge-title">MARKETER.</h3>
-              </div>
-
-              <!-- Role 02: BRAND BUILDER -->
-              <div class="role-slide-item" id="role-slide-2">
-                <span class="role-pre-lead">I BUILD LIKE A</span>
-                <h3 class="role-huge-title">BRAND BUILDER.</h3>
-              </div>
-
-              <!-- Role 03: CREATOR -->
-              <div class="role-slide-item" id="role-slide-3">
-                <span class="role-pre-lead">I CREATE LIKE A</span>
-                <h3 class="role-huge-title">CREATOR.</h3>
-              </div>
-
-              <!-- Role 04: SPEAKER -->
-              <div class="role-slide-item" id="role-slide-4">
-                <span class="role-pre-lead">I CONNECT LIKE A</span>
-                <h3 class="role-huge-title">SPEAKER.</h3>
-              </div>
+            <!-- Positioning Statement -->
+            <div class="hero-positioning-block" id="hero-positioning">
+              <p class="hero-poster-statement">
+                I build brands, digital experiences<br />
+                and <span class="hero-serif-accent">ideas that move people.</span>
+              </p>
+              <p class="hero-poster-subtext">
+                Turning ideas into real commercial opportunities through marketing, high-retention media, and scalable web platforms.
+              </p>
             </div>
 
-            <!-- Phase 4: Transition into Selected Work -->
-            <div class="work-transition-phase" id="work-transition-phase">
-              <span class="work-transition-label">SELECTED WORK / 01</span>
-              <h2 class="work-transition-title">DIGI<br />MARKETRIX</h2>
-              <p class="work-transition-subtitle">Digital Marketing &nbsp;·&nbsp; Strategy &nbsp;·&nbsp; Brand Growth</p>
+            <!-- Action CTAs -->
+            <div class="hero-cta-cluster" id="hero-cta-cluster">
+              <a href="#work" class="btn-editorial">
+                <span>Explore My Work →</span>
+              </a>
+              <a href="#about" class="btn-editorial-outline">
+                <span>About Me →</span>
+              </a>
             </div>
-
           </div>
 
-          <!-- Right: Reusable CharacterScene Component (Architecture for 3D GLB / Portrait Fallback) -->
-          <div class="character-scene" id="character-scene">
-            <!-- 1. Soft warm radial light behind upper body/head -->
-            <div class="character-scene-backdrop" id="hero-radial-light" aria-hidden="true"></div>
-            <!-- 2. Subtle directional light entering from side -->
-            <div class="character-directional-light" aria-hidden="true"></div>
-            <!-- 3. Faint ambient gradient in background -->
-            <div class="character-ambient-gradient" aria-hidden="true"></div>
-            <!-- 4. Subtle rim-light feeling behind character silhouette -->
-            <div class="character-rim-light" aria-hidden="true"></div>
-            
+          <!-- CENTER SUBJECT: AAKASH (Visual Anchor, Large 70–82vh, In Front of PORTFOLIO) -->
+          <div class="hero-center-subject" id="character-scene">
             <div class="character-scene-stage" id="character-stage">
-              <!-- Authentic Editorial Portrait with pointer parallax and scroll kinematics -->
+              <!-- High-resolution authentic cutout portrait with folded arms -->
               <img 
                 src="assets/aakash_authentic_portrait.png" 
-                alt="AAKASH — Editorial Portrait" 
-                class="character-portrait-asset" 
+                alt="AAKASH — Creative Director, Marketer and Builder" 
+                class="hero-poster-portrait" 
                 id="character-portrait" 
               />
-              
-              <!-- Future WebGL 3D GLB / React Three Fiber Canvas Mount -->
+              <!-- Genuine WebGL 3D GLB Mount Architecture -->
               <div class="character-3d-mount" id="character-3d-mount"></div>
             </div>
           </div>
 
+          <!-- RIGHT FLANK: Creator/Speaker Dimensions & Real Professional Anchors -->
+          <div class="hero-flank hero-flank-right" id="hero-right-flank">
+            <!-- Upper Right: Secondary Identity Tags -->
+            <div class="hero-tag-cluster hero-tag-right" id="hero-right-tags">
+              <span class="poster-tag">CREATOR</span>
+              <span class="poster-tag-separator">/</span>
+              <span class="poster-tag">SPEAKER</span>
+            </div>
+
+            <!-- Small Editorial Mission Statement -->
+            <div class="hero-right-mantra" id="hero-right-mantra">
+              <span class="poster-kicker-mono">CORE PHILOSOPHY</span>
+              <h3 class="poster-mantra-title">
+                TURNING IDEAS<br />
+                INTO EXPERIENCES.
+              </h3>
+            </div>
+
+            <!-- 2-3 Real Professional Anchors (Clean, Elegant, Real Credentials) -->
+            <div class="hero-anchors-stream" id="hero-anchors">
+              <div class="hero-anchor-item">
+                <span class="anchor-index">01</span>
+                <div class="anchor-body">
+                  <span class="anchor-title">DIGI MARKETRIX</span>
+                  <span class="anchor-sub">MARKETING &amp; STRATEGY</span>
+                </div>
+              </div>
+
+              <div class="hero-anchor-item">
+                <span class="anchor-index">02</span>
+                <div class="anchor-body">
+                  <span class="anchor-title">PERSONAL BRANDING</span>
+                  <span class="anchor-sub">BRAND BUILDING</span>
+                </div>
+              </div>
+
+              <div class="hero-anchor-item">
+                <span class="anchor-index">03</span>
+                <div class="anchor-body">
+                  <span class="anchor-title">SPEAKING</span>
+                  <span class="anchor-sub">COMMUNICATION</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
         </div>
+
+        <!-- Scroll Exit Phase 2: "I DON'T FIT INTO ONE BOX." Statement -->
+        <div class="identity-box-phase" id="identity-box-phase">
+          <h2 class="identity-huge-statement">
+            I DON'T FIT<br />
+            INTO ONE BOX.
+          </h2>
+        </div>
+
+        <!-- Scroll Exit Phase 3: Sequential Dominant Roles -->
+        <div class="role-sequence-phase" id="role-sequence-phase">
+          <!-- Role 01: MARKETER -->
+          <div class="role-slide-item" id="role-slide-1">
+            <span class="role-pre-lead">I THINK LIKE A</span>
+            <h3 class="role-huge-title">MARKETER.</h3>
+          </div>
+
+          <!-- Role 02: BRAND BUILDER -->
+          <div class="role-slide-item" id="role-slide-2">
+            <span class="role-pre-lead">I BUILD LIKE A</span>
+            <h3 class="role-huge-title">BRAND BUILDER.</h3>
+          </div>
+
+          <!-- Role 03: CREATOR -->
+          <div class="role-slide-item" id="role-slide-3">
+            <span class="role-pre-lead">I CREATE LIKE A</span>
+            <h3 class="role-huge-title">CREATOR.</h3>
+          </div>
+
+          <!-- Role 04: SPEAKER -->
+          <div class="role-slide-item" id="role-slide-4">
+            <span class="role-pre-lead">I CONNECT LIKE A</span>
+            <h3 class="role-huge-title">SPEAKER.</h3>
+          </div>
+        </div>
+
+        <!-- Scroll Exit Phase 4: Transition into Selected Work -->
+        <div class="work-transition-phase" id="work-transition-phase">
+          <span class="work-transition-label">SELECTED WORK / 01</span>
+          <h2 class="work-transition-title">DIGI<br />MARKETRIX</h2>
+          <p class="work-transition-subtitle">Digital Marketing &nbsp;·&nbsp; Strategy &nbsp;·&nbsp; Brand Growth</p>
+        </div>
+
       </section>
     </div>
 
