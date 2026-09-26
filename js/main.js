@@ -1744,41 +1744,123 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // 10d. Header & Drawer Navigation Scroll-Spy (Storytelling Order)
   // WORK → SPEAKING → CREATOR → JOURNEY → PROOF → ABOUT
-  function initNavScrollSpy() {
-    const navLinks = document.querySelectorAll('.nav-center-links .nav-link, .mobile-drawer .nav-link');
-    const trackedSections = [
-      document.getElementById('work'),
-      document.getElementById('speaking'),
-      document.getElementById('creator'),
-      document.getElementById('journey'),
-      document.getElementById('proof'),
-      document.getElementById('about')
-    ].filter(Boolean);
+  const navLinks = document.querySelectorAll('.nav-center-links .nav-link, .mobile-drawer .nav-link');
 
-    if (!navLinks.length || !trackedSections.length) return;
+  const navSectionMap = [
+    { id: 'about', target: 'about' },
+    { id: 'vision', target: 'about' },
+    { id: 'proof', target: 'proof' },
+    { id: 'journey', target: 'journey' },
+    { id: 'creator', target: 'creator' },
+    { id: 'speaking', target: 'speaking' },
+    { id: 'branding', target: 'work' },
+    { id: 'experience', target: 'work' },
+    { id: 'work', target: 'work' }
+  ];
 
-    if ('IntersectionObserver' in window) {
-      const navObserver = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            const secId = entry.target.id;
-            navLinks.forEach(link => {
-              const href = (link.getAttribute('href') || '').replace('#', '');
-              link.classList.toggle('active', href === secId);
-            });
-          }
-        });
-      }, {
-        rootMargin: '-20% 0px -60% 0px',
-        threshold: 0.12
-      });
+  let isNavScrolling = false;
 
-      trackedSections.forEach(sec => navObserver.observe(sec));
+  function updateActiveNav() {
+    if (isNavScrolling || !navLinks.length) return;
+
+    // In the hero top area, no section link should be active
+    if (window.scrollY < 250) {
+      navLinks.forEach(link => link.classList.remove('active'));
+      return;
     }
-  }
-  initNavScrollSpy();
 
-  // 10e. Smooth Anchor Navigation with Sticky Header Offset
+    const headerOffset = 180;
+    let currentTarget = null;
+
+    for (const item of navSectionMap) {
+      const el = document.getElementById(item.id);
+      if (el) {
+        const rect = el.getBoundingClientRect();
+        if (rect.top <= headerOffset && rect.bottom > 80) {
+          currentTarget = item.target;
+          break;
+        }
+      }
+    }
+
+    navLinks.forEach(link => {
+      const href = (link.getAttribute('href') || '').replace('#', '');
+      link.classList.toggle('active', href === currentTarget);
+    });
+  }
+
+  let navSpyTicking = false;
+  window.addEventListener('scroll', () => {
+    if (!navSpyTicking) {
+      requestAnimationFrame(() => {
+        updateActiveNav();
+        navSpyTicking = false;
+      });
+      navSpyTicking = true;
+    }
+  }, { passive: true });
+  updateActiveNav();
+
+  // 10e. Controlled Smooth Anchor Navigation with Pin-Aware Layout Recalculation
+  function scrollToAnchor(targetEl, smooth = true) {
+    if (!targetEl) return;
+
+    if (typeof ScrollTrigger !== 'undefined') {
+      ScrollTrigger.refresh();
+    }
+
+    const headerOffset = 90;
+    const rect = targetEl.getBoundingClientRect();
+    const targetPos = Math.max(0, rect.top + window.scrollY - headerOffset);
+
+    // Update active nav link immediately to match target
+    const targetId = targetEl.id;
+    const mappedTarget = navSectionMap.find(m => m.id === targetId)?.target || targetId;
+    navLinks.forEach(link => {
+      const href = (link.getAttribute('href') || '').replace('#', '');
+      link.classList.toggle('active', href === mappedTarget);
+    });
+
+    if (!smooth) {
+      window.scrollTo({ top: targetPos, behavior: 'instant' });
+      if (typeof ScrollTrigger !== 'undefined') {
+        ScrollTrigger.refresh();
+      }
+      return;
+    }
+
+    isNavScrolling = true;
+    const startPos = window.scrollY;
+    const distance = targetPos - startPos;
+    const duration = Math.min(850, Math.max(400, Math.abs(distance) * 0.045));
+    let startTime = null;
+
+    function step(timestamp) {
+      if (!startTime) startTime = timestamp;
+      const elapsed = timestamp - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      // Ease in-out cubic
+      const ease = progress < 0.5 
+        ? 4 * progress * progress * progress 
+        : 1 - Math.pow(-2 * progress + 2, 3) / 2;
+
+      window.scrollTo(0, startPos + distance * ease);
+
+      if (progress < 1) {
+        requestAnimationFrame(step);
+      } else {
+        window.scrollTo(0, targetPos);
+        isNavScrolling = false;
+        if (typeof ScrollTrigger !== 'undefined') {
+          ScrollTrigger.refresh();
+        }
+        updateActiveNav();
+      }
+    }
+
+    requestAnimationFrame(step);
+  }
+
   document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     anchor.addEventListener('click', function(e) {
       const href = this.getAttribute('href');
@@ -1787,14 +1869,42 @@ document.addEventListener('DOMContentLoaded', () => {
       const target = document.querySelector(href);
       if (target) {
         e.preventDefault();
-        const headerOffset = 90;
-        const targetPos = target.getBoundingClientRect().top + window.scrollY - headerOffset;
-        window.scrollTo({
-          top: targetPos,
-          behavior: 'smooth'
-        });
+        if (history.pushState) {
+          history.pushState(null, '', href);
+        }
+        scrollToAnchor(target, true);
       }
     });
+  });
+
+  // Handle URL hash on initial page load (prevent getting trapped in pinned hero spacer)
+  function handleInitialHash() {
+    if (window.location.hash && window.location.hash !== '#') {
+      const target = document.querySelector(window.location.hash);
+      if (target) {
+        if ('scrollRestoration' in history) {
+          history.scrollRestoration = 'manual';
+        }
+        scrollToAnchor(target, false);
+        setTimeout(() => {
+          scrollToAnchor(target, false);
+        }, 150);
+        setTimeout(() => {
+          scrollToAnchor(target, false);
+        }, 500);
+      }
+    }
+  }
+
+  handleInitialHash();
+  window.addEventListener('load', handleInitialHash);
+  window.addEventListener('hashchange', () => {
+    if (window.location.hash && window.location.hash !== '#') {
+      const target = document.querySelector(window.location.hash);
+      if (target) {
+        scrollToAnchor(target, true);
+      }
+    }
   });
 
   // 11. Subtle Contextual Cursor Badge ([data-cursor])
