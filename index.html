@@ -111,11 +111,14 @@
 
           <!-- LEFT FLANK: Identity fragments, Greeting, Statement, and CTAs -->
           <div class="hero-flank hero-flank-left" id="hero-left-flank">
-            <!-- Upper Left: Identity Tags -->
-            <div class="hero-tag-cluster" id="hero-left-tags">
-              <span class="poster-tag">MARKETER</span>
-              <span class="poster-tag-separator">/</span>
-              <span class="poster-tag">BRAND BUILDER</span>
+            <!-- Upper Left: Identity Tags with Directional Reveal (Left -> Right) -->
+            <div class="hero-tag-cluster hero-tag-left-cluster" id="hero-left-tags">
+              <span class="tag-accent-line tag-accent-line-left" aria-hidden="true"></span>
+              <div class="tag-reveal-wrap tag-reveal-left">
+                <span class="poster-tag tag-item-1">MARKETER.</span>
+                <span class="poster-tag-separator">/</span>
+                <span class="poster-tag tag-item-2">BRAND BUILDER.</span>
+              </div>
             </div>
 
             <!-- Main Greeting & AAKASH Name -->
@@ -163,11 +166,14 @@
 
           <!-- RIGHT FLANK: Creator/Speaker Dimensions & Real Professional Anchors -->
           <div class="hero-flank hero-flank-right" id="hero-right-flank">
-            <!-- Upper Right: Secondary Identity Tags -->
-            <div class="hero-tag-cluster hero-tag-right" id="hero-right-tags">
-              <span class="poster-tag">CREATOR</span>
-              <span class="poster-tag-separator">/</span>
-              <span class="poster-tag">SPEAKER</span>
+            <!-- Upper Right: Secondary Identity Tags with Directional Reveal (Right -> Left) -->
+            <div class="hero-tag-cluster hero-tag-right-cluster" id="hero-right-tags">
+              <div class="tag-reveal-wrap tag-reveal-right">
+                <span class="poster-tag tag-item-1">CREATOR.</span>
+                <span class="poster-tag-separator">/</span>
+                <span class="poster-tag tag-item-2">SPEAKER.</span>
+              </div>
+              <span class="tag-accent-line tag-accent-line-right" aria-hidden="true"></span>
             </div>
 
             <!-- Small Editorial Mission Statement -->
@@ -179,29 +185,53 @@
               </h3>
             </div>
 
-            <!-- 2-3 Real Professional Anchors (Clean, Elegant, Real Credentials) -->
+            <!-- Real Professional Anchors (01 DIGI MARKETRIX, 02 PERSONAL BRANDING STRATEGIST, 03 SPEAKER) -->
             <div class="hero-anchors-stream" id="hero-anchors">
-              <div class="hero-anchor-item">
-                <span class="anchor-index">01</span>
+              <!-- Anchor 01 -->
+              <div class="hero-anchor-item active" data-index="01" data-preview="assets/experience_digi_marketrix.jpg" data-title="DIGI MARKETRIX" data-sub="Marketing the Digital Presence" data-kicker="SELECTED WORK / 01">
+                <div class="anchor-step-row">
+                  <span class="anchor-index">01</span>
+                  <span class="anchor-line" aria-hidden="true"></span>
+                </div>
                 <div class="anchor-body">
-                  <span class="anchor-title">DIGI MARKETRIX</span>
-                  <span class="anchor-sub">MARKETING &amp; STRATEGY</span>
+                  <div class="anchor-title-wrap">
+                    <span class="anchor-title">DIGI MARKETRIX</span>
+                  </div>
+                  <div class="anchor-sub-wrap">
+                    <span class="anchor-sub">Marketing the Digital Presence</span>
+                  </div>
                 </div>
               </div>
 
-              <div class="hero-anchor-item">
-                <span class="anchor-index">02</span>
+              <!-- Anchor 02 -->
+              <div class="hero-anchor-item" data-index="02" data-preview="assets/project_fashion.jpg" data-title="PERSONAL BRANDING STRATEGIST" data-sub="Brand Building" data-kicker="STRATEGY / 02">
+                <div class="anchor-step-row">
+                  <span class="anchor-index">02</span>
+                  <span class="anchor-line" aria-hidden="true"></span>
+                </div>
                 <div class="anchor-body">
-                  <span class="anchor-title">PERSONAL BRANDING</span>
-                  <span class="anchor-sub">BRAND BUILDING</span>
+                  <div class="anchor-title-wrap">
+                    <span class="anchor-title">PERSONAL BRANDING STRATEGIST</span>
+                  </div>
+                  <div class="anchor-sub-wrap">
+                    <span class="anchor-sub">Brand Building</span>
+                  </div>
                 </div>
               </div>
 
-              <div class="hero-anchor-item">
-                <span class="anchor-index">03</span>
+              <!-- Anchor 03 -->
+              <div class="hero-anchor-item" data-index="03" data-preview="assets/life_with_aakash.jpg" data-title="SPEAKER" data-sub="Life &amp; Motivational" data-kicker="KEYNOTE / 03">
+                <div class="anchor-step-row">
+                  <span class="anchor-index">03</span>
+                  <span class="anchor-line" aria-hidden="true"></span>
+                </div>
                 <div class="anchor-body">
-                  <span class="anchor-title">SPEAKING</span>
-                  <span class="anchor-sub">COMMUNICATION</span>
+                  <div class="anchor-title-wrap">
+                    <span class="anchor-title">SPEAKER</span>
+                  </div>
+                  <div class="anchor-sub-wrap">
+                    <span class="anchor-sub">Life &amp; Motivational</span>
+                  </div>
                 </div>
               </div>
             </div>
@@ -209,46 +239,96 @@
 
         </div>
 
-        <!-- Scroll Exit Phase 2: "I DON'T FIT INTO ONE BOX." Statement -->
-        <div class="identity-box-phase" id="identity-box-phase">
-          <h2 class="identity-huge-statement">
-            I DON'T FIT<br />
-            INTO ONE BOX.
-          </h2>
+        <!-- Atmospheric Large Project Hover Preview (Opposite Side: Left Viewport) -->
+        <div class="hero-hover-preview-stage" id="hero-hover-preview" aria-hidden="true">
+          <div class="hover-preview-inner" id="hover-preview-inner">
+            <div class="hover-preview-media">
+              <img src="assets/experience_digi_marketrix.jpg" alt="" class="hover-preview-img" id="hover-preview-img" />
+              <div class="hover-preview-overlay"></div>
+            </div>
+            <div class="hover-preview-meta">
+              <span class="hover-preview-kicker" id="hover-preview-kicker">SELECTED WORK / 01</span>
+              <h4 class="hover-preview-title" id="hover-preview-title">DIGI MARKETRIX</h4>
+              <p class="hover-preview-sub" id="hover-preview-sub">Marketing the Digital Presence</p>
+            </div>
+          </div>
         </div>
 
-        <!-- Scroll Exit Phase 3: Sequential Dominant Roles -->
+        <!-- Scroll Exit Phase 2: "I DON'T FIT INTO ONE BOX." (Left 60–65% Composition) -->
+        <div class="identity-box-phase" id="identity-box-phase">
+          <div class="identity-line-mask">
+            <h2 class="identity-line identity-line-1" id="id-line-1">I DON'T FIT</h2>
+          </div>
+          <div class="identity-line-mask">
+            <h2 class="identity-line identity-line-2" id="id-line-2">INTO ONE</h2>
+          </div>
+          <div class="identity-line-mask">
+            <h2 class="identity-line identity-line-3" id="id-line-3">BOX<span class="identity-dot">.</span></h2>
+          </div>
+        </div>
+
+        <!-- Scroll Exit Phase 3: Sequential Dominant Roles (Typography Reel System in Left Zone) -->
         <div class="role-sequence-phase" id="role-sequence-phase">
           <!-- Role 01: MARKETER -->
           <div class="role-slide-item" id="role-slide-1">
-            <span class="role-pre-lead">I THINK LIKE A</span>
-            <h3 class="role-huge-title">MARKETER.</h3>
+            <span class="role-pre-lead">ROLE // 01</span>
+            <div class="role-title-reel-mask">
+              <h3 class="role-huge-title">MARKETER.</h3>
+            </div>
           </div>
 
-          <!-- Role 02: BRAND BUILDER -->
+          <!-- Role 02: STRATEGIST -->
           <div class="role-slide-item" id="role-slide-2">
-            <span class="role-pre-lead">I BUILD LIKE A</span>
-            <h3 class="role-huge-title">BRAND BUILDER.</h3>
+            <span class="role-pre-lead">ROLE // 02</span>
+            <div class="role-title-reel-mask">
+              <h3 class="role-huge-title">STRATEGIST.</h3>
+            </div>
           </div>
 
           <!-- Role 03: CREATOR -->
           <div class="role-slide-item" id="role-slide-3">
-            <span class="role-pre-lead">I CREATE LIKE A</span>
-            <h3 class="role-huge-title">CREATOR.</h3>
+            <span class="role-pre-lead">ROLE // 03</span>
+            <div class="role-title-reel-mask">
+              <h3 class="role-huge-title">CREATOR.</h3>
+            </div>
           </div>
 
           <!-- Role 04: SPEAKER -->
           <div class="role-slide-item" id="role-slide-4">
-            <span class="role-pre-lead">I CONNECT LIKE A</span>
-            <h3 class="role-huge-title">SPEAKER.</h3>
+            <span class="role-pre-lead">ROLE // 04</span>
+            <div class="role-title-reel-mask">
+              <h3 class="role-huge-title">SPEAKER.</h3>
+            </div>
           </div>
         </div>
 
-        <!-- Scroll Exit Phase 4: Transition into Selected Work -->
+        <!-- Scroll Exit Phase 4: Transition into Selected Work (Left Enters, Owns Screen) -->
         <div class="work-transition-phase" id="work-transition-phase">
-          <span class="work-transition-label">SELECTED WORK / 01</span>
-          <h2 class="work-transition-title">DIGI<br />MARKETRIX</h2>
-          <p class="work-transition-subtitle">Digital Marketing &nbsp;·&nbsp; Strategy &nbsp;·&nbsp; Brand Growth</p>
+          <div class="work-transition-kicker-mask">
+            <span class="work-transition-label" id="work-kicker">SELECTED WORK / 01</span>
+          </div>
+          <div class="work-title-mask-line">
+            <h2 class="work-title-word" id="work-title-digi">DIGI</h2>
+          </div>
+          <div class="work-title-mask-line">
+            <h2 class="work-title-word" id="work-title-marketrix">MARKETRIX</h2>
+          </div>
+          <div class="work-sub-mask-wrap">
+            <p class="work-transition-subtitle" id="work-subtitle">Digital Marketing &nbsp;·&nbsp; Strategy &nbsp;·&nbsp; Brand Growth</p>
+          </div>
+        </div>
+
+        <!-- Scroll Exit Phase 5: Approach into Project Canvas -->
+        <div class="hero-project-approach-canvas" id="hero-project-approach" aria-hidden="true">
+          <div class="project-approach-frame">
+            <img 
+              src="assets/experience_digi_marketrix.jpg" 
+              alt="Digi Marketrix Commercial Case Study Production" 
+              class="project-approach-img" 
+              id="project-approach-img" 
+            />
+            <div class="project-approach-glow"></div>
+          </div>
         </div>
 
       </section>

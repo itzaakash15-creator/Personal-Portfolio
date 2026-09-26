@@ -131,29 +131,29 @@ document.addEventListener('DOMContentLoaded', () => {
         const normX = (e.clientX / window.innerWidth) * 2 - 1;
         const normY = (e.clientY / window.innerHeight) * 2 - 1;
 
-        // Subtle relative depth according to guidelines:
-        // AAKASH portrait: ±5–7px
-        this.target.pointerX = normX * 6.5;
-        this.target.pointerY = normY * 4.5;
-        this.target.pointerScale = 1 + (Math.abs(normX) + Math.abs(normY)) * 0.003;
+        // Exact depth specifications from Specification 07:
+        // AAKASH portrait: maximum ±5px X, maximum ±3px Y
+        this.target.pointerX = normX * 5.0;
+        this.target.pointerY = normY * 3.0;
+        this.target.pointerScale = 1; // Natural, no distortion
 
-        // Lighting: ±8–12px
-        this.target.lightX = normX * 11;
-        this.target.lightY = normY * 8;
-        this.target.dirLightX = -normX * 14;
-        this.target.dirLightY = -normY * 9;
+        // LIGHT: maximum ±10px X, maximum ±6px Y
+        this.target.lightX = normX * 10.0;
+        this.target.lightY = normY * 6.0;
+        this.target.dirLightX = -normX * 8.0;
+        this.target.dirLightY = -normY * 5.0;
 
-        // PORTFOLIO wordmark: ±2px
-        this.target.wordmarkX = normX * 2.2;
+        // PORTFOLIO wordmark: maximum ±2px
+        this.target.wordmarkX = normX * 2.0;
         this.target.wordmarkY = normY * 1.5;
 
-        // Flanks / supporting details: ±2–4px
-        this.target.flankX = normX * 3.0;
-        this.target.flankY = normY * 2.0;
+        // Foreground details: maximum ±2px
+        this.target.flankX = normX * 2.0;
+        this.target.flankY = normY * 1.5;
 
         // Shadow subtle shift
-        this.target.shadowX = -normX * 10;
-        this.target.shadowY = 18 - normY * 5;
+        this.target.shadowX = -normX * 8;
+        this.target.shadowY = 18 - normY * 4;
 
         // Forward to CharacterScene modular interaction API for future 3D model
         if (window.Character3DScene && typeof window.Character3DScene.setPointer === 'function') {
@@ -204,32 +204,36 @@ document.addEventListener('DOMContentLoaded', () => {
     },
 
     update() {
-      const lf = this.lerpFactor;
       const c = this.current;
       const t = this.target;
 
-      c.pointerX += (t.pointerX - c.pointerX) * lf;
-      c.pointerY += (t.pointerY - c.pointerY) * lf;
-      c.pointerScale += (t.pointerScale - c.pointerScale) * lf;
+      // Layered damping speeds according to physical depth:
+      // Aakash portrait lerp (physical, responsive)
+      c.pointerX += (t.pointerX - c.pointerX) * 0.055;
+      c.pointerY += (t.pointerY - c.pointerY) * 0.055;
+      c.pointerScale += (t.pointerScale - c.pointerScale) * 0.055;
 
-      c.lightX += (t.lightX - c.lightX) * (lf * 0.85);
-      c.lightY += (t.lightY - c.lightY) * (lf * 0.85);
-      c.dirLightX += (t.dirLightX - c.dirLightX) * (lf * 0.85);
-      c.dirLightY += (t.dirLightY - c.dirLightY) * (lf * 0.85);
+      // Lighting lerp (soft atmospheric inertia)
+      c.lightX += (t.lightX - c.lightX) * 0.040;
+      c.lightY += (t.lightY - c.lightY) * 0.040;
+      c.dirLightX += (t.dirLightX - c.dirLightX) * 0.040;
+      c.dirLightY += (t.dirLightY - c.dirLightY) * 0.040;
 
-      c.wordmarkX += (t.wordmarkX - c.wordmarkX) * lf;
-      c.wordmarkY += (t.wordmarkY - c.wordmarkY) * lf;
+      // PORTFOLIO wordmark lerp (deep background, calm)
+      c.wordmarkX += (t.wordmarkX - c.wordmarkX) * 0.035;
+      c.wordmarkY += (t.wordmarkY - c.wordmarkY) * 0.035;
 
-      c.flankX += (t.flankX - c.flankX) * lf;
-      c.flankY += (t.flankY - c.flankY) * lf;
+      // Foreground flank details lerp (crisp)
+      c.flankX += (t.flankX - c.flankX) * 0.065;
+      c.flankY += (t.flankY - c.flankY) * 0.065;
 
-      c.shadowX += (t.shadowX - c.shadowX) * lf;
-      c.shadowY += (t.shadowY - c.shadowY) * lf;
+      c.shadowX += (t.shadowX - c.shadowX) * 0.055;
+      c.shadowY += (t.shadowY - c.shadowY) * 0.055;
 
-      c.scrollX += (t.scrollX - c.scrollX) * lf;
-      c.scrollY += (t.scrollY - c.scrollY) * lf;
-      c.scrollScale += (t.scrollScale - c.scrollScale) * lf;
-      c.scrollOpacity += (t.scrollOpacity - c.scrollOpacity) * lf;
+      c.scrollX += (t.scrollX - c.scrollX) * 0.055;
+      c.scrollY += (t.scrollY - c.scrollY) * 0.055;
+      c.scrollScale += (t.scrollScale - c.scrollScale) * 0.055;
+      c.scrollOpacity += (t.scrollOpacity - c.scrollOpacity) * 0.055;
 
       this.render();
 
@@ -365,17 +369,34 @@ document.addEventListener('DOMContentLoaded', () => {
   // 1.8s: Positioning statement
   // 2.0s: Professional anchors & CTAs
   // ==========================================================================
+  // ==========================================================================
+  // 3b. Cinematic Personal-Portfolio Poster Entrance (2–2.5 seconds total)
+  // Visitor Experience Order:
+  // PORTFOLIO ↓ AAKASH ↓ IDENTITY DETAILS ↓ PROFESSIONAL DETAILS ↓ FULL HERO
+  // ==========================================================================
   function initEntranceSequence() {
     const portfolioWord = document.getElementById('hero-portfolio-wordmark');
     const characterPortrait = document.getElementById('character-portrait') || document.querySelector('.hero-poster-portrait');
     const radialLight = document.getElementById('hero-radial-light');
-    const leftTags = document.getElementById('hero-left-tags');
-    const rightTags = document.getElementById('hero-right-tags');
+    
+    // Left-side Identity Elements
+    const leftLine = document.querySelector('.tag-accent-line-left');
+    const leftTag1 = document.querySelector('#hero-left-tags .tag-item-1');
+    const leftTag2 = document.querySelector('#hero-left-tags .tag-item-2');
+    const leftSep = document.querySelector('#hero-left-tags .poster-tag-separator');
+
+    // Right-side Identity Elements
+    const rightLine = document.querySelector('.tag-accent-line-right');
+    const rightTag1 = document.querySelector('#hero-right-tags .tag-item-1');
+    const rightTag2 = document.querySelector('#hero-right-tags .tag-item-2');
+    const rightSep = document.querySelector('#hero-right-tags .poster-tag-separator');
+
+    // Editorial Content Elements
     const greeting = document.getElementById('hero-greeting');
     const positioning = document.getElementById('hero-positioning');
     const ctaCluster = document.getElementById('hero-cta-cluster');
     const rightMantra = document.getElementById('hero-right-mantra');
-    const anchors = document.getElementById('hero-anchors');
+    const anchorItems = document.querySelectorAll('.hero-anchor-item');
 
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
@@ -383,7 +404,9 @@ document.addEventListener('DOMContentLoaded', () => {
       CharacterController.isEntrancePlaying = false;
       if (portfolioWord) {
         portfolioWord.style.opacity = '0.9';
-        portfolioWord.style.transform = 'translate(-50%, -50%) scale(1)';
+        portfolioWord.style.clipPath = 'none';
+        portfolioWord.style.letterSpacing = '-0.055em';
+        portfolioWord.style.transform = 'translate(-50%, -50%)';
       }
       if (characterPortrait) {
         characterPortrait.style.opacity = '1';
@@ -391,12 +414,32 @@ document.addEventListener('DOMContentLoaded', () => {
       }
       if (radialLight) {
         radialLight.style.opacity = '0.6';
+        radialLight.style.transform = 'translate3d(-50%, -50%, 0)';
       }
-      [leftTags, rightTags, greeting, positioning, ctaCluster, rightMantra, anchors].forEach(el => {
+      if (leftLine) leftLine.style.transform = 'scaleX(1)';
+      if (rightLine) rightLine.style.transform = 'scaleX(1)';
+      [leftTag1, leftTag2, rightTag1, rightTag2].forEach(tag => {
+        if (tag) {
+          tag.style.clipPath = 'none';
+          tag.style.opacity = '1';
+          tag.style.transform = 'none';
+        }
+      });
+      [leftSep, rightSep, greeting, positioning, ctaCluster, rightMantra].forEach(el => {
         if (el) {
           el.style.opacity = '1';
           el.style.transform = 'none';
         }
+      });
+      anchorItems.forEach((anchor, idx) => {
+        const num = anchor.querySelector('.anchor-index');
+        const line = anchor.querySelector('.anchor-line');
+        const title = anchor.querySelector('.anchor-title');
+        const sub = anchor.querySelector('.anchor-sub');
+        if (num) { num.style.opacity = '1'; num.style.transform = 'none'; }
+        if (line) line.style.transform = idx === 0 ? 'scaleX(1)' : 'scaleX(0)';
+        if (title) { title.style.clipPath = 'none'; title.style.opacity = '1'; title.style.transform = 'none'; }
+        if (sub) { sub.style.opacity = '1'; sub.style.transform = 'none'; }
       });
       CharacterController.requestTick();
     };
@@ -408,21 +451,49 @@ document.addEventListener('DOMContentLoaded', () => {
 
     CharacterController.isEntrancePlaying = true;
 
-    // Initial state before entrance begins
-    if (radialLight) radialLight.style.opacity = '0.12';
+    // 0.0s: Atmospheric near-black background; warm light starts extremely faint
+    if (radialLight) {
+      radialLight.style.opacity = '0.08';
+    }
     if (portfolioWord) {
       portfolioWord.style.opacity = '0';
-      portfolioWord.style.transform = 'translate(-50%, -50%) scale(0.96)';
+      portfolioWord.style.clipPath = 'inset(100% 0% 0% 0%)';
+      portfolioWord.style.letterSpacing = '0.025em';
+      portfolioWord.style.transform = 'translate(-50%, -50%)';
     }
     if (characterPortrait) {
       characterPortrait.style.opacity = '0';
-      characterPortrait.style.transform = 'translate3d(0, 85%, 0)';
+      characterPortrait.style.transform = 'translate3d(0, 80%, 0) scale(0.97)';
     }
-    [leftTags, rightTags, greeting, positioning, ctaCluster, rightMantra, anchors].forEach(el => {
+
+    // Directional tags initial state
+    if (leftLine) leftLine.style.transform = 'scaleX(0)';
+    if (rightLine) rightLine.style.transform = 'scaleX(0)';
+    if (leftTag1) { leftTag1.style.clipPath = 'inset(0% 100% 0% 0%)'; leftTag1.style.opacity = '0'; leftTag1.style.transform = 'translateX(-8px)'; }
+    if (leftTag2) { leftTag2.style.clipPath = 'inset(0% 100% 0% 0%)'; leftTag2.style.opacity = '0'; leftTag2.style.transform = 'translateX(-8px)'; }
+    if (rightTag1) { rightTag1.style.clipPath = 'inset(0% 0% 0% 100%)'; rightTag1.style.opacity = '0'; rightTag1.style.transform = 'translateX(8px)'; }
+    if (rightTag2) { rightTag2.style.clipPath = 'inset(0% 0% 0% 100%)'; rightTag2.style.opacity = '0'; rightTag2.style.transform = 'translateX(8px)'; }
+    if (leftSep) leftSep.style.opacity = '0';
+    if (rightSep) rightSep.style.opacity = '0';
+
+    // Supporting copy initial state
+    [greeting, positioning, ctaCluster, rightMantra].forEach(el => {
       if (el) {
         el.style.opacity = '0';
         el.style.transform = 'translate3d(0, 16px, 0)';
       }
+    });
+
+    // Anchors initial state
+    anchorItems.forEach(anchor => {
+      const num = anchor.querySelector('.anchor-index');
+      const line = anchor.querySelector('.anchor-line');
+      const title = anchor.querySelector('.anchor-title');
+      const sub = anchor.querySelector('.anchor-sub');
+      if (num) { num.style.opacity = '0'; num.style.transform = 'translate3d(0, 8px, 0)'; }
+      if (line) line.style.transform = 'scaleX(0)';
+      if (title) { title.style.clipPath = 'inset(100% 0% 0% 0%)'; title.style.opacity = '0'; title.style.transform = 'translate3d(0, 12px, 0)'; }
+      if (sub) { sub.style.opacity = '0'; sub.style.transform = 'translate3d(0, 10px, 0)'; }
     });
 
     let entranceTimeline = null;
@@ -435,74 +506,204 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       });
 
-      // 0.2s: Warm lighting blooms behind head and shoulders
-      entranceTimeline.to(radialLight, {
-        opacity: 0.6,
-        duration: 0.75,
-        ease: 'power2.out'
-      }, 0.2);
-
-      // 0.4s: PORTFOLIO typography reveals
+      // ----------------------------------------------------------------------
+      // 0.2s — PORTFOLIO: Vertical clipping reveal (bottom -> top)
+      // Letter-spacing compression (slightly expanded -> settles into final tracking)
+      // ----------------------------------------------------------------------
       entranceTimeline.to(portfolioWord, {
         opacity: 0.9,
-        scale: 1,
-        duration: 0.8,
-        ease: 'power2.out'
-      }, 0.4);
+        clipPath: 'inset(0% 0% 0% 0%)',
+        letterSpacing: '-0.055em',
+        duration: 0.65,
+        ease: 'power3.out'
+      }, 0.2);
 
-      // 0.7s: AAKASH rises smoothly from below viewport, crossing in front of PORTFOLIO (cinematic ease, no bounce)
+      // ----------------------------------------------------------------------
+      // 0.55s — AAKASH ENTERS: Rises from translateY 80% -> 0, scale 0.97 -> 1
+      // Passes IN FRONT of PORTFOLIO. Physical weight settling motion at end.
+      // ----------------------------------------------------------------------
       entranceTimeline.to(characterPortrait, {
         y: '0%',
         opacity: 1,
-        duration: 1.15,
+        scale: 1,
+        duration: 0.95,
         ease: 'power3.out'
-      }, 0.7);
+      }, 0.55);
 
-      // 1.2s: Left-side identity (MARKETER / BRAND BUILDER)
-      entranceTimeline.to(leftTags, {
-        opacity: 1,
-        y: 0,
+      // Light reacts as Aakash reaches ~70% of his rise (~1.2s):
+      // Studio light brightens slightly, then settles to normal intensity
+      entranceTimeline.to(radialLight, {
+        opacity: 0.85,
+        duration: 0.35,
+        ease: 'power2.out'
+      }, 1.18);
+
+      entranceTimeline.to(radialLight, {
+        opacity: 0.6,
         duration: 0.45,
-        ease: 'power2.out'
-      }, 1.2);
+        ease: 'power2.inOut'
+      }, 1.50);
 
-      // 1.4s: Right-side identity (CREATOR / SPEAKER)
-      entranceTimeline.to(rightTags, {
-        opacity: 1,
-        y: 0,
-        duration: 0.45,
-        ease: 'power2.out'
-      }, 1.4);
+      // Tiny physical weight settling motion: final position -> 3-5px above (-4px) -> final position
+      entranceTimeline.to(characterPortrait, {
+        y: '-4px',
+        duration: 0.12,
+        ease: 'power1.out'
+      }, 1.50);
 
-      // 1.6s: Hello, I'm AAKASH
-      entranceTimeline.to(greeting, {
-        opacity: 1,
-        y: 0,
-        duration: 0.5,
-        ease: 'power2.out'
-      }, 1.6);
+      entranceTimeline.to(characterPortrait, {
+        y: '0px',
+        duration: 0.16,
+        ease: 'power2.inOut'
+      }, 1.62);
 
-      // 1.8s: Positioning statement
-      entranceTimeline.to(positioning, {
-        opacity: 1,
-        y: 0,
-        duration: 0.5,
-        ease: 'power2.out'
-      }, 1.8);
+      // ----------------------------------------------------------------------
+      // 03 — SIDE IDENTITY DETAILS: Editorial information assembling around Aakash
+      // Directional reveals: Left (left -> right), Right (right -> left)
+      // ----------------------------------------------------------------------
+      // LEFT SIDE: small line appears first, then text reveals left -> right
+      if (leftLine) {
+        entranceTimeline.to(leftLine, {
+          scaleX: 1,
+          duration: 0.22,
+          ease: 'power2.out'
+        }, 1.66);
+      }
+      if (leftTag1) {
+        entranceTimeline.to(leftTag1, {
+          clipPath: 'inset(0% 0% 0% 0%)',
+          opacity: 1,
+          x: 0,
+          duration: 0.28,
+          ease: 'power2.out'
+        }, 1.76);
+      }
+      if (leftSep) {
+        entranceTimeline.to(leftSep, { opacity: 1, duration: 0.15 }, 1.80);
+      }
+      if (leftTag2) {
+        entranceTimeline.to(leftTag2, {
+          clipPath: 'inset(0% 0% 0% 0%)',
+          opacity: 1,
+          x: 0,
+          duration: 0.28,
+          ease: 'power2.out'
+        }, 1.82);
+      }
 
-      // 2.0s: Professional anchors & CTAs
-      entranceTimeline.to([rightMantra, anchors, ctaCluster], {
-        opacity: 1,
-        y: 0,
-        duration: 0.55,
-        ease: 'power2.out'
-      }, 2.0);
+      // RIGHT SIDE: small line appears first, then text reveals right -> left
+      if (rightLine) {
+        entranceTimeline.to(rightLine, {
+          scaleX: 1,
+          duration: 0.22,
+          ease: 'power2.out'
+        }, 1.70);
+      }
+      if (rightTag1) {
+        entranceTimeline.to(rightTag1, {
+          clipPath: 'inset(0% 0% 0% 0%)',
+          opacity: 1,
+          x: 0,
+          duration: 0.28,
+          ease: 'power2.out'
+        }, 1.80);
+      }
+      if (rightSep) {
+        entranceTimeline.to(rightSep, { opacity: 1, duration: 0.15 }, 1.84);
+      }
+      if (rightTag2) {
+        entranceTimeline.to(rightTag2, {
+          clipPath: 'inset(0% 0% 0% 0%)',
+          opacity: 1,
+          x: 0,
+          duration: 0.28,
+          ease: 'power2.out'
+        }, 1.86);
+      }
+
+      // Main Greeting & Editorial Statement
+      if (greeting) {
+        entranceTimeline.to(greeting, {
+          opacity: 1,
+          y: 0,
+          duration: 0.45,
+          ease: 'power2.out'
+        }, 1.85);
+      }
+      if (positioning) {
+        entranceTimeline.to(positioning, {
+          opacity: 1,
+          y: 0,
+          duration: 0.45,
+          ease: 'power2.out'
+        }, 1.95);
+      }
+      if (rightMantra) {
+        entranceTimeline.to(rightMantra, {
+          opacity: 1,
+          y: 0,
+          duration: 0.45,
+          ease: 'power2.out'
+        }, 1.95);
+      }
+
+      // ----------------------------------------------------------------------
+      // 05 — PROFESSIONAL ANCHORS ENTRANCE (Sequential 4-Step Entrance)
+      // For each: Step A (num), Step B (line), Step C (title clip), Step D (sub slide up)
+      // ----------------------------------------------------------------------
+      const anchorDelays = [2.05, 2.20, 2.35]; // ~150ms stagger
+      anchorItems.forEach((anchor, idx) => {
+        const baseTime = anchorDelays[idx] || (2.05 + idx * 0.15);
+        const num = anchor.querySelector('.anchor-index');
+        const line = anchor.querySelector('.anchor-line');
+        const title = anchor.querySelector('.anchor-title');
+        const sub = anchor.querySelector('.anchor-sub');
+
+        if (num) {
+          entranceTimeline.to(num, { opacity: 1, y: 0, duration: 0.18, ease: 'power2.out' }, baseTime);
+        }
+        if (line) {
+          // 01 begins active with line grown; 02 & 03 grow then gently rest
+          entranceTimeline.to(line, {
+            scaleX: idx === 0 ? 1 : 0.35,
+            duration: 0.22,
+            ease: 'power2.out'
+          }, baseTime + 0.06);
+        }
+        if (title) {
+          entranceTimeline.to(title, {
+            clipPath: 'inset(0% 0% 0% 0%)',
+            opacity: 1,
+            y: 0,
+            duration: 0.24,
+            ease: 'power2.out'
+          }, baseTime + 0.12);
+        }
+        if (sub) {
+          entranceTimeline.to(sub, {
+            opacity: 1,
+            y: 0,
+            duration: 0.20,
+            ease: 'power2.out'
+          }, baseTime + 0.18);
+        }
+      });
+
+      // CTAs Cluster Reveal
+      if (ctaCluster) {
+        entranceTimeline.to(ctaCluster, {
+          opacity: 1,
+          y: 0,
+          duration: 0.45,
+          ease: 'power2.out'
+        }, 2.45);
+      }
 
     } else {
-      setTimeout(settleHeroImmediately, 2400);
+      setTimeout(settleHeroImmediately, 2500);
     }
 
-    // Safety Skip Listener
+    // Safety Skip Listener on early scroll or keydown
     let hasSkipped = false;
     const triggerSkip = () => {
       if (hasSkipped) return;
@@ -528,8 +729,13 @@ document.addEventListener('DOMContentLoaded', () => {
   initEntranceSequence();
 
   // ==========================================================================
-  // 4. Signature Identity Experience Choreography (GSAP ScrollTrigger)
-  // Continuous transition from Poster Hero -> "I DON'T FIT INTO ONE BOX" -> Dominant Roles
+  // 4. Signature Hero + Scroll Motion Choreography (GSAP ScrollTrigger)
+  //
+  // CORE PRINCIPLE: AAKASH = VISUAL ANCHOR.
+  // Typography and content move AROUND him, NEVER constantly through him!
+  //
+  // LEFT 60–65%: Reserved for typography sequence
+  // RIGHT 35–40%: Reserved for Aakash portrait as dimensional anchor
   // ==========================================================================
   if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
     gsap.registerPlugin(ScrollTrigger);
@@ -542,52 +748,56 @@ document.addEventListener('DOMContentLoaded', () => {
       const leftFlank = document.getElementById('hero-left-flank');
       const rightFlank = document.getElementById('hero-right-flank');
       const portfolioWord = document.getElementById('hero-portfolio-wordmark');
+      const radialLight = document.getElementById('hero-radial-light');
+      const characterScene = document.getElementById('character-scene');
       
       const identityPhase = document.getElementById('identity-box-phase');
+      const idLine1 = document.getElementById('id-line-1');
+      const idLine2 = document.getElementById('id-line-2');
+      const idLine3 = document.getElementById('id-line-3');
+
       const role1 = document.getElementById('role-slide-1');
       const role2 = document.getElementById('role-slide-2');
       const role3 = document.getElementById('role-slide-3');
       const role4 = document.getElementById('role-slide-4');
-      const workTransition = document.getElementById('work-transition-phase');
 
-      if (!wrapper || !leftFlank) return;
+      const workTransition = document.getElementById('work-transition-phase');
+      const projectApproach = document.getElementById('hero-project-approach');
+
+      if (!wrapper || !characterScene) return;
+
+      // Calculate safe rightward anchor offset for Aakash portrait
+      // Keeps him anchored in the right 35–40% zone, leaving left 60–65% 100% clear
+      const getAnchorRightX = () => Math.min(Math.max(window.innerWidth * 0.22, 220), 380);
 
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: wrapper,
           start: "top top",
-          end: "+=4200",
+          end: "+=4400",
           pin: true,
           scrub: 0.8,
           anticipatePin: 1,
           onUpdate: (self) => {
             const p = self.progress;
             let section = 'hero';
-            // Character continuity kinematics mapped to scroll progress
-            if (p < 0.15) {
+            if (p < 0.12) {
               section = 'hero';
-              CharacterController.setScrollKinematics(0, 0, 0, 1, 1);
-            } else if (p >= 0.15 && p < 0.32) {
+            } else if (p >= 0.12 && p < 0.32) {
               section = 'identity';
-              CharacterController.setScrollKinematics(0, -10, 0, 1.03, 1);
-            } else if (p >= 0.32 && p < 0.45) {
+            } else if (p >= 0.32 && p < 0.44) {
               section = 'marketer';
-              CharacterController.setScrollKinematics(15, -6, 0, 1.02, 1);
-            } else if (p >= 0.45 && p < 0.58) {
-              section = 'brandbuilder';
-              CharacterController.setScrollKinematics(-15, -12, 0, 1.035, 1);
-            } else if (p >= 0.58 && p < 0.70) {
+            } else if (p >= 0.44 && p < 0.56) {
+              section = 'strategist';
+            } else if (p >= 0.56 && p < 0.68) {
               section = 'creator';
-              CharacterController.setScrollKinematics(12, -5, 0, 1.02, 1);
-            } else if (p >= 0.70 && p < 0.82) {
+            } else if (p >= 0.68 && p < 0.80) {
               section = 'speaker';
-              CharacterController.setScrollKinematics(-18, -8, 0, 1.03, 1);
             } else {
               section = 'work';
-              CharacterController.setScrollKinematics(30, 25, 0, 0.98, 0.25);
             }
 
-            // Sync scroll progress and active section with CharacterScene
+            // Sync with CharacterScene modular API for future 3D GLB model
             if (window.Character3DScene && typeof window.Character3DScene.setScroll === 'function') {
               window.Character3DScene.setScroll(p, section);
             }
@@ -595,112 +805,382 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       });
 
-      // Step 3: Transition out Hero Supporting Content (outward slide & fade)
+      // ----------------------------------------------------------------------
+      // STEP 1: Hero Flanks Slide Outward; AAKASH Moves Smoothly to the Right
+      // Aakash anchors to right 35–40%, clearing the left 60–65% for typography
+      // ----------------------------------------------------------------------
       tl.to(leftFlank, {
-        x: -55,
+        x: -60,
         opacity: 0,
-        duration: 0.9,
+        duration: 0.85,
         ease: "power2.inOut"
       }, 0);
 
       tl.to(rightFlank, {
-        x: 55,
+        x: 60,
         opacity: 0,
-        duration: 0.9,
+        duration: 0.85,
         ease: "power2.inOut"
       }, 0);
 
       tl.to(portfolioWord, {
-        scale: 0.92,
+        scale: 0.94,
         opacity: 0,
-        duration: 0.9,
+        duration: 0.85,
         ease: "power2.inOut"
       }, 0.05);
 
-      // Character remains centered; dark transition into "I DON'T FIT INTO ONE BOX."
-      tl.fromTo(identityPhase,
-        { opacity: 0, y: 50 },
-        { opacity: 1, y: 0, duration: 1.2, ease: "power2.out" },
+      // AAKASH SHIFTS TO THE RIGHT (Anchor Position: no text across face!)
+      tl.to(characterScene, {
+        x: () => getAnchorRightX(),
+        scale: 1.02,
+        opacity: 1,
+        duration: 1.0,
+        ease: "power2.inOut"
+      }, 0.15);
+
+      // Studio light accompanies Aakash to the right
+      tl.to(radialLight, {
+        x: () => getAnchorRightX() * 0.75,
+        duration: 1.0,
+        ease: "power2.inOut"
+      }, 0.15);
+
+      // ----------------------------------------------------------------------
+      // STEP 2 (Section 09): "I DON'T FIT INTO ONE BOX." Sequential Reveal
+      // FIRST: I DON'T FIT (bottom-to-top mask)
+      // THEN: INTO ONE (previous moves up slightly, lower contrast)
+      // THEN: BOX. (BOX. becomes temporarily dominant)
+      // ----------------------------------------------------------------------
+      tl.to(identityPhase, { opacity: 1, duration: 0.1 }, 1.15);
+
+      // Line 1: I DON'T FIT
+      tl.fromTo(idLine1,
+        { y: '100%', opacity: 0 },
+        { y: '0%', opacity: 1, duration: 0.85, ease: 'power3.out' },
         1.2
       );
-      // Hold identity statement
-      tl.to(identityPhase, { opacity: 1, duration: 0.8 }, 2.4);
-      // Fade out identity statement
-      tl.to(identityPhase, { opacity: 0, y: -40, duration: 0.9, ease: "power2.in" }, 3.2);
 
-      // Step 4: Role 1 — MARKETER (Only ONE role dominates)
-      tl.fromTo(role1,
-        { opacity: 0, y: 45 },
-        { opacity: 1, y: 0, duration: 1.1, ease: "power2.out" },
-        4.1
+      // Line 2: INTO ONE
+      tl.fromTo(idLine2,
+        { y: '100%', opacity: 0 },
+        { y: '0%', opacity: 1, duration: 0.85, ease: 'power3.out' },
+        2.05
       );
-      tl.to(role1, { opacity: 1, duration: 0.8 }, 5.2);
-      tl.to(role1, { opacity: 0, y: -35, duration: 0.9, ease: "power2.in" }, 6.0);
+      // Line 1 moves up slightly and becomes lower contrast
+      tl.to(idLine1, {
+        y: '-14px',
+        opacity: 0.35,
+        duration: 0.75,
+        ease: 'power2.out'
+      }, 2.05);
 
-      // Role 2 — BRAND BUILDER
-      tl.fromTo(role2,
-        { opacity: 0, y: 45 },
-        { opacity: 1, y: 0, duration: 1.1, ease: "power2.out" },
-        6.9
+      // Line 3: BOX. (temporarily dominant)
+      tl.fromTo(idLine3,
+        { y: '100%', opacity: 0 },
+        { y: '0%', opacity: 1, duration: 0.85, ease: 'power3.out' },
+        2.9
       );
-      tl.to(role2, { opacity: 1, duration: 0.8 }, 8.0);
-      tl.to(role2, { opacity: 0, y: -35, duration: 0.9, ease: "power2.in" }, 8.8);
+      // Line 1 & Line 2 move up slightly
+      tl.to([idLine1, idLine2], {
+        y: '-26px',
+        duration: 0.75,
+        ease: 'power2.out'
+      }, 2.9);
+      tl.to(idLine2, {
+        opacity: 0.42,
+        duration: 0.75,
+        ease: 'power2.out'
+      }, 2.9);
 
-      // Role 3 — CREATOR
-      tl.fromTo(role3,
-        { opacity: 0, y: 45 },
-        { opacity: 1, y: 0, duration: 1.1, ease: "power2.out" },
-        9.7
-      );
-      tl.to(role3, { opacity: 1, duration: 0.8 }, 10.8);
-      tl.to(role3, { opacity: 0, y: -35, duration: 0.9, ease: "power2.in" }, 11.6);
+      // Hold dominant BOX. statement
+      tl.to(idLine3, { opacity: 1, duration: 0.7 }, 3.75);
 
-      // Role 4 — SPEAKER
-      tl.fromTo(role4,
-        { opacity: 0, y: 45 },
-        { opacity: 1, y: 0, duration: 1.1, ease: "power2.out" },
-        12.5
-      );
-      tl.to(role4, { opacity: 1, duration: 0.8 }, 13.6);
-      tl.to(role4, { opacity: 0, y: -35, duration: 0.9, ease: "power2.in" }, 14.4);
+      // Exit "I DON'T FIT INTO ONE BOX." with upward clip
+      tl.to([idLine1, idLine2, idLine3], {
+        y: '-105%',
+        opacity: 0,
+        duration: 0.8,
+        ease: 'power2.in'
+      }, 4.45);
+      tl.to(identityPhase, { opacity: 0, duration: 0.15 }, 5.15);
 
-      // Step 5: Transition into First Case Study (DIGI MARKETRIX)
-      tl.fromTo(workTransition,
-        { opacity: 0, y: 55, scale: 0.96 },
-        { opacity: 1, y: 0, scale: 1, duration: 1.2, ease: "power2.out" },
-        15.3
+      // ----------------------------------------------------------------------
+      // STEP 3 (Sections 10 & 11): ROLE MORPH SEQUENCE (Typography Reel System)
+      // MARKETER. -> STRATEGIST. -> CREATOR. -> SPEAKER.
+      // Outgoing word moves upward + clips away.
+      // Incoming word enters from below + clips into view.
+      // Aakash remains mostly stable on the right with subtle light shifts.
+      // ----------------------------------------------------------------------
+
+      // --- ROLE 01: MARKETER. ---
+      tl.to(role1, { opacity: 1, duration: 0.1 }, 5.35);
+      tl.fromTo(role1.querySelector('.role-pre-lead'),
+        { y: 14, opacity: 0 },
+        { y: 0, opacity: 1, duration: 0.55, ease: 'power2.out' },
+        5.4
       );
-      tl.to(workTransition, { opacity: 1, duration: 1.2 }, 16.5);
+      tl.fromTo(role1.querySelector('.role-huge-title'),
+        { y: '100%' },
+        { y: '0%', duration: 0.85, ease: 'power3.out' },
+        5.4
+      );
+      // Aakash: neutral warm studio light
+      tl.to(radialLight, {
+        y: 0,
+        scale: 1.0,
+        opacity: 0.6,
+        duration: 0.8
+      }, 5.4);
+      // Hold
+      tl.to(role1, { opacity: 1, duration: 0.65 }, 6.25);
+      // Outgoing clip
+      tl.to(role1.querySelector('.role-huge-title'), {
+        y: '-100%',
+        duration: 0.7,
+        ease: 'power2.in'
+      }, 6.9);
+      tl.to(role1.querySelector('.role-pre-lead'), {
+        opacity: 0,
+        y: -10,
+        duration: 0.45
+      }, 7.0);
+      tl.to(role1, { opacity: 0, duration: 0.1 }, 7.6);
+
+      // --- ROLE 02: STRATEGIST. ---
+      tl.to(role2, { opacity: 1, duration: 0.1 }, 7.65);
+      tl.fromTo(role2.querySelector('.role-pre-lead'),
+        { y: 14, opacity: 0 },
+        { y: 0, opacity: 1, duration: 0.55, ease: 'power2.out' },
+        7.7
+      );
+      tl.fromTo(role2.querySelector('.role-huge-title'),
+        { y: '100%' },
+        { y: '0%', duration: 0.85, ease: 'power3.out' },
+        7.7
+      );
+      // Aakash: light moves slightly higher
+      tl.to(radialLight, {
+        y: -30,
+        scale: 1.02,
+        opacity: 0.65,
+        duration: 0.8
+      }, 7.7);
+      tl.to(characterScene, {
+        x: () => getAnchorRightX() * 0.98,
+        duration: 0.8
+      }, 7.7);
+      // Hold
+      tl.to(role2, { opacity: 1, duration: 0.65 }, 8.55);
+      // Outgoing clip
+      tl.to(role2.querySelector('.role-huge-title'), {
+        y: '-100%',
+        duration: 0.7,
+        ease: 'power2.in'
+      }, 9.2);
+      tl.to(role2.querySelector('.role-pre-lead'), {
+        opacity: 0,
+        y: -10,
+        duration: 0.45
+      }, 9.3);
+      tl.to(role2, { opacity: 0, duration: 0.1 }, 9.9);
+
+      // --- ROLE 03: CREATOR. ---
+      tl.to(role3, { opacity: 1, duration: 0.1 }, 9.95);
+      tl.fromTo(role3.querySelector('.role-pre-lead'),
+        { y: 14, opacity: 0 },
+        { y: 0, opacity: 1, duration: 0.55, ease: 'power2.out' },
+        10.0
+      );
+      tl.fromTo(role3.querySelector('.role-huge-title'),
+        { y: '100%' },
+        { y: '0%', duration: 0.85, ease: 'power3.out' },
+        10.0
+      );
+      // Aakash: slightly broader atmospheric light
+      tl.to(radialLight, {
+        y: -10,
+        scale: 1.15,
+        opacity: 0.68,
+        duration: 0.8
+      }, 10.0);
+      tl.to(characterScene, {
+        x: () => getAnchorRightX() * 1.03,
+        duration: 0.8
+      }, 10.0);
+      // Hold
+      tl.to(role3, { opacity: 1, duration: 0.65 }, 10.85);
+      // Outgoing clip
+      tl.to(role3.querySelector('.role-huge-title'), {
+        y: '-100%',
+        duration: 0.7,
+        ease: 'power2.in'
+      }, 11.5);
+      tl.to(role3.querySelector('.role-pre-lead'), {
+        opacity: 0,
+        y: -10,
+        duration: 0.45
+      }, 11.6);
+      tl.to(role3, { opacity: 0, duration: 0.1 }, 12.2);
+
+      // --- ROLE 04: SPEAKER. ---
+      tl.to(role4, { opacity: 1, duration: 0.1 }, 12.25);
+      tl.fromTo(role4.querySelector('.role-pre-lead'),
+        { y: 14, opacity: 0 },
+        { y: 0, opacity: 1, duration: 0.55, ease: 'power2.out' },
+        12.3
+      );
+      tl.fromTo(role4.querySelector('.role-huge-title'),
+        { y: '100%' },
+        { y: '0%', duration: 0.85, ease: 'power3.out' },
+        12.3
+      );
+      // Aakash: subtle spotlight influence
+      tl.to(radialLight, {
+        y: -20,
+        scale: 0.92,
+        opacity: 0.76,
+        duration: 0.8
+      }, 12.3);
+      tl.to(characterScene, {
+        x: () => getAnchorRightX(),
+        duration: 0.8
+      }, 12.3);
+      // Hold
+      tl.to(role4, { opacity: 1, duration: 0.65 }, 13.15);
+      // Outgoing clip
+      tl.to(role4.querySelector('.role-huge-title'), {
+        y: '-100%',
+        duration: 0.7,
+        ease: 'power2.in'
+      }, 13.8);
+      tl.to(role4.querySelector('.role-pre-lead'), {
+        opacity: 0,
+        y: -10,
+        duration: 0.45
+      }, 13.9);
+      tl.to(role4, { opacity: 0, duration: 0.1 }, 14.5);
+
+      // ----------------------------------------------------------------------
+      // STEP 4 (Sections 12 & 13): TRANSITION INTO DIGI MARKETRIX
+      // As SPEAKER finishes:
+      // Aakash moves toward the far right (translateX: 0 -> 8-12vw further)
+      // scale: 1 -> 0.94, opacity: 1 -> 0.32, lighting dims
+      // DIGI MARKETRIX enters from LEFT:
+      // SELECTED WORK / 01 first, then DIGI, then MARKETRIX (~100ms later)
+      // Project title OWNS the screen. Aakash is faint continuity on far right.
+      // ----------------------------------------------------------------------
+      tl.to(characterScene, {
+        x: () => getAnchorRightX() * 1.5,
+        scale: 0.94,
+        opacity: 0.32,
+        duration: 1.1,
+        ease: 'power2.inOut'
+      }, 14.5);
+
+      tl.to(radialLight, {
+        opacity: 0.22,
+        scale: 0.85,
+        duration: 1.1,
+        ease: 'power2.inOut'
+      }, 14.5);
+
+      // DIGI MARKETRIX Enters Left
+      tl.to(workTransition, { opacity: 1, duration: 0.1 }, 14.55);
+
+      // SELECTED WORK / 01 first
+      tl.fromTo('#work-kicker',
+        { y: 18, opacity: 0 },
+        { y: 0, opacity: 1, duration: 0.6, ease: 'power2.out' },
+        14.65
+      );
+
+      // DIGI: upward mask reveal
+      tl.fromTo('#work-title-digi',
+        { y: '100%', opacity: 0 },
+        { y: '0%', opacity: 1, duration: 0.85, ease: 'power3.out' },
+        14.95
+      );
+
+      // MARKETRIX: upward mask reveal approx 100ms later
+      tl.fromTo('#work-title-marketrix',
+        { y: '100%', opacity: 0 },
+        { y: '0%', opacity: 1, duration: 0.85, ease: 'power3.out' },
+        15.10
+      );
+
+      // Descriptor subtitle slides up 10px while fading in
+      tl.fromTo('#work-subtitle',
+        { y: 14, opacity: 0 },
+        { y: 0, opacity: 1, duration: 0.7, ease: 'power2.out' },
+        15.45
+      );
+
+      // ----------------------------------------------------------------------
+      // STEP 5 (Section 14): TRANSITION INTO PROJECT CANVAS
+      // Aakash fades completely.
+      // One actual Digi Marketrix project image approaches from depth.
+      // Title slightly reduces/moves.
+      // Case study begins: PERSON -> IDENTITY -> WORK.
+      // ----------------------------------------------------------------------
+      tl.to(characterScene, {
+        opacity: 0,
+        duration: 0.8,
+        ease: 'power2.in'
+      }, 16.2);
+
+      tl.to(radialLight, {
+        opacity: 0,
+        duration: 0.8
+      }, 16.2);
+
+      tl.to(workTransition, {
+        scale: 0.94,
+        y: -18,
+        duration: 0.9,
+        ease: 'power2.out'
+      }, 16.4);
+
+      if (projectApproach) {
+        tl.fromTo(projectApproach,
+          { opacity: 0, scale: 0.85, y: 35 },
+          { opacity: 1, scale: 1.0, y: 0, duration: 1.15, ease: 'power3.out' },
+          16.4
+        );
+      }
+
+      // Rest / hold before smooth unpinning into case study section
+      tl.to(workTransition, { opacity: 1, duration: 0.8 }, 17.55);
     });
   }
 
-  // Mobile: Native Scroll with Elegant Element Reveals (No Pinning, No Glitches)
+  // Mobile: Native Scroll with Clean Element Reveals (No Pinning, No Jitter)
   if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
     const mm = gsap.matchMedia();
     mm.add("(max-width: 960px)", () => {
-      const identityPhase = document.getElementById('identity-box-phase');
-      if (identityPhase) {
-        gsap.fromTo(identityPhase,
-          { opacity: 0.25, y: 30 },
+      const identityLines = document.querySelectorAll('.identity-line');
+      identityLines.forEach((line) => {
+        gsap.fromTo(line,
+          { opacity: 0.3, y: 20 },
           {
             opacity: 1,
             y: 0,
-            duration: 0.8,
+            duration: 0.7,
             ease: 'power2.out',
             scrollTrigger: {
-              trigger: identityPhase,
-              start: 'top 85%',
-              end: 'top 55%',
-              scrub: 0.4
+              trigger: line,
+              start: 'top 88%',
+              end: 'top 65%',
+              scrub: 0.35
             }
           }
         );
-      }
+      });
 
       const roleSlides = document.querySelectorAll('.role-slide-item');
       roleSlides.forEach((slide) => {
         gsap.fromTo(slide,
-          { opacity: 0.3, y: 25 },
+          { opacity: 0.35, y: 22 },
           {
             opacity: 1,
             y: 0,
@@ -737,7 +1217,100 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // 5. Clipboard Helpers & Toast Notifications
+  // ==========================================================================
+  // 5. Professional Anchors & Atmospheric Hover Preview (Sections 15 & 16)
+  // Hover shifts title 6-10px horizontally.
+  // Large atmospheric preview appears on opposite side (Left viewport).
+  // ==========================================================================
+  function initAnchorPreviews() {
+    const anchorItems = document.querySelectorAll('.hero-anchor-item');
+    const previewStage = document.getElementById('hero-hover-preview');
+    const previewImg = document.getElementById('hover-preview-img');
+    const previewTitle = document.getElementById('hover-preview-title');
+    const previewSub = document.getElementById('hover-preview-sub');
+    const previewKicker = document.getElementById('hover-preview-kicker');
+
+    if (!anchorItems.length || !previewStage) return;
+
+    const isDesktop = () => window.innerWidth > 960 && !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    anchorItems.forEach((item) => {
+      item.addEventListener('mouseenter', () => {
+        if (!isDesktop() || CharacterController.isEntrancePlaying) return;
+
+        // Shift title horizontally ~8px inward
+        const titleEl = item.querySelector('.anchor-title');
+        if (titleEl) {
+          titleEl.style.transform = 'translateX(-8px)';
+        }
+
+        // Highlight this item and recede siblings
+        anchorItems.forEach(sib => {
+          const line = sib.querySelector('.anchor-line');
+          if (sib === item) {
+            sib.classList.add('active');
+            sib.classList.remove('receded');
+            if (line) line.style.transform = 'scaleX(1)';
+          } else {
+            sib.classList.remove('active');
+            sib.classList.add('receded');
+            if (line) line.style.transform = 'scaleX(0.35)';
+          }
+        });
+
+        // Update preview content from data attributes
+        const previewSrc = item.getAttribute('data-preview');
+        const titleText = item.getAttribute('data-title');
+        const subText = item.getAttribute('data-sub');
+        const kickerText = item.getAttribute('data-kicker');
+
+        if (previewImg && previewSrc) previewImg.src = previewSrc;
+        if (previewTitle && titleText) previewTitle.textContent = titleText;
+        if (previewSub && subText) previewSub.textContent = subText;
+        if (previewKicker && kickerText) previewKicker.textContent = kickerText;
+
+        // Reveal atmospheric preview card on opposite side
+        previewStage.classList.add('active');
+      });
+
+      item.addEventListener('mouseleave', () => {
+        if (!isDesktop()) return;
+
+        const titleEl = item.querySelector('.anchor-title');
+        if (titleEl) {
+          titleEl.style.transform = 'none';
+        }
+
+        // Reset anchors: 01 active, others normal
+        anchorItems.forEach((sib, sIdx) => {
+          sib.classList.remove('receded');
+          const line = sib.querySelector('.anchor-line');
+          if (sIdx === 0) {
+            sib.classList.add('active');
+            if (line) line.style.transform = 'scaleX(1)';
+          } else {
+            sib.classList.remove('active');
+            if (line) line.style.transform = 'scaleX(0)';
+          }
+        });
+
+        // Fade out atmospheric preview card
+        previewStage.classList.remove('active');
+      });
+    });
+
+    // Subtle pointer parallax response on the atmospheric preview card
+    window.addEventListener('mousemove', (e) => {
+      if (!isDesktop() || !previewStage.classList.contains('active')) return;
+      const normX = (e.clientX / window.innerWidth) * 2 - 1;
+      const normY = (e.clientY / window.innerHeight) * 2 - 1;
+      previewStage.style.transform = `translate(calc(-50% + ${(normX * 8).toFixed(1)}px), calc(-50% + ${(normY * 6).toFixed(1)}px)) scale(1)`;
+    }, { passive: true });
+  }
+
+  initAnchorPreviews();
+
+  // 6. Clipboard Helpers & Toast Notifications
   const toast = document.getElementById('toast');
   const directEmail = 'itzaakash15@gmail.com';
   const directPhone = '8590637715';

@@ -233,17 +233,44 @@
   margin-left: auto;
 }
 
-/* Identity Tags */
+/* Identity Tags with Directional Reveals */
 .hero-tag-cluster {
   display: inline-flex;
   align-items: center;
   gap: 0.55rem;
   margin-bottom: 1.15rem;
-  padding: 0.35rem 0.85rem;
-  background: rgba(255, 255, 255, 0.02);
+  padding: 0.38rem 0.95rem;
+  background: rgba(255, 255, 255, 0.025);
   border: 1px solid var(--border-subtle);
   border-radius: 999px;
+  position: relative;
   will-change: transform, opacity;
+}
+
+.tag-accent-line {
+  display: block;
+  width: 18px;
+  height: 1.5px;
+  background: var(--accent-champagne);
+  transform: scaleX(0);
+  will-change: transform;
+}
+
+.tag-accent-line-left {
+  transform-origin: left center;
+  margin-right: 0.2rem;
+}
+
+.tag-accent-line-right {
+  transform-origin: right center;
+  margin-left: 0.2rem;
+}
+
+.tag-reveal-wrap {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  overflow: hidden;
 }
 
 .poster-tag {
@@ -253,6 +280,8 @@
   letter-spacing: 0.18em;
   text-transform: uppercase;
   color: var(--accent-champagne);
+  display: inline-block;
+  will-change: transform, clip-path, opacity;
 }
 
 .poster-tag-separator {
@@ -405,25 +434,38 @@
 .hero-anchors-stream {
   display: flex;
   flex-direction: column;
-  gap: 1.15rem;
+  gap: 1.25rem;
   width: 100%;
-  max-width: 320px;
+  max-width: 340px;
   will-change: transform, opacity;
+  position: relative;
+  z-index: 6;
 }
 
 .hero-anchor-item {
   display: flex;
-  align-items: baseline;
-  gap: 0.85rem;
-  justify-content: flex-end;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.35rem;
   text-align: right;
-  border-bottom: 1px solid var(--border-subtle);
-  padding-bottom: 0.75rem;
-  transition: border-color 0.25s ease;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  padding-bottom: 0.85rem;
+  cursor: pointer;
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease, border-color 0.3s ease;
+  will-change: transform, opacity;
 }
 
 .hero-anchor-item:hover {
-  border-color: rgba(216, 195, 165, 0.4);
+  border-color: rgba(216, 195, 165, 0.45);
+  transform: translateX(-8px);
+}
+
+.anchor-step-row {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.65rem;
+  width: 100%;
 }
 
 .anchor-index {
@@ -434,18 +476,47 @@
   letter-spacing: 0.12em;
 }
 
+.anchor-line {
+  display: block;
+  width: 32px;
+  height: 1px;
+  background: linear-gradient(270deg, var(--accent-champagne) 0%, rgba(216, 195, 165, 0.15) 100%);
+  transform: scaleX(0);
+  transform-origin: right center;
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), background 0.3s ease;
+  will-change: transform;
+}
+
+.hero-anchor-item.active .anchor-line {
+  transform: scaleX(1);
+}
+
 .anchor-body {
   display: flex;
   flex-direction: column;
-  gap: 0.15rem;
+  align-items: flex-end;
+  gap: 0.2rem;
+}
+
+.anchor-title-wrap {
+  overflow: hidden;
+  display: block;
 }
 
 .anchor-title {
   font-family: var(--font-sans);
-  font-size: 0.92rem;
+  font-size: 0.95rem;
   font-weight: 700;
   color: #ffffff;
   letter-spacing: -0.01em;
+  display: block;
+  transition: color 0.3s ease, transform 0.3s ease;
+  will-change: transform, clip-path;
+}
+
+.anchor-sub-wrap {
+  overflow: hidden;
+  display: block;
 }
 
 .anchor-sub {
@@ -454,43 +525,173 @@
   letter-spacing: 0.1em;
   color: var(--text-muted);
   text-transform: uppercase;
-}
-
-/* Phase 2: "I DON'T FIT INTO ONE BOX." Statement */
-.identity-box-phase {
-  position: absolute;
-  top: 50%;
-  left: 0;
-  transform: translateY(-50%);
-  width: 100%;
-  max-width: 720px;
-  opacity: 0;
-  pointer-events: none;
-  z-index: 7;
+  display: block;
+  transition: color 0.3s ease;
   will-change: transform, opacity;
 }
 
-.identity-huge-statement {
+.hero-anchor-item.active .anchor-title {
+  color: #ffffff;
+}
+
+.hero-anchor-item.active .anchor-sub {
+  color: var(--accent-champagne);
+}
+
+.hero-anchor-item.receded {
+  opacity: 0.36;
+}
+
+.hero-anchor-item.receded:hover {
+  opacity: 0.85;
+}
+
+/* Atmospheric Large Project Hover Preview (Opposite Side: Left Viewport) */
+.hero-hover-preview-stage {
+  position: absolute;
+  left: clamp(2rem, 5.5vw, 6.5rem);
+  top: 48%;
+  transform: translateY(-50%) scale(0.96);
+  width: clamp(340px, 32vw, 470px);
+  border-radius: 14px;
+  overflow: hidden;
+  background: rgba(12, 12, 16, 0.88);
+  border: 1px solid rgba(216, 195, 165, 0.22);
+  box-shadow: 0 35px 80px rgba(0, 0, 0, 0.85), 0 0 50px rgba(216, 195, 165, 0.08);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  opacity: 0;
+  pointer-events: none;
+  z-index: 10;
+  transition: opacity 0.35s ease, transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform, opacity;
+}
+
+.hero-hover-preview-stage.active {
+  opacity: 1;
+  transform: translateY(-50%) scale(1);
+  pointer-events: auto;
+}
+
+.hover-preview-media {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+}
+
+.hover-preview-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.hero-hover-preview-stage:hover .hover-preview-img {
+  transform: scale(1.04);
+}
+
+.hover-preview-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, transparent 40%, rgba(10, 10, 12, 0.94) 100%);
+  pointer-events: none;
+}
+
+.hover-preview-meta {
+  padding: 1.25rem 1.45rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.hover-preview-kicker {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  color: var(--accent-champagne);
+  text-transform: uppercase;
+}
+
+.hover-preview-title {
   font-family: var(--font-sans);
-  font-size: clamp(4rem, 9.5vw, 9.8rem);
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: #ffffff;
+  letter-spacing: -0.02em;
+  margin: 0;
+}
+
+.hover-preview-sub {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin: 0;
+  letter-spacing: 0.06em;
+}
+
+/* ==========================================================================
+   SCROLL PHASE 2: "I DON'T FIT INTO ONE BOX."
+   CORE PRINCIPLE: LEFT 60–65% for typography. RIGHT 35–40% for Aakash.
+   Typography moves AROUND him, never across his face!
+   ========================================================================== */
+.identity-box-phase {
+  position: absolute;
+  top: 50%;
+  left: clamp(2rem, 5.5vw, 6.5rem);
+  transform: translateY(-50%);
+  width: clamp(380px, 58vw, 780px);
+  max-width: 58vw;
+  text-align: left;
+  opacity: 0;
+  pointer-events: none;
+  z-index: 8;
+  will-change: transform, opacity;
+}
+
+.identity-line-mask {
+  overflow: hidden;
+  display: block;
+  margin-bottom: 0.2rem;
+}
+
+.identity-line {
+  display: block;
+  font-family: var(--font-sans);
+  font-size: clamp(3.8rem, 8.2vw, 8.6rem);
   font-weight: 900;
-  line-height: 0.90;
+  line-height: 0.91;
   letter-spacing: -0.045em;
   text-transform: uppercase;
   color: #ffffff;
   margin: 0;
+  will-change: transform, clip-path, opacity;
 }
 
-/* Phase 3: Sequential Dominant Roles (One at a time) */
+.identity-line.dimmed {
+  opacity: 0.35;
+}
+
+.identity-dot {
+  color: var(--accent-champagne);
+}
+
+/* ==========================================================================
+   SCROLL PHASE 3: SEQUENTIAL DOMINANT ROLES (Typography Reel System)
+   Confined strictly to LEFT 60–65% composition.
+   ========================================================================== */
 .role-sequence-phase {
   position: absolute;
   top: 50%;
-  left: 0;
+  left: clamp(2rem, 5.5vw, 6.5rem);
   transform: translateY(-50%);
-  width: 100%;
-  max-width: 760px;
+  width: clamp(380px, 58vw, 780px);
+  max-width: 58vw;
+  text-align: left;
   pointer-events: none;
-  z-index: 4;
+  z-index: 8;
 }
 
 .role-slide-item {
@@ -499,75 +700,148 @@
   left: 0;
   width: 100%;
   opacity: 0;
-  transform: translateY(30px);
   will-change: transform, opacity;
 }
 
 .role-pre-lead {
   font-family: var(--font-mono);
-  font-size: clamp(0.85rem, 1.6vw, 1.25rem);
-  font-weight: 600;
+  font-size: clamp(0.78rem, 1.3vw, 0.95rem);
+  font-weight: 700;
   letter-spacing: 0.22em;
   text-transform: uppercase;
-  color: var(--accent-gold);
+  color: var(--accent-champagne);
   display: block;
   margin-bottom: 0.75rem;
 }
 
+.role-title-reel-mask {
+  overflow: hidden;
+  height: clamp(4.2rem, 9.5vw, 9.2rem);
+  display: flex;
+  align-items: center;
+}
+
 .role-huge-title {
   font-family: var(--font-sans);
-  font-size: clamp(3.6rem, 8.8vw, 8.5rem);
+  font-size: clamp(3.8rem, 8.2vw, 8.6rem);
   font-weight: 900;
   line-height: 0.88;
   letter-spacing: -0.045em;
   text-transform: uppercase;
   color: #ffffff;
   margin: 0;
+  will-change: transform, clip-path, opacity;
 }
 
-/* Phase 4: Transition into Selected Work */
+/* ==========================================================================
+   SCROLL PHASE 4: TRANSITION INTO SELECTED WORK (DIGI MARKETRIX)
+   Enters from LEFT and OWNS the screen.
+   ========================================================================== */
 .work-transition-phase {
   position: absolute;
   top: 50%;
-  left: 0;
+  left: clamp(2rem, 5.5vw, 6.5rem);
   transform: translateY(-50%);
-  width: 100%;
-  max-width: 720px;
+  width: clamp(380px, 58vw, 780px);
+  max-width: 58vw;
+  text-align: left;
   opacity: 0;
   pointer-events: none;
-  z-index: 5;
+  z-index: 8;
   will-change: transform, opacity;
+}
+
+.work-transition-kicker-mask {
+  overflow: hidden;
+  display: block;
+  margin-bottom: 0.85rem;
 }
 
 .work-transition-label {
   font-family: var(--font-mono);
   font-size: clamp(0.75rem, 1.2vw, 0.875rem);
-  font-weight: 600;
+  font-weight: 700;
   letter-spacing: 0.22em;
   text-transform: uppercase;
-  color: var(--accent-light);
+  color: var(--accent-champagne);
   display: block;
-  margin-bottom: 1rem;
+  will-change: transform, opacity;
 }
 
-.work-transition-title {
+.work-title-mask-line {
+  overflow: hidden;
+  display: block;
+}
+
+.work-title-word {
+  display: block;
   font-family: var(--font-sans);
-  font-size: clamp(4.5rem, 11vw, 10.5rem);
+  font-size: clamp(4.5rem, 10.5vw, 10.5rem);
   font-weight: 900;
-  line-height: 0.85;
+  line-height: 0.86;
   letter-spacing: -0.05em;
   text-transform: uppercase;
   color: #ffffff;
-  margin-bottom: 1.25rem;
+  margin: 0;
+  will-change: transform, opacity;
+}
+
+.work-sub-mask-wrap {
+  overflow: hidden;
+  display: block;
+  margin-top: 1.25rem;
 }
 
 .work-transition-subtitle {
   font-family: var(--font-mono);
-  font-size: clamp(0.9rem, 1.6vw, 1.2rem);
+  font-size: clamp(0.85rem, 1.4vw, 1.15rem);
   font-weight: 500;
   letter-spacing: 0.08em;
   color: var(--accent-champagne);
   margin: 0;
+  will-change: transform, opacity;
+}
+
+/* ==========================================================================
+   SCROLL PHASE 5: PROJECT CANVAS APPROACH
+   Project screenshot approaches from depth into the case study.
+   ========================================================================== */
+.hero-project-approach-canvas {
+  position: absolute;
+  top: 50%;
+  right: clamp(2rem, 5.5vw, 7rem);
+  transform: translateY(-50%) scale(0.88);
+  width: clamp(360px, 40vw, 620px);
+  border-radius: 16px;
+  overflow: hidden;
+  opacity: 0;
+  pointer-events: none;
+  z-index: 7;
+  box-shadow: 0 35px 80px rgba(0, 0, 0, 0.85), 0 0 50px rgba(216, 195, 165, 0.12);
+  border: 1px solid rgba(216, 195, 165, 0.28);
+  will-change: transform, opacity;
+}
+
+.project-approach-frame {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+}
+
+.project-approach-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+}
+
+.project-approach-glow {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 50%, rgba(216, 195, 165, 0.08) 0%, transparent 70%);
+  pointer-events: none;
 }
 
 /* CharacterScene: 10-15% visual increase, anchored to bottom */
@@ -2305,8 +2579,19 @@ textarea.form-input-clean {
     width: 100%;
   }
   .hero-anchor-item {
-    justify-content: center;
+    align-items: center;
     text-align: center;
+    padding-bottom: 1rem;
+  }
+  .anchor-step-row {
+    justify-content: center;
+  }
+  .anchor-body {
+    align-items: center;
+  }
+  .hero-hover-preview-stage,
+  .hero-project-approach-canvas {
+    display: none !important;
   }
   .identity-box-phase {
     order: 3;
@@ -2317,10 +2602,14 @@ textarea.form-input-clean {
     margin-bottom: 3.5rem;
     padding-top: 2.5rem;
     border-top: 1px solid var(--border-subtle);
+    max-width: 100%;
+    width: 100%;
+    text-align: center;
   }
-  .identity-huge-statement {
-    font-size: clamp(2.6rem, 10vw, 4.5rem);
+  .identity-line {
+    font-size: clamp(2.4rem, 9.5vw, 4.2rem);
     line-height: 0.94;
+    text-align: center;
   }
   .role-sequence-phase {
     order: 4;
@@ -2330,6 +2619,9 @@ textarea.form-input-clean {
     display: flex;
     flex-direction: column;
     margin-bottom: 3.5rem;
+    max-width: 100%;
+    width: 100%;
+    text-align: center;
   }
   .role-slide-item {
     position: static;
@@ -2345,10 +2637,17 @@ textarea.form-input-clean {
     font-size: 0.8125rem;
     letter-spacing: 0.16em;
     margin-bottom: 0.4rem;
+    text-align: center;
+  }
+  .role-title-reel-mask {
+    height: auto;
+    overflow: visible;
+    justify-content: center;
   }
   .role-huge-title {
     font-size: clamp(2.2rem, 8.5vw, 3.8rem);
     line-height: 0.95;
+    text-align: center;
   }
   .work-transition-phase {
     order: 5;
@@ -2358,18 +2657,24 @@ textarea.form-input-clean {
     pointer-events: auto;
     padding-block: 2.75rem 1.5rem;
     border-top: 1px solid var(--border-subtle);
+    max-width: 100%;
+    width: 100%;
+    text-align: center;
   }
   .work-transition-label {
     font-size: 0.75rem;
     letter-spacing: 0.16em;
     margin-bottom: 0.75rem;
+    text-align: center;
   }
-  .work-transition-title {
+  .work-title-word {
     font-size: clamp(3.2rem, 12vw, 5.5rem);
     line-height: 0.9;
+    text-align: center;
   }
   .work-transition-subtitle {
     font-size: 0.9rem;
+    text-align: center;
   }
 }
 
