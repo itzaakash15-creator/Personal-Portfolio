@@ -1350,146 +1350,444 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // 5. Interactive Proof Modal Lightbox Engine
+  // 5. Interactive Proof Modal Lightbox Engine (ProofViewer / MediaViewer)
   const proofModal = document.getElementById('proof-modal');
-  const proofModalTitle = document.getElementById('proof-modal-title');
-  const proofModalBody = document.getElementById('proof-modal-body');
+  const proofModalBackdrop = document.getElementById('proof-modal-backdrop');
   const proofModalClose = document.getElementById('proof-modal-close');
+  const proofModalPrev = document.getElementById('proof-modal-prev');
+  const proofModalNext = document.getElementById('proof-modal-next');
+  const proofModalBadge = document.getElementById('proof-modal-badge');
+  const proofModalCounter = document.getElementById('proof-modal-counter');
+  const proofModalMedia = document.getElementById('proof-modal-media');
+  const proofModalMetaCategory = document.getElementById('proof-modal-meta-category');
+  const proofModalMetaPeriod = document.getElementById('proof-modal-meta-period');
+  const proofModalTitle = document.getElementById('proof-modal-title');
+  const proofModalDesc = document.getElementById('proof-modal-desc');
+  const proofModalActions = document.getElementById('proof-modal-actions');
 
   const proofData = {
     'digi-cert': {
       title: 'Digi Marketrix — Certified Internship Completion',
-      category: 'PROFESSIONAL CREDENTIAL',
+      category: 'OFFICIAL CREDENTIAL',
       period: 'May 1, 2026 — July 1, 2026 // Tuticorin',
-      image: 'assets/digi_marketrix_cert.jpg',
-      desc: 'Official credential verifying completion of full-time digital marketing & creative internship at Digi Marketrix. Covered end-to-end commercial scripting, videography, on-location client shoots, and post-production video editing for regional businesses and personal brands.',
-      linkText: 'Explore Experience Chapter →',
-      linkUrl: 'experience.html'
+      type: 'image',
+      image: 'assets/proofs_optimized/digi_marketrix_certificate.jpg',
+      desc: 'Official internship completion certificate issued and signed by Antony Joyson Fernando, CEO of Digi Marketrix. Formally verifies full-time agency experience in commercial scripting, on-location videography, and post-production video editing.',
+      linkText: 'View Digi Marketrix LinkedIn ↗',
+      linkUrl: 'https://www.linkedin.com/company/digimarketrix/'
     },
-    'digi-shoots': {
-      title: 'Digi Marketrix — On-Location Client Production Media',
-      category: 'WORKING MEDIA & PRODUCTION',
-      period: 'Commercial Shoots // Retail, Automotive & Food',
-      image: 'assets/experience_digi_marketrix.jpg',
-      desc: 'Field execution archive: directed on-location commercial shoots using gimbal stabilization, directional audio recording, ambient lighting rigs, and talent directing. Produced high-tempo short-form content designed for audience retention.',
-      linkText: 'View Selected Work →',
-      linkUrl: 'work.html#digi-marketrix'
+    'digi-office': {
+      title: 'Digi Marketrix — Agency Studio & 3D Logo Wall',
+      category: 'AGENCY ENVIRONMENT',
+      period: 'Thoothukudi Studio // Agency Headquarters',
+      type: 'image',
+      image: 'assets/proofs_optimized/digi_marketrix_office.jpg',
+      desc: 'The physical workplace at Digi Marketrix featuring the illuminated 3D logo wall. The creative operations hub where commercial campaigns, client pitches, and video production strategies were formulated.',
+      linkText: 'Explore Agency LinkedIn ↗',
+      linkUrl: 'https://www.linkedin.com/company/digimarketrix/'
     },
-    'u6nick-analytics': {
-      title: 'U6NICK — Editorial Model Personal Branding Case Study',
-      category: 'CASE STUDY & METRICS',
-      period: '2026 // Thoothukudi',
-      image: 'assets/project_fashion.jpg',
-      desc: 'Executed complete digital positioning for an editorial model. Formulated script hooks, visual aesthetic, content planning, and profile optimization. Resulted in high-performing viral reels and ~3,000 engaged followers verified by profile analytics and client review.',
-      linkText: 'Deep Dive U6NICK Case Study →',
-      linkUrl: 'work.html#u6nick'
+    'digi-working': {
+      title: 'Digi Marketrix — In-House Editing & Timeline Workflow',
+      category: 'POST-PRODUCTION',
+      period: 'Premiere Pro Timeline // Video Editing',
+      type: 'image',
+      image: 'assets/proofs_optimized/digi_marketrix_working.jpg',
+      desc: 'Behind-the-scenes photograph capturing commercial video post-production in Adobe Premiere Pro at Digi Marketrix. Demonstrates multi-layer timeline cutting, rhythm pacing, sound effects, and color grading.',
+      linkText: 'Digi Marketrix on LinkedIn ↗',
+      linkUrl: 'https://www.linkedin.com/company/digimarketrix/'
     },
-    'life-reel': {
-      title: 'Life With Aakash — 59K Peak Reel Showcase',
+    'digi-gimbal': {
+      title: 'Digi Marketrix — On-Location Gimbal Videography',
+      category: 'FIELD PRODUCTION',
+      period: '3-Axis Gimbal Stabilization // Commercial Shoot',
+      type: 'image',
+      image: 'assets/proofs_optimized/digi_marketrix_gimbal_shoot.jpg',
+      desc: 'On-location videography shoot utilizing a 3-axis motorized gimbal for dynamic, fluid commercial camera movement across retail, hospitality, and automotive client spaces.',
+      linkText: 'Digi Marketrix on LinkedIn ↗',
+      linkUrl: 'https://www.linkedin.com/company/digimarketrix/'
+    },
+    'digi-video-shooting': {
+      title: 'Digi Marketrix — Shooting to Uploading Production Reel',
+      category: 'PRODUCTION REEL',
+      period: 'End-to-End Workflow // Shoot to Post',
+      type: 'video',
+      video: 'assets/proofs_optimized/digi_work_shooting_uploading.mp4',
+      poster: 'assets/proofs_optimized/poster_digi_shooting_uploading.jpg',
+      desc: 'Full workflow record demonstrating the complete creative cycle: storyboard planning, field camera operation, post-production timeline editing, client review, and final digital distribution.',
+      linkText: 'Digi Marketrix on LinkedIn ↗',
+      linkUrl: 'https://www.linkedin.com/company/digimarketrix/'
+    },
+    'salemrr-bts': {
+      title: 'Salem RR Biriyani — Commercial Shoot Production',
+      category: 'CLIENT CAMPAIGN',
+      period: 'Thoothukudi // Food & Hospitality',
+      type: 'image',
+      image: 'assets/proofs_optimized/salemrr_shoot_bts.jpg',
+      desc: 'Behind-the-scenes photography during the commercial video shoot for Salem RR Biriyani. Handled on-camera VJ presentation, culinary lighting, and close-up food videography.',
+      linkText: 'Watch Reel on Instagram ↗',
+      linkUrl: 'https://www.instagram.com/reel/DahRlLUSNZ0/'
+    },
+    'salemrr-food': {
+      title: 'Salem RR Biriyani — Commercial Food Promotion Reel',
+      category: 'COMMERCIAL REEL',
+      period: 'VJ, Scripting & Editing // Salem RR Biriyani',
+      type: 'image',
+      image: 'assets/proofs_optimized/salemrr_reel_2848.jpg',
+      desc: 'Featured commercial reel frame from Salem RR Biriyani campaign. Seamlessly combined dynamic culinary closeups, pacing, and engaging on-screen VJ storytelling.',
+      linkText: 'Watch Reel on Instagram ↗',
+      linkUrl: 'https://www.instagram.com/reel/DahRlLUSNZ0/'
+    },
+    'talentrix-reel': {
+      title: 'Talentrix — Sub-Brand Influencer Marketing Reel',
+      category: 'SUB-BRAND INITIATIVE',
+      period: 'Digi Marketrix Influencer Division',
+      type: 'image',
+      image: 'assets/proofs_optimized/salemrr_reel_2870.jpg',
+      desc: 'Commercial reel produced for Talentrix (@talentrix_), the specialized talent & influencer marketing division under Digi Marketrix, connecting brands with high-retention regional creators.',
+      linkText: 'View Reel on Instagram ↗',
+      linkUrl: 'https://www.instagram.com/reel/DYhJlysI9Nr/'
+    },
+    'purple-bts': {
+      title: 'Purple Collection — Personal Branding Shoot BTS',
+      category: 'PERSONAL BRANDING',
+      period: 'Client Production // Fashion & Retail',
+      type: 'image',
+      image: 'assets/proofs_optimized/purple_collection_bts_large.jpg',
+      desc: 'On-location personal branding direction and video capture for Purple Collection. Establishing premium editorial tone, camera framing, and scripted talking points.',
+      linkText: 'Visit Client Instagram ↗',
+      linkUrl: 'https://www.instagram.com/mr._aku_vlogs/'
+    },
+    'purple-video': {
+      title: 'Purple Collection — Complete Client Campaign Video',
+      category: 'CLIENT VIDEO',
+      period: 'Direction, Filming & Editing by Aakash',
+      type: 'video',
+      video: 'assets/proofs_optimized/personal_branding_video.mp4',
+      poster: 'assets/proofs_optimized/poster_personal_branding_video.jpg',
+      desc: 'Full promotional video conceived, filmed, and edited for Purple Collection. Employs rhythmic pacing, music synchronization, and compelling visual hooks.',
+      linkText: 'Visit Client Instagram ↗',
+      linkUrl: 'https://www.instagram.com/mr._aku_vlogs/'
+    },
+    'purple-growth': {
+      title: 'Purple Collection — Verified +3,000 Reach Growth',
+      category: 'ANALYTICS & RESULTS',
+      period: 'Meta Business Suite Analytics Screenshot',
+      type: 'image',
+      image: 'assets/proofs_optimized/purple_collection_growth_3000.jpg',
+      desc: 'Verified platform metrics showing a 3,000+ follower and impression increase following the targeted personal branding content release for the client.',
+      linkText: 'Visit Client Profile ↗',
+      linkUrl: 'https://www.instagram.com/mr._aku_vlogs/'
+    },
+    'jayashakthi-site': {
+      title: 'Jayashakthi Tours & Travels — Commercial Web Platform',
+      category: 'WEB ENGINEERING',
+      period: 'Live Production Deployment // Responsive Architecture',
+      type: 'image',
+      image: 'assets/proofs_optimized/jayashakthi_website.jpg',
+      desc: 'Production commercial web portal built for Jayashakthi Tours & Travels, featuring responsive fleet showcase, inquiry workflows, and administrative management.',
+      linkText: 'Visit Live Website ↗',
+      linkUrl: 'https://www.jayashakthitoursandtravels.com/'
+    },
+    'tech-jayashakthi': {
+      title: 'Jayashakthi Tours & Travels — Full-Stack Deployment',
+      category: 'WEB ENGINEERING',
+      period: 'Deployed Commercial Platform',
+      type: 'image',
+      image: 'assets/proofs_optimized/jayashakthi_website.jpg',
+      desc: 'Complete commercial website deployed for regional tour operator, engineered with lightweight vanilla stack, fast page load speeds, and intuitive booking inquiries.',
+      linkText: 'Visit Live Website ↗',
+      linkUrl: 'https://www.jayashakthitoursandtravels.com/'
+    },
+    'chinnadurai-scripting': {
+      title: 'Chinnadurai Textiles — Commercial Scripting Document',
+      category: 'SCRIPTING & STRATEGY',
+      period: 'Pre-Production Concept & Script',
+      type: 'image',
+      image: 'assets/proofs_optimized/chinnadurai_scripting.jpg',
+      desc: 'Pre-production concept and script notes for retail commercial content. Outlined visual hooks, sequence transitions, and promotional call-to-actions.',
+      linkText: 'Explore Selected Work ↗',
+      linkUrl: '#other-work'
+    },
+    'chinnadurai-retention': {
+      title: 'Chinnadurai Textiles — Audience Retention Analytics',
+      category: 'RETENTION ANALYTICS',
+      period: '10K–15K Organic Views // Non-Paid',
+      type: 'image',
+      image: 'assets/proofs_optimized/chinnadurai_retention.jpg',
+      desc: 'Analytics graph demonstrating sustained organic viewership and high watch time for Chinnadurai Textiles video campaigns, generated without paid ad spend.',
+      linkText: 'Explore Selected Work ↗',
+      linkUrl: '#other-work'
+    },
+    'vedha-rice': {
+      title: 'Vedha Rice — Commercial VJ Reel Frame',
+      category: 'BRAND PROMOTION',
+      period: 'Commercial VJ & Scripting // FMCG',
+      type: 'image',
+      image: 'assets/proofs_optimized/vedha_rice_vj.jpg',
+      desc: 'On-screen commercial presentation for Vedha Rice, delivering clear brand value, quality differentiation, and engaging regional consumer connection.',
+      linkText: 'Explore Selected Work ↗',
+      linkUrl: '#other-work'
+    },
+    'lwa-views': {
+      title: 'Life With Aakash — 59K Peak Viewership Analytics',
+      category: 'ORGANIC METRICS',
+      period: '59.1K Impressions // Organic Audience Retention',
+      type: 'image',
+      image: 'assets/proofs_optimized/lwa_organic_views.jpg',
+      desc: 'Verified platform insights displaying 59.1K organic views on Life With Aakash motivational reel, proving hook retention and viral distribution mechanics.',
+      linkText: 'Visit @life.with_aakash ↗',
+      linkUrl: 'https://www.instagram.com/life.with_aakash?stkn=MXcwa2ZraGllYXBuOA=='
+    },
+    'lwa-profile': {
+      title: 'Life With Aakash — Official Instagram Profile',
       category: 'CREATOR PLATFORM',
-      period: '59K Views // 17 Published Reels // 453 Followers',
-      image: 'assets/life_with_aakash.jpg',
-      desc: 'Original platform focused on life lessons, motivation, and storytelling. Proved short-form viral hook mechanics organically with a top reel reaching 59,000 views. Earned regional recognition for informative content.',
-      linkText: 'Visit @life.with_aakash on Instagram ↗',
-      linkUrl: 'https://www.instagram.com/life.with_aakash/'
+      period: '@life.with_aakash // Motivational Content',
+      type: 'image',
+      image: 'assets/proofs_optimized/lwa_page.jpg',
+      desc: 'Dedicated personal growth and motivational communication platform. Features original reflections, spoken-word perspectives, and life mindset lessons.',
+      linkText: 'Visit @life.with_aakash ↗',
+      linkUrl: 'https://www.instagram.com/life.with_aakash?stkn=MXcwa2ZraGllYXBuOA=='
     },
-    'mraku-archive': {
-      title: 'Mr Aku Vlogs — Foundational Creator Archive',
-      category: 'CREATOR FOUNDATION',
-      period: 'YouTube (2020) & Instagram (2023) // 2,177 Verified Followers',
-      image: 'assets/mraku_vlogs.jpg',
-      desc: 'Where the journey started in 2020. Explored videography pacing, local food documentation, brand promotion videos, and creator collaborations. Built 2,177 verified Instagram followers, establishing the discipline that led directly into commercial digital marketing.',
-      linkText: 'Explore Journey Timeline →',
-      linkUrl: 'journey.html'
+    'lwa-feedback': {
+      title: 'Life With Aakash — Community Direct Feedback & DMs',
+      category: 'AUDIENCE TRUST',
+      period: 'Verified Direct Messages & Viewer Feedback',
+      type: 'image',
+      image: 'assets/proofs_optimized/lwa_congrats_IMG_2888.jpg',
+      desc: 'Direct responses and messages from viewers appreciating the clarity, motivation, and practical mindset advice shared through Life With Aakash videos.',
+      linkText: 'Visit @life.with_aakash ↗',
+      linkUrl: 'https://www.instagram.com/life.with_aakash?stkn=MXcwa2ZraGllYXBuOA=='
+    },
+    'award-business-excellence': {
+      title: 'Twin Heart Business Excellence Award',
+      category: 'VERIFIED RECOGNITION',
+      period: 'Stage Presentation // Excellence Trophy & Certificate',
+      type: 'image',
+      image: 'assets/proofs_optimized/award_1_business_excellence.jpg',
+      desc: 'Prestigious Twin Heart Business Excellence Award presented on stage for outstanding contribution in digital marketing, brand promotion, and creative execution.',
+      linkText: 'Explore Journey Timeline ↗',
+      linkUrl: '#journey'
+    },
+    'award-talent-competition': {
+      title: 'State Level Talent Competition 2025 Award',
+      category: 'STAGE HONORS',
+      period: '2025 // State Level Recognition',
+      type: 'image',
+      image: 'assets/proofs_optimized/award_2_talent_competition.jpg',
+      desc: 'State-level recognition honoring creative communication, visual storytelling, and digital content impact at the 2025 talent competition.',
+      linkText: 'Explore Journey Timeline ↗',
+      linkUrl: '#journey'
+    },
+    'award-talent-video': {
+      title: 'State Level Talent Competition 2025 — Stage Ceremony Video',
+      category: 'STAGE CEREMONY',
+      period: 'Live On-Stage Award Presentation',
+      type: 'video',
+      video: 'assets/proofs_optimized/award_2_video.mov',
+      poster: 'assets/proofs_optimized/poster_award2_video.jpg',
+      desc: 'Live stage recording capturing the announcement and presentation of the 2025 State Level Talent Competition award.',
+      linkText: 'Explore Journey Timeline ↗',
+      linkUrl: '#journey'
+    },
+    'mraku-joined': {
+      title: 'Mr Aku Vlogs — Account Creation & Early Origin (2020)',
+      category: 'CREATOR ARCHIVE',
+      period: 'Instagram Joined Record // September 2020',
+      type: 'image',
+      image: 'assets/proofs_optimized/mr_aku_joined_proof.jpg',
+      desc: 'Official platform proof showing the account creation date in 2020. Verifies the authentic five-year foundation in digital video, audience growth, and content creation.',
+      linkText: 'Visit @mr._aku_vlogs ↗',
+      linkUrl: 'https://www.instagram.com/mr._aku_vlogs/'
+    },
+    'mraku-profile': {
+      title: 'Mr Aku Vlogs — Verified Creator Profile (2,177+ Followers)',
+      category: 'CREATOR ARCHIVE',
+      period: '2,177+ Verified Followers // 332 Posts',
+      type: 'image',
+      image: 'assets/proofs_optimized/mr_aku_instagram_page.jpg',
+      desc: 'Primary creator channel demonstrating consistent multi-year publishing, regional food reviews, local brand promotions, and creator collaborations.',
+      linkText: 'Visit @mr._aku_vlogs ↗',
+      linkUrl: 'https://www.instagram.com/mr._aku_vlogs/'
+    },
+    'mraku-vj': {
+      title: 'Mr Aku Vlogs — On-Camera VJ Mic Field Shoot',
+      category: 'FIELD PRODUCTION',
+      period: 'Live VJ Mic Presentation // Street Interviews',
+      type: 'image',
+      image: 'assets/proofs_optimized/mr_aku_vj_shoot.jpg',
+      desc: 'On-camera hosting and street interview coverage for Mr Aku Vlogs, mastering quick audience engagement, improvised dialogue, and live event energy.',
+      linkText: 'Visit @mr._aku_vlogs ↗',
+      linkUrl: 'https://www.instagram.com/mr._aku_vlogs/'
+    },
+    'mraku-roshan': {
+      title: 'Music Album Video Shoot with Actor Roshan',
+      category: 'MEDIA COLLABORATION',
+      period: 'Cinema & Music Album Production',
+      type: 'image',
+      image: 'assets/proofs_optimized/album_song_shoot_roshan.jpg',
+      desc: 'Collaborative shoot alongside actor Roshan during production of a commercial music album video, integrating cinematic direction with high-tempo performance.',
+      linkText: 'Visit @mr._aku_vlogs ↗',
+      linkUrl: 'https://www.instagram.com/mr._aku_vlogs/'
+    },
+    'mraku-paranthu': {
+      title: 'Movie Promotion // Paranthu Po',
+      category: 'CINEMA PROMOTION',
+      period: 'Film Promotional Interview & Creator Coverage',
+      type: 'image',
+      image: 'assets/proofs_optimized/movie_paranthu_po.jpg',
+      desc: 'Promotional interview and digital media coverage for the Tamil film Paranthu Po, connecting the film\'s cast with regional digital audiences.',
+      linkText: 'Visit @mr._aku_vlogs ↗',
+      linkUrl: 'https://www.instagram.com/mr._aku_vlogs/'
+    },
+    'mraku-tourist': {
+      title: 'Film Collaboration // Tourist Family',
+      category: 'CINEMA PROMOTION',
+      period: 'Entertainment & Cinema Promotional Coverage',
+      type: 'image',
+      image: 'assets/proofs_optimized/movie_tourist_family.jpg',
+      desc: 'Entertainment media shoot and promotional interview coverage for the movie Tourist Family, expanding creator reach into mainstream Tamil cinema.',
+      linkText: 'Visit @mr._aku_vlogs ↗',
+      linkUrl: 'https://www.instagram.com/mr._aku_vlogs/'
+    },
+    'mraku-nayanthara': {
+      title: 'Nayanthara Production Collaboration Shoot',
+      category: 'PRODUCTION COLLABORATION',
+      period: 'Commercial Production Shoot with Leading Banner',
+      type: 'image',
+      image: 'assets/proofs_optimized/mr_aku_nayanthara_production.jpg',
+      desc: 'Commercial collaboration shoot linked with a major production associated with actress Nayanthara, executing creative promotional formats.',
+      linkText: 'Visit @mr._aku_vlogs ↗',
+      linkUrl: 'https://www.instagram.com/mr._aku_vlogs/'
+    },
+    'mraku-bts-video': {
+      title: 'Mr Aku Vlogs Production BTS',
+      category: 'BTS VIDEO',
+      period: 'Behind-the-Scenes Camera Setups & Filming',
+      type: 'video',
+      video: 'assets/proofs_optimized/mr_aku_bts.mov',
+      poster: 'assets/proofs_optimized/poster_mr_aku_bts.jpg',
+      desc: 'Behind-the-scenes recording revealing on-location camera setups, lighting, mobile gear, and spontaneous content creation in the field.',
+      linkText: 'Visit @mr._aku_vlogs ↗',
+      linkUrl: 'https://www.instagram.com/mr._aku_vlogs/'
+    },
+    'mraku-promo-1': {
+      title: 'Mr Aku Vlogs — Retail Store Promotion Campaign',
+      category: 'SHOP PROMOTION',
+      period: 'Regional Commercial Client Promotion',
+      type: 'image',
+      image: 'assets/proofs_optimized/mr_aku_promo_2876.jpg',
+      desc: 'High-impact promotional campaign video for regional retail store, featuring product demonstrations, offer announcements, and store walk-throughs.',
+      linkText: 'Visit @mr._aku_vlogs ↗',
+      linkUrl: 'https://www.instagram.com/mr._aku_vlogs/'
     },
     'tech-mineguardian': {
       title: 'MineGuardian / MineCore — Autonomous Underground Rover',
       category: 'AI & HARDWARE TELEMETRY',
       period: 'Smart India Hackathon // IoT & Sensor Fusion',
+      type: 'image',
       image: 'assets/lab_mineguardian.jpg',
       desc: 'Hazardous underground coal mine rover concept designed to monitor toxic methane (MQ-4), temperature (DHT22), and structural cave-in vibrations. Transmits real-time environmental telemetry to an emergency dashboard before miners enter hazardous shafts.',
-      linkText: 'View Digital Lab →',
+      linkText: 'Explore Digital Lab ↗',
       linkUrl: 'lab.html#mineguardian'
-    },
-    'tech-jayashakthi': {
-      title: 'Jayashakthi Tours & Travels — Live Web Platform + Admin Portal',
-      category: 'WEB ENGINEERING & COMMERCE',
-      period: 'Live Commercial Deployment // Full-Stack',
-      image: 'assets/project_jayashakthi.jpg',
-      desc: 'Production travel business web platform featuring responsive fleet showcase, interactive booking flow, and private administrative portal for route management and booking inquiries.',
-      linkText: 'Visit Live Website ↗',
-      linkUrl: 'https://www.jayashakthitoursandtravels.com/'
-    },
-    'award-bestreels': {
-      title: 'Best Reels Creator — 2025 Regional Award',
-      category: 'VERIFIED RECOGNITION',
-      period: '2025 // Tuticorin Content Honors',
-      image: 'assets/life_with_aakash.jpg',
-      desc: 'Awarded for creative short-form visual storytelling, dynamic pacing, and audience retention metrics on Life With Aakash and commercial video productions.',
-      linkText: 'Explore Journey Timeline →',
-      linkUrl: 'journey.html'
-    },
-    'award-younginfo': {
-      title: 'Young Informative Content — 2025 Citation',
-      category: 'VERIFIED RECOGNITION',
-      period: '2025 // Regional Digital Honors',
-      image: 'assets/mraku_vlogs.jpg',
-      desc: 'Recognized for informative, value-driven lifestyle and personal growth content, bridging youth motivation with real-world execution.',
-      linkText: 'Explore Journey Timeline →',
-      linkUrl: 'journey.html'
-    },
-    'chinnadurai-textiles': {
-      title: 'Chinnadurai Textiles — Commercial Campaign Strategy',
-      category: 'COMMERCIAL CONTENT & SCRIPTING',
-      period: '10K–15K Organic Views // Thoothukudi',
-      image: 'assets/project_textile.jpg',
-      desc: 'Full content research, scriptwriting, and promotional reel direction for retail textile brand, yielding 10,000–15,000 organic impressions without paid ad spend.',
-      linkText: 'Read Full Case Study →',
-      linkUrl: 'work.html#chinnadurai'
-    },
-    'salemrr-food': {
-      title: 'SalemRR Biriyani — Commercial Video VJ & Food Promotion',
-      category: 'BRAND PROMOTION & VIDEO VJ',
-      period: 'Cinematic Food Production // 2026',
-      image: 'assets/project_food.jpg',
-      desc: 'On-camera VJ presentation, commercial scripting, and culinary cinematography capturing store ambiance, dish presentation, and promotional reach.',
-      linkText: 'Read Full Case Study →',
-      linkUrl: 'work.html#salemrr'
     }
   };
 
-  function openProofModal(key) {
+  const proofKeys = Object.keys(proofData);
+  let currentProofIndex = 0;
+
+  // Single-Video playback controller: pause all other videos when one plays
+  function pauseAllVideos(exceptVideo = null) {
+    document.querySelectorAll('video').forEach(vid => {
+      if (vid !== exceptVideo && !vid.paused) {
+        vid.pause();
+      }
+    });
+  }
+
+  function renderProofItem(key) {
     const item = proofData[key];
-    if (!item || !proofModal) return;
+    if (!item) return;
 
+    currentProofIndex = proofKeys.indexOf(key);
+    if (currentProofIndex === -1) currentProofIndex = 0;
+
+    // Pause any other playing video
+    pauseAllVideos();
+
+    if (proofModalBadge) proofModalBadge.textContent = item.category;
+    if (proofModalCounter) {
+      const currentNum = String(currentProofIndex + 1).padStart(2, '0');
+      const totalNum = String(proofKeys.length).padStart(2, '0');
+      proofModalCounter.textContent = `${currentNum} / ${totalNum}`;
+    }
+    if (proofModalMetaCategory) proofModalMetaCategory.textContent = item.category;
+    if (proofModalMetaPeriod) proofModalMetaPeriod.textContent = item.period;
     if (proofModalTitle) proofModalTitle.textContent = item.title;
+    if (proofModalDesc) proofModalDesc.textContent = item.desc;
 
-    if (proofModalBody) {
-      proofModalBody.innerHTML = `
-        <img src="${item.image}" alt="${item.title}" class="proof-modal-image" />
-        <div class="proof-modal-meta-row">
-          <span>${item.category}</span>
-          <span>${item.period}</span>
-        </div>
-        <p class="proof-modal-desc">${item.desc}</p>
-        <div>
-          <a href="${item.linkUrl}" target="${item.linkUrl.startsWith('http') ? '_blank' : '_self'}" class="btn-editorial" style="margin-top: 0.5rem;">
-            <span>${item.linkText}</span>
-          </a>
-        </div>
-      `;
+    // Media presentation
+    if (proofModalMedia) {
+      if (item.type === 'video') {
+        proofModalMedia.innerHTML = `
+          <video class="proof-modal-video" controls playsinline poster="${item.poster || ''}">
+            <source src="${item.video}" type="video/mp4">
+            <source src="${item.video}" type="video/quicktime">
+            Your browser does not support HTML5 video.
+          </video>
+        `;
+        const modalVid = proofModalMedia.querySelector('video');
+        if (modalVid) {
+          modalVid.addEventListener('play', () => pauseAllVideos(modalVid));
+          // Attempt playback safely
+          modalVid.play().catch(() => {});
+        }
+      } else {
+        proofModalMedia.innerHTML = `
+          <img src="${item.image}" alt="${item.title}" class="proof-modal-image" />
+        `;
+      }
     }
 
+    // External action button
+    if (proofModalActions) {
+      if (item.linkUrl) {
+        const isExternal = item.linkUrl.startsWith('http');
+        proofModalActions.innerHTML = `
+          <a href="${item.linkUrl}" target="${isExternal ? '_blank' : '_self'}" rel="${isExternal ? 'noopener noreferrer' : ''}" class="proof-external-btn">
+            <span>${item.linkText || 'VIEW ORIGINAL ↗'}</span>
+          </a>
+        `;
+      } else {
+        proofModalActions.innerHTML = '';
+      }
+    }
+  }
+
+  function openProofModal(key) {
+    if (!proofModal) return;
+    renderProofItem(key);
     proofModal.classList.add('active');
     document.body.style.overflow = 'hidden';
   }
 
   function closeProofModal() {
     if (!proofModal) return;
+    // Pause video in modal before closing
+    if (proofModalMedia) {
+      const vid = proofModalMedia.querySelector('video');
+      if (vid) vid.pause();
+    }
     proofModal.classList.remove('active');
     document.body.style.overflow = '';
   }
 
+  function navigateProof(direction) {
+    if (proofKeys.length === 0) return;
+    currentProofIndex = (currentProofIndex + direction + proofKeys.length) % proofKeys.length;
+    renderProofItem(proofKeys[currentProofIndex]);
+  }
+
+  // Trigger clicks
   document.querySelectorAll('[data-proof]').forEach(trigger => {
     trigger.addEventListener('click', (e) => {
       e.preventDefault();
@@ -1498,35 +1796,43 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  if (proofModalClose) {
-    proofModalClose.addEventListener('click', closeProofModal);
-  }
+  if (proofModalClose) proofModalClose.addEventListener('click', closeProofModal);
+  if (proofModalBackdrop) proofModalBackdrop.addEventListener('click', closeProofModal);
+  if (proofModalPrev) proofModalPrev.addEventListener('click', () => navigateProof(-1));
+  if (proofModalNext) proofModalNext.addEventListener('click', () => navigateProof(1));
 
-  if (proofModal) {
-    proofModal.addEventListener('click', (e) => {
-      if (e.target === proofModal) closeProofModal();
-    });
-  }
-
+  // Global Keyboard listener: ESC to close, Left/Right arrows to cycle
   window.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') closeProofModal();
+    if (!proofModal || !proofModal.classList.contains('active')) return;
+    if (e.key === 'Escape') {
+      closeProofModal();
+    } else if (e.key === 'ArrowLeft') {
+      navigateProof(-1);
+    } else if (e.key === 'ArrowRight') {
+      navigateProof(1);
+    }
   });
 
-  // 6. Proof Vault Tab Filtering (Multi-category support)
+  // Global video playback coordination: single video active
+  document.querySelectorAll('video').forEach(vid => {
+    vid.addEventListener('play', () => pauseAllVideos(vid));
+  });
+
+  // 6. Proof Vault Tab Filtering (Multi-category support for .proof-wall-item and .proof-card)
   const filterBtns = document.querySelectorAll('.proof-filter-btn');
-  const proofCards = document.querySelectorAll('.proof-card');
+  const proofCards = document.querySelectorAll('.proof-wall-item, .proof-card');
 
   if (filterBtns.length > 0 && proofCards.length > 0) {
     filterBtns.forEach(btn => {
       btn.addEventListener('click', () => {
         filterBtns.forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
-        const filter = btn.getAttribute('data-filter');
+        const filter = (btn.getAttribute('data-filter') || 'all').toLowerCase();
 
         proofCards.forEach(card => {
-          const category = card.getAttribute('data-category') || '';
-          const categories = category.toLowerCase().split(/\s+/);
-          if (filter === 'all' || categories.includes(filter.toLowerCase())) {
+          const category = (card.getAttribute('data-category') || '').toLowerCase();
+          const categories = category.split(/\s+/);
+          if (filter === 'all' || categories.includes(filter)) {
             card.style.display = 'flex';
             setTimeout(() => { card.style.opacity = '1'; }, 20);
           } else {
