@@ -40,6 +40,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // Architecture ready for React Three Fiber / WebGL 3D GLB Model
   // ==========================================================================
   const CharacterController = {
+    isEntrancePlaying: false,
     // Layered state for physical depth (portrait, background light, shadow)
     current: {
       pointerX: 0,
@@ -228,7 +229,8 @@ document.addEventListener('DOMContentLoaded', () => {
       }
 
       // 2. Move 2D Portrait with subtle shadow movement (depth simulation without flat rotation)
-      if (this.portraitEl) {
+      // Skip if entrance animation is actively controlling portrait kinematics
+      if (this.portraitEl && !this.isEntrancePlaying) {
         const totalX = this.current.pointerX + this.current.scrollX;
         const totalY = this.current.pointerY + this.current.scrollY;
         const totalScale = this.current.pointerScale * this.current.scrollScale;
@@ -294,6 +296,177 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   CharacterController.init();
+
+  // ==========================================================================
+  // 3b. Cinematic Website Entrance Experience (2–3 seconds total, never blocking)
+  // State 01: Warm light blooms + Giant background typography "PORTFOLIO" reveals
+  // State 02: Aakash portrait rises from below viewport in front of PORTFOLIO (depth)
+  // State 03: Identity words sequentially reveal around character
+  // State 04: Settle smoothly into Hero, words fade, PORTFOLIO dims to ambient layer
+  // ==========================================================================
+  function initEntranceSequence() {
+    const portfolioWord = document.getElementById('entrance-portfolio-word');
+    const floatingLayer = document.getElementById('entrance-floating-layer') || document.querySelector('.entrance-floating-layer');
+    const wordMarketer = document.getElementById('float-marketer');
+    const wordBuilder = document.getElementById('float-brandbuilder');
+    const wordCreator = document.getElementById('float-creator');
+    const wordSpeaker = document.getElementById('float-speaker');
+    const heroIntroPhase = document.getElementById('hero-intro-phase');
+    const characterPortrait = document.getElementById('character-portrait') || document.querySelector('.character-portrait-asset');
+    const radialLight = document.getElementById('hero-radial-light');
+
+    const floatWords = [wordMarketer, wordBuilder, wordCreator, wordSpeaker].filter(Boolean);
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    const settleHeroImmediately = () => {
+      CharacterController.isEntrancePlaying = false;
+      if (portfolioWord) {
+        portfolioWord.style.opacity = '0.035';
+        portfolioWord.style.transform = 'translate(-50%, -50%) scale(0.94)';
+      }
+      if (floatingLayer) {
+        floatingLayer.style.display = 'none';
+      }
+      if (characterPortrait) {
+        characterPortrait.style.opacity = '1';
+        characterPortrait.style.transform = 'none';
+      }
+      if (radialLight) {
+        radialLight.style.opacity = '0.55';
+      }
+      if (heroIntroPhase) {
+        heroIntroPhase.style.opacity = '1';
+        heroIntroPhase.style.transform = 'none';
+      }
+      CharacterController.requestTick();
+    };
+
+    // If reduced motion is requested or already scrolled down, settle immediately
+    if (prefersReducedMotion || window.scrollY > 30) {
+      settleHeroImmediately();
+      return;
+    }
+
+    CharacterController.isEntrancePlaying = true;
+
+    // Initial state before entrance begins
+    if (radialLight) radialLight.style.opacity = '0.12';
+    if (portfolioWord) {
+      portfolioWord.style.opacity = '0';
+      portfolioWord.style.transform = 'translate(-50%, -50%) scale(0.96)';
+    }
+    if (characterPortrait) {
+      characterPortrait.style.opacity = '0';
+      characterPortrait.style.transform = 'translate3d(0, 115%, 0) scale(0.96)';
+    }
+    if (heroIntroPhase) {
+      heroIntroPhase.style.opacity = '0';
+      heroIntroPhase.style.transform = 'translate3d(0, 18px, 0)';
+    }
+    floatWords.forEach(w => {
+      w.style.opacity = '0';
+      w.style.transform = 'translate3d(0, 14px, 0)';
+      w.style.filter = 'blur(8px)';
+    });
+
+    let entranceTimeline = null;
+
+    if (typeof gsap !== 'undefined') {
+      entranceTimeline = gsap.timeline({
+        onComplete: () => {
+          settleHeroImmediately();
+        }
+      });
+
+      // State 01: Soft warm atmospheric light blooms + huge PORTFOLIO typography appears
+      entranceTimeline.to(radialLight, {
+        opacity: 0.55,
+        duration: 0.65,
+        ease: 'power2.out'
+      }, 0);
+
+      entranceTimeline.to(portfolioWord, {
+        opacity: 0.32,
+        scale: 1,
+        duration: 0.75,
+        ease: 'power2.out'
+      }, 0.08);
+
+      // State 02: Aakash portrait rises smoothly from below viewport, in front of PORTFOLIO (creates depth)
+      entranceTimeline.to(characterPortrait, {
+        y: '0%',
+        opacity: 1,
+        scale: 1,
+        duration: 1.15,
+        ease: 'power3.out'
+      }, 0.35);
+
+      // State 03: Sequential reveal of floating identity words around Aakash
+      floatWords.forEach((wordEl, index) => {
+        entranceTimeline.to(wordEl, {
+          opacity: 0.95,
+          y: 0,
+          filter: 'blur(0px)',
+          duration: 0.38,
+          ease: 'power2.out'
+        }, 0.9 + (index * 0.16));
+      });
+
+      // State 04: Transition naturally into Hero
+      // Floating words fade out gently
+      entranceTimeline.to(floatWords, {
+        opacity: 0,
+        y: -10,
+        filter: 'blur(6px)',
+        duration: 0.45,
+        ease: 'power2.in'
+      }, 1.85);
+
+      // PORTFOLIO moves subtly backward and dims to ambient watermark layer
+      entranceTimeline.to(portfolioWord, {
+        opacity: 0.035,
+        scale: 0.94,
+        duration: 0.75,
+        ease: 'power2.out'
+      }, 1.95);
+
+      // Hero content reveals clearly
+      entranceTimeline.to(heroIntroPhase, {
+        opacity: 1,
+        y: 0,
+        duration: 0.7,
+        ease: 'power2.out'
+      }, 2.05);
+
+    } else {
+      // Fallback if GSAP is unavailable
+      setTimeout(settleHeroImmediately, 2400);
+    }
+
+    // Safety Skip Listener: If user scrolls even slightly, presses key, or touches, settle instantly
+    let hasSkipped = false;
+    const triggerSkip = () => {
+      if (hasSkipped) return;
+      hasSkipped = true;
+      window.removeEventListener('scroll', checkScrollSkip);
+      window.removeEventListener('keydown', triggerSkip);
+      window.removeEventListener('touchstart', checkScrollSkip);
+      if (entranceTimeline) entranceTimeline.kill();
+      settleHeroImmediately();
+    };
+
+    const checkScrollSkip = () => {
+      if (window.scrollY > 15) {
+        triggerSkip();
+      }
+    };
+
+    window.addEventListener('scroll', checkScrollSkip, { passive: true });
+    window.addEventListener('keydown', triggerSkip, { passive: true });
+    window.addEventListener('touchstart', checkScrollSkip, { passive: true });
+  }
+
+  initEntranceSequence();
 
   // ==========================================================================
   // 4. Signature Identity Experience Choreography (GSAP ScrollTrigger)
@@ -847,6 +1020,146 @@ document.addEventListener('DOMContentLoaded', () => {
   window.addEventListener('scroll', updateScrollProgress, { passive: true });
   updateScrollProgress();
 
+  // 10b. Interactive Project Index Preview System (#other-work)
+  // Hovering over a project row updates the sticky preview pane media & meta
+  function initProjectIndexPreview() {
+    const rows = document.querySelectorAll('.horizontal-project-row');
+    const previewImg = document.getElementById('project-preview-img');
+    const previewCat = document.getElementById('project-preview-cat');
+    const previewTitle = document.getElementById('project-preview-title');
+
+    if (!rows.length || !previewImg) return;
+
+    rows.forEach(row => {
+      row.addEventListener('mouseenter', () => {
+        rows.forEach(r => r.classList.remove('active-index'));
+        row.classList.add('active-index');
+
+        const imgSrc = row.getAttribute('data-preview-img');
+        const cat = row.getAttribute('data-preview-cat');
+        const title = row.getAttribute('data-preview-title');
+
+        if (imgSrc && !previewImg.src.endsWith(imgSrc)) {
+          previewImg.style.opacity = '0.3';
+          previewImg.style.transform = 'scale(0.985)';
+          setTimeout(() => {
+            previewImg.src = imgSrc;
+            previewImg.style.opacity = '1';
+            previewImg.style.transform = 'scale(1)';
+          }, 110);
+        }
+
+        if (previewCat && cat) previewCat.textContent = cat;
+        if (previewTitle && title) previewTitle.textContent = title;
+      });
+    });
+  }
+  initProjectIndexPreview();
+
+  // 10c. The Journey Chronology Rail Scroll-Spy & Interactive Chapter Nav
+  // 2020 ━━━ 2021–22 ━━━ 2023 ━━━ 2024 ━━━ 2025 ━━━ 2026 / NOW ━━━ NEXT →
+  function initJourneyTimelineRail() {
+    const railBtns = document.querySelectorAll('.journey-rail-btn');
+    const yearBlocks = document.querySelectorAll('.journey-year-block, .journey-next-transition-block');
+
+    if (!railBtns.length) return;
+
+    // Click handler for smooth navigation to year chapter
+    railBtns.forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const targetId = btn.getAttribute('data-target');
+        if (!targetId) return;
+
+        const targetEl = document.getElementById(targetId);
+        if (targetEl) {
+          e.preventDefault();
+          const headerOffset = 110;
+          const targetY = targetEl.getBoundingClientRect().top + window.scrollY - headerOffset;
+          window.scrollTo({
+            top: targetY,
+            behavior: 'smooth'
+          });
+        }
+      });
+    });
+
+    // Scroll-spy with IntersectionObserver
+    if ('IntersectionObserver' in window && yearBlocks.length > 0) {
+      const railObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            const chapterId = entry.target.id;
+            railBtns.forEach(btn => {
+              const matches = btn.getAttribute('data-target') === chapterId;
+              btn.classList.toggle('active', matches);
+            });
+          }
+        });
+      }, {
+        rootMargin: '-25% 0px -50% 0px',
+        threshold: 0.1
+      });
+
+      yearBlocks.forEach(block => railObserver.observe(block));
+    }
+  }
+  initJourneyTimelineRail();
+
+  // 10d. Header & Drawer Navigation Scroll-Spy (Storytelling Order)
+  // WORK → SPEAKING → CREATOR → JOURNEY → PROOF → ABOUT
+  function initNavScrollSpy() {
+    const navLinks = document.querySelectorAll('.nav-center-links .nav-link, .mobile-drawer .nav-link');
+    const trackedSections = [
+      document.getElementById('work'),
+      document.getElementById('speaking'),
+      document.getElementById('creator'),
+      document.getElementById('journey'),
+      document.getElementById('proof'),
+      document.getElementById('about')
+    ].filter(Boolean);
+
+    if (!navLinks.length || !trackedSections.length) return;
+
+    if ('IntersectionObserver' in window) {
+      const navObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            const secId = entry.target.id;
+            navLinks.forEach(link => {
+              const href = (link.getAttribute('href') || '').replace('#', '');
+              link.classList.toggle('active', href === secId);
+            });
+          }
+        });
+      }, {
+        rootMargin: '-20% 0px -60% 0px',
+        threshold: 0.12
+      });
+
+      trackedSections.forEach(sec => navObserver.observe(sec));
+    }
+  }
+  initNavScrollSpy();
+
+  // 10e. Smooth Anchor Navigation with Sticky Header Offset
+  document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function(e) {
+      const href = this.getAttribute('href');
+      if (href === '#' || href === '') return;
+      
+      const target = document.querySelector(href);
+      if (target) {
+        e.preventDefault();
+        const headerOffset = 90;
+        const targetPos = target.getBoundingClientRect().top + window.scrollY - headerOffset;
+        window.scrollTo({
+          top: targetPos,
+          behavior: 'smooth'
+        });
+      }
+    });
+  });
+
   // 11. Subtle Contextual Cursor Badge ([data-cursor])
   const cursorBadge = document.getElementById('cursor-badge');
   const cursorBadgeText = document.getElementById('cursor-badge-text');
@@ -908,7 +1221,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // 13. Contact Form Handler
+  // 13. Contact Form Handler (Clean Mailto Generation with Aakash Greeting)
   const contactForm = document.getElementById('contact-form');
   if (contactForm) {
     contactForm.addEventListener('submit', (e) => {
@@ -925,7 +1238,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
       showToast('Opening email client...');
       const subject = `[${category}] Inquiry from ${name}`;
-      const body = `Hi AKU,\n\nName: ${name}\nEmail: ${email}\nCategory: ${category}\n\nMessage:\n${message}\n`;
+      const body = `Hi Aakash,\n\nName: ${name}\nEmail: ${email}\nCategory: ${category}\n\nMessage:\n${message}\n`;
       const mailtoUrl = `mailto:${directEmail}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
       setTimeout(() => {
         window.location.href = mailtoUrl;

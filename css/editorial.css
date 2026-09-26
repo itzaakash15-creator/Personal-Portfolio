@@ -2845,3 +2845,539 @@ section[data-theme="about"] {
   }
 }
 
+/* ==========================================================================
+   30. Cinematic Entrance Sequence System (PORTFOLIO Typography & Floating Words)
+   ========================================================================== */
+.entrance-portfolio-word {
+  position: absolute;
+  top: 45%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.96);
+  font-family: var(--font-sans);
+  font-size: clamp(6.5rem, 19vw, 22rem);
+  font-weight: 900;
+  letter-spacing: -0.055em;
+  color: transparent;
+  -webkit-text-stroke: 1.5px rgba(255, 255, 255, 0.08);
+  text-transform: uppercase;
+  white-space: nowrap;
+  pointer-events: none;
+  user-select: none;
+  z-index: 1;
+  opacity: 0;
+  will-change: transform, opacity;
+  line-height: 0.9;
+}
+
+.entrance-floating-layer {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.entrance-float-word {
+  position: absolute;
+  font-family: var(--font-mono);
+  font-size: clamp(0.8125rem, 1.4vw, 1.15rem);
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  color: var(--accent-champagne);
+  text-transform: uppercase;
+  opacity: 0;
+  transform: translateY(14px);
+  filter: blur(8px);
+  transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1), transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), filter 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform, opacity, filter;
+  text-shadow: 0 4px 20px rgba(0, 0, 0, 0.8);
+}
+
+.entrance-float-word.float-left {
+  left: 6%;
+  top: 40%;
+}
+
+.entrance-float-word.float-right {
+  right: 6%;
+  top: 36%;
+}
+
+.entrance-float-word.float-lower-left {
+  left: 12%;
+  bottom: 24%;
+}
+
+.entrance-float-word.float-lower-right {
+  right: 10%;
+  bottom: 20%;
+}
+
+.entrance-float-word.visible {
+  opacity: 0.92;
+  transform: translateY(0);
+  filter: blur(0);
+}
+
+.entrance-float-word.settled {
+  opacity: 0;
+  transform: translateY(-10px);
+  filter: blur(4px);
+  transition: opacity 0.6s ease, transform 0.6s ease, filter 0.6s ease;
+}
+
+/* ==========================================================================
+   31. Interactive Project Index with Dynamic Preview Canvas
+   ========================================================================== */
+.project-index-grid {
+  display: grid;
+  grid-template-columns: 1.35fr 0.65fr;
+  gap: clamp(2rem, 4vw, 4rem);
+  align-items: start;
+  margin-top: 2rem;
+}
+
+.project-index-preview-pane {
+  position: sticky;
+  top: calc(var(--header-height) + 2rem);
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-xs);
+  padding: 1.25rem;
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.45);
+  transition: all 0.3s ease;
+}
+
+.preview-pane-inner {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.preview-img-wrapper {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+  border-radius: var(--radius-xs);
+  background-color: #060608;
+}
+
+.preview-img-wrapper img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
+}
+
+.preview-caption-row {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.preview-caption-title {
+  font-family: var(--font-sans);
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: -0.01em;
+}
+
+.proj-badge-mobile {
+  display: none;
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.12em;
+  color: var(--accent-champagne);
+  padding: 0.2rem 0.5rem;
+  border: 1px solid rgba(216, 195, 165, 0.25);
+  border-radius: 999px;
+  margin-top: 0.35rem;
+  align-self: flex-start;
+}
+
+.horizontal-project-row.active-index {
+  background-color: rgba(255, 255, 255, 0.035);
+  padding-inline: 1rem;
+  border-color: rgba(216, 195, 165, 0.3);
+}
+
+/* ==========================================================================
+   32. Dedicated Chronological Journey Section (2020 → PRESENT → NEXT →)
+   ========================================================================== */
+.journey-experience-section {
+  position: relative;
+}
+
+.journey-persistent-rail {
+  position: sticky;
+  top: var(--header-height);
+  z-index: 10;
+  background: rgba(10, 10, 12, 0.92);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  padding-block: 1rem;
+  margin-bottom: 3.5rem;
+  border-bottom: 1px solid var(--border-subtle);
+  width: 100%;
+}
+
+.journey-rail-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  max-width: 100%;
+  overflow-x: auto;
+  gap: 0.5rem;
+  padding-inline: 0.5rem;
+  scrollbar-width: none;
+}
+
+.journey-rail-inner::-webkit-scrollbar {
+  display: none;
+}
+
+.journey-rail-btn {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0.35rem 0.65rem;
+  transition: all 0.25s ease;
+  white-space: nowrap;
+}
+
+.rail-year {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  color: var(--text-muted);
+  transition: color 0.25s ease;
+}
+
+.rail-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background-color: var(--border-medium);
+  transition: all 0.25s ease;
+}
+
+.journey-rail-btn:hover .rail-year {
+  color: #ffffff;
+}
+
+.journey-rail-btn.active .rail-year {
+  color: var(--accent-champagne);
+  font-weight: 700;
+}
+
+.journey-rail-btn.active .rail-dot {
+  background-color: var(--accent-champagne);
+  box-shadow: 0 0 10px var(--accent-champagne);
+  transform: scale(1.4);
+}
+
+.rail-line {
+  flex: 1;
+  height: 1px;
+  background: var(--border-subtle);
+  min-width: 24px;
+}
+
+.rail-extending {
+  background: linear-gradient(to right, var(--border-subtle), var(--accent-champagne));
+}
+
+.rail-btn-next .rail-year {
+  color: var(--accent-gold);
+  font-weight: 700;
+}
+
+.journey-chapters-stream {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(4rem, 8vw, 8rem);
+  position: relative;
+}
+
+.journey-year-block {
+  position: relative;
+  border-top: 1px solid var(--border-subtle);
+  padding-top: clamp(2.5rem, 5vw, 4.5rem);
+}
+
+.year-giant-typography {
+  font-family: var(--font-sans);
+  font-size: clamp(4.5rem, 12vw, 11rem);
+  font-weight: 900;
+  line-height: 0.85;
+  letter-spacing: -0.05em;
+  color: rgba(255, 255, 255, 0.05);
+  margin-bottom: -1.5rem;
+  user-select: none;
+  pointer-events: none;
+}
+
+.year-block-content-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(2.5rem, 5vw, 5rem);
+  align-items: center;
+  position: relative;
+  z-index: 1;
+}
+
+.year-editorial-meta {
+  display: flex;
+  flex-direction: column;
+}
+
+.year-chapter-title {
+  font-family: var(--font-sans);
+  font-size: clamp(1.8rem, 3.2vw, 2.75rem);
+  font-weight: 800;
+  line-height: 1.12;
+  letter-spacing: -0.025em;
+  color: #ffffff;
+  margin-block: 0.6rem 1.25rem;
+}
+
+.year-visual-composition {
+  position: relative;
+  border-radius: var(--radius-xs);
+  overflow: hidden;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+}
+
+.year-visual-composition img {
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.year-visual-composition:hover img {
+  transform: scale(1.02);
+}
+
+.year-comp-caption {
+  padding: 0.85rem 1.25rem;
+  background: rgba(10, 10, 12, 0.95);
+  border-top: 1px solid var(--border-subtle);
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.14em;
+  color: var(--accent-champagne);
+}
+
+.year-quote-badge {
+  padding: clamp(2rem, 4vw, 3rem);
+  background: var(--bg-surface);
+  border-radius: var(--radius-xs);
+  display: flex;
+  flex-direction: column;
+}
+
+.year-big-stat {
+  font-family: var(--font-sans);
+  font-size: clamp(3.5rem, 7vw, 5.5rem);
+  font-weight: 900;
+  line-height: 1;
+  color: var(--accent-champagne);
+  margin-block: 0.5rem 0.75rem;
+}
+
+.twin-citation-preview {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  padding: clamp(1.5rem, 3vw, 2.5rem);
+}
+
+.citation-pill-item {
+  padding: 1.25rem;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-xs);
+}
+
+.citation-pill-item h4 {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #ffffff;
+  margin-block: 0.35rem 0.25rem;
+}
+
+.citation-pill-item p {
+  font-size: 0.875rem;
+  color: var(--text-muted);
+  margin: 0;
+}
+
+.journey-next-transition-block {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding-block: clamp(4rem, 8vw, 7rem) 2rem;
+  position: relative;
+}
+
+.next-extending-line {
+  width: 2px;
+  height: 80px;
+  background: linear-gradient(to bottom, var(--border-medium), var(--accent-champagne));
+  margin-bottom: 2rem;
+}
+
+.next-huge-prompt {
+  font-family: var(--font-sans);
+  font-size: clamp(4rem, 9vw, 8rem);
+  font-weight: 900;
+  color: var(--accent-champagne);
+  letter-spacing: -0.04em;
+  margin-block: 0.5rem 1rem;
+}
+
+/* ==========================================================================
+   33. Future Vision: 5 Pillars Grid & Monumental Typography
+   ========================================================================== */
+.vision-pillars-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: clamp(1.5rem, 3vw, 2rem);
+  margin-bottom: clamp(4rem, 8vw, 7rem);
+}
+
+.vision-pillar-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-xs);
+  padding: clamp(1.75rem, 3vw, 2.5rem);
+  display: flex;
+  flex-direction: column;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.vision-pillar-card:hover {
+  border-color: rgba(216, 195, 165, 0.4);
+  transform: translateY(-4px);
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.4);
+}
+
+.pillar-number {
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  font-weight: 700;
+  color: var(--accent-champagne);
+  letter-spacing: 0.16em;
+  margin-bottom: 1.25rem;
+}
+
+.pillar-title {
+  font-family: var(--font-sans);
+  font-size: 1.3rem;
+  font-weight: 800;
+  color: #ffffff;
+  letter-spacing: -0.015em;
+  margin-bottom: 0.85rem;
+}
+
+.pillar-desc {
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+  line-height: 1.65;
+  margin-bottom: 1.5rem;
+}
+
+.pillar-sub {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.14em;
+  color: var(--text-muted);
+  margin-top: auto;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border-subtle);
+  text-transform: uppercase;
+}
+
+.vision-monumental-quote {
+  padding-block: clamp(3rem, 6vw, 5rem);
+  border-top: 1px solid var(--border-subtle);
+  border-bottom: 1px solid var(--border-subtle);
+  text-align: center;
+}
+
+.monumental-line-top {
+  font-family: var(--font-sans);
+  font-size: clamp(1.8rem, 4vw, 3.4rem);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  margin-bottom: 0.5rem;
+}
+
+.monumental-line-bottom {
+  font-family: var(--font-sans);
+  font-size: clamp(2.5rem, 6.5vw, 5.8rem);
+  font-weight: 900;
+  letter-spacing: -0.04em;
+  color: #ffffff;
+  text-transform: uppercase;
+}
+
+/* ==========================================================================
+   34. Dedicated Section Lighting Themes
+   ========================================================================== */
+section[data-theme="journey"] {
+  position: relative;
+  background: radial-gradient(circle at 75% 20%, rgba(216, 195, 165, 0.05) 0%, transparent 65%), #08080a;
+}
+
+section[data-theme="vision"] {
+  position: relative;
+  background: radial-gradient(circle at 50% 30%, rgba(216, 195, 165, 0.06) 0%, transparent 70%), #09090c;
+}
+
+/* Additional Responsive Rules */
+@media (max-width: 960px) {
+  .project-index-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .project-index-preview-pane {
+    display: none;
+  }
+
+  .proj-badge-mobile {
+    display: inline-block;
+  }
+
+  .year-block-content-grid {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+
+  .year-giant-typography {
+    margin-bottom: -0.5rem;
+  }
+
+  .vision-pillars-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .entrance-float-word {
+    display: none;
+  }
+}
+

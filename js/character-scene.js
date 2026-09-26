@@ -168,8 +168,8 @@
     }
 
     attemptModelLoad() {
-      // Model path prepared for incoming production asset
-      const modelCandidates = ['models/aku.glb', '/models/aku.glb'];
+      // Model path prepared for incoming production asset (/models/aakash.glb)
+      const modelCandidates = ['models/aakash.glb', '/models/aakash.glb', 'models/aku.glb', '/models/aku.glb'];
       this.tryLoadCandidates(modelCandidates, 0);
     }
 
