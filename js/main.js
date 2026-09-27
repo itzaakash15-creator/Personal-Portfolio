@@ -760,11 +760,48 @@ document.addEventListener('DOMContentLoaded', () => {
       const role2 = document.getElementById('role-slide-2');
       const role3 = document.getElementById('role-slide-3');
       const role4 = document.getElementById('role-slide-4');
+      const role5 = document.getElementById('role-slide-5');
+
+      const characterPortrait = document.getElementById('character-portrait');
+      const aakashShadow = document.getElementById('aakash-contact-shadow');
+      const orbitStage = document.getElementById('orbit-spatial-stage');
+      const orbitSpotlight = document.getElementById('orbit-spotlight');
+
+      // The Box boundary elements
+      const boxBoundary = document.getElementById('orbit-box-boundary');
+      const boxLineTop = document.getElementById('box-line-top');
+      const boxLineRightU = document.getElementById('box-line-right-u');
+      const boxLineRightL = document.getElementById('box-line-right-l');
+      const boxLineBottom = document.getElementById('box-line-bottom');
+      const boxLineLeft = document.getElementById('box-line-left');
+      const boxSpark = document.getElementById('box-fracture-spark');
+      const boxCorners = document.querySelectorAll('.box-corner');
+      const boxTag = document.getElementById('box-status-tag');
+
+      // 6 Identity spatial nodes
+      const nodeStrategist = document.getElementById('orbit-node-strategist');
+      const nodeCreator = document.getElementById('orbit-node-creator');
+      const nodeBrand = document.getElementById('orbit-node-brand');
+      const nodeSpeaker = document.getElementById('orbit-node-speaker');
+      const nodeBuilder = document.getElementById('orbit-node-builder');
+      const nodeIdeas = document.getElementById('orbit-node-ideas');
+      const allOrbitNodes = document.querySelectorAll('.orbit-spatial-node');
 
       const workTransition = document.getElementById('work-transition-phase');
       const projectApproach = document.getElementById('hero-project-approach');
 
       if (!wrapper || !characterScene) return;
+
+      // Helper to activate a specific orbit node with warm champagne edge lighting
+      function setActiveOrbitNode(activeNode) {
+        allOrbitNodes.forEach(node => {
+          if (node === activeNode) {
+            node.classList.add('active-role');
+          } else {
+            node.classList.remove('active-role');
+          }
+        });
+      }
 
       // Calculate safe rightward anchor offset for Aakash portrait
       // Keeps him anchored in the right 35–40% zone, leaving left 60–65% 100% clear
@@ -774,24 +811,26 @@ document.addEventListener('DOMContentLoaded', () => {
         scrollTrigger: {
           trigger: wrapper,
           start: "top top",
-          end: "+=4400",
+          end: "+=4600",
           pin: true,
           scrub: 0.8,
           anticipatePin: 1,
           onUpdate: (self) => {
             const p = self.progress;
             let section = 'hero';
-            if (p < 0.12) {
+            if (p < 0.10) {
               section = 'hero';
-            } else if (p >= 0.12 && p < 0.32) {
+            } else if (p >= 0.10 && p < 0.28) {
               section = 'identity';
-            } else if (p >= 0.32 && p < 0.44) {
+            } else if (p >= 0.28 && p < 0.38) {
               section = 'marketer';
-            } else if (p >= 0.44 && p < 0.56) {
+            } else if (p >= 0.38 && p < 0.48) {
               section = 'strategist';
-            } else if (p >= 0.56 && p < 0.68) {
+            } else if (p >= 0.48 && p < 0.58) {
               section = 'creator';
-            } else if (p >= 0.68 && p < 0.80) {
+            } else if (p >= 0.58 && p < 0.68) {
+              section = 'brand';
+            } else if (p >= 0.68 && p < 0.78) {
               section = 'speaker';
             } else {
               section = 'work';
@@ -806,8 +845,8 @@ document.addEventListener('DOMContentLoaded', () => {
       });
 
       // ----------------------------------------------------------------------
-      // STEP 1: Hero Flanks Slide Outward; AAKASH Moves Smoothly to the Right
-      // Aakash anchors to right 35–40%, clearing the left 60–65% for typography
+      // STEP 1: Hero Flanks Slide Outward; AAKASH Anchors Smoothly to the Right
+      // Aakash anchors to right 35–40%, clearing left 60–65% for the experience
       // ----------------------------------------------------------------------
       tl.to(leftFlank, {
         x: -60,
@@ -830,38 +869,71 @@ document.addEventListener('DOMContentLoaded', () => {
         ease: "power2.inOut"
       }, 0.05);
 
-      // AAKASH SHIFTS TO THE RIGHT (Anchor Position: no text across face!)
+      // AAKASH SHIFTS TO THE RIGHT (Anchor Position: scale 0.96, opacity 0.85)
       tl.to(characterScene, {
         x: () => getAnchorRightX(),
-        scale: 1.02,
-        opacity: 1,
         duration: 1.0,
         ease: "power2.inOut"
       }, 0.15);
 
-      // Studio light accompanies Aakash to the right
+      if (characterPortrait) {
+        tl.to(characterPortrait, {
+          scale: 0.96,
+          opacity: 0.85,
+          duration: 1.0,
+          ease: "power2.inOut"
+        }, 0.15);
+      }
+
+      // Studio light & Contact Shadow accompany Aakash to the right
       tl.to(radialLight, {
         x: () => getAnchorRightX() * 0.75,
         duration: 1.0,
         ease: "power2.inOut"
       }, 0.15);
 
+      if (aakashShadow) {
+        tl.to(aakashShadow, {
+          opacity: 1,
+          duration: 0.8,
+          ease: "power2.out"
+        }, 0.2);
+      }
+
       // ----------------------------------------------------------------------
-      // STEP 2 (Section 09): "I DON'T FIT INTO ONE BOX." Sequential Reveal
-      // FIRST: I DON'T FIT (bottom-to-top mask)
-      // THEN: INTO ONE (previous moves up slightly, lower contrast)
-      // THEN: BOX. (BOX. becomes temporarily dominant)
+      // STEP 2: "THE ORBIT OF AAKASH" & "I DON'T FIT INTO ONE BOX."
       // ----------------------------------------------------------------------
+
+      // SCENE 01: "I DON'T FIT" + Symbol 01 (Creator Viewfinder emerges from darkness)
       tl.to(identityPhase, { opacity: 1, duration: 0.1 }, 1.15);
 
-      // Line 1: I DON'T FIT
+      // Line 1: I DON'T FIT (bottom-to-top mask)
       tl.fromTo(idLine1,
         { y: '100%', opacity: 0 },
         { y: '0%', opacity: 1, duration: 0.85, ease: 'power3.out' },
         1.2
       );
 
-      // Line 2: INTO ONE
+      // Symbol 01: CREATOR Viewfinder emerges from darkness behind/near Aakash
+      if (nodeCreator) {
+        tl.fromTo(nodeCreator,
+          { scale: 0.7, opacity: 0, filter: 'blur(10px)', y: 25 },
+          { scale: 1, opacity: 0.82, filter: 'blur(0px)', y: 0, duration: 0.85, ease: 'power2.out' },
+          1.25
+        );
+      }
+
+      // Narrow warm light reveals the emerging viewfinder object
+      if (orbitSpotlight) {
+        tl.to(orbitSpotlight, {
+          opacity: 0.55,
+          scale: 0.85,
+          duration: 0.8,
+          ease: 'power2.out'
+        }, 1.25);
+      }
+
+      // SCENE 02: "INTO ONE" + Symbols 02 & 03 (Strategy & Speaker enter from depths)
       tl.fromTo(idLine2,
         { y: '100%', opacity: 0 },
         { y: '0%', opacity: 1, duration: 0.85, ease: 'power3.out' },
@@ -875,69 +947,201 @@ document.addEventListener('DOMContentLoaded', () => {
         ease: 'power2.out'
       }, 2.05);
 
-      // Line 3: BOX. (temporarily dominant)
+      // Aakash subtle progress
+      if (characterPortrait) {
+        tl.to(characterPortrait, {
+          scale: 0.98,
+          opacity: 0.92,
+          y: -5,
+          duration: 0.8
+        }, 2.05);
+      }
+
+      // Strategy nodes enter from upper-right negative space
+      if (nodeStrategist) {
+        tl.fromTo(nodeStrategist,
+          { x: 35, y: -25, opacity: 0, scale: 0.75, rotation: -5 },
+          { x: 0, y: 0, opacity: 0.82, scale: 1, rotation: 0, duration: 0.85, ease: 'power2.out' },
+          2.1
+        );
+      }
+
+      // Speaker microphone enters from lower-right negative space
+      if (nodeSpeaker) {
+        tl.fromTo(nodeSpeaker,
+          { x: 30, y: 30, opacity: 0, scale: 0.75, rotation: 5 },
+          { x: 0, y: 0, opacity: 0.82, scale: 1, rotation: 0, duration: 0.85, ease: 'power2.out' },
+          2.15
+        );
+      }
+
+      // Ideas spark emerges in far background
+      if (nodeIdeas) {
+        tl.fromTo(nodeIdeas,
+          { opacity: 0, scale: 0.7 },
+          { opacity: 0.65, scale: 1, duration: 0.8, ease: 'power2.out' },
+          2.2
+        );
+      }
+
+      // Spotlight broadens
+      if (orbitSpotlight) {
+        tl.to(orbitSpotlight, {
+          opacity: 0.72,
+          scale: 1.1,
+          duration: 0.8
+        }, 2.1);
+      }
+
+      // SCENE 03: "BOX." + THE ARCHITECTURAL BOX DRAWS + BREAKS OPEN
       tl.fromTo(idLine3,
         { y: '100%', opacity: 0 },
         { y: '0%', opacity: 1, duration: 0.85, ease: 'power3.out' },
-        2.9
+        2.95
       );
       // Line 1 & Line 2 move up slightly
       tl.to([idLine1, idLine2], {
         y: '-26px',
         duration: 0.75,
         ease: 'power2.out'
-      }, 2.9);
+      }, 2.95);
       tl.to(idLine2, {
         opacity: 0.42,
         duration: 0.75,
         ease: 'power2.out'
-      }, 2.9);
+      }, 2.95);
+
+      // Aakash settles to scale 1.0, opacity 1.0, y: -12px (calm and anchored)
+      if (characterPortrait) {
+        tl.to(characterPortrait, {
+          scale: 1.0,
+          opacity: 1.0,
+          y: -12,
+          duration: 0.8
+        }, 2.95);
+      }
+
+      // Draw the 4 architectural lines of THE BOX
+      if (boxBoundary) {
+        tl.to(boxBoundary, { opacity: 1, duration: 0.1 }, 3.0);
+      }
+      if (boxLineTop) {
+        tl.fromTo(boxLineTop, { scaleX: 0 }, { scaleX: 1, duration: 0.45, ease: 'power2.out' }, 3.05); // top ->
+      }
+      if (boxLineRightU && boxLineRightL) {
+        tl.fromTo([boxLineRightU, boxLineRightL], { scaleY: 0 }, { scaleY: 1, duration: 0.45, ease: 'power2.out' }, 3.2); // right |
+      }
+      if (boxLineBottom) {
+        tl.fromTo(boxLineBottom, { scaleX: 0 }, { scaleX: 1, duration: 0.45, ease: 'power2.out' }, 3.35); // bottom <-
+      }
+      if (boxLineLeft) {
+        tl.fromTo(boxLineLeft, { scaleY: 0 }, { scaleY: 1, duration: 0.45, ease: 'power2.out' }, 3.5); // left ^
+      }
+      if (boxCorners) {
+        tl.to(boxCorners, { opacity: 1, duration: 0.3 }, 3.55);
+      }
+      if (boxTag) {
+        tl.to(boxTag, { opacity: 0.85, duration: 0.3 }, 3.55);
+      }
+      if (orbitSpotlight) {
+        tl.to(orbitSpotlight, { opacity: 0.85, scale: 1.15, duration: 0.5 }, 3.35);
+      }
+
+      // THE LINE NEAREST AAKASH BREAKS OPEN & OBJECTS ESCAPE (3.9 to 4.6)
+      if (boxLineRightU) {
+        tl.to(boxLineRightU, { y: -14, x: 8, rotation: -6, opacity: 0.35, duration: 0.45, ease: 'power2.inOut' }, 3.9);
+      }
+      if (boxLineRightL) {
+        tl.to(boxLineRightL, { y: 14, x: 8, rotation: 6, opacity: 0.35, duration: 0.45, ease: 'power2.inOut' }, 3.9);
+      }
+      if (boxSpark) {
+        tl.fromTo(boxSpark,
+          { opacity: 0, scale: 0.3 },
+          { opacity: 1, scale: 1.6, duration: 0.2, ease: 'power2.out' },
+          3.9
+        );
+        tl.to(boxSpark, { opacity: 0, scale: 2.2, duration: 0.3, ease: 'power2.in' }, 4.1);
+      }
+      if (boxTag) {
+        tl.to(boxTag, { textContent: 'UNBOUND', color: '#ffffff', borderColor: 'rgba(255,255,255,0.4)', duration: 0.2 }, 4.0);
+      }
+
+      // Objects begin escaping beyond the boundary
+      if (nodeCreator) {
+        tl.to(nodeCreator, { x: 38, y: -14, rotation: 5, scale: 1.06, duration: 0.65, ease: 'power2.out' }, 3.95);
+      }
+      if (nodeStrategist) {
+        tl.to(nodeStrategist, { x: 42, y: -18, rotation: -4, scale: 1.06, duration: 0.65, ease: 'power2.out' }, 3.95);
+      }
+      if (nodeSpeaker) {
+        tl.to(nodeSpeaker, { x: 36, y: 16, rotation: 4, scale: 1.05, duration: 0.65, ease: 'power2.out' }, 3.95);
+      }
+
+      // Brand Builder & Code Builder nodes enter from outside boundary
+      if (nodeBrand) {
+        tl.fromTo(nodeBrand,
+          { opacity: 0, scale: 0.8 },
+          { opacity: 0.78, scale: 1, duration: 0.65, ease: 'power2.out' },
+          4.0
+        );
+      }
+      if (nodeBuilder) {
+        tl.fromTo(nodeBuilder,
+          { opacity: 0, scale: 0.8 },
+          { opacity: 0.78, scale: 1, duration: 0.65, ease: 'power2.out' },
+          4.05
+        );
+      }
+
+      // Warm illumination expands beyond the box
+      if (orbitSpotlight) {
+        tl.to(orbitSpotlight, { scale: 1.45, opacity: 0.95, duration: 0.75 }, 3.95);
+      }
 
       // Hold dominant BOX. statement
-      tl.to(idLine3, { opacity: 1, duration: 0.7 }, 3.75);
+      tl.to(idLine3, { opacity: 1, duration: 0.5 }, 4.2);
 
       // Exit "I DON'T FIT INTO ONE BOX." with upward clip
       tl.to([idLine1, idLine2, idLine3], {
         y: '-105%',
         opacity: 0,
-        duration: 0.8,
+        scale: 0.96,
+        duration: 0.75,
         ease: 'power2.in'
-      }, 4.45);
-      tl.to(identityPhase, { opacity: 0, duration: 0.15 }, 5.15);
+      }, 4.7);
+      tl.to(identityPhase, { opacity: 0, duration: 0.15 }, 5.35);
+
+      // Box boundary gently dims into background
+      if (boxBoundary) {
+        tl.to(boxBoundary, { opacity: 0.18, duration: 0.5 }, 4.8);
+      }
 
       // ----------------------------------------------------------------------
-      // STEP 3 (Sections 10 & 11): ROLE MORPH SEQUENCE (Typography Reel System)
-      // MARKETER. -> STRATEGIST. -> CREATOR. -> SPEAKER.
-      // Outgoing word moves upward + clips away.
-      // Incoming word enters from below + clips into view.
-      // Aakash remains mostly stable on the right with subtle light shifts.
+      // STEP 3: SEQUENTIAL ROLES EMERGE (Typography Reel System + Edge Lighting)
+      // MARKETER. -> STRATEGIST. -> CREATOR. -> BRAND BUILDER. -> SPEAKER.
+      // Each role corresponds with one surrounding visual object receiving warm rim light.
       // ----------------------------------------------------------------------
 
       // --- ROLE 01: MARKETER. ---
-      tl.to(role1, { opacity: 1, duration: 0.1 }, 5.35);
+      tl.to(role1, { opacity: 1, duration: 0.1 }, 5.4);
       tl.fromTo(role1.querySelector('.role-pre-lead'),
         { y: 14, opacity: 0 },
         { y: 0, opacity: 1, duration: 0.55, ease: 'power2.out' },
-        5.4
+        5.45
       );
       tl.fromTo(role1.querySelector('.role-huge-title'),
         { y: '100%' },
-        { y: '0%', duration: 0.85, ease: 'power3.out' },
-        5.4
+        { y: '0%', duration: 0.8, ease: 'power3.out' },
+        5.45
       );
-      // Aakash: neutral warm studio light
-      tl.to(radialLight, {
-        y: 0,
-        scale: 1.0,
-        opacity: 0.6,
-        duration: 0.8
-      }, 5.4);
+      // Activate Strategist/Growth node with champagne edge light
+      tl.call(() => setActiveOrbitNode(nodeStrategist), null, 5.45);
       // Hold
       tl.to(role1, { opacity: 1, duration: 0.65 }, 6.25);
       // Outgoing clip
       tl.to(role1.querySelector('.role-huge-title'), {
         y: '-100%',
-        duration: 0.7,
+        duration: 0.65,
         ease: 'power2.in'
       }, 6.9);
       tl.to(role1.querySelector('.role-pre-lead'), {
@@ -945,124 +1149,187 @@ document.addEventListener('DOMContentLoaded', () => {
         y: -10,
         duration: 0.45
       }, 7.0);
-      tl.to(role1, { opacity: 0, duration: 0.1 }, 7.6);
+      tl.to(role1, { opacity: 0, duration: 0.1 }, 7.55);
 
       // --- ROLE 02: STRATEGIST. ---
-      tl.to(role2, { opacity: 1, duration: 0.1 }, 7.65);
+      tl.to(role2, { opacity: 1, duration: 0.1 }, 7.6);
       tl.fromTo(role2.querySelector('.role-pre-lead'),
         { y: 14, opacity: 0 },
         { y: 0, opacity: 1, duration: 0.55, ease: 'power2.out' },
-        7.7
+        7.65
       );
       tl.fromTo(role2.querySelector('.role-huge-title'),
         { y: '100%' },
-        { y: '0%', duration: 0.85, ease: 'power3.out' },
-        7.7
+        { y: '0%', duration: 0.8, ease: 'power3.out' },
+        7.65
       );
-      // Aakash: light moves slightly higher
-      tl.to(radialLight, {
-        y: -30,
-        scale: 1.02,
-        opacity: 0.65,
-        duration: 0.8
-      }, 7.7);
-      tl.to(characterScene, {
-        x: () => getAnchorRightX() * 0.98,
-        duration: 0.8
-      }, 7.7);
+      // Activate Builder / Strategy nodes
+      tl.call(() => setActiveOrbitNode(nodeBuilder), null, 7.65);
       // Hold
-      tl.to(role2, { opacity: 1, duration: 0.65 }, 8.55);
+      tl.to(role2, { opacity: 1, duration: 0.65 }, 8.45);
       // Outgoing clip
       tl.to(role2.querySelector('.role-huge-title'), {
         y: '-100%',
-        duration: 0.7,
+        duration: 0.65,
         ease: 'power2.in'
-      }, 9.2);
+      }, 9.1);
       tl.to(role2.querySelector('.role-pre-lead'), {
         opacity: 0,
         y: -10,
         duration: 0.45
-      }, 9.3);
-      tl.to(role2, { opacity: 0, duration: 0.1 }, 9.9);
+      }, 9.2);
+      tl.to(role2, { opacity: 0, duration: 0.1 }, 9.75);
 
       // --- ROLE 03: CREATOR. ---
-      tl.to(role3, { opacity: 1, duration: 0.1 }, 9.95);
+      tl.to(role3, { opacity: 1, duration: 0.1 }, 9.8);
       tl.fromTo(role3.querySelector('.role-pre-lead'),
         { y: 14, opacity: 0 },
         { y: 0, opacity: 1, duration: 0.55, ease: 'power2.out' },
-        10.0
+        9.85
       );
       tl.fromTo(role3.querySelector('.role-huge-title'),
         { y: '100%' },
-        { y: '0%', duration: 0.85, ease: 'power3.out' },
-        10.0
+        { y: '0%', duration: 0.8, ease: 'power3.out' },
+        9.85
       );
-      // Aakash: slightly broader atmospheric light
-      tl.to(radialLight, {
-        y: -10,
-        scale: 1.15,
-        opacity: 0.68,
-        duration: 0.8
-      }, 10.0);
-      tl.to(characterScene, {
-        x: () => getAnchorRightX() * 1.03,
-        duration: 0.8
-      }, 10.0);
+      // Activate Creator viewfinder with warm edge light
+      tl.call(() => setActiveOrbitNode(nodeCreator), null, 9.85);
       // Hold
-      tl.to(role3, { opacity: 1, duration: 0.65 }, 10.85);
+      tl.to(role3, { opacity: 1, duration: 0.65 }, 10.65);
       // Outgoing clip
       tl.to(role3.querySelector('.role-huge-title'), {
         y: '-100%',
-        duration: 0.7,
+        duration: 0.65,
         ease: 'power2.in'
-      }, 11.5);
+      }, 11.3);
       tl.to(role3.querySelector('.role-pre-lead'), {
         opacity: 0,
         y: -10,
         duration: 0.45
-      }, 11.6);
-      tl.to(role3, { opacity: 0, duration: 0.1 }, 12.2);
+      }, 11.4);
+      tl.to(role3, { opacity: 0, duration: 0.1 }, 11.95);
 
-      // --- ROLE 04: SPEAKER. ---
-      tl.to(role4, { opacity: 1, duration: 0.1 }, 12.25);
-      tl.fromTo(role4.querySelector('.role-pre-lead'),
-        { y: 14, opacity: 0 },
-        { y: 0, opacity: 1, duration: 0.55, ease: 'power2.out' },
-        12.3
-      );
-      tl.fromTo(role4.querySelector('.role-huge-title'),
-        { y: '100%' },
-        { y: '0%', duration: 0.85, ease: 'power3.out' },
-        12.3
-      );
-      // Aakash: subtle spotlight influence
-      tl.to(radialLight, {
-        y: -20,
-        scale: 0.92,
-        opacity: 0.76,
-        duration: 0.8
-      }, 12.3);
-      tl.to(characterScene, {
-        x: () => getAnchorRightX(),
-        duration: 0.8
-      }, 12.3);
-      // Hold
-      tl.to(role4, { opacity: 1, duration: 0.65 }, 13.15);
-      // Outgoing clip
-      tl.to(role4.querySelector('.role-huge-title'), {
-        y: '-100%',
-        duration: 0.7,
-        ease: 'power2.in'
-      }, 13.8);
-      tl.to(role4.querySelector('.role-pre-lead'), {
-        opacity: 0,
-        y: -10,
-        duration: 0.45
-      }, 13.9);
-      tl.to(role4, { opacity: 0, duration: 0.1 }, 14.5);
+      // --- ROLE 04: BRAND BUILDER. ---
+      if (role4) {
+        tl.to(role4, { opacity: 1, duration: 0.1 }, 12.0);
+        tl.fromTo(role4.querySelector('.role-pre-lead'),
+          { y: 14, opacity: 0 },
+          { y: 0, opacity: 1, duration: 0.55, ease: 'power2.out' },
+          12.05
+        );
+        tl.fromTo(role4.querySelector('.role-huge-title'),
+          { y: '100%' },
+          { y: '0%', duration: 0.8, ease: 'power3.out' },
+          12.05
+        );
+        // Activate Brand Builder identity frame
+        tl.call(() => setActiveOrbitNode(nodeBrand), null, 12.05);
+        // Hold
+        tl.to(role4, { opacity: 1, duration: 0.65 }, 12.85);
+        // Outgoing clip
+        tl.to(role4.querySelector('.role-huge-title'), {
+          y: '-100%',
+          duration: 0.65,
+          ease: 'power2.in'
+        }, 13.5);
+        tl.to(role4.querySelector('.role-pre-lead'), {
+          opacity: 0,
+          y: -10,
+          duration: 0.45
+        }, 13.6);
+        tl.to(role4, { opacity: 0, duration: 0.1 }, 14.15);
+      }
+
+      // --- ROLE 05: SPEAKER. ---
+      if (role5) {
+        tl.to(role5, { opacity: 1, duration: 0.1 }, 14.2);
+        tl.fromTo(role5.querySelector('.role-pre-lead'),
+          { y: 14, opacity: 0 },
+          { y: 0, opacity: 1, duration: 0.55, ease: 'power2.out' },
+          14.25
+        );
+        tl.fromTo(role5.querySelector('.role-huge-title'),
+          { y: '100%' },
+          { y: '0%', duration: 0.8, ease: 'power3.out' },
+          14.25
+        );
+        // Activate Speaker microphone capsule
+        tl.call(() => setActiveOrbitNode(nodeSpeaker), null, 14.25);
+        // Hold
+        tl.to(role5, { opacity: 1, duration: 0.65 }, 15.05);
+        // Outgoing clip
+        tl.to(role5.querySelector('.role-huge-title'), {
+          y: '-100%',
+          duration: 0.65,
+          ease: 'power2.in'
+        }, 15.7);
+        tl.to(role5.querySelector('.role-pre-lead'), {
+          opacity: 0,
+          y: -10,
+          duration: 0.45
+        }, 15.8);
+        tl.to(role5, { opacity: 0, duration: 0.1 }, 16.35);
+      }
 
       // ----------------------------------------------------------------------
-      // STEP 4 (Sections 12 & 13): TRANSITION INTO DIGI MARKETRIX
+      // STEP 4: TRANSITION OUT & INTO DIGI MARKETRIX
+      // All identity objects glide outward into darkness.
+      // Box outline disappears.
+      // Aakash moves toward far right and darkens.
+      // DIGI MARKETRIX takes over the viewport.
+      // ----------------------------------------------------------------------
+
+      // Deactivate all role highlights
+      tl.call(() => setActiveOrbitNode(null), null, 16.35);
+
+      // Objects glide outward into darkness
+      if (allOrbitNodes.length > 0) {
+        tl.to(allOrbitNodes, {
+          x: '+=45',
+          opacity: 0,
+          scale: 0.85,
+          duration: 0.85,
+          stagger: 0.04,
+          ease: 'power2.in'
+        }, 16.4);
+      }
+
+      // Box disappears completely
+      if (boxBoundary) {
+        tl.to(boxBoundary, { opacity: 0, duration: 0.4 }, 16.4);
+      }
+
+      // Orbit spotlight fades
+      if (orbitSpotlight) {
+        tl.to(orbitSpotlight, { opacity: 0, duration: 0.8 }, 16.4);
+      }
+
+      // Aakash moves toward the right edge & dims
+      tl.to(characterScene, {
+        x: () => getAnchorRightX() * 1.5,
+        scale: 0.94,
+        opacity: 0.32,
+        duration: 1.1,
+        ease: 'power2.inOut'
+      }, 16.5);
+
+      if (characterPortrait) {
+        tl.to(characterPortrait, {
+          y: -15,
+          duration: 1.1,
+          ease: 'power2.inOut'
+        }, 16.5);
+      }
+
+      tl.to(radialLight, {
+        opacity: 0.22,
+        scale: 0.85,
+        duration: 1.1,
+        ease: 'power2.inOut'
+      }, 16.5);
+
+      // ----------------------------------------------------------------------
+      // STEP 4: TRANSITION INTO DIGI MARKETRIX
       // As SPEAKER finishes:
       // Aakash moves toward the far right (translateX: 0 -> 8-12vw further)
       // scale: 1 -> 0.94, opacity: 1 -> 0.32, lighting dims
@@ -1070,54 +1337,39 @@ document.addEventListener('DOMContentLoaded', () => {
       // SELECTED WORK / 01 first, then DIGI, then MARKETRIX (~100ms later)
       // Project title OWNS the screen. Aakash is faint continuity on far right.
       // ----------------------------------------------------------------------
-      tl.to(characterScene, {
-        x: () => getAnchorRightX() * 1.5,
-        scale: 0.94,
-        opacity: 0.32,
-        duration: 1.1,
-        ease: 'power2.inOut'
-      }, 14.5);
-
-      tl.to(radialLight, {
-        opacity: 0.22,
-        scale: 0.85,
-        duration: 1.1,
-        ease: 'power2.inOut'
-      }, 14.5);
-
       // DIGI MARKETRIX Enters Left
-      tl.to(workTransition, { opacity: 1, duration: 0.1 }, 14.55);
+      tl.to(workTransition, { opacity: 1, duration: 0.1 }, 16.6);
 
       // SELECTED WORK / 01 first
       tl.fromTo('#work-kicker',
         { y: 18, opacity: 0 },
         { y: 0, opacity: 1, duration: 0.6, ease: 'power2.out' },
-        14.65
+        16.7
       );
 
       // DIGI: upward mask reveal
       tl.fromTo('#work-title-digi',
         { y: '100%', opacity: 0 },
         { y: '0%', opacity: 1, duration: 0.85, ease: 'power3.out' },
-        14.95
+        17.0
       );
 
       // MARKETRIX: upward mask reveal approx 100ms later
       tl.fromTo('#work-title-marketrix',
         { y: '100%', opacity: 0 },
         { y: '0%', opacity: 1, duration: 0.85, ease: 'power3.out' },
-        15.10
+        17.15
       );
 
       // Descriptor subtitle slides up 10px while fading in
       tl.fromTo('#work-subtitle',
         { y: 14, opacity: 0 },
         { y: 0, opacity: 1, duration: 0.7, ease: 'power2.out' },
-        15.45
+        17.5
       );
 
       // ----------------------------------------------------------------------
-      // STEP 5 (Section 14): TRANSITION INTO PROJECT CANVAS
+      // STEP 5: TRANSITION INTO PROJECT CANVAS
       // Aakash fades completely.
       // One actual Digi Marketrix project image approaches from depth.
       // Title slightly reduces/moves.
@@ -1127,30 +1379,91 @@ document.addEventListener('DOMContentLoaded', () => {
         opacity: 0,
         duration: 0.8,
         ease: 'power2.in'
-      }, 16.2);
+      }, 18.3);
 
       tl.to(radialLight, {
         opacity: 0,
         duration: 0.8
-      }, 16.2);
+      }, 18.3);
 
       tl.to(workTransition, {
         scale: 0.94,
         y: -18,
         duration: 0.9,
         ease: 'power2.out'
-      }, 16.4);
+      }, 18.4);
 
       if (projectApproach) {
         tl.fromTo(projectApproach,
           { opacity: 0, scale: 0.85, y: 35 },
           { opacity: 1, scale: 1.0, y: 0, duration: 1.15, ease: 'power3.out' },
-          16.4
+          18.4
         );
       }
 
       // Rest / hold before smooth unpinning into case study section
-      tl.to(workTransition, { opacity: 1, duration: 0.8 }, 17.55);
+      tl.to(workTransition, { opacity: 1, duration: 0.8 }, 19.55);
+
+      // ----------------------------------------------------------------------
+      // POINTER INTERACTION (Desktop Only — Subtle Parallax & Hover Illumination)
+      // Aakash: ±3px, Near objects: ±8px, Far objects: ±3px, Light: ±10px
+      // ----------------------------------------------------------------------
+      if (window.matchMedia("(min-width: 1025px)").matches) {
+        let mouseX = 0, mouseY = 0;
+        let targetX = 0, targetY = 0;
+
+        window.addEventListener('mousemove', (e) => {
+          targetX = (e.clientX / window.innerWidth - 0.5) * 2;
+          targetY = (e.clientY / window.innerHeight - 0.5) * 2;
+        }, { passive: true });
+
+        gsap.ticker.add(() => {
+          mouseX += (targetX - mouseX) * 0.08;
+          mouseY += (targetY - mouseY) * 0.08;
+
+          // Aakash: ±3px
+          if (characterPortrait) {
+            gsap.set(characterPortrait, {
+              x: mouseX * 3,
+              y: mouseY * 3
+            });
+          }
+
+          // Near objects: ±8px
+          document.querySelectorAll('.orbit-spatial-node[data-depth="near"]').forEach(node => {
+            gsap.set(node, {
+              x: mouseX * 8,
+              y: mouseY * 8
+            });
+          });
+
+          // Far objects: ±3px
+          document.querySelectorAll('.orbit-spatial-node[data-depth="far"]').forEach(node => {
+            gsap.set(node, {
+              x: mouseX * 3,
+              y: mouseY * 3
+            });
+          });
+
+          // Light: ±10px
+          if (orbitSpotlight) {
+            gsap.set(orbitSpotlight, {
+              x: mouseX * 10,
+              y: mouseY * 10
+            });
+          }
+        });
+
+        // Hover proximity illumination & micro-label reveal
+        allOrbitNodes.forEach(node => {
+          node.addEventListener('mouseenter', () => {
+            node.classList.add('hovered');
+          });
+          node.addEventListener('mouseleave', () => {
+            node.classList.remove('hovered');
+          });
+        });
+      }
     });
   }
 

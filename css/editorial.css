@@ -401,6 +401,36 @@
   user-select: none;
 }
 
+/* Contact Shadow & Environmental Grounding for Aakash */
+.aakash-contact-shadow {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 85%;
+  height: 140px;
+  background: radial-gradient(ellipse at center, rgba(0, 0, 0, 0.85) 0%, rgba(0, 0, 0, 0.45) 45%, transparent 75%);
+  filter: blur(24px);
+  z-index: 4;
+  pointer-events: none;
+}
+
+/* Focused Orbit Spotlight in Lighting Stage */
+.hero-orbit-spotlight {
+  position: absolute;
+  top: 40%;
+  left: 56%;
+  transform: translate(-50%, -50%);
+  width: clamp(400px, 45vw, 750px);
+  height: clamp(400px, 45vw, 750px);
+  background: radial-gradient(circle, rgba(212, 175, 55, 0.14) 0%, rgba(139, 92, 246, 0.03) 45%, transparent 70%);
+  filter: blur(55px);
+  pointer-events: none;
+  z-index: 2;
+  opacity: 0;
+  transition: opacity 0.6s ease;
+}
+
 /* RIGHT FLANK: Mantra & Real Professional Anchors */
 .hero-right-mantra {
   display: flex;
@@ -676,6 +706,235 @@
 
 .identity-dot {
   color: var(--accent-champagne);
+}
+
+/* ==========================================================================
+   SCROLL PHASE 2.5: THE ORBIT OF AAKASH (Spatial Symbols & Breakable Box)
+   ========================================================================== */
+.orbit-spatial-stage {
+  position: absolute;
+  inset: -15% -30%;
+  pointer-events: none;
+  z-index: 7;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform-style: preserve-3d;
+  perspective: 1000px;
+}
+
+/* THE BOX: Architectural 4-line boundary with breakable right segment */
+.orbit-box-boundary {
+  position: absolute;
+  top: 10%;
+  left: -8%;
+  width: 96%;
+  height: 82%;
+  pointer-events: none;
+  z-index: 6;
+  opacity: 0;
+}
+
+.box-line {
+  position: absolute;
+  background: rgba(255, 255, 255, 0.22);
+  will-change: transform, opacity;
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.08);
+}
+
+.box-line-top {
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  transform-origin: left center;
+  transform: scaleX(0);
+}
+
+.box-line-bottom {
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  transform-origin: right center;
+  transform: scaleX(0);
+}
+
+.box-line-left {
+  top: 0;
+  left: 0;
+  width: 1px;
+  height: 100%;
+  transform-origin: bottom center;
+  transform: scaleY(0);
+}
+
+.box-line-right-upper {
+  top: 0;
+  right: 0;
+  width: 1px;
+  height: 42%;
+  transform-origin: top center;
+  transform: scaleY(0);
+}
+
+.box-line-right-lower {
+  bottom: 0;
+  right: 0;
+  width: 1px;
+  height: 42%;
+  transform-origin: bottom center;
+  transform: scaleY(0);
+}
+
+.box-fracture-spark {
+  position: absolute;
+  top: 50%;
+  right: -6px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #fff 10%, var(--accent-champagne) 60%, transparent 90%);
+  filter: blur(1px) drop-shadow(0 0 12px var(--accent-champagne));
+  opacity: 0;
+  transform: translateY(-50%) scale(0.5);
+  pointer-events: none;
+}
+
+.box-corner {
+  position: absolute;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: rgba(212, 175, 55, 0.65);
+  line-height: 1;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  user-select: none;
+}
+
+.box-corner-tl { top: -6px; left: -5px; }
+.box-corner-tr { top: -6px; right: -5px; }
+.box-corner-br { bottom: -6px; right: -5px; }
+.box-corner-bl { bottom: -6px; left: -5px; }
+
+.box-status-tag {
+  position: absolute;
+  top: -10px;
+  left: 20px;
+  font-family: var(--font-mono);
+  font-size: 0.58rem;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  color: var(--accent-champagne);
+  background: #09090c;
+  padding: 2px 7px;
+  border: 1px solid rgba(212, 175, 55, 0.35);
+  border-radius: 2px;
+  opacity: 0;
+  user-select: none;
+}
+
+/* SPATIAL IDENTITY NODES: Smoked Glass & Dark Metal Aesthetic */
+.orbit-spatial-node {
+  position: absolute;
+  z-index: 8;
+  pointer-events: auto;
+  opacity: 0;
+  transform-style: preserve-3d;
+  will-change: transform, opacity, filter;
+  cursor: default;
+}
+
+/* Precise negative-space anchoring around Aakash's silhouette */
+.orbit-node-strategist {
+  top: 14%;
+  right: -14%;
+  width: 110px;
+}
+
+.orbit-node-creator {
+  top: 38%;
+  left: -16%;
+  width: 96px;
+}
+
+.orbit-node-brand {
+  top: 2%;
+  right: 4%;
+  width: 86px;
+}
+
+.orbit-node-speaker {
+  top: 68%;
+  right: -12%;
+  width: 86px;
+}
+
+.orbit-node-builder {
+  top: 74%;
+  left: -12%;
+  width: 116px;
+}
+
+.orbit-node-ideas {
+  top: 6%;
+  left: -2%;
+  width: 80px;
+}
+
+.orbit-node-surface {
+  position: relative;
+  background: linear-gradient(135deg, rgba(22, 22, 28, 0.75) 0%, rgba(10, 10, 14, 0.85) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.75), 0 0 20px rgba(212, 175, 55, 0.04);
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease, background 0.3s ease, transform 0.3s ease;
+}
+
+.orbit-vector-art {
+  width: 100%;
+  height: auto;
+  display: block;
+  overflow: visible;
+}
+
+.orbit-micro-label {
+  margin-top: 6px;
+  font-family: var(--font-mono);
+  font-size: 0.58rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--accent-champagne);
+  opacity: 0;
+  transform: translateY(4px);
+  transition: opacity 0.25s ease, transform 0.25s ease;
+  pointer-events: none;
+  white-space: nowrap;
+  user-select: none;
+}
+
+/* Hover & Active Role Activation: Warm Champagne Edge Light */
+.orbit-spatial-node.active-role .orbit-node-surface,
+.orbit-spatial-node:hover .orbit-node-surface {
+  border-color: rgba(212, 175, 55, 0.65);
+  box-shadow: 0 24px 50px rgba(0, 0, 0, 0.9), 0 0 30px rgba(212, 175, 55, 0.25);
+  background: linear-gradient(135deg, rgba(30, 28, 22, 0.85) 0%, rgba(14, 13, 11, 0.92) 100%);
+  transform: translateY(-2px);
+}
+
+.orbit-spatial-node.active-role .orbit-micro-label,
+.orbit-spatial-node:hover .orbit-micro-label {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 /* ==========================================================================
@@ -2606,6 +2865,32 @@ textarea.form-input-clean {
   .proof-nav-next {
     right: 0.5rem;
   }
+
+  /* The Orbit of Aakash: Calibrated mobile view (3 key symbols only, safe negative space) */
+  .orbit-node-brand,
+  .orbit-node-builder,
+  .orbit-node-ideas {
+    display: none !important;
+  }
+  .orbit-node-strategist {
+    top: 8% !important;
+    right: -4% !important;
+    transform: scale(0.75) !important;
+  }
+  .orbit-node-creator {
+    top: 36% !important;
+    left: -4% !important;
+    transform: scale(0.75) !important;
+  }
+  .orbit-node-speaker {
+    top: 66% !important;
+    right: -4% !important;
+    transform: scale(0.75) !important;
+  }
+  .orbit-box-boundary {
+    left: -2% !important;
+    width: 98% !important;
+  }
 }
 
 /* ==========================================================================
@@ -2882,6 +3167,12 @@ textarea.form-input-clean {
   .character-portrait-asset {
     transform: none !important;
     opacity: 1 !important;
+  }
+  .orbit-spatial-stage {
+    display: none !important;
+  }
+  .orbit-box-boundary {
+    display: none !important;
   }
 }
 
