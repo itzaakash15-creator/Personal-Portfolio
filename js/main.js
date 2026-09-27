@@ -467,7 +467,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     if (characterPortrait) {
       characterPortrait.style.opacity = '0';
-      characterPortrait.style.transform = 'translate3d(0, 105%, 0) scale(0.96)';
+      characterPortrait.style.transform = 'translate3d(0, 85vh, 0) scale(0.97)';
     }
 
     // Directional tags initial state
@@ -528,57 +528,54 @@ document.addEventListener('DOMContentLoaded', () => {
           opacity: 0.92,
           clipPath: 'inset(0% 0% 0% 0%)',
           letterSpacing: '-0.055em',
-          duration: 0.72,
+          duration: 0.70,
           ease: 'power3.out'
         },
         0.22
       );
 
       // ----------------------------------------------------------------------
-      // STEP 3: AAKASH POPS / RISES UP FROM BELOW THE VIEWPORT
-      // Starts below the visible screen (y: 105%) and comes upward into final position
-      // Passes IN FRONT of the huge PORTFOLIO typography.
-      // Motion: translateY(105% -> 0), opacity: 0 -> 1, scale: 0.96 -> 1
-      // Strong premium ease-out. Tiny 3-5px settling motion at end.
+      // STEP 3: AAKASH RISES UP FROM BELOW THE VIEWPORT (translateY 85vh -> 0)
+      // Enters smoothly in front of PORTFOLIO with physical weight and cinematic ease.
+      // Physical weight: subtle 3-5px settling movement (-4px -> 0px) near the end.
       // ----------------------------------------------------------------------
       entranceTimeline.fromTo(characterPortrait,
         {
-          y: '105%',
+          y: '85vh',
           opacity: 0,
-          scale: 0.96
+          scale: 0.97
         },
         {
           y: '0%',
           opacity: 1,
           scale: 1,
-          duration: 1.02,
+          duration: 1.15,
           ease: 'power3.out'
         },
-        0.62
+        0.55
       );
 
-      // Tiny 3-5px physical weight settling motion at the end of his rise
+      // Physical weight subtle settling movement at the end of Aakash's entrance (1.70s)
       entranceTimeline.to(characterPortrait, {
         y: '-4px',
         duration: 0.14,
         ease: 'power1.out'
-      }, 1.64);
+      }, 1.70);
 
       entranceTimeline.to(characterPortrait, {
         y: '0px',
         duration: 0.18,
         ease: 'power2.inOut'
-      }, 1.78);
+      }, 1.84);
 
       // ----------------------------------------------------------------------
-      // STEP 4: Once Aakash reaches his position:
-      // The cinematic backlight behind him increases slightly
+      // STEP 4: Backlight blooms behind Aakash as he approaches position
       // ----------------------------------------------------------------------
       entranceTimeline.fromTo(radialLight,
         { opacity: 0.12 },
         {
           opacity: 0.88,
-          duration: 0.42,
+          duration: 0.45,
           ease: 'power2.out'
         },
         1.35
@@ -588,102 +585,101 @@ document.addEventListener('DOMContentLoaded', () => {
         opacity: 0.65,
         duration: 0.45,
         ease: 'power2.inOut'
-      }, 1.77);
+      }, 1.80);
 
       // ----------------------------------------------------------------------
-      // STEP 5: ONLY THEN reveal the surrounding identity text/details
-      // Starts right after Aakash reaches his position (1.82s)
+      // STEP 5: SIDE DETAILS ASSEMBLE
+      // Only reveal surrounding details once Aakash has completed ~65-75% of his rise (~1.38s)!
+      // Staggered mask reveals, small translates, opacity.
       // ----------------------------------------------------------------------
-      // LEFT SIDE: small line appears first, then text reveals left -> right
       if (leftLine) {
         entranceTimeline.to(leftLine, {
           scaleX: 1,
           duration: 0.22,
           ease: 'power2.out'
-        }, 1.82);
+        }, 1.38);
       }
       if (leftTag1) {
         entranceTimeline.to(leftTag1, {
           clipPath: 'inset(0% 0% 0% 0%)',
           opacity: 1,
           x: 0,
-          duration: 0.28,
+          duration: 0.26,
           ease: 'power2.out'
-        }, 1.90);
+        }, 1.44);
       }
       if (leftSep) {
-        entranceTimeline.to(leftSep, { opacity: 1, duration: 0.15 }, 1.94);
+        entranceTimeline.to(leftSep, { opacity: 1, duration: 0.15 }, 1.48);
       }
       if (leftTag2) {
         entranceTimeline.to(leftTag2, {
           clipPath: 'inset(0% 0% 0% 0%)',
           opacity: 1,
           x: 0,
-          duration: 0.28,
+          duration: 0.26,
           ease: 'power2.out'
-        }, 1.96);
+        }, 1.50);
       }
 
-      // RIGHT SIDE: small line appears first, then text reveals right -> left
       if (rightLine) {
         entranceTimeline.to(rightLine, {
           scaleX: 1,
           duration: 0.22,
           ease: 'power2.out'
-        }, 1.86);
+        }, 1.40);
       }
       if (rightTag1) {
         entranceTimeline.to(rightTag1, {
           clipPath: 'inset(0% 0% 0% 0%)',
           opacity: 1,
           x: 0,
-          duration: 0.28,
+          duration: 0.26,
           ease: 'power2.out'
-        }, 1.94);
+        }, 1.46);
       }
       if (rightSep) {
-        entranceTimeline.to(rightSep, { opacity: 1, duration: 0.15 }, 1.98);
+        entranceTimeline.to(rightSep, { opacity: 1, duration: 0.15 }, 1.50);
       }
       if (rightTag2) {
         entranceTimeline.to(rightTag2, {
           clipPath: 'inset(0% 0% 0% 0%)',
           opacity: 1,
           x: 0,
-          duration: 0.28,
+          duration: 0.26,
           ease: 'power2.out'
-        }, 2.00);
+        }, 1.52);
       }
 
-      // Main Greeting & Editorial Statement
       if (greeting) {
         entranceTimeline.to(greeting, {
           opacity: 1,
           y: 0,
           duration: 0.45,
           ease: 'power2.out'
-        }, 2.02);
+        }, 1.58);
       }
+
       if (positioning) {
         entranceTimeline.to(positioning, {
           opacity: 1,
           y: 0,
           duration: 0.45,
           ease: 'power2.out'
-        }, 2.12);
+        }, 1.66);
       }
+
       if (rightMantra) {
         entranceTimeline.to(rightMantra, {
           opacity: 1,
           y: 0,
           duration: 0.45,
           ease: 'power2.out'
-        }, 2.12);
+        }, 1.72);
       }
 
-      // Anchors Entrance (Sequential 4-Step Entrance)
-      const anchorDelays = [2.22, 2.37, 2.52];
+      // Anchors Entrance
       anchorItems.forEach((anchor, idx) => {
-        const baseTime = anchorDelays[idx] || (2.22 + idx * 0.15);
+        const baseTime = 1.78 + idx * 0.10;
         const num = anchor.querySelector('.anchor-index');
         const line = anchor.querySelector('.anchor-line');
         const title = anchor.querySelector('.anchor-title');
@@ -697,7 +693,7 @@ document.addEventListener('DOMContentLoaded', () => {
             scaleX: idx === 0 ? 1 : 0.35,
             duration: 0.22,
             ease: 'power2.out'
-          }, baseTime + 0.06);
+          }, baseTime + 0.04);
         }
         if (title) {
           entranceTimeline.to(title, {
@@ -706,7 +702,7 @@ document.addEventListener('DOMContentLoaded', () => {
             y: 0,
             duration: 0.24,
             ease: 'power2.out'
-          }, baseTime + 0.12);
+          }, baseTime + 0.08);
         }
         if (sub) {
           entranceTimeline.to(sub, {
@@ -714,7 +710,7 @@ document.addEventListener('DOMContentLoaded', () => {
             y: 0,
             duration: 0.20,
             ease: 'power2.out'
-          }, baseTime + 0.18);
+          }, baseTime + 0.12);
         }
       });
 
@@ -725,7 +721,7 @@ document.addEventListener('DOMContentLoaded', () => {
           y: 0,
           duration: 0.45,
           ease: 'power2.out'
-        }, 2.58);
+        }, 1.84);
       }
 
     } else {
@@ -779,106 +775,92 @@ document.addEventListener('DOMContentLoaded', () => {
       const portfolioWord = document.getElementById('hero-portfolio-wordmark');
       const radialLight = document.getElementById('hero-radial-light');
       const characterScene = document.getElementById('character-scene');
-      
-      const identityPhase = document.getElementById('identity-box-phase');
-      const idLine1 = document.getElementById('id-line-1');
-      const idLine2 = document.getElementById('id-line-2');
-      const idLine3 = document.getElementById('id-line-3');
-
-      const role1 = document.getElementById('role-slide-1');
-      const role2 = document.getElementById('role-slide-2');
-      const role3 = document.getElementById('role-slide-3');
-      const role4 = document.getElementById('role-slide-4');
-      const role5 = document.getElementById('role-slide-5');
-
       const characterPortrait = document.getElementById('character-portrait');
       const aakashShadow = document.getElementById('aakash-contact-shadow');
-      const constellationStage = document.getElementById('identity-constellation');
-      const orbitSpotlight = document.getElementById('orbit-spotlight');
 
-      // The Conceptual Box boundary elements
-      const boxBoundary = document.getElementById('conceptual-box-frame');
-      const boxSegmentTop = document.getElementById('box-segment-top');
-      const boxSegmentRightU = document.getElementById('box-segment-right-u');
-      const boxSegmentRightL = document.getElementById('box-segment-right-l');
-      const boxSegmentBottom = document.getElementById('box-segment-bottom');
-      const boxSegmentLeft = document.getElementById('box-segment-left');
-      const boxSpark = document.getElementById('box-fracture-spark');
-      const boxMarkers = document.querySelectorAll('.box-corner-marker');
-      const boxTag = document.getElementById('box-status-tag');
+      // PART 2: Backdrop Statement (3 Typographic Depth Levels Behind Aakash)
+      const stmtBackdrop = document.getElementById('hero-statement-backdrop');
+      const stmtLine1 = document.getElementById('stmt-line-1');
+      const stmtLine2 = document.getElementById('stmt-line-2');
+      const stmtLine3 = document.getElementById('stmt-line-3');
 
-      // 5 Identity Constellation Spatial Objects
-      const objStrategy = document.getElementById('constellation-strategy');
-      const objCreator = document.getElementById('constellation-creator');
-      const objBrand = document.getElementById('constellation-brand');
-      const objSpeaker = document.getElementById('constellation-speaker');
-      const objBuilder = document.getElementById('constellation-builder');
-      const allConstellationObjs = document.querySelectorAll('.constellation-object');
+      // PART 3 & 4: Environmental Glowing Symbols (Large Artwork Behind Frames)
+      const envSymbolsWrap = document.getElementById('role-env-symbols');
+      const envSymMarketer = document.getElementById('env-sym-marketer');
+      const envSymBrand = document.getElementById('env-sym-brand');
+      const envSymCreator = document.getElementById('env-sym-creator');
+      const envSymSpeaker = document.getElementById('env-sym-speaker');
 
-      // Internal SVG references for unique craft animations
-      const stratPathLine = document.getElementById('strat-path-line');
-      const stratNodes = document.querySelectorAll('.strat-node, .strat-node-apex, .strat-node-ring, .strat-apex-arrow');
-      const stratFill = document.querySelector('.strat-fill-area');
-      const apertureBlades = document.querySelectorAll('.aperture-blade');
-      const fingerprintPaths = document.querySelectorAll('.fingerprint-path');
-      const soundPulseDot = document.getElementById('sound-pulse-dot');
-      const soundWaveBars = document.querySelectorAll('#sound-wave-bars line');
-      const builderGridLines = document.querySelectorAll('#builder-grid line');
-      const builderBrackets = document.querySelectorAll('.builder-bracket, .builder-slash');
+      // Active Role Frames & Warm Spotlight
+      const roleStage = document.getElementById('active-role-stage');
+      const roleSpotlight = document.getElementById('active-role-spotlight');
+      const frame1 = document.getElementById('role-frame-1'); // 01 MARKETER
+      const frame2 = document.getElementById('role-frame-2'); // 02 BRAND BUILDER
+      const frame3 = document.getElementById('role-frame-3'); // 03 CREATOR
+      const frame4 = document.getElementById('role-frame-4'); // 04 SPEAKER
 
+      // Top Identity Progress System (Accumulating Roles Trail)
+      const progressTrail = document.getElementById('identity-progress-trail');
+      const progRole1 = document.getElementById('prog-role-1');
+      const progRole2 = document.getElementById('prog-role-2');
+      const progRole3 = document.getElementById('prog-role-3');
+      const progRole4 = document.getElementById('prog-role-4');
+      const progFill1 = document.getElementById('prog-fill-1');
+      const progFill2 = document.getElementById('prog-fill-2');
+      const progFill3 = document.getElementById('prog-fill-3');
+      const progFill4 = document.getElementById('prog-fill-4');
+      const progCollectiveLine = document.getElementById('prog-collective-line');
+
+      // Untouched Digi Marketrix Transition Phase
       const workTransition = document.getElementById('work-transition-phase');
       const projectApproach = document.getElementById('hero-project-approach');
 
       if (!wrapper || !characterScene) return;
 
-      // Helper to activate a specific constellation object with warm champagne edge lighting
-      function setActiveConstellation(activeObj) {
-        allConstellationObjs.forEach(obj => {
-          if (obj === activeObj) {
-            obj.classList.add('active-constellation');
-            gsap.to(obj, { scale: 1.04, opacity: 1, duration: 0.35, overwrite: 'auto' });
-          } else {
-            obj.classList.remove('active-constellation');
-            gsap.to(obj, { scale: 1.0, opacity: 0.38, duration: 0.35, overwrite: 'auto' });
-          }
+      // Safe rightward anchor calculation for Aakash portrait
+      // Keeps Aakash stably anchored in right 35–40%, clearing left 60–65% for the editorial frames
+      const getAnchorRightX = () => Math.min(Math.max(window.innerWidth * 0.22, 220), 380);
+
+      // SVG path initialization for smooth environmental drawings
+      const markPath = envSymMarketer ? envSymMarketer.querySelector('.env-path-draw') : null;
+      if (markPath) {
+        gsap.set(markPath, { strokeDasharray: 480, strokeDashoffset: 480 });
+      }
+      const brandPaths = envSymBrand ? envSymBrand.querySelectorAll('.env-path-draw') : [];
+      if (brandPaths.length) {
+        brandPaths.forEach(p => gsap.set(p, { strokeDasharray: 340, strokeDashoffset: 340 }));
+      }
+      const creatorBlades = envSymCreator ? envSymCreator.querySelectorAll('g path') : [];
+      if (creatorBlades.length) {
+        gsap.set(creatorBlades, { transformOrigin: '170px 170px', rotation: 18, scale: 0.88, opacity: 0.4 });
+      }
+      const speakerBars = envSymSpeaker ? envSymSpeaker.querySelectorAll('line') : [];
+      if (speakerBars.length) {
+        speakerBars.forEach((bar, idx) => {
+          if (idx > 0) gsap.set(bar, { transformOrigin: 'center center', scaleY: 0.1 });
         });
       }
 
-      // Initial state preparation for SVG paths & symbols
-      if (stratPathLine) {
-        gsap.set(stratPathLine, { strokeDasharray: 260, strokeDashoffset: 260 });
-      }
-      if (stratNodes.length) {
-        gsap.set(stratNodes, { scale: 0, transformOrigin: 'center center' });
-      }
-      if (apertureBlades.length) {
-        gsap.set(apertureBlades, { rotation: 24, scale: 0.82, opacity: 0, transformOrigin: 'center center' });
-      }
-      if (fingerprintPaths.length) {
-        fingerprintPaths.forEach(p => gsap.set(p, { strokeDasharray: 180, strokeDashoffset: 180 }));
-      }
-      if (soundWaveBars.length) {
-        gsap.set(soundWaveBars, { scaleY: 0, transformOrigin: 'center center' });
-      }
-      if (soundPulseDot) {
-        gsap.set(soundPulseDot, { x: 0 });
-      }
-      if (builderGridLines.length) {
-        gsap.set(builderGridLines, { scaleX: 0, transformOrigin: 'left center' });
-      }
-      if (builderBrackets.length) {
-        gsap.set(builderBrackets, { opacity: 0, scale: 0.85, transformOrigin: 'center center' });
-      }
+      // Initial state of active frames (Architectural Panels elevated in 3D depth)
+      [frame1, frame2, frame3, frame4].forEach(f => {
+        if (f) {
+          gsap.set(f, {
+            transformPerspective: 1200,
+            transformOrigin: 'center bottom',
+            y: 120,
+            scale: 0.88,
+            rotateX: 10,
+            opacity: 0
+          });
+        }
+      });
 
-      // Calculate safe rightward anchor offset for Aakash portrait
-      // Keeps him anchored in the right 35–40% zone, leaving left 60–65% 100% clear
-      const getAnchorRightX = () => Math.min(Math.max(window.innerWidth * 0.22, 220), 380);
-
+      // Master ScrollTrigger Timeline
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: wrapper,
           start: "top top",
-          end: "+=4600",
+          end: "+=4800",
           pin: true,
           scrub: 0.8,
           anticipatePin: 1,
@@ -887,23 +869,20 @@ document.addEventListener('DOMContentLoaded', () => {
             let section = 'hero';
             if (p < 0.10) {
               section = 'hero';
-            } else if (p >= 0.10 && p < 0.28) {
-              section = 'identity';
-            } else if (p >= 0.28 && p < 0.38) {
+            } else if (p >= 0.10 && p < 0.26) {
+              section = 'statement';
+            } else if (p >= 0.26 && p < 0.40) {
               section = 'marketer';
-            } else if (p >= 0.38 && p < 0.48) {
-              section = 'strategist';
-            } else if (p >= 0.48 && p < 0.58) {
-              section = 'creator';
-            } else if (p >= 0.58 && p < 0.68) {
+            } else if (p >= 0.40 && p < 0.54) {
               section = 'brand';
-            } else if (p >= 0.68 && p < 0.78) {
+            } else if (p >= 0.54 && p < 0.68) {
+              section = 'creator';
+            } else if (p >= 0.68 && p < 0.82) {
               section = 'speaker';
             } else {
               section = 'work';
             }
 
-            // Sync with CharacterScene modular API for 3D GLB model if loaded
             if (window.Character3DScene && typeof window.Character3DScene.setScroll === 'function') {
               window.Character3DScene.setScroll(p, section);
             }
@@ -912,8 +891,7 @@ document.addEventListener('DOMContentLoaded', () => {
       });
 
       // ----------------------------------------------------------------------
-      // STEP 1: Hero Flanks Slide Outward; AAKASH Anchors Smoothly to the Right
-      // Aakash anchors to right 35–40%, clearing left 60–65% for the experience
+      // STEP 1: Hero Flanks Slide Out; AAKASH Anchors Smoothly to Right
       // ----------------------------------------------------------------------
       tl.to(leftFlank, {
         x: -60,
@@ -936,23 +914,23 @@ document.addEventListener('DOMContentLoaded', () => {
         ease: "power2.inOut"
       }, 0.05);
 
-      // AAKASH SHIFTS TO THE RIGHT (Anchor Position: scale 0.96, opacity 0.85)
+      // AAKASH SHIFTS TO THE RIGHT (Anchor Position: right 35–40%, face stable)
       tl.to(characterScene, {
         x: () => getAnchorRightX(),
+        scale: 0.98,
         duration: 1.0,
         ease: "power2.inOut"
       }, 0.15);
 
       if (characterPortrait) {
         tl.to(characterPortrait, {
-          scale: 0.96,
-          opacity: 0.85,
+          scale: 0.98,
+          opacity: 0.96,
           duration: 1.0,
           ease: "power2.inOut"
         }, 0.15);
       }
 
-      // Studio light & Contact Shadow accompany Aakash to the right
       tl.to(radialLight, {
         x: () => getAnchorRightX() * 0.75,
         duration: 1.0,
@@ -968,469 +946,436 @@ document.addEventListener('DOMContentLoaded', () => {
       }
 
       // ----------------------------------------------------------------------
-      // STEP 2: "IDENTITY CONSTELLATION" & "I DON'T FIT INTO ONE BOX."
+      // STEP 2: "I DON'T FIT INTO ONE BOX." ENORMOUS BACKGROUND TYPOGRAPHY
+      // Three Typographic Depth Levels layered behind Aakash:
+      // Line 1: I DON'T FIT (depth level 1: scale 0.92 -> 1, blur 8px -> 0, opacity 0.52)
+      // Line 2: INTO ONE (depth level 2: scale 0.94 -> 1, blur 6px -> 0, opacity 0.72)
+      // Line 3: BOX. (depth level 3: scale 0.96 -> 1, blur 4px -> 0, opacity 0.98)
+      // Aakash naturally obscures portions of the typography while remaining fully readable.
       // ----------------------------------------------------------------------
+      tl.to(stmtBackdrop, { opacity: 1, duration: 0.1 }, 1.15);
 
-      // SCENE 01: "I DON'T FIT" + Subtle Identity Lines Begin Appearing
-      tl.to(identityPhase, { opacity: 1, duration: 0.1 }, 1.15);
-
-      // Line 1: I DON'T FIT (bottom-to-top mask)
-      tl.fromTo(idLine1,
-        { y: '100%', opacity: 0 },
-        { y: '0%', opacity: 1, duration: 0.85, ease: 'power3.out' },
-        1.2
+      // Depth Level 1: "I DON'T FIT"
+      tl.fromTo(stmtLine1,
+        { scale: 0.92, filter: 'blur(8px)', opacity: 0, y: 35 },
+        { scale: 1, filter: 'blur(0px)', opacity: 0.52, y: 0, duration: 0.85, ease: 'power2.out' },
+        1.25
       );
 
-      // Constellation stage activates; subtle identity lines appear faintly
-      if (constellationStage) {
-        tl.to(constellationStage, { opacity: 1, duration: 0.4 }, 1.2);
-      }
-
-      if (objStrategy) {
-        tl.fromTo(objStrategy,
-          { opacity: 0, scale: 0.88, y: 15 },
-          { opacity: 0.35, scale: 0.96, y: 0, duration: 0.85, ease: 'power2.out' },
-          1.25
-        );
-      }
-
-      if (objCreator) {
-        tl.fromTo(objCreator,
-          { opacity: 0, scale: 0.88, y: 15 },
-          { opacity: 0.35, scale: 0.96, y: 0, duration: 0.85, ease: 'power2.out' },
-          1.25
-        );
-      }
-
-      // Narrow warm light reveals the emerging constellation zone
-      if (orbitSpotlight) {
-        tl.to(orbitSpotlight, {
-          opacity: 0.55,
-          scale: 0.85,
-          duration: 0.8,
-          ease: 'power2.out'
-        }, 1.25);
-      }
-
-      // SCENE 02: "INTO ONE" + MARKETING Strategy Path Draws + CREATOR Aperture Assembles
-      tl.fromTo(idLine2,
-        { y: '100%', opacity: 0 },
-        { y: '0%', opacity: 1, duration: 0.85, ease: 'power3.out' },
+      // Depth Level 2: "INTO ONE"
+      tl.fromTo(stmtLine2,
+        { scale: 0.94, filter: 'blur(6px)', opacity: 0, y: 30 },
+        { scale: 1, filter: 'blur(0px)', opacity: 0.72, y: 0, duration: 0.85, ease: 'power2.out' },
         2.05
       );
-      // Line 1 moves up slightly and becomes lower contrast
-      tl.to(idLine1, {
-        y: '-14px',
-        opacity: 0.35,
+      // Line 1 deepens slightly
+      tl.to(stmtLine1, {
+        opacity: 0.38,
+        scale: 0.98,
+        y: -10,
         duration: 0.75,
         ease: 'power2.out'
       }, 2.05);
 
-      // Aakash subtle progress
-      if (characterPortrait) {
-        tl.to(characterPortrait, {
-          scale: 0.98,
-          opacity: 0.92,
-          y: -5,
-          duration: 0.8
-        }, 2.05);
+      // Depth Level 3: "BOX." (Largest, strongest, accented)
+      tl.fromTo(stmtLine3,
+        { scale: 0.96, filter: 'blur(5px)', opacity: 0, y: 25 },
+        { scale: 1, filter: 'blur(0px)', opacity: 0.98, y: 0, duration: 0.85, ease: 'power2.out' },
+        2.85
+      );
+      // Lines 1 & 2 adjust upward slightly into deep perspective
+      tl.to([stmtLine1, stmtLine2], {
+        y: -22,
+        duration: 0.75,
+        ease: 'power2.out'
+      }, 2.85);
+      tl.to(stmtLine2, {
+        opacity: 0.55,
+        duration: 0.75,
+        ease: 'power2.out'
+      }, 2.85);
+
+      // Hold complete layered statement behind Aakash
+      tl.to(stmtBackdrop, { opacity: 1, duration: 0.6 }, 3.7);
+
+      // ----------------------------------------------------------------------
+      // STEP 3: TRANSITION FROM SENTENCE INTO ROLES
+      // Sentence slowly moves deeper into background (scale 0.92, opacity 0.12, blur)
+      // Aakash remains stably anchored on the right.
+      // Reveal Top Identity Progress System container.
+      // ----------------------------------------------------------------------
+      tl.to(stmtBackdrop, {
+        scale: 0.92,
+        opacity: 0.12,
+        filter: 'blur(4px) contrast(0.8)',
+        duration: 0.85,
+        ease: 'power2.inOut'
+      }, 4.4);
+
+      // Top progress trail emerges into view
+      if (progressTrail) {
+        tl.fromTo(progressTrail,
+          { opacity: 0, y: -15 },
+          { opacity: 1, y: 0, duration: 0.65, ease: 'power2.out' },
+          4.7
+        );
       }
 
-      // MARKETING STRATEGY PATH DRAWS: Thin champagne line draws across environment & connects nodes
-      if (objStrategy) {
-        tl.to(objStrategy, { opacity: 0.88, scale: 1.0, duration: 0.8, ease: 'power2.out' }, 2.1);
+      // ----------------------------------------------------------------------
+      // SCROLL STEP 01: 01 MARKETER
+      // Active Frame pops up from depth with 3D rotation (rotateZ -2.5deg -> 0).
+      // Environmental strategy/path symbol illuminates behind frame.
+      // Spotlight warms up beneath card.
+      // Top marker 01 MARKETER activates.
+      // Continuous migration: Frame travels upward into top progress marker.
+      // ----------------------------------------------------------------------
+      // Environmental Symbol 01: Strategy Path
+      if (envSymMarketer) {
+        tl.fromTo(envSymMarketer,
+          { opacity: 0, scale: 0.9, y: 20 },
+          { opacity: 0.55, scale: 1, y: 0, duration: 0.75, ease: 'power2.out' },
+          5.3
+        );
       }
-      if (stratPathLine) {
-        tl.to(stratPathLine, { strokeDashoffset: 0, duration: 0.85, ease: 'power2.out' }, 2.1);
-      }
-      if (stratNodes.length) {
-        tl.to(stratNodes, { scale: 1, duration: 0.4, stagger: 0.08, ease: 'back.out(2)' }, 2.2);
-      }
-      if (stratFill) {
-        tl.to(stratFill, { opacity: 0.16, duration: 0.6, ease: 'power2.out' }, 2.3);
+      if (markPath) {
+        tl.to(markPath, { strokeDashoffset: 0, duration: 0.8, ease: 'power2.out' }, 5.35);
       }
 
-      // CREATOR APERTURE ASSEMBLES: Curved pieces rotate and assemble into camera aperture
-      if (objCreator) {
-        tl.to(objCreator, { opacity: 0.88, scale: 1.0, duration: 0.8, ease: 'power2.out' }, 2.15);
+      // Active Spotlight beneath Marketer frame
+      if (roleSpotlight) {
+        tl.fromTo(roleSpotlight,
+          { opacity: 0, scale: 0.85 },
+          { opacity: 0.85, scale: 1.0, duration: 0.6, ease: 'power2.out' },
+          5.35
+        );
       }
-      if (apertureBlades.length) {
-        tl.to(apertureBlades, {
+
+      // Frame 01 Entrance: Pops up from depth with 3D rotation
+      if (frame1) {
+        tl.fromTo(frame1,
+          { y: 120, scale: 0.88, rotateX: 10, rotateZ: -2.5, opacity: 0 },
+          { y: 0, scale: 1, rotateX: 0, rotateZ: 0, opacity: 1, duration: 0.8, ease: 'power3.out' },
+          5.3
+        );
+      }
+
+      // Top Progress Marker 01: Active state
+      if (progRole1) {
+        tl.to(progRole1, { opacity: 1, duration: 0.5, ease: 'power2.out' }, 5.4);
+      }
+      if (progFill1) {
+        tl.to(progFill1, { scaleX: 1, duration: 0.65, ease: 'power2.out' }, 5.45);
+      }
+
+      // Subtle Aakash micro-movement (face stable)
+      if (characterScene) {
+        tl.to(characterScene, { x: () => getAnchorRightX() + 6, duration: 0.8, ease: 'power1.out' }, 5.5);
+      }
+
+      // Reading Hold for Marketer
+      tl.to(frame1, { opacity: 1, duration: 0.75 }, 6.1);
+
+      // Continuous Migration: Frame 1 moves upward toward top progress area
+      if (frame1) {
+        tl.to(frame1, {
+          y: -85,
+          scale: 0.58,
+          opacity: 0,
+          duration: 0.85,
+          ease: 'power2.inOut'
+        }, 6.95);
+      }
+      // Top Progress 01 settles into completed role state (opacity: 0.5)
+      if (progRole1) {
+        tl.to(progRole1, { opacity: 0.5, duration: 0.45, ease: 'power2.out' }, 7.4);
+      }
+      // Env symbol 1 dims
+      if (envSymMarketer) {
+        tl.to(envSymMarketer, { opacity: 0.12, duration: 0.6, ease: 'power2.out' }, 7.0);
+      }
+      if (roleSpotlight) {
+        tl.to(roleSpotlight, { opacity: 0.35, duration: 0.5 }, 7.1);
+      }
+
+      // ----------------------------------------------------------------------
+      // SCROLL STEP 02: 02 BRAND BUILDER
+      // Previous MARKETER remains visible in top progress trail!
+      // BRAND BUILDER rises from depth with varied rotation (rotateZ +2.5deg -> 0).
+      // Environmental fingerprint / identity contour symbol illuminates behind it.
+      // IMPORTANT: BRAND BUILDER is 100% visible with zero text clipping.
+      // ----------------------------------------------------------------------
+      // Environmental Symbol 02: Fingerprint / Identity Contours
+      if (envSymBrand) {
+        tl.fromTo(envSymBrand,
+          { opacity: 0, scale: 0.9, y: 20 },
+          { opacity: 0.58, scale: 1, y: 0, duration: 0.75, ease: 'power2.out' },
+          7.75
+        );
+      }
+      if (brandPaths.length) {
+        tl.to(brandPaths, { strokeDashoffset: 0, duration: 0.8, stagger: 0.08, ease: 'power2.out' }, 7.8);
+      }
+
+      // Spotlight warms up beneath Brand Builder
+      if (roleSpotlight) {
+        tl.to(roleSpotlight, { opacity: 0.88, scale: 1.05, duration: 0.55 }, 7.8);
+      }
+
+      // Frame 02 Entrance: Pops up from depth with 3D rotation
+      if (frame2) {
+        tl.fromTo(frame2,
+          { y: 120, scale: 0.88, rotateX: 10, rotateZ: 2.5, opacity: 0 },
+          { y: 0, scale: 1, rotateX: 0, rotateZ: 0, opacity: 1, duration: 0.8, ease: 'power3.out' },
+          7.75
+        );
+      }
+
+      // Top Progress Marker 02: Active state
+      if (progRole2) {
+        tl.to(progRole2, { opacity: 1, duration: 0.5, ease: 'power2.out' }, 7.85);
+      }
+      if (progFill2) {
+        tl.to(progFill2, { scaleX: 1, duration: 0.65, ease: 'power2.out' }, 7.9);
+      }
+
+      // Subtle Aakash micro-movement
+      if (characterScene) {
+        tl.to(characterScene, { x: () => getAnchorRightX() - 4, duration: 0.8, ease: 'power1.out' }, 7.9);
+      }
+
+      // Reading Hold for Brand Builder
+      tl.to(frame2, { opacity: 1, duration: 0.75 }, 8.55);
+
+      // Continuous Migration: Frame 2 moves upward toward top progress area
+      if (frame2) {
+        tl.to(frame2, {
+          y: -85,
+          scale: 0.58,
+          opacity: 0,
+          duration: 0.85,
+          ease: 'power2.inOut'
+        }, 9.4);
+      }
+      // Top Progress 02 settles into completed role state (opacity: 0.5)
+      if (progRole2) {
+        tl.to(progRole2, { opacity: 0.5, duration: 0.45, ease: 'power2.out' }, 9.85);
+      }
+      // Env symbol 2 dims
+      if (envSymBrand) {
+        tl.to(envSymBrand, { opacity: 0.12, duration: 0.6, ease: 'power2.out' }, 9.45);
+      }
+      if (roleSpotlight) {
+        tl.to(roleSpotlight, { opacity: 0.35, duration: 0.5 }, 9.5);
+      }
+
+      // ----------------------------------------------------------------------
+      // SCROLL STEP 03: 03 CREATOR
+      // Previous MARKETER & BRAND BUILDER remain visible in top progress trail!
+      // CREATOR rises from depth with rotation (rotateZ -2deg -> 0).
+      // Environmental camera viewfinder / aperture symbol illuminates behind it.
+      // ----------------------------------------------------------------------
+      // Environmental Symbol 03: Camera Aperture
+      if (envSymCreator) {
+        tl.fromTo(envSymCreator,
+          { opacity: 0, scale: 0.9, y: 20 },
+          { opacity: 0.60, scale: 1, y: 0, duration: 0.75, ease: 'power2.out' },
+          10.25
+        );
+      }
+      if (creatorBlades.length) {
+        tl.to(creatorBlades, {
           rotation: 0,
           scale: 1,
-          opacity: 1,
-          duration: 0.85,
+          opacity: 0.9,
+          duration: 0.8,
           stagger: 0.04,
           ease: 'power2.out'
-        }, 2.15);
+        }, 10.3);
       }
 
-      // Spotlight broadens
-      if (orbitSpotlight) {
-        tl.to(orbitSpotlight, {
-          opacity: 0.72,
-          scale: 1.1,
-          duration: 0.8
-        }, 2.1);
+      // Spotlight warms up beneath Creator
+      if (roleSpotlight) {
+        tl.to(roleSpotlight, { opacity: 0.88, scale: 1.05, duration: 0.55 }, 10.3);
       }
 
-      // SCENE 03: "BOX." + THE CONCEPTUAL BOX DRAWS
-      tl.fromTo(idLine3,
-        { y: '100%', opacity: 0 },
-        { y: '0%', opacity: 1, duration: 0.85, ease: 'power3.out' },
-        2.95
-      );
-      // Line 1 & Line 2 move up slightly
-      tl.to([idLine1, idLine2], {
-        y: '-26px',
-        duration: 0.75,
-        ease: 'power2.out'
-      }, 2.95);
-      tl.to(idLine2, {
-        opacity: 0.42,
-        duration: 0.75,
-        ease: 'power2.out'
-      }, 2.95);
-
-      // Aakash settles to scale 1.0, opacity 1.0, y: -12px (calm and anchored)
-      if (characterPortrait) {
-        tl.to(characterPortrait, {
-          scale: 1.0,
-          opacity: 1.0,
-          y: -12,
-          duration: 0.8
-        }, 2.95);
-      }
-
-      // Draw the 4 architectural lines of THE CONCEPTUAL BOX
-      if (boxBoundary) {
-        tl.to(boxBoundary, { opacity: 1, duration: 0.1 }, 3.0);
-      }
-      if (boxSegmentTop) {
-        tl.fromTo(boxSegmentTop, { scaleX: 0 }, { scaleX: 1, duration: 0.45, ease: 'power2.out' }, 3.05); // top ->
-      }
-      if (boxSegmentRightU && boxSegmentRightL) {
-        tl.fromTo([boxSegmentRightU, boxSegmentRightL], { scaleY: 0 }, { scaleY: 1, duration: 0.45, ease: 'power2.out' }, 3.2); // right |
-      }
-      if (boxSegmentBottom) {
-        tl.fromTo(boxSegmentBottom, { scaleX: 0 }, { scaleX: 1, duration: 0.45, ease: 'power2.out' }, 3.35); // bottom <-
-      }
-      if (boxSegmentLeft) {
-        tl.fromTo(boxSegmentLeft, { scaleY: 0 }, { scaleY: 1, duration: 0.45, ease: 'power2.out' }, 3.5); // left ^
-      }
-      if (boxMarkers.length) {
-        tl.to(boxMarkers, { opacity: 0.85, duration: 0.3 }, 3.55);
-      }
-      if (boxTag) {
-        tl.to(boxTag, { opacity: 0.85, duration: 0.3 }, 3.55);
-      }
-      if (orbitSpotlight) {
-        tl.to(orbitSpotlight, { opacity: 0.85, scale: 1.15, duration: 0.5 }, 3.35);
-      }
-
-      // SCENE 04 & 05: BREAK OUT OF THE CONCEPTUAL BOX (STRICTLY WITHIN SAFE SCREEN FRAME)
-      // The box lines separate, one corner fractures open, and objects spread into surrounding negative space
-      if (boxSegmentRightU) {
-        tl.to(boxSegmentRightU, { y: -16, x: 8, rotation: -7, opacity: 0.35, duration: 0.45, ease: 'power2.inOut' }, 3.9);
-      }
-      if (boxSegmentRightL) {
-        tl.to(boxSegmentRightL, { y: 16, x: 8, rotation: 7, opacity: 0.35, duration: 0.45, ease: 'power2.inOut' }, 3.9);
-      }
-      if (boxSpark) {
-        tl.fromTo(boxSpark,
-          { opacity: 0, scale: 0.3 },
-          { opacity: 1, scale: 1.8, duration: 0.2, ease: 'power2.out' },
-          3.9
-        );
-        tl.to(boxSpark, { opacity: 0, scale: 2.2, duration: 0.3, ease: 'power2.in' }, 4.1);
-      }
-      if (boxTag) {
-        tl.to(boxTag, { textContent: 'UNBOUND', color: '#ffffff', borderColor: 'rgba(212,175,55,0.6)', duration: 0.2 }, 4.0);
-      }
-
-      // Objects begin breaking beyond the conceptual box boundary while strictly staying in safe frame
-      if (objCreator) {
-        tl.to(objCreator, { x: 20, y: -10, rotation: 3, scale: 1.04, duration: 0.65, ease: 'power2.out' }, 3.95);
-      }
-      if (objStrategy) {
-        tl.to(objStrategy, { x: -16, y: -12, scale: 1.04, duration: 0.65, ease: 'power2.out' }, 3.95);
-      }
-
-      // PERSONAL BRANDING: Single continuous line draws abstract fingerprint / contour
-      if (objBrand) {
-        tl.fromTo(objBrand,
-          { opacity: 0, scale: 0.85, y: 15 },
-          { opacity: 0.82, scale: 1, y: 0, duration: 0.65, ease: 'power2.out' },
-          4.0
+      // Frame 03 Entrance: Pops up from depth with 3D rotation
+      if (frame3) {
+        tl.fromTo(frame3,
+          { y: 120, scale: 0.88, rotateX: 10, rotateZ: -2.0, opacity: 0 },
+          { y: 0, scale: 1, rotateX: 0, rotateZ: 0, opacity: 1, duration: 0.8, ease: 'power3.out' },
+          10.25
         );
       }
-      if (fingerprintPaths.length) {
-        tl.to(fingerprintPaths, {
-          strokeDashoffset: 0,
+
+      // Top Progress Marker 03: Active state
+      if (progRole3) {
+        tl.to(progRole3, { opacity: 1, duration: 0.5, ease: 'power2.out' }, 10.35);
+      }
+      if (progFill3) {
+        tl.to(progFill3, { scaleX: 1, duration: 0.65, ease: 'power2.out' }, 10.4);
+      }
+
+      // Subtle Aakash micro-movement
+      if (characterScene) {
+        tl.to(characterScene, { x: () => getAnchorRightX() + 4, duration: 0.8, ease: 'power1.out' }, 10.4);
+      }
+
+      // Reading Hold for Creator
+      tl.to(frame3, { opacity: 1, duration: 0.75 }, 11.05);
+
+      // Continuous Migration: Frame 3 moves upward toward top progress area
+      if (frame3) {
+        tl.to(frame3, {
+          y: -85,
+          scale: 0.58,
+          opacity: 0,
+          duration: 0.85,
+          ease: 'power2.inOut'
+        }, 11.9);
+      }
+      // Top Progress 03 settles into completed role state (opacity: 0.5)
+      if (progRole3) {
+        tl.to(progRole3, { opacity: 0.5, duration: 0.45, ease: 'power2.out' }, 12.35);
+      }
+      // Env symbol 3 dims
+      if (envSymCreator) {
+        tl.to(envSymCreator, { opacity: 0.12, duration: 0.6, ease: 'power2.out' }, 11.95);
+      }
+      if (roleSpotlight) {
+        tl.to(roleSpotlight, { opacity: 0.35, duration: 0.5 }, 12.0);
+      }
+
+      // ----------------------------------------------------------------------
+      // SCROLL STEP 04: 04 SPEAKER
+      // Previous MARKETER, BRAND BUILDER & CREATOR remain visible in top progress!
+      // SPEAKER rises from depth with rotation (rotateZ +1.8deg -> 0).
+      // Environmental acoustic soundwave symbol illuminates behind it.
+      // ----------------------------------------------------------------------
+      // Environmental Symbol 04: Soundwave
+      if (envSymSpeaker) {
+        tl.fromTo(envSymSpeaker,
+          { opacity: 0, scale: 0.9, y: 20 },
+          { opacity: 0.60, scale: 1, y: 0, duration: 0.75, ease: 'power2.out' },
+          12.75
+        );
+      }
+      if (speakerBars.length) {
+        speakerBars.forEach((bar, idx) => {
+          if (idx > 0) {
+            tl.to(bar, { scaleY: 1, duration: 0.6, ease: 'back.out(1.5)' }, 12.8 + (idx * 0.02));
+          }
+        });
+      }
+
+      // Spotlight warms up beneath Speaker
+      if (roleSpotlight) {
+        tl.to(roleSpotlight, { opacity: 0.88, scale: 1.05, duration: 0.55 }, 12.8);
+      }
+
+      // Frame 04 Entrance: Pops up from depth with 3D rotation
+      if (frame4) {
+        tl.fromTo(frame4,
+          { y: 120, scale: 0.88, rotateX: 10, rotateZ: 1.8, opacity: 0 },
+          { y: 0, scale: 1, rotateX: 0, rotateZ: 0, opacity: 1, duration: 0.8, ease: 'power3.out' },
+          12.75
+        );
+      }
+
+      // Top Progress Marker 04: Active state
+      if (progRole4) {
+        tl.to(progRole4, { opacity: 1, duration: 0.5, ease: 'power2.out' }, 12.85);
+      }
+      if (progFill4) {
+        tl.to(progFill4, { scaleX: 1, duration: 0.65, ease: 'power2.out' }, 12.9);
+      }
+
+      // Subtle Aakash micro-movement
+      if (characterScene) {
+        tl.to(characterScene, { x: () => getAnchorRightX(), duration: 0.8, ease: 'power1.out' }, 12.9);
+      }
+
+      // Reading Hold for Speaker
+      tl.to(frame4, { opacity: 1, duration: 0.75 }, 13.55);
+
+      // Continuous Migration: Frame 4 moves upward into fourth progress position
+      if (frame4) {
+        tl.to(frame4, {
+          y: -85,
+          scale: 0.58,
+          opacity: 0,
+          duration: 0.85,
+          ease: 'power2.inOut'
+        }, 14.4);
+      }
+      if (envSymSpeaker) {
+        tl.to(envSymSpeaker, { opacity: 0.12, duration: 0.6, ease: 'power2.out' }, 14.45);
+      }
+      if (roleSpotlight) {
+        tl.to(roleSpotlight, { opacity: 0, duration: 0.6 }, 14.5);
+      }
+
+      // ----------------------------------------------------------------------
+      // FINAL ROLE STATE: THE COMPLETED IDENTITY TRAIL
+      // All four roles now sit at the top:
+      // 01 MARKETER   02 BRAND BUILDER   03 CREATOR   04 SPEAKER
+      // "THE FOUR PARTS OF AAKASH."
+      // Collective opacity increases to 0.95.
+      // Thin champagne progress line connects them across.
+      // Visually completes: "I DON'T FIT INTO ONE BOX. AAKASH IS ALL FOUR."
+      // ----------------------------------------------------------------------
+      const allProgRoles = [progRole1, progRole2, progRole3, progRole4].filter(Boolean);
+      if (allProgRoles.length) {
+        tl.to(allProgRoles, {
+          opacity: 0.95,
+          duration: 0.55,
+          ease: 'power2.out'
+        }, 15.2);
+      }
+
+      if (progCollectiveLine) {
+        tl.fromTo(progCollectiveLine,
+          { scaleX: 0 },
+          { scaleX: 1, duration: 0.75, ease: 'power2.out' },
+          15.3
+        );
+      }
+
+      // Hold the completed identity trail state
+      tl.to(progressTrail, { opacity: 1, duration: 0.8 }, 15.7);
+
+      // ----------------------------------------------------------------------
+      // STEP 5: SEAMLESS TRANSITION INTO UNTOUCHED DIGI MARKETRIX
+      // Progress trail & background statement glide gently into darkness.
+      // Aakash moves toward the right edge (translateX: 0 -> 8-12vw further)
+      // scale: 1 -> 0.94, opacity: 1 -> 0.32, lighting dims.
+      // DIGI MARKETRIX enters from LEFT:
+      // SELECTED WORK / 01 first, then DIGI, then MARKETRIX (~100ms later).
+      // Project title OWNS the screen. Aakash is faint continuity on far right.
+      // ----------------------------------------------------------------------
+      if (progressTrail) {
+        tl.to(progressTrail, {
+          y: -25,
+          opacity: 0,
           duration: 0.75,
-          stagger: 0.08,
-          ease: 'power2.out'
-        }, 4.05);
-      }
-
-      // SPEAKER: Pulse travels horizontally & creates expanding sound waveform
-      if (objSpeaker) {
-        tl.fromTo(objSpeaker,
-          { opacity: 0, scale: 0.85, y: 15 },
-          { opacity: 0.82, scale: 1, y: 0, duration: 0.65, ease: 'power2.out' },
-          4.05
-        );
-      }
-      if (soundPulseDot) {
-        tl.to(soundPulseDot, { x: 90, duration: 0.6, ease: 'power2.out' }, 4.1);
-      }
-      if (soundWaveBars.length) {
-        tl.to(soundWaveBars, {
-          scaleY: 1,
-          duration: 0.65,
-          stagger: 0.03,
-          ease: 'back.out(1.5)'
-        }, 4.15);
-      }
-
-      // BUILDER: Architectural lines draw abstract grid, aligning into interface wireframe
-      if (objBuilder) {
-        tl.fromTo(objBuilder,
-          { opacity: 0, scale: 0.85, y: 15 },
-          { opacity: 0.82, scale: 1, y: 0, duration: 0.65, ease: 'power2.out' },
-          4.1
-        );
-      }
-      if (builderGridLines.length) {
-        tl.to(builderGridLines, {
-          scaleX: 1,
-          duration: 0.5,
-          stagger: 0.04,
-          ease: 'power2.out'
-        }, 4.15);
-      }
-      if (builderBrackets.length) {
-        tl.to(builderBrackets, {
-          opacity: 1,
-          scale: 1,
-          duration: 0.45,
-          stagger: 0.06,
-          ease: 'back.out(2)'
-        }, 4.25);
-      }
-
-      // Warm illumination expands beyond the conceptual box
-      if (orbitSpotlight) {
-        tl.to(orbitSpotlight, { scale: 1.45, opacity: 0.95, duration: 0.75 }, 3.95);
-      }
-
-      // Hold dominant phrase resolution: I DON'T FIT INTO ONE BOX.
-      tl.to(idLine3, { opacity: 1, duration: 0.5 }, 4.2);
-
-      // Exit "I DON'T FIT INTO ONE BOX." with upward clip
-      tl.to([idLine1, idLine2, idLine3], {
-        y: '-105%',
-        opacity: 0,
-        scale: 0.96,
-        duration: 0.75,
-        ease: 'power2.in'
-      }, 4.7);
-      tl.to(identityPhase, { opacity: 0, duration: 0.15 }, 5.35);
-
-      // Conceptual box boundary gently dims into background
-      if (boxBoundary) {
-        tl.to(boxBoundary, { opacity: 0.15, duration: 0.5 }, 4.8);
-      }
-
-      // ----------------------------------------------------------------------
-      // STEP 3: SEQUENTIAL ROLES EMERGE (Typography Reel System + Edge Lighting)
-      // MARKETER. -> STRATEGIST. -> CREATOR. -> BRAND BUILDER. -> SPEAKER.
-      // Each role corresponds with one surrounding visual object receiving warm rim light.
-      // ----------------------------------------------------------------------
-
-      // --- ROLE 01: MARKETER. ---
-      tl.to(role1, { opacity: 1, duration: 0.1 }, 5.4);
-      tl.fromTo(role1.querySelector('.role-pre-lead'),
-        { y: 14, opacity: 0 },
-        { y: 0, opacity: 1, duration: 0.55, ease: 'power2.out' },
-        5.45
-      );
-      tl.fromTo(role1.querySelector('.role-huge-title'),
-        { y: '100%' },
-        { y: '0%', duration: 0.8, ease: 'power3.out' },
-        5.45
-      );
-      // Activate Strategy / Marketing path with champagne edge light
-      tl.call(() => setActiveConstellation(objStrategy), null, 5.45);
-      // Hold
-      tl.to(role1, { opacity: 1, duration: 0.65 }, 6.25);
-      // Outgoing clip
-      tl.to(role1.querySelector('.role-huge-title'), {
-        y: '-100%',
-        duration: 0.65,
-        ease: 'power2.in'
-      }, 6.9);
-      tl.to(role1.querySelector('.role-pre-lead'), {
-        opacity: 0,
-        y: -10,
-        duration: 0.45
-      }, 7.0);
-      tl.to(role1, { opacity: 0, duration: 0.1 }, 7.55);
-
-      // --- ROLE 02: STRATEGIST. ---
-      tl.to(role2, { opacity: 1, duration: 0.1 }, 7.6);
-      tl.fromTo(role2.querySelector('.role-pre-lead'),
-        { y: 14, opacity: 0 },
-        { y: 0, opacity: 1, duration: 0.55, ease: 'power2.out' },
-        7.65
-      );
-      tl.fromTo(role2.querySelector('.role-huge-title'),
-        { y: '100%' },
-        { y: '0%', duration: 0.8, ease: 'power3.out' },
-        7.65
-      );
-      // Activate Builder / Architectural Interface object
-      tl.call(() => setActiveConstellation(objBuilder), null, 7.65);
-      // Hold
-      tl.to(role2, { opacity: 1, duration: 0.65 }, 8.45);
-      // Outgoing clip
-      tl.to(role2.querySelector('.role-huge-title'), {
-        y: '-100%',
-        duration: 0.65,
-        ease: 'power2.in'
-      }, 9.1);
-      tl.to(role2.querySelector('.role-pre-lead'), {
-        opacity: 0,
-        y: -10,
-        duration: 0.45
-      }, 9.2);
-      tl.to(role2, { opacity: 0, duration: 0.1 }, 9.75);
-
-      // --- ROLE 03: CREATOR. ---
-      tl.to(role3, { opacity: 1, duration: 0.1 }, 9.8);
-      tl.fromTo(role3.querySelector('.role-pre-lead'),
-        { y: 14, opacity: 0 },
-        { y: 0, opacity: 1, duration: 0.55, ease: 'power2.out' },
-        9.85
-      );
-      tl.fromTo(role3.querySelector('.role-huge-title'),
-        { y: '100%' },
-        { y: '0%', duration: 0.8, ease: 'power3.out' },
-        9.85
-      );
-      // Activate Creator aperture with warm edge light
-      tl.call(() => setActiveConstellation(objCreator), null, 9.85);
-      // Hold
-      tl.to(role3, { opacity: 1, duration: 0.65 }, 10.65);
-      // Outgoing clip
-      tl.to(role3.querySelector('.role-huge-title'), {
-        y: '-100%',
-        duration: 0.65,
-        ease: 'power2.in'
-      }, 11.3);
-      tl.to(role3.querySelector('.role-pre-lead'), {
-        opacity: 0,
-        y: -10,
-        duration: 0.45
-      }, 11.4);
-      tl.to(role3, { opacity: 0, duration: 0.1 }, 11.95);
-
-      // --- ROLE 04: BRAND BUILDER. ---
-      if (role4) {
-        tl.to(role4, { opacity: 1, duration: 0.1 }, 12.0);
-        tl.fromTo(role4.querySelector('.role-pre-lead'),
-          { y: 14, opacity: 0 },
-          { y: 0, opacity: 1, duration: 0.55, ease: 'power2.out' },
-          12.05
-        );
-        tl.fromTo(role4.querySelector('.role-huge-title'),
-          { y: '100%' },
-          { y: '0%', duration: 0.8, ease: 'power3.out' },
-          12.05
-        );
-        // Activate Brand Strategy fingerprint contour
-        tl.call(() => setActiveConstellation(objBrand), null, 12.05);
-        // Hold
-        tl.to(role4, { opacity: 1, duration: 0.65 }, 12.85);
-        // Outgoing clip
-        tl.to(role4.querySelector('.role-huge-title'), {
-          y: '-100%',
-          duration: 0.65,
           ease: 'power2.in'
-        }, 13.5);
-        tl.to(role4.querySelector('.role-pre-lead'), {
-          opacity: 0,
-          y: -10,
-          duration: 0.45
-        }, 13.6);
-        tl.to(role4, { opacity: 0, duration: 0.1 }, 14.15);
+        }, 16.5);
       }
-
-      // --- ROLE 05: SPEAKER. ---
-      if (role5) {
-        tl.to(role5, { opacity: 1, duration: 0.1 }, 14.2);
-        tl.fromTo(role5.querySelector('.role-pre-lead'),
-          { y: 14, opacity: 0 },
-          { y: 0, opacity: 1, duration: 0.55, ease: 'power2.out' },
-          14.25
-        );
-        tl.fromTo(role5.querySelector('.role-huge-title'),
-          { y: '100%' },
-          { y: '0%', duration: 0.8, ease: 'power3.out' },
-          14.25
-        );
-        // Activate Speaker soundwave
-        tl.call(() => setActiveConstellation(objSpeaker), null, 14.25);
-        // Hold
-        tl.to(role5, { opacity: 1, duration: 0.65 }, 15.05);
-        // Outgoing clip
-        tl.to(role5.querySelector('.role-huge-title'), {
-          y: '-100%',
-          duration: 0.65,
+      if (stmtBackdrop) {
+        tl.to(stmtBackdrop, {
+          opacity: 0,
+          duration: 0.75,
           ease: 'power2.in'
-        }, 15.7);
-        tl.to(role5.querySelector('.role-pre-lead'), {
-          opacity: 0,
-          y: -10,
-          duration: 0.45
-        }, 15.8);
-        tl.to(role5, { opacity: 0, duration: 0.1 }, 16.35);
+        }, 16.5);
       }
-
-      // ----------------------------------------------------------------------
-      // STEP 4: TRANSITION OUT & INTO DIGI MARKETRIX
-      // All identity objects glide outward into darkness.
-      // Box outline disappears.
-      // Aakash moves toward far right and darkens.
-      // DIGI MARKETRIX takes over the viewport.
-      // ----------------------------------------------------------------------
-
-      // Deactivate all role highlights
-      tl.call(() => setActiveConstellation(null), null, 16.35);
-
-      // Objects glide outward into darkness
-      if (allConstellationObjs.length > 0) {
-        tl.to(allConstellationObjs, {
-          x: '+=20',
+      if (envSymbolsWrap) {
+        tl.to(envSymbolsWrap, {
           opacity: 0,
-          scale: 0.88,
-          duration: 0.85,
-          stagger: 0.04,
+          duration: 0.75,
           ease: 'power2.in'
-        }, 16.4);
+        }, 16.5);
       }
 
-      // Conceptual box disappears completely
-      if (boxBoundary) {
-        tl.to(boxBoundary, { opacity: 0, duration: 0.4 }, 16.4);
-      }
-
-      // Orbit spotlight fades
-      if (orbitSpotlight) {
-        tl.to(orbitSpotlight, { opacity: 0, duration: 0.8 }, 16.4);
-      }
-
-      // Aakash moves toward the right edge & dims
+      // Aakash moves toward far right & dims (continuity into Digi Marketrix)
       tl.to(characterScene, {
         x: () => getAnchorRightX() * 1.5,
         scale: 0.94,
@@ -1454,15 +1399,7 @@ document.addEventListener('DOMContentLoaded', () => {
         ease: 'power2.inOut'
       }, 16.5);
 
-      // ----------------------------------------------------------------------
-      // STEP 4: TRANSITION INTO DIGI MARKETRIX
-      // As SPEAKER finishes:
-      // Aakash moves toward the far right (translateX: 0 -> 8-12vw further)
-      // scale: 1 -> 0.94, opacity: 1 -> 0.32, lighting dims
-      // DIGI MARKETRIX enters from LEFT:
-      // SELECTED WORK / 01 first, then DIGI, then MARKETRIX (~100ms later)
-      // Project title OWNS the screen. Aakash is faint continuity on far right.
-      // ----------------------------------------------------------------------
+      // DIGI MARKETRIX ENTERS (Untouched Content & Structure)
       tl.to(workTransition, { opacity: 1, duration: 0.1 }, 16.6);
 
       // SELECTED WORK / 01 first
@@ -1494,7 +1431,7 @@ document.addEventListener('DOMContentLoaded', () => {
       );
 
       // ----------------------------------------------------------------------
-      // STEP 5: TRANSITION INTO PROJECT CANVAS
+      // STEP 6: TRANSITION INTO PROJECT CANVAS (Untouched)
       // Aakash fades completely.
       // One actual Digi Marketrix project image approaches from depth.
       // Title slightly reduces/moves.
@@ -1547,59 +1484,55 @@ document.addEventListener('DOMContentLoaded', () => {
           mouseX += (targetX - mouseX) * 0.08;
           mouseY += (targetY - mouseY) * 0.08;
 
-          // Aakash: calm anchor! strictly ±3px, ±2.5px
-          if (characterPortrait) {
+          // Aakash: calm anchor! strictly max ±3px, ±2.5px
+          if (characterPortrait && !CharacterController.isEntrancePlaying) {
             gsap.set(characterPortrait, {
               x: mouseX * 3,
               y: mouseY * 2.5
             });
           }
 
-          // Constellation objects parallax within safe frame
-          allConstellationObjs.forEach((node, i) => {
-            const factor = i % 2 === 0 ? 5 : 3;
-            gsap.set(node, {
-              x: mouseX * factor,
-              y: mouseY * factor
-            });
+          // Active role frames subtle architectural 3D response
+          const activeFrames = [frame1, frame2, frame3, frame4];
+          activeFrames.forEach(f => {
+            if (f && gsap.getProperty(f, 'opacity') > 0.4) {
+              gsap.set(f, {
+                rotateY: mouseX * 4,
+                rotateX: -mouseY * 3
+              });
+            }
           });
 
-          // Light: ±8px
-          if (orbitSpotlight) {
-            gsap.set(orbitSpotlight, {
+          // Environmental symbols subtle parallax
+          const activeEnvSyms = [envSymMarketer, envSymBrand, envSymCreator, envSymSpeaker];
+          activeEnvSyms.forEach((sym, i) => {
+            if (sym) {
+              const factor = i % 2 === 0 ? 4 : 2.5;
+              gsap.set(sym, {
+                x: mouseX * factor,
+                y: mouseY * factor
+              });
+            }
+          });
+
+          // Role spotlight responds gently
+          if (roleSpotlight) {
+            gsap.set(roleSpotlight, {
               x: mouseX * 8,
-              y: mouseY * 8
+              y: mouseY * 6
             });
           }
         });
-
-        // Hover proximity illumination & micro-interaction
-        allConstellationObjs.forEach(node => {
-          node.addEventListener('mouseenter', () => {
-            node.classList.add('hovered');
-            if (orbitSpotlight) {
-              gsap.to(orbitSpotlight, { opacity: 0.85, scale: 1.25, duration: 0.4 });
-            }
-          });
-          node.addEventListener('mouseleave', () => {
-            node.classList.remove('hovered');
-            if (orbitSpotlight) {
-              gsap.to(orbitSpotlight, { opacity: 0.65, scale: 1.0, duration: 0.4 });
-            }
-          });
-        });
       }
     });
-  }
 
-  // Mobile: Native Scroll with Clean Element Reveals (No Pinning, No Jitter)
-  if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
-    const mm = gsap.matchMedia();
+    // Mobile & Tablet: Native Scroll with Clean Element Reveals
     mm.add("(max-width: 960px)", () => {
-      const identityLines = document.querySelectorAll('.identity-line');
-      identityLines.forEach((line) => {
+      // Backdrop statement lines reveal cleanly on mobile
+      const stmtLines = document.querySelectorAll('.stmt-line');
+      stmtLines.forEach((line) => {
         gsap.fromTo(line,
-          { opacity: 0.3, y: 20 },
+          { opacity: 0.35, y: 18 },
           {
             opacity: 1,
             y: 0,
@@ -1615,25 +1548,28 @@ document.addEventListener('DOMContentLoaded', () => {
         );
       });
 
-      const roleSlides = document.querySelectorAll('.role-slide-item');
-      roleSlides.forEach((slide) => {
-        gsap.fromTo(slide,
-          { opacity: 0.35, y: 22 },
+      // The 4 Editorial Role Frames reveal smoothly without clipping
+      const roleFrames = document.querySelectorAll('.editorial-role-frame');
+      roleFrames.forEach((frame) => {
+        gsap.fromTo(frame,
+          { opacity: 0.25, y: 25, scale: 0.94 },
           {
             opacity: 1,
             y: 0,
-            duration: 0.7,
+            scale: 1,
+            duration: 0.75,
             ease: 'power2.out',
             scrollTrigger: {
-              trigger: slide,
+              trigger: frame,
               start: 'top 88%',
-              end: 'top 60%',
+              end: 'top 58%',
               scrub: 0.35
             }
           }
         );
       });
 
+      // Digi Marketrix Work Transition
       const workTransition = document.getElementById('work-transition-phase');
       if (workTransition) {
         gsap.fromTo(workTransition,
@@ -1651,28 +1587,6 @@ document.addEventListener('DOMContentLoaded', () => {
             }
           }
         );
-      }
-
-      // Mobile: Sequence visible constellation objects smoothly during scroll
-      const mobileConstellation = document.querySelectorAll('.constellation-object');
-      if (mobileConstellation.length) {
-        mobileConstellation.forEach((obj, idx) => {
-          gsap.fromTo(obj,
-            { opacity: 0, y: 15 },
-            {
-              opacity: 0.85,
-              y: 0,
-              duration: 0.6,
-              ease: 'power2.out',
-              scrollTrigger: {
-                trigger: '.identity-box-phase',
-                start: `top ${85 - idx * 8}%`,
-                end: `top ${55 - idx * 8}%`,
-                scrub: 0.35
-              }
-            }
-          );
-        });
       }
     });
   }
