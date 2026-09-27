@@ -799,17 +799,15 @@ document.addEventListener('DOMContentLoaded', () => {
       const frame3 = document.getElementById('role-frame-3'); // 03 CREATOR
       const frame4 = document.getElementById('role-frame-4'); // 04 SPEAKER
 
-      // Top Identity Progress System (Accumulating Roles Trail)
-      const progressTrail = document.getElementById('identity-progress-trail');
-      const progRole1 = document.getElementById('prog-role-1');
-      const progRole2 = document.getElementById('prog-role-2');
-      const progRole3 = document.getElementById('prog-role-3');
-      const progRole4 = document.getElementById('prog-role-4');
-      const progFill1 = document.getElementById('prog-fill-1');
-      const progFill2 = document.getElementById('prog-fill-2');
-      const progFill3 = document.getElementById('prog-fill-3');
-      const progFill4 = document.getElementById('prog-fill-4');
-      const progCollectiveLine = document.getElementById('prog-collective-line');
+      // Top Identity History System (Reserved slots for stored completed frames)
+      const historyRow = document.getElementById('identity-history-row');
+      const historySlots = [
+        document.getElementById('history-slot-1'),
+        document.getElementById('history-slot-2'),
+        document.getElementById('history-slot-3'),
+        document.getElementById('history-slot-4')
+      ];
+      const historyCollectiveLine = document.getElementById('history-collective-line');
 
       // Untouched Digi Marketrix Transition Phase
       const workTransition = document.getElementById('work-transition-phase');
@@ -820,6 +818,24 @@ document.addEventListener('DOMContentLoaded', () => {
       // Safe rightward anchor calculation for Aakash portrait
       // Keeps Aakash stably anchored in right 35–40%, clearing left 60–65% for the editorial frames
       const getAnchorRightX = () => Math.min(Math.max(window.innerWidth * 0.22, 220), 380);
+
+      // Calculates exact delta to physically store active frame into top history slot
+      const getSlotDelta = (index) => {
+        const stage = roleStage || document.getElementById('active-role-stage');
+        const slot = historySlots[index] || document.getElementById(`history-slot-${index + 1}`);
+        if (!stage || !slot) return { x: 0, y: 0, scale: 0.38 };
+
+        const stageRect = stage.getBoundingClientRect();
+        const slotRect = slot.getBoundingClientRect();
+
+        if (!stageRect.width || !slotRect.width) return { x: 0, y: -200, scale: 0.38 };
+
+        const scale = Math.min(Math.max(slotRect.width / stageRect.width, 0.30), 0.44);
+        const x = slotRect.left - stageRect.left;
+        const y = slotRect.top - stageRect.top;
+
+        return { x, y, scale };
+      };
 
       // SVG path initialization for smooth environmental drawings
       const markPath = envSymMarketer ? envSymMarketer.querySelector('.env-path-draw') : null;
@@ -847,37 +863,39 @@ document.addEventListener('DOMContentLoaded', () => {
           gsap.set(f, {
             transformPerspective: 1200,
             transformOrigin: 'center bottom',
-            y: 120,
-            scale: 0.88,
-            rotateX: 10,
+            y: 100,
+            scale: 0.90,
+            rotateX: 9,
             opacity: 0
           });
         }
       });
 
       // Master ScrollTrigger Timeline
+      // Distance: +=5200 for slow, weighted, buttery storytelling
+      // Scrub: 1.5 for buttery inertia between physical wheel input & visual animation
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: wrapper,
           start: "top top",
-          end: "+=4800",
+          end: "+=5200",
           pin: true,
-          scrub: 0.8,
+          scrub: 1.5,
           anticipatePin: 1,
           onUpdate: (self) => {
             const p = self.progress;
             let section = 'hero';
-            if (p < 0.10) {
+            if (p < 0.05) {
               section = 'hero';
-            } else if (p >= 0.10 && p < 0.26) {
+            } else if (p >= 0.05 && p < 0.28) {
               section = 'statement';
-            } else if (p >= 0.26 && p < 0.40) {
+            } else if (p >= 0.28 && p < 0.44) {
               section = 'marketer';
-            } else if (p >= 0.40 && p < 0.54) {
+            } else if (p >= 0.44 && p < 0.60) {
               section = 'brand';
-            } else if (p >= 0.54 && p < 0.68) {
+            } else if (p >= 0.60 && p < 0.76) {
               section = 'creator';
-            } else if (p >= 0.68 && p < 0.82) {
+            } else if (p >= 0.76 && p < 0.88) {
               section = 'speaker';
             } else {
               section = 'work';
@@ -896,21 +914,21 @@ document.addEventListener('DOMContentLoaded', () => {
       tl.to(leftFlank, {
         x: -60,
         opacity: 0,
-        duration: 0.85,
+        duration: 1.0,
         ease: "power2.inOut"
       }, 0);
 
       tl.to(rightFlank, {
         x: 60,
         opacity: 0,
-        duration: 0.85,
+        duration: 1.0,
         ease: "power2.inOut"
       }, 0);
 
       tl.to(portfolioWord, {
         scale: 0.94,
         opacity: 0,
-        duration: 0.85,
+        duration: 0.9,
         ease: "power2.inOut"
       }, 0.05);
 
@@ -918,7 +936,7 @@ document.addEventListener('DOMContentLoaded', () => {
       tl.to(characterScene, {
         x: () => getAnchorRightX(),
         scale: 0.98,
-        duration: 1.0,
+        duration: 1.1,
         ease: "power2.inOut"
       }, 0.15);
 
@@ -926,260 +944,249 @@ document.addEventListener('DOMContentLoaded', () => {
         tl.to(characterPortrait, {
           scale: 0.98,
           opacity: 0.96,
-          duration: 1.0,
+          duration: 1.1,
           ease: "power2.inOut"
         }, 0.15);
       }
 
       tl.to(radialLight, {
         x: () => getAnchorRightX() * 0.75,
-        duration: 1.0,
+        duration: 1.1,
         ease: "power2.inOut"
       }, 0.15);
 
       if (aakashShadow) {
         tl.to(aakashShadow, {
           opacity: 1,
-          duration: 0.8,
+          duration: 0.9,
           ease: "power2.out"
         }, 0.2);
       }
 
       // ----------------------------------------------------------------------
       // STEP 2: "I DON'T FIT INTO ONE BOX." ENORMOUS BACKGROUND TYPOGRAPHY
-      // Three Typographic Depth Levels layered behind Aakash:
-      // Line 1: I DON'T FIT (depth level 1: scale 0.92 -> 1, blur 8px -> 0, opacity 0.52)
-      // Line 2: INTO ONE (depth level 2: scale 0.94 -> 1, blur 6px -> 0, opacity 0.72)
-      // Line 3: BOX. (depth level 3: scale 0.96 -> 1, blur 4px -> 0, opacity 0.98)
-      // Aakash naturally obscures portions of the typography while remaining fully readable.
+      // Intelligent layering behind Aakash: Left/center text extends naturally
+      // behind hair, shoulders, body while preserving full line readability.
+      // Timing: Line 1 enters -> HOLD -> Line 2 enters -> HOLD -> Line 3 enters
+      // -> FULL SENTENCE READING HOLD -> Soften before first role enters.
       // ----------------------------------------------------------------------
-      tl.to(stmtBackdrop, { opacity: 1, duration: 0.1 }, 1.15);
+      tl.to(stmtBackdrop, { opacity: 1, duration: 0.1 }, 1.2);
 
-      // Depth Level 1: "I DON'T FIT"
+      // 0–8% of sentence segment: Line 1 "I DON'T FIT" enters
       tl.fromTo(stmtLine1,
-        { scale: 0.92, filter: 'blur(8px)', opacity: 0, y: 35 },
-        { scale: 1, filter: 'blur(0px)', opacity: 0.52, y: 0, duration: 0.85, ease: 'power2.out' },
-        1.25
+        { scale: 0.94, filter: 'blur(7px)', opacity: 0, y: 35 },
+        { scale: 1, filter: 'blur(0px)', opacity: 0.55, y: 0, duration: 0.85, ease: 'power2.out' },
+        1.3
       );
 
-      // Depth Level 2: "INTO ONE"
+      // 8–17%: HOLD Line 1 (Reading window)
+      tl.to(stmtLine1, { opacity: 0.55, duration: 0.7 }, 2.15);
+
+      // 17–24%: Line 2 "INTO ONE" enters
       tl.fromTo(stmtLine2,
-        { scale: 0.94, filter: 'blur(6px)', opacity: 0, y: 30 },
+        { scale: 0.95, filter: 'blur(6px)', opacity: 0, y: 30 },
         { scale: 1, filter: 'blur(0px)', opacity: 0.72, y: 0, duration: 0.85, ease: 'power2.out' },
-        2.05
+        2.85
       );
-      // Line 1 deepens slightly
-      tl.to(stmtLine1, {
-        opacity: 0.38,
-        scale: 0.98,
-        y: -10,
-        duration: 0.75,
-        ease: 'power2.out'
-      }, 2.05);
+      tl.to(stmtLine1, { opacity: 0.42, y: -8, duration: 0.7, ease: 'power2.out' }, 2.85);
 
-      // Depth Level 3: "BOX." (Largest, strongest, accented)
+      // 24–34%: HOLD Lines 1 & 2 (Reading window)
+      tl.to(stmtLine2, { opacity: 0.72, duration: 0.7 }, 3.7);
+
+      // 34–41%: Line 3 "BOX." enters (Enormous, lower background, warm dot)
       tl.fromTo(stmtLine3,
         { scale: 0.96, filter: 'blur(5px)', opacity: 0, y: 25 },
         { scale: 1, filter: 'blur(0px)', opacity: 0.98, y: 0, duration: 0.85, ease: 'power2.out' },
-        2.85
+        4.4
       );
-      // Lines 1 & 2 adjust upward slightly into deep perspective
-      tl.to([stmtLine1, stmtLine2], {
-        y: -22,
-        duration: 0.75,
-        ease: 'power2.out'
-      }, 2.85);
-      tl.to(stmtLine2, {
-        opacity: 0.55,
-        duration: 0.75,
-        ease: 'power2.out'
-      }, 2.85);
+      tl.to([stmtLine1, stmtLine2], { y: -16, duration: 0.7, ease: 'power2.out' }, 4.4);
+      tl.to(stmtLine2, { opacity: 0.58, duration: 0.7, ease: 'power2.out' }, 4.4);
 
-      // Hold complete layered statement behind Aakash
-      tl.to(stmtBackdrop, { opacity: 1, duration: 0.6 }, 3.7);
+      // 41–55%: FULL SENTENCE READING HOLD
+      // Active moment: increase contrast slightly, generous pause to absorb statement
+      tl.to(stmtBackdrop, {
+        opacity: 1,
+        filter: 'contrast(1.08)',
+        duration: 2.2
+      }, 5.25);
 
-      // ----------------------------------------------------------------------
-      // STEP 3: TRANSITION FROM SENTENCE INTO ROLES
-      // Sentence slowly moves deeper into background (scale 0.92, opacity 0.12, blur)
-      // Aakash remains stably anchored on the right.
-      // Reveal Top Identity Progress System container.
-      // ----------------------------------------------------------------------
+      // Sentence contrast reduces, settles deeper into background before first role enters
       tl.to(stmtBackdrop, {
         scale: 0.92,
         opacity: 0.12,
         filter: 'blur(4px) contrast(0.8)',
-        duration: 0.85,
+        duration: 0.9,
         ease: 'power2.inOut'
-      }, 4.4);
-
-      // Top progress trail emerges into view
-      if (progressTrail) {
-        tl.fromTo(progressTrail,
-          { opacity: 0, y: -15 },
-          { opacity: 1, y: 0, duration: 0.65, ease: 'power2.out' },
-          4.7
-        );
-      }
+      }, 7.45);
 
       // ----------------------------------------------------------------------
-      // SCROLL STEP 01: 01 MARKETER
-      // Active Frame pops up from depth with 3D rotation (rotateZ -2.5deg -> 0).
-      // Environmental strategy/path symbol illuminates behind frame.
-      // Spotlight warms up beneath card.
-      // Top marker 01 MARKETER activates.
-      // Continuous migration: Frame travels upward into top progress marker.
+      // STEP 3: ROLE 01 — 01 MARKETER
+      // ENTRANCE: Rises from depth (y: 100 -> 0, scale 0.90 -> 1, rotateZ -2 -> 0)
+      // Environmental strategy path symbol illuminates behind frame.
+      // HOLD: Full reading window for MARKETER.
+      // TRANSFORMATION: THE SAME MARKETER FRAME shrinks, travels upward,
+      // settles into top identity history slot 1!
       // ----------------------------------------------------------------------
       // Environmental Symbol 01: Strategy Path
       if (envSymMarketer) {
         tl.fromTo(envSymMarketer,
           { opacity: 0, scale: 0.9, y: 20 },
-          { opacity: 0.55, scale: 1, y: 0, duration: 0.75, ease: 'power2.out' },
-          5.3
+          { opacity: 0.58, scale: 1, y: 0, duration: 0.85, ease: 'power2.out' },
+          8.35
         );
       }
       if (markPath) {
-        tl.to(markPath, { strokeDashoffset: 0, duration: 0.8, ease: 'power2.out' }, 5.35);
+        tl.to(markPath, { strokeDashoffset: 0, duration: 0.9, ease: 'power2.out' }, 8.4);
       }
 
-      // Active Spotlight beneath Marketer frame
+      // Spotlight warms up beneath Marketer
       if (roleSpotlight) {
         tl.fromTo(roleSpotlight,
           { opacity: 0, scale: 0.85 },
-          { opacity: 0.85, scale: 1.0, duration: 0.6, ease: 'power2.out' },
-          5.35
+          { opacity: 0.85, scale: 1.0, duration: 0.7, ease: 'power2.out' },
+          8.4
         );
       }
 
-      // Frame 01 Entrance: Pops up from depth with 3D rotation
+      // Frame 01 Entrance (25% Enter)
       if (frame1) {
         tl.fromTo(frame1,
-          { y: 120, scale: 0.88, rotateX: 10, rotateZ: -2.5, opacity: 0 },
-          { y: 0, scale: 1, rotateX: 0, rotateZ: 0, opacity: 1, duration: 0.8, ease: 'power3.out' },
-          5.3
+          { y: 100, scale: 0.90, rotateX: 9, rotateZ: -2.0, opacity: 0 },
+          { y: 0, scale: 1, rotateX: 0, rotateZ: 0, opacity: 1, duration: 0.95, ease: 'power3.out' },
+          8.35
         );
       }
 
-      // Top Progress Marker 01: Active state
-      if (progRole1) {
-        tl.to(progRole1, { opacity: 1, duration: 0.5, ease: 'power2.out' }, 5.4);
-      }
-      if (progFill1) {
-        tl.to(progFill1, { scaleX: 1, duration: 0.65, ease: 'power2.out' }, 5.45);
-      }
-
-      // Subtle Aakash micro-movement (face stable)
+      // Subtle Aakash micro-anchor
       if (characterScene) {
-        tl.to(characterScene, { x: () => getAnchorRightX() + 6, duration: 0.8, ease: 'power1.out' }, 5.5);
+        tl.to(characterScene, { x: () => getAnchorRightX() + 6, duration: 0.8, ease: 'power1.out' }, 8.5);
       }
 
-      // Reading Hold for Marketer
-      tl.to(frame1, { opacity: 1, duration: 0.75 }, 6.1);
+      // MARKETER HOLD (45% Reading Hold - Generous time to read all details)
+      tl.to(frame1, { opacity: 1, duration: 1.8 }, 9.3);
 
-      // Continuous Migration: Frame 1 moves upward toward top progress area
+      // MARKETER TRANSFORMATION INTO TOP HISTORY SLOT 1 (30% Exit / Move to History)
+      // The SAME frame shrinks, moves upward, collapses keywords, settles in Slot 1!
       if (frame1) {
+        const subWrap = frame1.querySelector('.role-frame-sub-wrap');
+        const cat = frame1.querySelector('.role-frame-category');
+        const inner = frame1.querySelector('.role-frame-inner');
+
+        if (subWrap) tl.to(subWrap, { height: 0, opacity: 0, duration: 0.75, ease: 'power2.inOut' }, 11.1);
+        if (cat) tl.to(cat, { opacity: 0, duration: 0.6, ease: 'power2.inOut' }, 11.1);
+        if (inner) tl.to(inner, { padding: '12px 16px', duration: 0.85, ease: 'power2.inOut' }, 11.1);
+
         tl.to(frame1, {
-          y: -85,
-          scale: 0.58,
-          opacity: 0,
-          duration: 0.85,
-          ease: 'power2.inOut'
-        }, 6.95);
+          transformOrigin: 'top left',
+          x: () => getSlotDelta(0).x,
+          y: () => getSlotDelta(0).y,
+          scale: () => getSlotDelta(0).scale,
+          opacity: 0.65,
+          rotateX: 0,
+          rotateZ: 0,
+          duration: 1.1,
+          ease: 'power2.inOut',
+          onStart: () => frame1.classList.add('is-stored')
+        }, 11.1);
       }
-      // Top Progress 01 settles into completed role state (opacity: 0.5)
-      if (progRole1) {
-        tl.to(progRole1, { opacity: 0.5, duration: 0.45, ease: 'power2.out' }, 7.4);
-      }
-      // Env symbol 1 dims
+
+      // Strategy symbol dims as Marketer settles at top
       if (envSymMarketer) {
-        tl.to(envSymMarketer, { opacity: 0.12, duration: 0.6, ease: 'power2.out' }, 7.0);
+        tl.to(envSymMarketer, { opacity: 0.05, duration: 0.75, ease: 'power2.out' }, 11.3);
       }
       if (roleSpotlight) {
-        tl.to(roleSpotlight, { opacity: 0.35, duration: 0.5 }, 7.1);
+        tl.to(roleSpotlight, { opacity: 0.25, duration: 0.7 }, 11.3);
       }
 
       // ----------------------------------------------------------------------
-      // SCROLL STEP 02: 02 BRAND BUILDER
-      // Previous MARKETER remains visible in top progress trail!
-      // BRAND BUILDER rises from depth with varied rotation (rotateZ +2.5deg -> 0).
-      // Environmental fingerprint / identity contour symbol illuminates behind it.
-      // IMPORTANT: BRAND BUILDER is 100% visible with zero text clipping.
+      // STEP 4: ROLE 02 — 02 BRAND BUILDER
+      // ONLY AFTER MARKETER SETTLES AT TOP does Brand Builder rise!
+      // Brand contour symbol illuminates.
+      // Brand Builder is 100% visible with zero text clipping.
+      // HOLD: Full reading window for BRAND BUILDER.
+      // TRANSFORMATION: BRAND BUILDER itself shrinks and travels upward,
+      // settling NEXT TO MARKETER in Slot 2.
+      // Top now contains: [ 01 MARKETER ] [ 02 BRAND BUILDER ].
       // ----------------------------------------------------------------------
       // Environmental Symbol 02: Fingerprint / Identity Contours
       if (envSymBrand) {
         tl.fromTo(envSymBrand,
           { opacity: 0, scale: 0.9, y: 20 },
-          { opacity: 0.58, scale: 1, y: 0, duration: 0.75, ease: 'power2.out' },
-          7.75
+          { opacity: 0.58, scale: 1, y: 0, duration: 0.85, ease: 'power2.out' },
+          12.3
         );
       }
       if (brandPaths.length) {
-        tl.to(brandPaths, { strokeDashoffset: 0, duration: 0.8, stagger: 0.08, ease: 'power2.out' }, 7.8);
+        tl.to(brandPaths, { strokeDashoffset: 0, duration: 0.9, stagger: 0.08, ease: 'power2.out' }, 12.35);
       }
 
-      // Spotlight warms up beneath Brand Builder
       if (roleSpotlight) {
-        tl.to(roleSpotlight, { opacity: 0.88, scale: 1.05, duration: 0.55 }, 7.8);
+        tl.to(roleSpotlight, { opacity: 0.88, scale: 1.05, duration: 0.7 }, 12.35);
       }
 
-      // Frame 02 Entrance: Pops up from depth with 3D rotation
+      // Frame 02 Entrance (rotateZ +2deg -> 0)
       if (frame2) {
         tl.fromTo(frame2,
-          { y: 120, scale: 0.88, rotateX: 10, rotateZ: 2.5, opacity: 0 },
-          { y: 0, scale: 1, rotateX: 0, rotateZ: 0, opacity: 1, duration: 0.8, ease: 'power3.out' },
-          7.75
+          { y: 100, scale: 0.90, rotateX: 9, rotateZ: 2.0, opacity: 0 },
+          { y: 0, scale: 1, rotateX: 0, rotateZ: 0, opacity: 1, duration: 0.95, ease: 'power3.out' },
+          12.3
         );
       }
 
-      // Top Progress Marker 02: Active state
-      if (progRole2) {
-        tl.to(progRole2, { opacity: 1, duration: 0.5, ease: 'power2.out' }, 7.85);
-      }
-      if (progFill2) {
-        tl.to(progFill2, { scaleX: 1, duration: 0.65, ease: 'power2.out' }, 7.9);
-      }
-
-      // Subtle Aakash micro-movement
       if (characterScene) {
-        tl.to(characterScene, { x: () => getAnchorRightX() - 4, duration: 0.8, ease: 'power1.out' }, 7.9);
+        tl.to(characterScene, { x: () => getAnchorRightX() - 4, duration: 0.8, ease: 'power1.out' }, 12.45);
       }
 
-      // Reading Hold for Brand Builder
-      tl.to(frame2, { opacity: 1, duration: 0.75 }, 8.55);
+      // BRAND BUILDER HOLD (Full reading window)
+      tl.to(frame2, { opacity: 1, duration: 1.8 }, 13.25);
 
-      // Continuous Migration: Frame 2 moves upward toward top progress area
+      // BRAND BUILDER TRANSFORMATION INTO TOP HISTORY SLOT 2
+      // Same frame shrinks and moves next to Marketer
       if (frame2) {
+        const subWrap = frame2.querySelector('.role-frame-sub-wrap');
+        const cat = frame2.querySelector('.role-frame-category');
+        const inner = frame2.querySelector('.role-frame-inner');
+
+        if (subWrap) tl.to(subWrap, { height: 0, opacity: 0, duration: 0.75, ease: 'power2.inOut' }, 15.05);
+        if (cat) tl.to(cat, { opacity: 0, duration: 0.6, ease: 'power2.inOut' }, 15.05);
+        if (inner) tl.to(inner, { padding: '12px 16px', duration: 0.85, ease: 'power2.inOut' }, 15.05);
+
         tl.to(frame2, {
-          y: -85,
-          scale: 0.58,
-          opacity: 0,
-          duration: 0.85,
-          ease: 'power2.inOut'
-        }, 9.4);
+          transformOrigin: 'top left',
+          x: () => getSlotDelta(1).x,
+          y: () => getSlotDelta(1).y,
+          scale: () => getSlotDelta(1).scale,
+          opacity: 0.65,
+          rotateX: 0,
+          rotateZ: 0,
+          duration: 1.1,
+          ease: 'power2.inOut',
+          onStart: () => frame2.classList.add('is-stored')
+        }, 15.05);
       }
-      // Top Progress 02 settles into completed role state (opacity: 0.5)
-      if (progRole2) {
-        tl.to(progRole2, { opacity: 0.5, duration: 0.45, ease: 'power2.out' }, 9.85);
-      }
+
       // Env symbol 2 dims
       if (envSymBrand) {
-        tl.to(envSymBrand, { opacity: 0.12, duration: 0.6, ease: 'power2.out' }, 9.45);
+        tl.to(envSymBrand, { opacity: 0.05, duration: 0.75, ease: 'power2.out' }, 15.25);
       }
       if (roleSpotlight) {
-        tl.to(roleSpotlight, { opacity: 0.35, duration: 0.5 }, 9.5);
+        tl.to(roleSpotlight, { opacity: 0.25, duration: 0.7 }, 15.25);
       }
 
       // ----------------------------------------------------------------------
-      // SCROLL STEP 03: 03 CREATOR
-      // Previous MARKETER & BRAND BUILDER remain visible in top progress trail!
-      // CREATOR rises from depth with rotation (rotateZ -2deg -> 0).
-      // Environmental camera viewfinder / aperture symbol illuminates behind it.
+      // STEP 5: ROLE 03 — 03 CREATOR
+      // Marketer & Brand Builder remain parked in Slots 1 & 2!
+      // Creator rises from depth.
+      // Aperture symbol illuminates.
+      // HOLD: Full reading window for CREATOR.
+      // TRANSFORMATION: CREATOR shrinks and moves into Slot 3.
+      // Top now contains: [ 01 MARKETER ] [ 02 BRAND BUILDER ] [ 03 CREATOR ].
       // ----------------------------------------------------------------------
-      // Environmental Symbol 03: Camera Aperture
       if (envSymCreator) {
         tl.fromTo(envSymCreator,
           { opacity: 0, scale: 0.9, y: 20 },
-          { opacity: 0.60, scale: 1, y: 0, duration: 0.75, ease: 'power2.out' },
-          10.25
+          { opacity: 0.60, scale: 1, y: 0, duration: 0.85, ease: 'power2.out' },
+          16.25
         );
       }
       if (creatorBlades.length) {
@@ -1187,192 +1194,201 @@ document.addEventListener('DOMContentLoaded', () => {
           rotation: 0,
           scale: 1,
           opacity: 0.9,
-          duration: 0.8,
+          duration: 0.9,
           stagger: 0.04,
           ease: 'power2.out'
-        }, 10.3);
+        }, 16.3);
       }
 
-      // Spotlight warms up beneath Creator
       if (roleSpotlight) {
-        tl.to(roleSpotlight, { opacity: 0.88, scale: 1.05, duration: 0.55 }, 10.3);
+        tl.to(roleSpotlight, { opacity: 0.88, scale: 1.05, duration: 0.7 }, 16.3);
       }
 
-      // Frame 03 Entrance: Pops up from depth with 3D rotation
+      // Frame 03 Entrance (rotateZ -1.8deg -> 0)
       if (frame3) {
         tl.fromTo(frame3,
-          { y: 120, scale: 0.88, rotateX: 10, rotateZ: -2.0, opacity: 0 },
-          { y: 0, scale: 1, rotateX: 0, rotateZ: 0, opacity: 1, duration: 0.8, ease: 'power3.out' },
-          10.25
+          { y: 100, scale: 0.90, rotateX: 9, rotateZ: -1.8, opacity: 0 },
+          { y: 0, scale: 1, rotateX: 0, rotateZ: 0, opacity: 1, duration: 0.95, ease: 'power3.out' },
+          16.25
         );
       }
 
-      // Top Progress Marker 03: Active state
-      if (progRole3) {
-        tl.to(progRole3, { opacity: 1, duration: 0.5, ease: 'power2.out' }, 10.35);
-      }
-      if (progFill3) {
-        tl.to(progFill3, { scaleX: 1, duration: 0.65, ease: 'power2.out' }, 10.4);
-      }
-
-      // Subtle Aakash micro-movement
       if (characterScene) {
-        tl.to(characterScene, { x: () => getAnchorRightX() + 4, duration: 0.8, ease: 'power1.out' }, 10.4);
+        tl.to(characterScene, { x: () => getAnchorRightX() + 4, duration: 0.8, ease: 'power1.out' }, 16.4);
       }
 
-      // Reading Hold for Creator
-      tl.to(frame3, { opacity: 1, duration: 0.75 }, 11.05);
+      // CREATOR HOLD (Full reading window)
+      tl.to(frame3, { opacity: 1, duration: 1.8 }, 17.2);
 
-      // Continuous Migration: Frame 3 moves upward toward top progress area
+      // CREATOR TRANSFORMATION INTO TOP HISTORY SLOT 3
       if (frame3) {
+        const subWrap = frame3.querySelector('.role-frame-sub-wrap');
+        const cat = frame3.querySelector('.role-frame-category');
+        const inner = frame3.querySelector('.role-frame-inner');
+
+        if (subWrap) tl.to(subWrap, { height: 0, opacity: 0, duration: 0.75, ease: 'power2.inOut' }, 19.0);
+        if (cat) tl.to(cat, { opacity: 0, duration: 0.6, ease: 'power2.inOut' }, 19.0);
+        if (inner) tl.to(inner, { padding: '12px 16px', duration: 0.85, ease: 'power2.inOut' }, 19.0);
+
         tl.to(frame3, {
-          y: -85,
-          scale: 0.58,
-          opacity: 0,
-          duration: 0.85,
-          ease: 'power2.inOut'
-        }, 11.9);
+          transformOrigin: 'top left',
+          x: () => getSlotDelta(2).x,
+          y: () => getSlotDelta(2).y,
+          scale: () => getSlotDelta(2).scale,
+          opacity: 0.65,
+          rotateX: 0,
+          rotateZ: 0,
+          duration: 1.1,
+          ease: 'power2.inOut',
+          onStart: () => frame3.classList.add('is-stored')
+        }, 19.0);
       }
-      // Top Progress 03 settles into completed role state (opacity: 0.5)
-      if (progRole3) {
-        tl.to(progRole3, { opacity: 0.5, duration: 0.45, ease: 'power2.out' }, 12.35);
-      }
-      // Env symbol 3 dims
+
       if (envSymCreator) {
-        tl.to(envSymCreator, { opacity: 0.12, duration: 0.6, ease: 'power2.out' }, 11.95);
+        tl.to(envSymCreator, { opacity: 0.05, duration: 0.75, ease: 'power2.out' }, 19.2);
       }
       if (roleSpotlight) {
-        tl.to(roleSpotlight, { opacity: 0.35, duration: 0.5 }, 12.0);
+        tl.to(roleSpotlight, { opacity: 0.25, duration: 0.7 }, 19.2);
       }
 
       // ----------------------------------------------------------------------
-      // SCROLL STEP 04: 04 SPEAKER
-      // Previous MARKETER, BRAND BUILDER & CREATOR remain visible in top progress!
-      // SPEAKER rises from depth with rotation (rotateZ +1.8deg -> 0).
-      // Environmental acoustic soundwave symbol illuminates behind it.
+      // STEP 6: ROLE 04 — 04 SPEAKER
+      // Marketer, Brand Builder & Creator parked in Slots 1, 2, 3!
+      // Speaker rises from depth.
+      // Soundwave symbol illuminates.
+      // HOLD: Full reading window for SPEAKER.
+      // TRANSFORMATION: SPEAKER shrinks and moves into Slot 4.
+      // Top now contains: [ 01 MARKETER ] [ 02 BRAND BUILDER ] [ 03 CREATOR ] [ 04 SPEAKER ].
       // ----------------------------------------------------------------------
-      // Environmental Symbol 04: Soundwave
       if (envSymSpeaker) {
         tl.fromTo(envSymSpeaker,
           { opacity: 0, scale: 0.9, y: 20 },
-          { opacity: 0.60, scale: 1, y: 0, duration: 0.75, ease: 'power2.out' },
-          12.75
+          { opacity: 0.60, scale: 1, y: 0, duration: 0.85, ease: 'power2.out' },
+          20.2
         );
       }
       if (speakerBars.length) {
         speakerBars.forEach((bar, idx) => {
           if (idx > 0) {
-            tl.to(bar, { scaleY: 1, duration: 0.6, ease: 'back.out(1.5)' }, 12.8 + (idx * 0.02));
+            tl.to(bar, { scaleY: 1, duration: 0.65, ease: 'back.out(1.5)' }, 20.25 + (idx * 0.02));
           }
         });
       }
 
-      // Spotlight warms up beneath Speaker
       if (roleSpotlight) {
-        tl.to(roleSpotlight, { opacity: 0.88, scale: 1.05, duration: 0.55 }, 12.8);
+        tl.to(roleSpotlight, { opacity: 0.88, scale: 1.05, duration: 0.7 }, 20.25);
       }
 
-      // Frame 04 Entrance: Pops up from depth with 3D rotation
+      // Frame 04 Entrance (rotateZ +1.8deg -> 0)
       if (frame4) {
         tl.fromTo(frame4,
-          { y: 120, scale: 0.88, rotateX: 10, rotateZ: 1.8, opacity: 0 },
-          { y: 0, scale: 1, rotateX: 0, rotateZ: 0, opacity: 1, duration: 0.8, ease: 'power3.out' },
-          12.75
+          { y: 100, scale: 0.90, rotateX: 9, rotateZ: 1.8, opacity: 0 },
+          { y: 0, scale: 1, rotateX: 0, rotateZ: 0, opacity: 1, duration: 0.95, ease: 'power3.out' },
+          20.2
         );
       }
 
-      // Top Progress Marker 04: Active state
-      if (progRole4) {
-        tl.to(progRole4, { opacity: 1, duration: 0.5, ease: 'power2.out' }, 12.85);
-      }
-      if (progFill4) {
-        tl.to(progFill4, { scaleX: 1, duration: 0.65, ease: 'power2.out' }, 12.9);
-      }
-
-      // Subtle Aakash micro-movement
       if (characterScene) {
-        tl.to(characterScene, { x: () => getAnchorRightX(), duration: 0.8, ease: 'power1.out' }, 12.9);
+        tl.to(characterScene, { x: () => getAnchorRightX(), duration: 0.8, ease: 'power1.out' }, 20.35);
       }
 
-      // Reading Hold for Speaker
-      tl.to(frame4, { opacity: 1, duration: 0.75 }, 13.55);
+      // SPEAKER HOLD (Full reading window)
+      tl.to(frame4, { opacity: 1, duration: 1.8 }, 21.15);
 
-      // Continuous Migration: Frame 4 moves upward into fourth progress position
+      // SPEAKER TRANSFORMATION INTO TOP HISTORY SLOT 4
       if (frame4) {
+        const subWrap = frame4.querySelector('.role-frame-sub-wrap');
+        const cat = frame4.querySelector('.role-frame-category');
+        const inner = frame4.querySelector('.role-frame-inner');
+
+        if (subWrap) tl.to(subWrap, { height: 0, opacity: 0, duration: 0.75, ease: 'power2.inOut' }, 22.95);
+        if (cat) tl.to(cat, { opacity: 0, duration: 0.6, ease: 'power2.inOut' }, 22.95);
+        if (inner) tl.to(inner, { padding: '12px 16px', duration: 0.85, ease: 'power2.inOut' }, 22.95);
+
         tl.to(frame4, {
-          y: -85,
-          scale: 0.58,
-          opacity: 0,
-          duration: 0.85,
-          ease: 'power2.inOut'
-        }, 14.4);
+          transformOrigin: 'top left',
+          x: () => getSlotDelta(3).x,
+          y: () => getSlotDelta(3).y,
+          scale: () => getSlotDelta(3).scale,
+          opacity: 0.65,
+          rotateX: 0,
+          rotateZ: 0,
+          duration: 1.1,
+          ease: 'power2.inOut',
+          onStart: () => frame4.classList.add('is-stored')
+        }, 22.95);
       }
+
       if (envSymSpeaker) {
-        tl.to(envSymSpeaker, { opacity: 0.12, duration: 0.6, ease: 'power2.out' }, 14.45);
+        tl.to(envSymSpeaker, { opacity: 0.05, duration: 0.75, ease: 'power2.out' }, 23.15);
       }
       if (roleSpotlight) {
-        tl.to(roleSpotlight, { opacity: 0, duration: 0.6 }, 14.5);
+        tl.to(roleSpotlight, { opacity: 0, duration: 0.7 }, 23.15);
       }
 
       // ----------------------------------------------------------------------
-      // FINAL ROLE STATE: THE COMPLETED IDENTITY TRAIL
-      // All four roles now sit at the top:
-      // 01 MARKETER   02 BRAND BUILDER   03 CREATOR   04 SPEAKER
+      // STEP 7: ALL FOUR COMPLETED FRAMES IN TOP HISTORY ROW
+      // All 4 collective opacity increases to 0.95.
+      // Glowing champagne collective line draws underneath.
       // "THE FOUR PARTS OF AAKASH."
-      // Collective opacity increases to 0.95.
-      // Thin champagne progress line connects them across.
-      // Visually completes: "I DON'T FIT INTO ONE BOX. AAKASH IS ALL FOUR."
+      // Generous reading hold.
       // ----------------------------------------------------------------------
-      const allProgRoles = [progRole1, progRole2, progRole3, progRole4].filter(Boolean);
-      if (allProgRoles.length) {
-        tl.to(allProgRoles, {
+      const storedFrames = [frame1, frame2, frame3, frame4].filter(Boolean);
+      if (storedFrames.length) {
+        tl.to(storedFrames, {
           opacity: 0.95,
-          duration: 0.55,
+          duration: 0.65,
           ease: 'power2.out'
-        }, 15.2);
+        }, 24.15);
       }
 
-      if (progCollectiveLine) {
-        tl.fromTo(progCollectiveLine,
+      if (historyCollectiveLine) {
+        tl.fromTo(historyCollectiveLine,
           { scaleX: 0 },
-          { scaleX: 1, duration: 0.75, ease: 'power2.out' },
-          15.3
+          { scaleX: 1, duration: 0.85, ease: 'power2.out' },
+          24.25
         );
       }
 
-      // Hold the completed identity trail state
-      tl.to(progressTrail, { opacity: 1, duration: 0.8 }, 15.7);
+      // Hold the completed identity collection
+      tl.to(wrapper, { duration: 1.6 }, 24.8);
 
       // ----------------------------------------------------------------------
-      // STEP 5: SEAMLESS TRANSITION INTO UNTOUCHED DIGI MARKETRIX
-      // Progress trail & background statement glide gently into darkness.
-      // Aakash moves toward the right edge (translateX: 0 -> 8-12vw further)
-      // scale: 1 -> 0.94, opacity: 1 -> 0.32, lighting dims.
-      // DIGI MARKETRIX enters from LEFT:
-      // SELECTED WORK / 01 first, then DIGI, then MARKETRIX (~100ms later).
-      // Project title OWNS the screen. Aakash is faint continuity on far right.
+      // STEP 8: SEAMLESS TRANSITION INTO UNTOUCHED DIGI MARKETRIX
+      // Top history row, frames & statement glide gently into darkness.
+      // Aakash moves toward right edge and dims.
+      // DIGI MARKETRIX enters from LEFT: SELECTED WORK / 01 first, then DIGI,
+      // then MARKETRIX (~100ms later). Untouched case study code.
       // ----------------------------------------------------------------------
-      if (progressTrail) {
-        tl.to(progressTrail, {
+      if (historyRow) {
+        tl.to(historyRow, {
           y: -25,
           opacity: 0,
-          duration: 0.75,
+          duration: 0.85,
           ease: 'power2.in'
-        }, 16.5);
+        }, 26.4);
+      }
+      if (storedFrames.length) {
+        tl.to(storedFrames, {
+          y: '-=25',
+          opacity: 0,
+          duration: 0.85,
+          ease: 'power2.in'
+        }, 26.4);
       }
       if (stmtBackdrop) {
         tl.to(stmtBackdrop, {
           opacity: 0,
-          duration: 0.75,
+          duration: 0.85,
           ease: 'power2.in'
-        }, 16.5);
+        }, 26.4);
       }
       if (envSymbolsWrap) {
         tl.to(envSymbolsWrap, {
           opacity: 0,
-          duration: 0.75,
+          duration: 0.85,
           ease: 'power2.in'
-        }, 16.5);
+        }, 26.4);
       }
 
       // Aakash moves toward far right & dims (continuity into Digi Marketrix)
@@ -1382,14 +1398,14 @@ document.addEventListener('DOMContentLoaded', () => {
         opacity: 0.32,
         duration: 1.1,
         ease: 'power2.inOut'
-      }, 16.5);
+      }, 26.4);
 
       if (characterPortrait) {
         tl.to(characterPortrait, {
           y: -15,
           duration: 1.1,
           ease: 'power2.inOut'
-        }, 16.5);
+        }, 26.4);
       }
 
       tl.to(radialLight, {
@@ -1397,74 +1413,68 @@ document.addEventListener('DOMContentLoaded', () => {
         scale: 0.85,
         duration: 1.1,
         ease: 'power2.inOut'
-      }, 16.5);
+      }, 26.4);
 
       // DIGI MARKETRIX ENTERS (Untouched Content & Structure)
-      tl.to(workTransition, { opacity: 1, duration: 0.1 }, 16.6);
+      tl.to(workTransition, { opacity: 1, duration: 0.1 }, 26.5);
 
       // SELECTED WORK / 01 first
       tl.fromTo('#work-kicker',
         { y: 18, opacity: 0 },
-        { y: 0, opacity: 1, duration: 0.6, ease: 'power2.out' },
-        16.7
+        { y: 0, opacity: 1, duration: 0.65, ease: 'power2.out' },
+        26.6
       );
 
       // DIGI: upward mask reveal
       tl.fromTo('#work-title-digi',
         { y: '100%', opacity: 0 },
         { y: '0%', opacity: 1, duration: 0.85, ease: 'power3.out' },
-        17.0
+        26.9
       );
 
-      // MARKETRIX: upward mask reveal approx 100ms later (no clipping!)
+      // MARKETRIX: upward mask reveal approx 100ms later
       tl.fromTo('#work-title-marketrix',
         { y: '100%', opacity: 0 },
         { y: '0%', opacity: 1, duration: 0.85, ease: 'power3.out' },
-        17.15
+        27.05
       );
 
-      // Descriptor subtitle slides up 10px while fading in
+      // Descriptor subtitle slides up 14px while fading in
       tl.fromTo('#work-subtitle',
         { y: 14, opacity: 0 },
-        { y: 0, opacity: 1, duration: 0.7, ease: 'power2.out' },
-        17.5
+        { y: 0, opacity: 1, duration: 0.75, ease: 'power2.out' },
+        27.4
       );
 
-      // ----------------------------------------------------------------------
-      // STEP 6: TRANSITION INTO PROJECT CANVAS (Untouched)
-      // Aakash fades completely.
-      // One actual Digi Marketrix project image approaches from depth.
-      // Title slightly reduces/moves.
-      // Case study begins: PERSON -> IDENTITY -> WORK.
-      // ----------------------------------------------------------------------
+      // Approach into project canvas (untouched)
       tl.to(characterScene, {
         opacity: 0,
         duration: 0.8,
         ease: 'power2.in'
-      }, 18.3);
+      }, 28.2);
 
       tl.to(radialLight, {
         opacity: 0,
         duration: 0.8
-      }, 18.3);
+      }, 28.2);
 
       tl.to(workTransition, {
         scale: 0.94,
         y: -18,
         duration: 0.9,
         ease: 'power2.out'
-      }, 18.4);
+      }, 28.3);
 
       if (projectApproach) {
         tl.fromTo(projectApproach,
           { opacity: 0, scale: 0.85, y: 35 },
           { opacity: 1, scale: 1.0, y: 0, duration: 1.15, ease: 'power3.out' },
-          18.4
+          28.3
         );
       }
 
-      // Rest / hold before smooth unpinning into case study section
-      tl.to(workTransition, { opacity: 1, duration: 0.8 }, 19.55);
+      // Rest / hold before unpinning into case study section
+      tl.to(workTransition, { opacity: 1, duration: 0.9 }, 29.45);
 
       // ----------------------------------------------------------------------
       // POINTER INTERACTION (Desktop Only — Micro-Interactions & Calm Parallax)
@@ -1492,10 +1502,10 @@ document.addEventListener('DOMContentLoaded', () => {
             });
           }
 
-          // Active role frames subtle architectural 3D response
+          // Active role frames subtle architectural 3D response (active center stage only)
           const activeFrames = [frame1, frame2, frame3, frame4];
           activeFrames.forEach(f => {
-            if (f && gsap.getProperty(f, 'opacity') > 0.4) {
+            if (f && !f.classList.contains('is-stored') && gsap.getProperty(f, 'opacity') > 0.7) {
               gsap.set(f, {
                 rotateY: mouseX * 4,
                 rotateX: -mouseY * 3
@@ -1632,19 +1642,33 @@ document.addEventListener('DOMContentLoaded', () => {
           }
         });
 
-        // Update preview content from data attributes
+        // Update preview content from data attributes with smooth crossfade
         const previewSrc = item.getAttribute('data-preview');
         const titleText = item.getAttribute('data-title');
         const subText = item.getAttribute('data-sub');
         const kickerText = item.getAttribute('data-kicker');
 
-        if (previewImg && previewSrc) previewImg.src = previewSrc;
-        if (previewTitle && titleText) previewTitle.textContent = titleText;
-        if (previewSub && subText) previewSub.textContent = subText;
-        if (previewKicker && kickerText) previewKicker.textContent = kickerText;
-
-        // Reveal atmospheric preview card on opposite side
-        previewStage.classList.add('active');
+        if (previewStage.classList.contains('active') && previewImg && previewImg.src !== previewSrc) {
+          // Crossfade media smoothly inside existing frame without destroy/recreate
+          previewImg.style.opacity = '0.35';
+          setTimeout(() => {
+            if (previewImg && previewSrc) previewImg.src = previewSrc;
+            if (previewTitle && titleText) previewTitle.textContent = titleText;
+            if (previewSub && subText) previewSub.textContent = subText;
+            if (previewKicker && kickerText) previewKicker.textContent = kickerText;
+            if (previewImg) previewImg.style.opacity = '1';
+          }, 120);
+        } else {
+          if (previewImg && previewSrc) {
+            previewImg.src = previewSrc;
+            previewImg.style.opacity = '1';
+          }
+          if (previewTitle && titleText) previewTitle.textContent = titleText;
+          if (previewSub && subText) previewSub.textContent = subText;
+          if (previewKicker && kickerText) previewKicker.textContent = kickerText;
+          // Smooth 600ms entrance from opacity 0, scale 0.94, translateY 18px, rotateZ -1deg
+          previewStage.classList.add('active');
+        }
       });
 
       item.addEventListener('mouseleave', () => {
@@ -1668,17 +1692,19 @@ document.addEventListener('DOMContentLoaded', () => {
           }
         });
 
-        // Fade out atmospheric preview card
+        // Fade out refined preview card & reset transform to resting state
         previewStage.classList.remove('active');
+        previewStage.style.transform = '';
       });
     });
 
-    // Subtle pointer parallax response on the atmospheric preview card
+    // Subtle pointer parallax response strictly within safe viewport limits
+    // Note: NEVER shift by -50% to prevent pushing the preview out of the left screen edge
     window.addEventListener('mousemove', (e) => {
       if (!isDesktop() || !previewStage.classList.contains('active')) return;
       const normX = (e.clientX / window.innerWidth) * 2 - 1;
       const normY = (e.clientY / window.innerHeight) * 2 - 1;
-      previewStage.style.transform = `translate(calc(-50% + ${(normX * 8).toFixed(1)}px), calc(-50% + ${(normY * 6).toFixed(1)}px)) scale(1)`;
+      previewStage.style.transform = `translate(${(normX * 6).toFixed(1)}px, ${(normY * 4).toFixed(1)}px) scale(1) rotate(0deg)`;
     }, { passive: true });
   }
 
