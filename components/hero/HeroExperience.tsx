@@ -83,9 +83,179 @@ export default function HeroExperience() {
 
       const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+      // ======================================================================
+      // CharacterController: Responsive Parallax & Scroll Kinematics
+      // ======================================================================
+      const isTouch = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+
+      const CharacterController = {
+        isEntrancePlaying: false,
+        current: {
+          pointerX: 0,
+          pointerY: 0,
+          pointerScale: 1,
+          lightX: 0,
+          lightY: 0,
+          dirLightX: 0,
+          dirLightY: 0,
+          wordmarkX: 0,
+          wordmarkY: 0,
+          flankX: 0,
+          flankY: 0,
+          shadowX: 0,
+          shadowY: 18,
+        },
+        target: {
+          pointerX: 0,
+          pointerY: 0,
+          pointerScale: 1,
+          lightX: 0,
+          lightY: 0,
+          dirLightX: 0,
+          dirLightY: 0,
+          wordmarkX: 0,
+          wordmarkY: 0,
+          flankX: 0,
+          flankY: 0,
+          shadowX: 0,
+          shadowY: 18,
+        },
+        isTicking: false,
+        rafId: 0 as number,
+
+        init() {
+          if (characterPortrait) {
+            characterPortrait.style.opacity = '1';
+            characterPortrait.style.visibility = 'visible';
+            characterPortrait.style.display = 'block';
+          }
+          if (!isTouch && !prefersReducedMotion) {
+            this.bindPointerEvents();
+          }
+        },
+
+        bindPointerEvents() {
+          const isDesktop = () => window.innerWidth > 960 && !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+          const onPointerMove = (e: MouseEvent) => {
+            if (!isDesktop() || this.isEntrancePlaying) return;
+
+            const normX = (e.clientX / window.innerWidth) * 2 - 1;
+            const normY = (e.clientY / window.innerHeight) * 2 - 1;
+
+            this.target.pointerX = normX * 5.0;
+            this.target.pointerY = normY * 3.0;
+            this.target.lightX = normX * 10.0;
+            this.target.lightY = normY * 6.0;
+            this.target.dirLightX = -normX * 8.0;
+            this.target.dirLightY = -normY * 5.0;
+            this.target.wordmarkX = normX * 2.0;
+            this.target.wordmarkY = normY * 1.5;
+            this.target.flankX = normX * 2.0;
+            this.target.flankY = normY * 1.5;
+            this.target.shadowX = -normX * 8;
+            this.target.shadowY = 18 - normY * 4;
+
+            this.requestTick();
+          };
+
+          const onPointerLeave = () => {
+            if (!isDesktop()) return;
+            this.target.pointerX = 0;
+            this.target.pointerY = 0;
+            this.target.lightX = 0;
+            this.target.lightY = 0;
+            this.target.dirLightX = 0;
+            this.target.dirLightY = 0;
+            this.target.wordmarkX = 0;
+            this.target.wordmarkY = 0;
+            this.target.flankX = 0;
+            this.target.flankY = 0;
+            this.target.shadowX = 0;
+            this.target.shadowY = 18;
+
+            this.requestTick();
+          };
+
+          window.addEventListener('mousemove', onPointerMove, { passive: true });
+          window.addEventListener('mouseleave', onPointerLeave, { passive: true });
+        },
+
+        requestTick() {
+          if (!this.isTicking) {
+            this.isTicking = true;
+            this.rafId = requestAnimationFrame(() => this.update());
+          }
+        },
+
+        update() {
+          const c = this.current;
+          const t = this.target;
+
+          c.pointerX += (t.pointerX - c.pointerX) * 0.055;
+          c.pointerY += (t.pointerY - c.pointerY) * 0.055;
+          c.lightX += (t.lightX - c.lightX) * 0.040;
+          c.lightY += (t.lightY - c.lightY) * 0.040;
+          c.dirLightX += (t.dirLightX - c.dirLightX) * 0.040;
+          c.dirLightY += (t.dirLightY - c.dirLightY) * 0.040;
+          c.wordmarkX += (t.wordmarkX - c.wordmarkX) * 0.035;
+          c.wordmarkY += (t.wordmarkY - c.wordmarkY) * 0.035;
+          c.flankX += (t.flankX - c.flankX) * 0.065;
+          c.flankY += (t.flankY - c.flankY) * 0.065;
+          c.shadowX += (t.shadowX - c.shadowX) * 0.055;
+          c.shadowY += (t.shadowY - c.shadowY) * 0.055;
+
+          this.render();
+
+          const diff = Math.abs(t.pointerX - c.pointerX) +
+                       Math.abs(t.pointerY - c.pointerY) +
+                       Math.abs(t.lightX - c.lightX) +
+                       Math.abs(t.lightY - c.lightY) +
+                       Math.abs(t.wordmarkX - c.wordmarkX) +
+                       Math.abs(t.wordmarkY - c.wordmarkY);
+
+          if (diff > 0.005) {
+            this.rafId = requestAnimationFrame(() => this.update());
+          } else {
+            this.isTicking = false;
+          }
+        },
+
+        render() {
+          if (radialLight) {
+            radialLight.style.transform = `translate3d(calc(-50% + ${this.current.lightX.toFixed(2)}px), calc(-50% + ${this.current.lightY.toFixed(2)}px), 0)`;
+          }
+          const dirLightEl = document.querySelector('.hero-poster-side-light') as HTMLElement | null;
+          if (dirLightEl) {
+            dirLightEl.style.transform = `translate3d(${this.current.dirLightX.toFixed(2)}px, ${this.current.dirLightY.toFixed(2)}px, 0)`;
+          }
+          if (portfolioWord && !this.isEntrancePlaying) {
+            portfolioWord.style.transform = `translate(calc(-50% + ${this.current.wordmarkX.toFixed(2)}px), calc(-50% + ${this.current.wordmarkY.toFixed(2)}px))`;
+          }
+          if (leftFlank && !this.isEntrancePlaying) {
+            leftFlank.style.transform = `translate3d(${(-this.current.flankX).toFixed(2)}px, ${this.current.flankY.toFixed(2)}px, 0)`;
+          }
+          if (rightFlank && !this.isEntrancePlaying) {
+            rightFlank.style.transform = `translate3d(${this.current.flankX.toFixed(2)}px, ${this.current.flankY.toFixed(2)}px, 0)`;
+          }
+          if (characterPortrait && !this.isEntrancePlaying) {
+            const totalX = this.current.pointerX;
+            const totalY = this.current.pointerY;
+            characterPortrait.style.transform = `translate3d(${totalX.toFixed(2)}px, ${totalY.toFixed(2)}px, 0)`;
+            characterPortrait.style.filter = `contrast(1.08) brightness(0.97) saturate(0.9) drop-shadow(${this.current.shadowX.toFixed(1)}px ${this.current.shadowY.toFixed(1)}px 32px rgba(0, 0, 0, 0.7))`;
+          }
+        },
+      };
+
+      CharacterController.init();
+
+      // ======================================================================
+      // Cinematic Personal-Portfolio Poster Entrance (2–2.5 seconds total)
+      // ======================================================================
       const settleHeroImmediately = () => {
+        CharacterController.isEntrancePlaying = false;
         if (portfolioWord) {
-          portfolioWord.style.opacity = '0.9';
+          portfolioWord.style.opacity = '0.92';
           portfolioWord.style.clipPath = 'none';
           portfolioWord.style.letterSpacing = '-0.055em';
           portfolioWord.style.transform = 'translate(-50%, -50%)';
@@ -95,7 +265,7 @@ export default function HeroExperience() {
           characterPortrait.style.transform = 'none';
         }
         if (radialLight) {
-          radialLight.style.opacity = '0.6';
+          radialLight.style.opacity = '0.65';
           radialLight.style.transform = 'translate3d(-50%, -50%, 0)';
         }
         if (leftLine) leftLine.style.transform = 'scaleX(1)';
@@ -119,16 +289,17 @@ export default function HeroExperience() {
           const title = anchor.querySelector('.anchor-title') as HTMLElement | null;
           const sub = anchor.querySelector('.anchor-sub') as HTMLElement | null;
           if (num) { num.style.opacity = '1'; num.style.transform = 'none'; }
-          if (line) line.style.transform = idx === 0 ? 'scaleX(1)' : 'scaleX(0)';
+          if (line) line.style.transform = idx === 0 ? 'scaleX(1)' : 'scaleX(0.35)';
           if (title) { title.style.clipPath = 'none'; title.style.opacity = '1'; title.style.transform = 'none'; }
           if (sub) { sub.style.opacity = '1'; sub.style.transform = 'none'; }
         });
+        CharacterController.requestTick();
       };
 
-      if (prefersReducedMotion || window.scrollY > 40 || hasRunEntrance.current) {
+      if (prefersReducedMotion || window.scrollY > 40) {
         settleHeroImmediately();
       } else {
-        hasRunEntrance.current = true;
+        CharacterController.isEntrancePlaying = true;
 
         if (radialLight) radialLight.style.opacity = '0.08';
         if (portfolioWord) {
@@ -150,94 +321,106 @@ export default function HeroExperience() {
         if (rightTag2) { rightTag2.style.clipPath = 'inset(0% 0% 0% 100%)'; rightTag2.style.opacity = '0'; rightTag2.style.transform = 'translateX(8px)'; }
         if (leftSep) leftSep.style.opacity = '0';
         if (rightSep) rightSep.style.opacity = '0';
-        if (greeting) { greeting.style.opacity = '0'; greeting.style.transform = 'translateY(16px)'; }
-        if (positioning) { positioning.style.opacity = '0'; positioning.style.transform = 'translateY(16px)'; }
-        if (ctaCluster) { ctaCluster.style.opacity = '0'; ctaCluster.style.transform = 'translateY(14px)'; }
-        if (rightMantra) { rightMantra.style.opacity = '0'; rightMantra.style.transform = 'translateY(14px)'; }
+
+        [greeting, positioning, ctaCluster, rightMantra].forEach((el) => {
+          if (el) {
+            el.style.opacity = '0';
+            el.style.transform = 'translate3d(0, 16px, 0)';
+          }
+        });
 
         anchorItems.forEach((anchor) => {
           const num = anchor.querySelector('.anchor-index') as HTMLElement | null;
           const line = anchor.querySelector('.anchor-line') as HTMLElement | null;
           const title = anchor.querySelector('.anchor-title') as HTMLElement | null;
           const sub = anchor.querySelector('.anchor-sub') as HTMLElement | null;
-          if (num) { num.style.opacity = '0'; num.style.transform = 'translateY(8px)'; }
+          if (num) { num.style.opacity = '0'; num.style.transform = 'translate3d(0, 8px, 0)'; }
           if (line) line.style.transform = 'scaleX(0)';
-          if (title) { title.style.clipPath = 'inset(0% 100% 0% 0%)'; title.style.opacity = '0'; title.style.transform = 'translateX(-10px)'; }
-          if (sub) { sub.style.opacity = '0'; sub.style.transform = 'translateY(8px)'; }
+          if (title) { title.style.clipPath = 'inset(100% 0% 0% 0%)'; title.style.opacity = '0'; title.style.transform = 'translate3d(0, 12px, 0)'; }
+          if (sub) { sub.style.opacity = '0'; sub.style.transform = 'translate3d(0, 10px, 0)'; }
         });
 
         const entranceTl = gsap.timeline({
           onComplete: () => {
-            settleHeroImmediately();
+            CharacterController.isEntrancePlaying = false;
+            CharacterController.requestTick();
           },
         });
 
-        if (radialLight) {
-          entranceTl.to(radialLight, {
-            opacity: 0.6,
-            duration: 1.2,
-            ease: 'power2.out',
-          }, 0.2);
-        }
+        // 1. PORTFOLIO mask-reveal
+        entranceTl.fromTo(portfolioWord,
+          { opacity: 0, clipPath: 'inset(100% 0% 0% 0%)', letterSpacing: '0.04em' },
+          { opacity: 0.92, clipPath: 'inset(0% 0% 0% 0%)', letterSpacing: '-0.055em', duration: 0.70, ease: 'power3.out' },
+          0.22
+        );
 
-        if (portfolioWord) {
-          entranceTl.to(portfolioWord, {
-            opacity: 0.9,
-            clipPath: 'inset(0% 0% 0% 0%)',
-            letterSpacing: '-0.055em',
-            duration: 1.1,
-            ease: 'power3.out',
-          }, 0.4);
-        }
+        // 2. AAKASH rises from below (85vh -> 0%) with authentic settling physics (-4px -> 0px)
+        entranceTl.fromTo(characterPortrait,
+          { y: '85vh', opacity: 0, scale: 0.97 },
+          { y: '0%', opacity: 1, scale: 1, duration: 1.15, ease: 'power3.out' },
+          0.55
+        );
+        entranceTl.to(characterPortrait, { y: '-4px', duration: 0.14, ease: 'power1.out' }, 1.70);
+        entranceTl.to(characterPortrait, { y: '0px', duration: 0.18, ease: 'power2.inOut' }, 1.84);
 
-        if (characterPortrait) {
-          entranceTl.to(characterPortrait, {
-            opacity: 1,
-            y: 0,
-            scale: 1,
-            duration: 1.35,
-            ease: 'power3.out',
-          }, 0.65);
-        }
+        // 3. Backlight blooms behind Aakash
+        entranceTl.fromTo(radialLight,
+          { opacity: 0.12 },
+          { opacity: 0.88, duration: 0.45, ease: 'power2.out' },
+          1.35
+        );
+        entranceTl.to(radialLight, { opacity: 0.65, duration: 0.45, ease: 'power2.inOut' }, 1.80);
 
-        if (leftLine) {
-          entranceTl.to(leftLine, { scaleX: 1, duration: 0.55, ease: 'power2.out' }, 1.15);
-        }
-        if (leftTag1) {
-          entranceTl.to(leftTag1, { clipPath: 'inset(0% 0% 0% 0%)', opacity: 1, x: 0, duration: 0.5, ease: 'power2.out' }, 1.25);
-        }
-        if (leftSep) {
-          entranceTl.to(leftSep, { opacity: 0.5, duration: 0.35, ease: 'power1.out' }, 1.35);
-        }
-        if (leftTag2) {
-          entranceTl.to(leftTag2, { clipPath: 'inset(0% 0% 0% 0%)', opacity: 1, x: 0, duration: 0.5, ease: 'power2.out' }, 1.4);
-        }
+        // 4. Side Details Assemble
+        if (leftLine) entranceTl.to(leftLine, { scaleX: 1, duration: 0.22, ease: 'power2.out' }, 1.38);
+        if (leftTag1) entranceTl.to(leftTag1, { clipPath: 'inset(0% 0% 0% 0%)', opacity: 1, x: 0, duration: 0.26, ease: 'power2.out' }, 1.44);
+        if (leftSep) entranceTl.to(leftSep, { opacity: 1, duration: 0.15 }, 1.48);
+        if (leftTag2) entranceTl.to(leftTag2, { clipPath: 'inset(0% 0% 0% 0%)', opacity: 1, x: 0, duration: 0.26, ease: 'power2.out' }, 1.50);
 
-        if (rightLine) {
-          entranceTl.to(rightLine, { scaleX: 1, duration: 0.55, ease: 'power2.out' }, 1.3);
-        }
-        if (rightTag1) {
-          entranceTl.to(rightTag1, { clipPath: 'inset(0% 0% 0% 0%)', opacity: 1, x: 0, duration: 0.5, ease: 'power2.out' }, 1.4);
-        }
-        if (rightSep) {
-          entranceTl.to(rightSep, { opacity: 0.5, duration: 0.35, ease: 'power1.out' }, 1.48);
-        }
-        if (rightTag2) {
-          entranceTl.to(rightTag2, { clipPath: 'inset(0% 0% 0% 0%)', opacity: 1, x: 0, duration: 0.5, ease: 'power2.out' }, 1.52);
-        }
+        if (rightLine) entranceTl.to(rightLine, { scaleX: 1, duration: 0.22, ease: 'power2.out' }, 1.40);
+        if (rightTag1) entranceTl.to(rightTag1, { clipPath: 'inset(0% 0% 0% 0%)', opacity: 1, x: 0, duration: 0.26, ease: 'power2.out' }, 1.46);
+        if (rightSep) entranceTl.to(rightSep, { opacity: 1, duration: 0.15 }, 1.50);
+        if (rightTag2) entranceTl.to(rightTag2, { clipPath: 'inset(0% 0% 0% 0%)', opacity: 1, x: 0, duration: 0.26, ease: 'power2.out' }, 1.52);
 
-        if (greeting) {
-          entranceTl.to(greeting, { opacity: 1, y: 0, duration: 0.6, ease: 'power2.out' }, 1.5);
-        }
-        if (positioning) {
-          entranceTl.to(positioning, { opacity: 1, y: 0, duration: 0.6, ease: 'power2.out' }, 1.62);
-        }
-        if (ctaCluster) {
-          entranceTl.to(ctaCluster, { opacity: 1, y: 0, duration: 0.55, ease: 'power2.out' }, 1.74);
-        }
-        if (rightMantra) {
-          entranceTl.to(rightMantra, { opacity: 1, y: 0, duration: 0.55, ease: 'power2.out' }, 1.7);
-        }
+        // 5. Copy & CTAs
+        if (greeting) entranceTl.to(greeting, { opacity: 1, y: 0, duration: 0.45, ease: 'power2.out' }, 1.58);
+        if (positioning) entranceTl.to(positioning, { opacity: 1, y: 0, duration: 0.45, ease: 'power2.out' }, 1.66);
+        if (rightMantra) entranceTl.to(rightMantra, { opacity: 1, y: 0, duration: 0.45, ease: 'power2.out' }, 1.72);
+
+        anchorItems.forEach((anchor, idx) => {
+          const baseTime = 1.78 + idx * 0.10;
+          const num = anchor.querySelector('.anchor-index') as HTMLElement | null;
+          const line = anchor.querySelector('.anchor-line') as HTMLElement | null;
+          const title = anchor.querySelector('.anchor-title') as HTMLElement | null;
+          const sub = anchor.querySelector('.anchor-sub') as HTMLElement | null;
+
+          if (num) entranceTl.to(num, { opacity: 1, y: 0, duration: 0.18, ease: 'power2.out' }, baseTime);
+          if (line) entranceTl.to(line, { scaleX: idx === 0 ? 1 : 0.35, duration: 0.22, ease: 'power2.out' }, baseTime + 0.04);
+          if (title) entranceTl.to(title, { clipPath: 'inset(0% 0% 0% 0%)', opacity: 1, y: 0, duration: 0.24, ease: 'power2.out' }, baseTime + 0.08);
+          if (sub) entranceTl.to(sub, { opacity: 1, y: 0, duration: 0.20, ease: 'power2.out' }, baseTime + 0.12);
+        });
+
+        if (ctaCluster) entranceTl.to(ctaCluster, { opacity: 1, y: 0, duration: 0.45, ease: 'power2.out' }, 1.84);
+
+        // Safety skip on user scroll or key interaction
+        let hasSkipped = false;
+        const checkScrollSkip = () => {
+          if (window.scrollY > 40 && !hasSkipped) {
+            triggerSkip();
+          }
+        };
+        const triggerSkip = () => {
+          if (hasSkipped) return;
+          hasSkipped = true;
+          window.removeEventListener('scroll', checkScrollSkip);
+          window.removeEventListener('keydown', triggerSkip);
+          window.removeEventListener('touchstart', checkScrollSkip);
+          entranceTl.kill();
+          settleHeroImmediately();
+        };
+        window.addEventListener('scroll', checkScrollSkip, { passive: true });
+        window.addEventListener('keydown', triggerSkip, { once: true });
+        window.addEventListener('touchstart', checkScrollSkip, { passive: true, once: true });
       }
 
       // ----------------------------------------------------------------------
@@ -587,6 +770,65 @@ export default function HeroExperience() {
           );
         }
         tl.to(workTransition, { opacity: 1, duration: 0.9 }, 29.45);
+
+        // ----------------------------------------------------------------------
+        // POINTER INTERACTION (Desktop Only — Micro-Interactions & Calm Parallax)
+        // Aakash: strict limit max ±3px X, ±2.5px Y (calm anchor, no face distortion)
+        // Constellation objects: subtle depth ±5px
+        // ----------------------------------------------------------------------
+        if (window.matchMedia('(min-width: 1025px)').matches) {
+          let mouseX = 0, mouseY = 0;
+          let targetX = 0, targetY = 0;
+
+          window.addEventListener('mousemove', (e) => {
+            targetX = (e.clientX / window.innerWidth - 0.5) * 2;
+            targetY = (e.clientY / window.innerHeight - 0.5) * 2;
+          }, { passive: true });
+
+          gsap.ticker.add(() => {
+            mouseX += (targetX - mouseX) * 0.08;
+            mouseY += (targetY - mouseY) * 0.08;
+
+            // Aakash: calm anchor! strictly max ±3px, ±2.5px
+            if (characterPortrait && !CharacterController.isEntrancePlaying) {
+              gsap.set(characterPortrait, {
+                x: mouseX * 3,
+                y: mouseY * 2.5
+              });
+            }
+
+            // Active role frames subtle architectural 3D response (active center stage only)
+            const activeFrames = [frame1, frame2, frame3, frame4];
+            activeFrames.forEach((f) => {
+              if (f && !f.classList.contains('is-stored') && gsap.getProperty(f, 'opacity') > 0.7) {
+                gsap.set(f, {
+                  rotateY: mouseX * 4,
+                  rotateX: -mouseY * 3
+                });
+              }
+            });
+
+            // Environmental symbols subtle parallax
+            const activeEnvSyms = [envSymMarketer, envSymBrand, envSymCreator, envSymSpeaker];
+            activeEnvSyms.forEach((sym, i) => {
+              if (sym) {
+                const factor = i % 2 === 0 ? 4 : 2.5;
+                gsap.set(sym, {
+                  x: mouseX * factor,
+                  y: mouseY * factor
+                });
+              }
+            });
+
+            // Role spotlight responds gently
+            if (roleSpotlight) {
+              gsap.set(roleSpotlight, {
+                x: mouseX * 8,
+                y: mouseY * 6
+              });
+            }
+          });
+        }
       });
 
       // Mobile reveals
@@ -727,6 +969,13 @@ export default function HeroExperience() {
             previewStage.style.transform = '';
           });
         });
+
+        window.addEventListener('mousemove', (e) => {
+          if (window.innerWidth <= 960 || !previewStage.classList.contains('active')) return;
+          const normX = (e.clientX / window.innerWidth) * 2 - 1;
+          const normY = (e.clientY / window.innerHeight) * 2 - 1;
+          previewStage.style.transform = `translate(${(normX * 6).toFixed(1)}px, ${(normY * 4).toFixed(1)}px) scale(1) rotate(0deg)`;
+        }, { passive: true });
       }
     }, containerRef);
 
