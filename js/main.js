@@ -1868,6 +1868,17 @@ document.addEventListener('DOMContentLoaded', () => {
       linkText: 'Visit Client Instagram ↗',
       linkUrl: 'https://www.instagram.com/mr._aku_vlogs/'
     },
+    'personal-branding-video': {
+      title: 'Personal Branding Client Video — 100% Executed by Aakash',
+      category: 'COMMERCIAL VIDEO REEL',
+      period: 'Direction, Filming & Editing by Aakash',
+      type: 'video',
+      video: 'assets/proofs_optimized/personal_branding_video.mp4',
+      poster: 'assets/proofs_optimized/poster_personal_branding_video.jpg',
+      desc: 'Complete commercial video planned, scripted, shot, and edited by Aakash. Incorporates high-retention hook architecture, sound design, and narrative pacing.',
+      linkText: 'Explore Selected Work ↗',
+      linkUrl: '#clients'
+    },
     'purple-growth': {
       title: 'Purple Collection — Verified +3,000 Reach Growth',
       category: 'ANALYTICS & RESULTS',
@@ -2196,6 +2207,18 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
+  // Delegated click handler ensuring all dynamic/drawer [data-proof] triggers open smoothly
+  document.addEventListener('click', (e) => {
+    const trigger = e.target.closest('[data-proof]');
+    if (trigger) {
+      const key = trigger.getAttribute('data-proof');
+      if (key && proofData[key]) {
+        e.preventDefault();
+        openProofModal(key);
+      }
+    }
+  });
+
   if (proofModalClose) proofModalClose.addEventListener('click', closeProofModal);
   if (proofModalBackdrop) proofModalBackdrop.addEventListener('click', closeProofModal);
   if (proofModalPrev) proofModalPrev.addEventListener('click', () => navigateProof(-1));
@@ -2363,24 +2386,26 @@ document.addEventListener('DOMContentLoaded', () => {
   window.addEventListener('scroll', updateScrollProgress, { passive: true });
   updateScrollProgress();
 
-  // 10b. Interactive Project Index Preview System (#other-work)
+  // 10b. Interactive Project Index Preview System (#clients & #other-work)
   // Hovering over a project row updates the sticky preview pane media & meta
   function initProjectIndexPreview() {
-    const rows = document.querySelectorAll('.horizontal-project-row');
-    const previewImg = document.getElementById('project-preview-img');
-    const previewCat = document.getElementById('project-preview-cat');
-    const previewTitle = document.getElementById('project-preview-title');
+    const rows = document.querySelectorAll('.horizontal-project-row, .index-row-item');
+    const previewImg = document.getElementById('editorial-preview-img') || document.getElementById('project-preview-img');
+    const previewCat = document.getElementById('editorial-preview-cat') || document.getElementById('project-preview-cat');
+    const previewTitle = document.getElementById('editorial-preview-title') || document.getElementById('project-preview-title');
+    const previewScope = document.getElementById('editorial-preview-scope');
 
     if (!rows.length || !previewImg) return;
 
     rows.forEach(row => {
-      row.addEventListener('mouseenter', () => {
+      const updatePreview = () => {
         rows.forEach(r => r.classList.remove('active-index'));
         row.classList.add('active-index');
 
         const imgSrc = row.getAttribute('data-preview-img');
         const cat = row.getAttribute('data-preview-cat');
         const title = row.getAttribute('data-preview-title');
+        const scope = row.getAttribute('data-preview-scope');
 
         if (imgSrc && !previewImg.src.endsWith(imgSrc)) {
           previewImg.style.opacity = '0.3';
@@ -2394,10 +2419,60 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (previewCat && cat) previewCat.textContent = cat;
         if (previewTitle && title) previewTitle.textContent = title;
-      });
+        if (previewScope && scope) previewScope.textContent = scope;
+      };
+
+      row.addEventListener('mouseenter', updatePreview);
+      row.addEventListener('click', updatePreview);
     });
   }
   initProjectIndexPreview();
+
+  // 10bb. Editorial Slide-Over Drawers (Full Case Study Depth)
+  function initEditorialDrawers() {
+    const openBtns = document.querySelectorAll('.open-drawer-btn');
+    const closeBtns = document.querySelectorAll('[data-close-drawer]');
+    const allDrawers = document.querySelectorAll('.editorial-drawer-overlay');
+
+    function closeAllDrawers() {
+      allDrawers.forEach(drawer => {
+        drawer.classList.remove('active');
+        drawer.setAttribute('aria-hidden', 'true');
+      });
+      document.body.style.overflow = '';
+    }
+
+    openBtns.forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        const drawerId = btn.getAttribute('data-drawer');
+        const targetDrawer = document.getElementById(drawerId);
+        if (targetDrawer) {
+          closeAllDrawers();
+          targetDrawer.classList.add('active');
+          targetDrawer.setAttribute('aria-hidden', 'false');
+          document.body.style.overflow = 'hidden';
+        }
+      });
+    });
+
+    closeBtns.forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        closeAllDrawers();
+      });
+    });
+
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        const activeDrawer = document.querySelector('.editorial-drawer-overlay.active');
+        if (activeDrawer && (!proofModal || !proofModal.classList.contains('active'))) {
+          closeAllDrawers();
+        }
+      }
+    });
+  }
+  initEditorialDrawers();
 
   // 10c. The Journey Chronology Rail Scroll-Spy & Interactive Chapter Nav
   // 2020 ━━━ 2021–22 ━━━ 2023 ━━━ 2024 ━━━ 2025 ━━━ 2026 / NOW ━━━ NEXT →
