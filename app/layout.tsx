@@ -3,6 +3,7 @@ import React from 'react';
 import '../styles/main.css';
 import '../styles/nav.css';
 import '../styles/editorial.css';
+import '../styles/professional-redesign.css';
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://aakashk.vercel.app'),

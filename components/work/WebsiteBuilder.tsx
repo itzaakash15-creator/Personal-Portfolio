@@ -1,4 +1,8 @@
-import React from 'react';
+'use client';
+
+import React, { useEffect, useRef } from 'react';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 interface WebsiteBuilderProps {
   onOpenDrawer?: (drawerId: string) => void;
@@ -6,86 +10,189 @@ interface WebsiteBuilderProps {
 }
 
 export default function WebsiteBuilder({ onOpenDrawer, onOpenProof }: WebsiteBuilderProps) {
+  const sectionRef = useRef<HTMLElement>(null);
+  const browserStageRef = useRef<HTMLDivElement>(null);
+  const canvasRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    gsap.registerPlugin(ScrollTrigger);
+
+    const ctx = gsap.context(() => {
+      if (canvasRef.current) {
+        // Perspective entrance: rotateX: 7deg, scale: 0.88, translateY: 80px -> settles to 0, 1, 0
+        gsap.fromTo(
+          canvasRef.current,
+          {
+            rotateX: 7,
+            scale: 0.88,
+            y: 80,
+            opacity: 0.35,
+          },
+          {
+            rotateX: 0,
+            scale: 1,
+            y: 0,
+            opacity: 1,
+            duration: 1.35,
+            ease: 'power3.out',
+            scrollTrigger: {
+              trigger: canvasRef.current,
+              start: 'top 85%',
+              toggleActions: 'play none none reverse',
+            },
+          }
+        );
+      }
+    }, sectionRef);
+
+    return () => ctx.revert();
+  }, []);
+
+  // Subtle pointer depth response (no exaggerated tilt)
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!canvasRef.current || window.innerWidth < 960) return;
+    const rect = canvasRef.current.getBoundingClientRect();
+    const x = (e.clientX - rect.left) / rect.width - 0.5;
+    const y = (e.clientY - rect.top) / rect.height - 0.5;
+
+    gsap.to(canvasRef.current, {
+      rotateY: x * 4,
+      rotateX: -y * 3.5,
+      y: -6 + y * 4,
+      duration: 0.45,
+      ease: 'power1.out',
+      transformPerspective: 1400,
+    });
+  };
+
+  const handleMouseLeave = () => {
+    if (!canvasRef.current) return;
+    gsap.to(canvasRef.current, {
+      rotateY: 0,
+      rotateX: 0,
+      y: 0,
+      duration: 0.65,
+      ease: 'power2.out',
+    });
+  };
+
   return (
-    <section className="editorial-chapter" id="web" data-alias="about">
+    <section className="pro-section" id="web" data-alias="about" ref={sectionRef}>
+      {/* Anchor aliases for smooth navigation */}
       <span id="about" style={{ position: 'absolute', top: 0, left: 0, pointerEvents: 'none' }} aria-hidden="true"></span>
-      <div className="editorial-bg-glow" aria-hidden="true"></div>
+      <div className="pro-bg-radial" style={{ top: '10%', right: '10%' }} aria-hidden="true"></div>
 
-      <div className="editorial-container">
-        {/* Hook Viewport */}
-        <div className="editorial-chapter-hook">
-          <span className="hook-kicker">03 // FUNCTIONAL CODE &amp; INTERFACES</span>
-          <h2 className="hook-headline">
-            SOME IDEAS<br />
-            NEED MORE THAN CONTENT.<br />
-            <span className="text-gold">THEY NEED SOMETHING<br />PEOPLE CAN USE.</span>
-          </h2>
-        </div>
-
-        {/* Identity Title Lockup */}
-        <div className="editorial-title-row">
-          <h3 className="editorial-chapter-title">
-            WEBSITE<br />BUILDER
-          </h3>
-          <p className="editorial-chapter-tagline">DESIGN · BUILD · DEPLOY</p>
-        </div>
-
-        {/* First Viewport Split: Real Jayashakthi Tours & Travels Website */}
-        <div className="editorial-viewport-split">
-          <div className="viewport-content-pane">
-            <p className="supporting-narrative">
-              Converting an idea into an actual working digital experience. Fast, accessible, and conversion-focused web architecture built to power real business revenue.
-            </p>
-            <div className="credibility-signal">
-              <span className="signal-dot"></span>
-              <span className="signal-text">LIVE PRODUCTION DEPLOYMENT · ACTIVE BUSINESS CONVERSIONS</span>
+      <div className="pro-container">
+        {/* Minimal Editorial Header */}
+        <div className="pro-web-layout">
+          <div className="pro-web-header">
+            <div className="pro-kicker-row" style={{ justifyContent: 'center' }}>
+              <span className="pro-kicker-dot" aria-hidden="true"></span>
+              <span className="pro-kicker-text">03 // FUNCTIONAL CODE &amp; INTERFACES</span>
             </div>
-            <div className="editorial-chapter-actions">
-              <a
-                href="https://jayashakthitoursandtravels.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="btn-editorial"
-              >
-                VIEW LIVE WEBSITE →
-              </a>
-              <button
-                type="button"
-                className="btn-editorial-outline open-drawer-btn"
-                data-drawer="drawer-web"
-                onClick={() => onOpenDrawer?.('drawer-web')}
-              >
-                EXPLORE ARCHITECTURE ↗
-              </button>
+
+            <h2 className="pro-hook-headline" style={{ marginBottom: '0.8rem' }}>
+              WEBSITE<br />
+              <span style={{ color: '#d4af37' }}>BUILDER</span>
+            </h2>
+
+            <p className="pro-kicker-text" style={{ color: '#a1a1aa', letterSpacing: '0.22em', marginBottom: '0.75rem' }}>
+              DESIGN · BUILD · DEPLOY
+            </p>
+
+            <p style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: '0.82rem', color: '#71717a', textTransform: 'uppercase', letterSpacing: '0.12em' }}>
+              JAYASHAKTHI TOURS &amp; TRAVELS — LIVE COMMERCIAL PLATFORM
+            </p>
+          </div>
+
+          {/* Floating 3D Perspective Browser Canvas */}
+          <div
+            className="pro-browser-stage"
+            ref={browserStageRef}
+            onMouseMove={handleMouseMove}
+            onMouseLeave={handleMouseLeave}
+          >
+            <div
+              className="pro-browser-canvas"
+              ref={canvasRef}
+              onClick={() => onOpenProof?.('jayashakthi-site')}
+              role="button"
+              tabIndex={0}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  onOpenProof?.('jayashakthi-site');
+                }
+              }}
+              aria-label="Inspect Jayashakthi Tours & Travels website"
+            >
+              {/* Browser Chrome Bar */}
+              <div className="pro-browser-chrome">
+                <div className="pro-browser-dots" aria-hidden="true">
+                  <span className="pro-browser-dot" style={{ background: '#ff5f56' }}></span>
+                  <span className="pro-browser-dot" style={{ background: '#ffbd2e' }}></span>
+                  <span className="pro-browser-dot" style={{ background: '#27c93f' }}></span>
+                </div>
+                <div className="pro-browser-url">
+                  <span style={{ color: '#27c93f', fontSize: '0.65rem' }}>●</span>
+                  <span>https://jayashakthitoursandtravels.com</span>
+                </div>
+                <span
+                  style={{
+                    fontFamily: 'var(--font-mono, monospace)',
+                    fontSize: '0.68rem',
+                    color: '#d4af37',
+                    letterSpacing: '0.1em',
+                    textTransform: 'uppercase',
+                  }}
+                >
+                  LIVE PROD
+                </span>
+              </div>
+
+              {/* Real Website Image Interface */}
+              <div className="pro-browser-body">
+                <img
+                  src="/assets/proofs_optimized/jayashakthi_website.jpg"
+                  alt="Jayashakthi Tours & Travels Live Website Interface"
+                  loading="lazy"
+                />
+
+                {/* Hover Action Overlay */}
+                <div className="pro-browser-action-overlay">
+                  <span
+                    className="pro-btn-primary"
+                    style={{ pointerEvents: 'none' }}
+                  >
+                    INSPECT SYSTEM PROOF ↗
+                  </span>
+                </div>
+              </div>
             </div>
           </div>
 
-          <div
-            className="browser-mockup-frame open-proof-trigger"
-            data-proof="jayashakthi-site"
-            data-cursor="VIEW"
-            title="Click to inspect Jayashakthi Tours & Travels website"
-            onClick={() => onOpenProof?.('jayashakthi-site')}
-          >
-            <div className="browser-mockup-bar">
-              <div className="browser-dots">
-                <span className="browser-dot"></span>
-                <span className="browser-dot"></span>
-                <span className="browser-dot"></span>
-              </div>
-              <div className="browser-url-pill">https://jayashakthitoursandtravels.com</div>
-            </div>
-            <div className="browser-mockup-body">
-              <img
-                src="/assets/proofs_optimized/jayashakthi_website.jpg"
-                alt="Jayashakthi Tours & Travels Official Live Website"
-                loading="lazy"
-              />
-            </div>
-            <div className="visual-frame-overlay-badge">
-              <span>JAYASHAKTHI TOURS &amp; TRAVELS // LIVE PRODUCTION PORTAL</span>
-              <span>INSPECT ↗</span>
-            </div>
+          {/* Minimal Credibility Actions */}
+          <div className="pro-btn-cluster" style={{ justifyContent: 'center', marginTop: '2.5rem' }}>
+            <a
+              href="https://jayashakthitoursandtravels.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="pro-btn-primary"
+            >
+              VIEW LIVE ↗
+            </a>
+            <button
+              type="button"
+              className="pro-btn-outline"
+              onClick={() => onOpenDrawer?.('drawer-web')}
+            >
+              SYSTEM ARCHITECTURE ↗
+            </button>
+          </div>
+
+          {/* Transition: Browser screen darkens and transforms into video frame */}
+          <div className="pro-trans-canvas-to-video" aria-hidden="true">
+            <div className="pro-trans-canvas-to-video-taper"></div>
           </div>
         </div>
       </div>

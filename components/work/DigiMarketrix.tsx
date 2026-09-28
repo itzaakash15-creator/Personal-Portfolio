@@ -1,4 +1,8 @@
-import React from 'react';
+'use client';
+
+import React, { useEffect, useRef } from 'react';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import Talentrix from './Talentrix';
 
 interface DigiMarketrixProps {
@@ -7,117 +11,213 @@ interface DigiMarketrixProps {
 }
 
 export default function DigiMarketrix({ onOpenDrawer, onOpenProof }: DigiMarketrixProps) {
+  const sectionRef = useRef<HTMLElement>(null);
+  const mediaRef = useRef<HTMLDivElement>(null);
+  const depthLayerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    gsap.registerPlugin(ScrollTrigger);
+
+    const ctx = gsap.context(() => {
+      // Masked typography reveal
+      const digiWord = document.querySelector('.pro-digi-word-1');
+      const marketrixWord = document.querySelector('.pro-digi-word-2');
+      const mainVisual = mediaRef.current;
+
+      if (digiWord && marketrixWord) {
+        gsap.fromTo(
+          digiWord,
+          { y: '105%', opacity: 0 },
+          {
+            y: '0%',
+            opacity: 1,
+            duration: 1.0,
+            ease: 'power3.out',
+            scrollTrigger: {
+              trigger: sectionRef.current,
+              start: 'top 80%',
+              toggleActions: 'play none none reverse',
+            },
+          }
+        );
+
+        gsap.fromTo(
+          marketrixWord,
+          { y: '105%', opacity: 0 },
+          {
+            y: '0%',
+            opacity: 1,
+            duration: 1.0,
+            ease: 'power3.out',
+            delay: 0.12,
+            scrollTrigger: {
+              trigger: sectionRef.current,
+              start: 'top 80%',
+              toggleActions: 'play none none reverse',
+            },
+          }
+        );
+      }
+
+      // Visual settling physics
+      if (mainVisual) {
+        gsap.fromTo(
+          mainVisual,
+          { scale: 0.88, y: 60, rotateZ: 2, opacity: 0.3 },
+          {
+            scale: 1,
+            y: 0,
+            rotateZ: 0,
+            opacity: 1,
+            duration: 1.25,
+            ease: 'power2.out',
+            scrollTrigger: {
+              trigger: mainVisual,
+              start: 'top 85%',
+              toggleActions: 'play none none reverse',
+            },
+          }
+        );
+      }
+    }, sectionRef);
+
+    return () => ctx.revert();
+  }, []);
+
+  // Subtle pointer movement: maximum 6–8px shift, calm anchor
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!mediaRef.current || window.innerWidth < 960) return;
+    const rect = mediaRef.current.getBoundingClientRect();
+    const x = (e.clientX - rect.left) / rect.width - 0.5;
+    const y = (e.clientY - rect.top) / rect.height - 0.5;
+
+    gsap.to(mediaRef.current, {
+      x: x * 14,
+      y: y * 12,
+      duration: 0.5,
+      ease: 'power1.out',
+    });
+
+    if (depthLayerRef.current) {
+      gsap.to(depthLayerRef.current, {
+        x: x * -18,
+        y: y * -16,
+        duration: 0.6,
+        ease: 'power1.out',
+      });
+    }
+  };
+
+  const handleMouseLeave = () => {
+    if (!mediaRef.current) return;
+    gsap.to(mediaRef.current, { x: 0, y: 0, duration: 0.6, ease: 'power2.out' });
+    if (depthLayerRef.current) {
+      gsap.to(depthLayerRef.current, { x: 0, y: 0, duration: 0.7, ease: 'power2.out' });
+    }
+  };
+
   return (
-    <section className="editorial-chapter" id="work" data-alias="experience">
+    <section className="pro-section" id="work" data-alias="experience" ref={sectionRef}>
       <span id="experience" style={{ position: 'absolute', top: 0, left: 0, pointerEvents: 'none' }} aria-hidden="true"></span>
-      <div className="editorial-bg-glow" aria-hidden="true"></div>
+      <div className="pro-bg-radial" style={{ top: '15%', right: '-8%' }} aria-hidden="true"></div>
 
-      <div className="editorial-container">
-        {/* Hook Viewport */}
-        <div className="editorial-chapter-hook">
-          <span className="hook-kicker">01 // THE PRIMARY FOUNDATION</span>
-          <h2 className="hook-headline">
-            THREE YEARS.<br />
-            <span className="text-gold">ONE PLACE THAT</span><br />
-            CHANGED HOW I WORK.
-          </h2>
-        </div>
-
-        {/* Identity Title Lockup */}
-        <div className="editorial-title-row">
-          <h3 className="editorial-chapter-title">
-            DIGI<br />MARKETRIX
-          </h3>
-          <p className="editorial-chapter-tagline">MARKETING THE DIGITAL PRESENCE</p>
-        </div>
-
-        {/* First Viewport Split: One Strong Visual + Narrative & Credibility */}
-        <div className="editorial-viewport-split">
-          <div className="viewport-content-pane">
-            <p className="supporting-narrative">
-              Agency-level execution across 3 years of digital marketing, video production, and commercial brand campaigns. Where creative intuition transformed into systematic, metric-driven client execution.
-            </p>
-            <div className="credibility-signal">
-              <span className="signal-dot"></span>
-              <span className="signal-text">3-YEAR ASSOCIATION · FULL-TIME AGENCY INTERNSHIP</span>
+      <div className="pro-container">
+        {/* Digi Marketrix Asymmetric Presentation */}
+        <div className="pro-digi-grid">
+          {/* Left Column: Masked Typography + Concise Hook + Factual Markers */}
+          <div className="pro-digi-content">
+            <div className="pro-kicker-row">
+              <span className="pro-kicker-dot" aria-hidden="true"></span>
+              <span className="pro-kicker-text">01 // 3 YEARS · DIGITAL MARKETING</span>
             </div>
-            <div className="editorial-chapter-actions">
+
+            <h2 className="pro-hook-headline">
+              REAL WORK.<br />
+              <span style={{ color: '#d4af37' }}>REAL RESPONSIBILITY.</span>
+            </h2>
+
+            <div className="pro-digi-wordmark" aria-label="Digi Marketrix">
+              <div className="pro-title-mask">
+                <span className="pro-digi-word-1">DIGI</span>
+              </div>
+              <div className="pro-title-mask">
+                <span className="pro-digi-word-2" style={{ color: '#d4af37' }}>MARKETRIX</span>
+              </div>
+            </div>
+
+            {/* Typography-integrated factual markers (No generic cards) */}
+            <div className="pro-facts-row">
+              <div className="pro-fact-item">
+                <span className="pro-fact-num">03</span>
+                <span className="pro-fact-label">Years Agency Execution</span>
+              </div>
+              <div className="pro-fact-item">
+                <span className="pro-fact-num" style={{ color: '#ffffff' }}>CERTIFIED</span>
+                <span className="pro-fact-label">Full-Time Internship</span>
+              </div>
+            </div>
+
+            <div className="pro-btn-cluster">
               <button
                 type="button"
-                className="btn-editorial open-drawer-btn"
-                data-drawer="drawer-digi"
+                className="pro-btn-primary"
                 onClick={() => onOpenDrawer?.('drawer-digi')}
               >
                 EXPLORE CASE STUDY →
               </button>
               <button
                 type="button"
-                className="btn-editorial-outline open-proof-trigger"
-                data-proof="digi-cert"
+                className="pro-btn-outline"
                 onClick={() => onOpenProof?.('digi-cert')}
               >
-                VIEW OFFICIAL CERTIFICATE ↗
+                VIEW CERTIFICATE ↗
               </button>
             </div>
           </div>
 
+          {/* Right Column: Dominant Real Visual with 3D Depth Layer */}
           <div
-            className="editorial-single-visual-frame open-proof-trigger"
-            data-proof="digi-office"
-            data-cursor="EXPLORE"
-            title="Click to view full-resolution workplace"
-            onClick={() => onOpenProof?.('digi-office')}
+            className="pro-media-stage"
+            onMouseMove={handleMouseMove}
+            onMouseLeave={handleMouseLeave}
           >
-            <img
-              src="/assets/proofs_optimized/digi_marketrix_office.jpg"
-              alt="Digi Marketrix Agency Studio Workplace and 3D Logo Wall"
-              loading="lazy"
-            />
-            <div className="visual-frame-overlay-badge">
-              <span>AGENCY ENVIRONMENT // THOOTHUKUDI STUDIO</span>
-              <span>INSPECT ↗</span>
+            {/* Secondary depth visual behind */}
+            <div
+              className="pro-media-depth-peek"
+              ref={depthLayerRef}
+              style={{ backgroundImage: 'url(/assets/proofs_optimized/digi_marketrix_working.jpg)' }}
+              aria-hidden="true"
+            ></div>
+
+            {/* Primary Dominant Real Image */}
+            <div
+              className="pro-media-main-frame"
+              ref={mediaRef}
+              onClick={() => onOpenProof?.('digi-office')}
+              title="Click to inspect Digi Marketrix agency studio"
+            >
+              <img
+                src="/assets/proofs_optimized/digi_marketrix_office.jpg"
+                alt="Digi Marketrix Agency Studio Workplace and 3D Logo Wall"
+                loading="lazy"
+              />
+              <div className="pro-media-badge">
+                <span>VIEW WORK</span>
+                <span>↗</span>
+              </div>
             </div>
           </div>
         </div>
 
-        {/* Digi Ownership Story Block */}
-        <div className="editorial-ownership-block">
-          <div className="ownership-hook">
-            I DIDN'T JUST<br />
-            <span className="text-muted-strike">WORK THERE.</span><br />
-            <span className="text-gold">I GREW INSIDE IT.</span>
-          </div>
+        {/* Thin Viewport Sweep Line into Talentrix */}
+        <div className="pro-sweep-divider" id="talentrix-sweep-line"></div>
 
-          {/* Sequential Trio Reveal */}
-          <div className="ownership-trio-sequence">
-            <div className="trio-item">
-              <span className="trio-num">01</span>
-              <h4 className="trio-title">3 YEARS</h4>
-              <p className="trio-desc">
-                Continuous active association inside the agency. Evolving across digital marketing strategy, commercial scriptwriting, and direct business account management.
-              </p>
-            </div>
+        {/* Talentrix Moment */}
+        <Talentrix onOpenDrawer={onOpenDrawer} onOpenProof={onOpenProof} />
 
-            <div className="trio-item">
-              <span className="trio-num">02</span>
-              <h4 className="trio-title">INTERNSHIP</h4>
-              <p className="trio-desc">
-                Completed formal full-time agency internship certified by CEO Antony Joyson Fernando. Mastered on-location camera setups, gimbal movement, and Premiere Pro post-production.
-              </p>
-            </div>
-
-            <div className="trio-item trio-highlight">
-              <span className="trio-num">03</span>
-              <h4 className="trio-title">TALENTRIX</h4>
-              <p className="trio-desc">
-                Started and directed the dedicated influencer-marketing arm within the Digi Marketrix ecosystem, connecting regional brands with digital creators.
-              </p>
-            </div>
-          </div>
-
-          {/* Dedicated Talentrix Sub-Moment */}
-          <Talentrix onOpenDrawer={onOpenDrawer} onOpenProof={onOpenProof} />
-        </div>
+        {/* Transition: Talentrix wide poster collapses into vertical framing */}
+        <div className="pro-trans-collapse-vertical" aria-hidden="true"></div>
       </div>
     </section>
   );

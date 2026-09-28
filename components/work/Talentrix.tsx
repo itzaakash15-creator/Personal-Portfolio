@@ -1,4 +1,8 @@
-import React from 'react';
+'use client';
+
+import React, { useEffect, useRef } from 'react';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 interface TalentrixProps {
   onOpenDrawer?: (drawerId: string) => void;
@@ -6,52 +10,150 @@ interface TalentrixProps {
 }
 
 export default function Talentrix({ onOpenDrawer, onOpenProof }: TalentrixProps) {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const posterRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    gsap.registerPlugin(ScrollTrigger);
+
+    const ctx = gsap.context(() => {
+      const sweepLine = document.getElementById('talentrix-sweep-line');
+      const talentrixTitle = document.querySelector('.pro-talentrix-word');
+      const poster = posterRef.current;
+
+      if (sweepLine) {
+        gsap.fromTo(
+          sweepLine,
+          { scaleX: 0 },
+          {
+            scaleX: 1,
+            duration: 1.2,
+            ease: 'power3.inOut',
+            scrollTrigger: {
+              trigger: sweepLine,
+              start: 'top 85%',
+              toggleActions: 'play none none reverse',
+            },
+          }
+        );
+      }
+
+      if (talentrixTitle) {
+        gsap.fromTo(
+          talentrixTitle,
+          { y: '100%', opacity: 0 },
+          {
+            y: '0%',
+            opacity: 1,
+            duration: 1.1,
+            ease: 'power3.out',
+            scrollTrigger: {
+              trigger: containerRef.current,
+              start: 'top 80%',
+              toggleActions: 'play none none reverse',
+            },
+          }
+        );
+      }
+
+      if (poster) {
+        gsap.fromTo(
+          poster,
+          { scale: 0.9, y: 50, opacity: 0.4 },
+          {
+            scale: 1,
+            y: 0,
+            opacity: 1,
+            duration: 1.2,
+            ease: 'power2.out',
+            scrollTrigger: {
+              trigger: poster,
+              start: 'top 85%',
+              toggleActions: 'play none none reverse',
+            },
+          }
+        );
+      }
+    }, containerRef);
+
+    return () => ctx.revert();
+  }, []);
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!posterRef.current || window.innerWidth < 960) return;
+    const rect = posterRef.current.getBoundingClientRect();
+    const x = (e.clientX - rect.left) / rect.width - 0.5;
+    const y = (e.clientY - rect.top) / rect.height - 0.5;
+
+    gsap.to(posterRef.current, {
+      x: x * 16,
+      y: y * 14,
+      duration: 0.45,
+      ease: 'power1.out',
+    });
+  };
+
+  const handleMouseLeave = () => {
+    if (!posterRef.current) return;
+    gsap.to(posterRef.current, { x: 0, y: 0, duration: 0.6, ease: 'power2.out' });
+  };
+
   return (
-    <div className="talentrix-submoment" id="talentrix">
-      <div className="talentrix-submoment-content">
-        <span className="submoment-badge">IN-HOUSE VENTURE // BORN AT DIGI MARKETRIX</span>
-        <h4 className="talentrix-big-name">
-          TALENT<br />
-          RIX<span className="text-gold">.</span>
-        </h4>
-        <div className="talentrix-manifesto">STARTED. LED. BUILT.</div>
-        <p className="talentrix-desc">
-          Conceptualized and spearheaded by Aakash to bridge retail clients with high-affinity influencers. Orchestrated talent discovery, commercial negotiations, storyboard direction, and production delivery.
+    <div className="pro-talentrix-block" id="talentrix" ref={containerRef}>
+      {/* Left Column: Revealed Wordmark & Micro Kicker */}
+      <div className="pro-talentrix-info">
+        <div className="pro-kicker-row">
+          <span className="pro-kicker-dot" aria-hidden="true"></span>
+          <span className="pro-kicker-text">IN-HOUSE VENTURE // 02</span>
+        </div>
+
+        <div className="pro-title-mask">
+          <h3 className="pro-talentrix-title pro-talentrix-word">
+            TALENT<br />
+            RIX<span style={{ color: '#d4af37' }}>.</span>
+          </h3>
+        </div>
+
+        <p className="pro-hook-sub" style={{ textTransform: 'uppercase', letterSpacing: '0.08em', fontWeight: 600 }}>
+          STARTED &amp; LED<br />
+          <span style={{ color: '#d4af37' }}>INFLUENCER MARKETING.</span>
         </p>
-        <div className="talentrix-actions">
+
+        <div className="pro-btn-cluster">
           <button
             type="button"
-            className="btn-editorial open-drawer-btn"
-            data-drawer="drawer-digi"
+            className="pro-btn-primary"
             onClick={() => onOpenDrawer?.('drawer-digi')}
           >
-            EXPLORE CASE STUDY →
+            EXPLORE INITIATIVE →
           </button>
           <button
             type="button"
-            className="btn-editorial-outline open-proof-trigger"
-            data-proof="digi-gimbal"
+            className="pro-btn-outline"
             onClick={() => onOpenProof?.('digi-gimbal')}
           >
-            VIEW FIELD PRODUCTION ↗
+            FIELD PRODUCTION ↗
           </button>
         </div>
       </div>
 
+      {/* Right Column: Floating Editorial Poster with Cursor Parallax */}
       <div
-        className="talentrix-visual-card open-proof-trigger"
-        data-proof="digi-gimbal"
-        data-cursor="INSPECT"
-        title="Click to view 3-axis gimbal production"
+        className="pro-talentrix-poster"
+        ref={posterRef}
+        onMouseMove={handleMouseMove}
+        onMouseLeave={handleMouseLeave}
         onClick={() => onOpenProof?.('digi-gimbal')}
+        title="Click to inspect Talentrix field production"
       >
         <img
           src="/assets/proofs_optimized/digi_marketrix_gimbal_shoot.jpg"
           alt="Aakash operating 3-axis motorized gimbal during commercial production"
           loading="lazy"
         />
-        <div className="visual-card-caption">
-          <span>TALENTRIX FIELD PRODUCTION // GIMBAL SHOOT</span>
+        <div className="pro-media-badge">
+          <span>EXPLORE</span>
           <span>↗</span>
         </div>
       </div>
