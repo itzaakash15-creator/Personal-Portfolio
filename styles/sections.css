@@ -1,0 +1,644 @@
+/* ==========================================================================
+   AAKASH K — Sections CSS (Minimalistic Editorial Layout)
+   Hero, Introduction, Digi Marketrix, U6NICK, Life With Aakash,
+   More to Explore, Contact CTA & Minimal Footer
+   Strict 12-Column Alignment & High Readability
+   ========================================================================== */
+
+/* ==========================================================================
+   1. Hero Section
+   ========================================================================== */
+.hero-section {
+  padding-top: calc(var(--header-height) + clamp(3rem, 6vw, 5.5rem));
+  padding-bottom: clamp(4rem, 8vw, 7rem);
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.hero-grid {
+  display: grid;
+  grid-template-columns: 1.15fr 0.85fr;
+  gap: clamp(2.5rem, 6vw, 5.5rem);
+  align-items: center;
+}
+
+.hero-content {
+  display: flex;
+  flex-direction: column;
+}
+
+.hero-eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--accent-light);
+  margin-bottom: 1.5rem;
+}
+
+.hero-title {
+  font-size: clamp(2.8rem, 6vw, 5.2rem);
+  font-weight: 800;
+  line-height: 1.04;
+  letter-spacing: -0.04em;
+  text-transform: uppercase;
+  color: #ffffff;
+  margin-bottom: 1.75rem;
+}
+
+.hero-supporting {
+  font-size: clamp(1.1rem, 2vw, 1.3rem);
+  line-height: 1.65;
+  color: var(--text-secondary);
+  max-width: 580px;
+  margin-bottom: 2.5rem;
+}
+
+.hero-actions {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  flex-wrap: wrap;
+}
+
+/* Hero Portrait Editorial Treatment */
+.hero-portrait-wrapper {
+  position: relative;
+  width: 100%;
+  max-width: 480px;
+  margin-left: auto;
+}
+
+.hero-portrait-frame {
+  position: relative;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  border: 1px solid var(--border-subtle);
+  background-color: var(--bg-surface);
+  aspect-ratio: 4 / 5;
+}
+
+.hero-portrait-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: contrast(1.03) brightness(0.97);
+  transition: transform 0.6s var(--ease-smooth);
+}
+
+.hero-portrait-frame:hover .hero-portrait-img {
+  transform: scale(1.02);
+}
+
+.hero-portrait-frame::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, transparent 65%, rgba(7, 7, 9, 0.6) 100%);
+  pointer-events: none;
+}
+
+.portrait-caption {
+  margin-top: 0.85rem;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  letter-spacing: 0.08em;
+  display: flex;
+  justify-content: space-between;
+}
+
+/* ==========================================================================
+   2. Introduction Section
+   ========================================================================== */
+.intro-section {
+  background-color: var(--bg-primary);
+}
+
+.intro-content {
+  max-width: 960px;
+}
+
+.intro-statement {
+  font-size: clamp(2rem, 4.5vw, 3.6rem);
+  font-weight: 800;
+  line-height: 1.08;
+  letter-spacing: -0.03em;
+  text-transform: uppercase;
+  color: #ffffff;
+  margin-bottom: 2rem;
+}
+
+.intro-text {
+  font-size: clamp(1.15rem, 2vw, 1.35rem);
+  line-height: 1.75;
+  color: var(--text-secondary);
+}
+
+/* ==========================================================================
+   3. Featured Experience — Digi Marketrix
+   ========================================================================== */
+.experience-section {
+  background-color: var(--bg-secondary);
+}
+
+.section-header-block {
+  margin-bottom: clamp(2.5rem, 5vw, 4rem);
+}
+
+.experience-hero-card {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(2rem, 5vw, 4.5rem);
+  align-items: center;
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: clamp(2rem, 4vw, 3.5rem);
+  margin-bottom: 3.5rem;
+}
+
+.exp-left-content {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.exp-company-name {
+  font-size: clamp(2rem, 4vw, 3.2rem);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  text-transform: uppercase;
+  color: #ffffff;
+}
+
+.exp-description {
+  font-size: 1.1rem;
+  line-height: 1.7;
+  color: var(--text-secondary);
+}
+
+.exp-media-frame {
+  position: relative;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  border: 1px solid var(--border-subtle);
+  aspect-ratio: 16 / 10;
+  background-color: var(--bg-primary);
+}
+
+.exp-media-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Three Capability Areas */
+.capabilities-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: clamp(1.5rem, 3vw, 2.5rem);
+}
+
+.capability-card {
+  border-top: 1px solid var(--border-medium);
+  padding-top: 1.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+.capability-title {
+  font-family: var(--font-mono);
+  font-size: 0.875rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #ffffff;
+}
+
+.capability-desc {
+  font-size: 0.95rem;
+  line-height: 1.65;
+  color: var(--text-secondary);
+}
+
+/* ==========================================================================
+   4. Featured Personal Branding Work — U6NICK
+   ========================================================================== */
+.u6nick-section {
+  background-color: var(--bg-primary);
+}
+
+.u6nick-intro-grid {
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  gap: clamp(2rem, 5vw, 4rem);
+  align-items: baseline;
+  margin-bottom: 3rem;
+}
+
+.u6nick-title {
+  font-size: clamp(2.2rem, 4.5vw, 3.8rem);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  text-transform: uppercase;
+  color: #ffffff;
+}
+
+.u6nick-summary {
+  font-size: 1.1rem;
+  line-height: 1.7;
+  color: var(--text-secondary);
+}
+
+/* Roles Checklist */
+.u6nick-roles-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin-bottom: 2.5rem;
+}
+
+.u6nick-role-pill {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  padding: 0.35rem 0.8rem;
+  border-radius: var(--radius-xs);
+}
+
+/* Large Immersive Media */
+.u6nick-media-hero {
+  position: relative;
+  width: 100%;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  border: 1px solid var(--border-subtle);
+  aspect-ratio: 16 / 9;
+  background-color: var(--bg-surface);
+  margin-bottom: 3.5rem;
+}
+
+.u6nick-media-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Case Study Preview Strip (The Work, Result, Proof) */
+.u6nick-case-preview {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: clamp(1.5rem, 4vw, 3rem);
+  border-top: 1px solid var(--border-subtle);
+  padding-top: 2.5rem;
+  align-items: start;
+}
+
+.case-preview-col {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+.case-col-label {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--accent-light);
+}
+
+.case-col-text {
+  font-size: 1rem;
+  line-height: 1.7;
+  color: var(--text-secondary);
+}
+
+.case-preview-cta {
+  grid-column: span 3;
+  margin-top: 2rem;
+  display: flex;
+  justify-content: flex-start;
+}
+
+/* ==========================================================================
+   5. Life With Aakash — Personal Brand & Motivational Speaking
+   ========================================================================== */
+.lwa-section {
+  background-color: var(--bg-secondary);
+}
+
+.lwa-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(2.5rem, 5vw, 4.5rem);
+  align-items: center;
+  margin-bottom: 4rem;
+}
+
+.lwa-left {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.lwa-heading {
+  font-size: clamp(2rem, 4.5vw, 3.4rem);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  text-transform: uppercase;
+  color: #ffffff;
+}
+
+.lwa-description {
+  font-size: 1.15rem;
+  line-height: 1.7;
+  color: var(--text-secondary);
+}
+
+.lwa-media-frame {
+  position: relative;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  border: 1px solid var(--border-subtle);
+  aspect-ratio: 16 / 9;
+  background-color: var(--bg-primary);
+}
+
+.lwa-media-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Verified Metrics Row (Editorial, not a dashboard) */
+.lwa-metrics-strip {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+  border-top: 1px solid var(--border-subtle);
+  border-bottom: 1px solid var(--border-subtle);
+  padding-block: 2rem;
+  margin-bottom: 3.5rem;
+}
+
+.lwa-metric-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.lwa-metric-number {
+  font-size: clamp(2.5rem, 5vw, 3.8rem);
+  font-weight: 800;
+  color: #ffffff;
+  line-height: 1;
+  letter-spacing: -0.04em;
+}
+
+.lwa-metric-label {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+/* Motivational Speaking Subsection */
+.motivational-subsection {
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: clamp(2rem, 4vw, 3rem);
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: clamp(1.5rem, 4vw, 3rem);
+  align-items: baseline;
+}
+
+.speaking-title {
+  font-family: var(--font-mono);
+  font-size: 0.875rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #ffffff;
+}
+
+.speaking-body {
+  font-size: 1.05rem;
+  line-height: 1.75;
+  color: var(--text-secondary);
+}
+
+/* ==========================================================================
+   6. More to Explore Section (Transition)
+   ========================================================================== */
+.more-explore-section {
+  background-color: var(--bg-primary);
+}
+
+.more-explore-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: clamp(1.5rem, 3vw, 2.5rem);
+  margin-top: 2.5rem;
+}
+
+.explore-card {
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: clamp(1.75rem, 3vw, 2.5rem);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 240px;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.explore-card:hover {
+  background-color: var(--bg-surface-hover);
+  border-color: var(--border-medium);
+  transform: translateY(-2px);
+}
+
+.explore-card-top {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+.explore-card-category {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--accent-light);
+}
+
+.explore-card-title {
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: -0.01em;
+}
+
+.explore-card-desc {
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+.explore-card-cta {
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: #ffffff;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-top: 1.5rem;
+  transition: color var(--transition-fast);
+}
+
+.explore-card:hover .explore-card-cta {
+  color: var(--accent-light);
+}
+
+/* ==========================================================================
+   7. Contact CTA Section
+   ========================================================================== */
+.contact-section {
+  background-color: var(--bg-secondary);
+  padding-block: clamp(6rem, 12vw, 10rem);
+}
+
+.contact-layout {
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
+  max-width: 860px;
+}
+
+.contact-heading-huge {
+  font-size: clamp(2.6rem, 6.5vw, 5rem);
+  font-weight: 800;
+  line-height: 1.04;
+  letter-spacing: -0.04em;
+  text-transform: uppercase;
+  color: #ffffff;
+}
+
+.contact-email-action {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  flex-wrap: wrap;
+}
+
+.email-display-text {
+  font-size: clamp(1.2rem, 2.5vw, 1.8rem);
+  font-weight: 600;
+  color: #ffffff;
+  letter-spacing: -0.02em;
+}
+
+.contact-social-row {
+  display: flex;
+  gap: 1.75rem;
+  flex-wrap: wrap;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--border-subtle);
+}
+
+.contact-social-link {
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  color: var(--text-secondary);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  transition: color var(--transition-fast);
+}
+
+.contact-social-link:hover {
+  color: #ffffff;
+}
+
+/* ==========================================================================
+   8. Minimal Footer
+   ========================================================================== */
+.site-footer {
+  padding-block: 2.5rem;
+  background-color: var(--bg-primary);
+  border-top: 1px solid var(--border-subtle);
+}
+
+.footer-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.footer-quote {
+  color: var(--text-secondary);
+}
+
+/* ==========================================================================
+   Responsive Breakpoints
+   ========================================================================== */
+@media (max-width: 1024px) {
+  .hero-grid {
+    grid-template-columns: 1fr;
+  }
+  .hero-portrait-wrapper {
+    max-width: 420px;
+    margin-left: 0;
+  }
+  .experience-hero-card {
+    grid-template-columns: 1fr;
+  }
+  .u6nick-intro-grid {
+    grid-template-columns: 1fr;
+  }
+  .u6nick-case-preview {
+    grid-template-columns: 1fr;
+  }
+  .case-preview-cta {
+    grid-column: span 1;
+  }
+  .lwa-grid {
+    grid-template-columns: 1fr;
+  }
+  .motivational-subsection {
+    grid-template-columns: 1fr;
+  }
+  .more-explore-grid {
+    grid-template-columns: 1fr;
+  }
+  .capabilities-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .hero-title {
+    font-size: clamp(2.4rem, 9vw, 3.4rem);
+  }
+  .lwa-metrics-strip {
+    grid-template-columns: 1fr;
+    gap: 1.75rem;
+  }
+  .footer-content {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}

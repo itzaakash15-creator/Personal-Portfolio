@@ -1,0 +1,234 @@
+/* ==========================================================================
+   AAKASH — PREMIUM EDITORIAL DESIGN SYSTEM
+   Quality: Studio / Awwwards / Siteinspire Caliber
+   Visuals: Editorial Minimalism + Subtle Cinematic 3D
+   Palette: Near-Black Charcoal × Warm Off-White × Champagne / Muted Gold
+   ========================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,600&family=Playfair+Display:ital,wght@0,600;0,700;1,400;1,600;1,700&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+:root {
+  /* Surfaces & Canvas (Near-black / charcoal) */
+  --bg-primary: #0a0a0c;
+  --bg-secondary: #111114;
+  --bg-surface: #16161a;
+  --bg-surface-hover: #1e1e23;
+  --bg-card: rgba(22, 22, 26, 0.75);
+
+  /* Typography Colors (Warm off-white & muted warm gray) */
+  --text-primary: #f5f2eb;
+  --text-secondary: #9e9a92;
+  --text-muted: #6b6760;
+  --text-dim: #4d4a45;
+
+  /* Subtle Warm Accent: Champagne / Muted Gold */
+  --accent-gold: #d8c3a5;
+  --accent-champagne: #e8d7be;
+  --accent-warm: #c5a880;
+  --accent-subtle: rgba(216, 195, 165, 0.08);
+  --accent-glow: rgba(216, 195, 165, 0.16);
+  --accent-light: #e8d7be;
+
+  /* Editorial Borders & Dividers */
+  --border-subtle: rgba(245, 242, 235, 0.08);
+  --border-medium: rgba(245, 242, 235, 0.15);
+  --border-accent: rgba(216, 195, 165, 0.32);
+
+  /* Typography */
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-serif: 'Playfair Display', Georgia, 'Times New Roman', serif;
+  --font-mono: 'JetBrains Mono', monospace;
+
+  /* Geometry & Grid */
+  --container-max: 1400px;
+  --header-height: 80px;
+  --radius-xs: 4px;
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 20px;
+
+  /* Easing */
+  --ease-smooth: cubic-bezier(0.16, 1, 0.3, 1);
+  --transition-fast: 0.18s ease;
+  --transition-normal: 0.35s var(--ease-smooth);
+}
+
+/* ==========================================================================
+   CSS Reset & Base Rules
+   ========================================================================== */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 16px;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  min-height: 100vh;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  line-height: 1.65;
+  overflow-x: hidden;
+}
+
+::selection {
+  background: rgba(139, 92, 246, 0.35);
+  color: #ffffff;
+}
+
+/* Very subtle atmospheric film grain */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: radial-gradient(rgba(255, 255, 255, 0.025) 1px, transparent 1px);
+  background-size: 32px 32px;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.5;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg-primary);
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: var(--radius-sm);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+/* Base Links & Images */
+a {
+  color: inherit;
+  text-decoration: none;
+  transition: color var(--transition-fast), border-color var(--transition-fast);
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+button, input, textarea, select {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: none;
+  outline: none;
+}
+
+button {
+  cursor: pointer;
+}
+
+ul {
+  list-style: none;
+}
+
+/* ==========================================================================
+   Editorial Typography Scale
+   ========================================================================== */
+h1, h2, h3, h4, h5 {
+  font-family: var(--font-sans);
+  font-weight: 800;
+  line-height: 1.05;
+  color: #ffffff;
+  letter-spacing: -0.035em;
+}
+
+.label-mono {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  display: inline-block;
+  margin-bottom: 1.25rem;
+}
+
+.label-mono.accent {
+  color: var(--accent-light);
+}
+
+.display-title {
+  font-size: clamp(3rem, 7.5vw, 6.2rem);
+  font-weight: 900;
+  line-height: 0.98;
+  letter-spacing: -0.04em;
+  text-transform: uppercase;
+}
+
+.section-title {
+  font-size: clamp(2.2rem, 5vw, 4.2rem);
+  font-weight: 800;
+  line-height: 1.04;
+  letter-spacing: -0.035em;
+  text-transform: uppercase;
+  margin-bottom: 1.5rem;
+}
+
+.body-large {
+  font-size: clamp(1.1rem, 2vw, 1.35rem);
+  line-height: 1.65;
+  color: var(--text-secondary);
+}
+
+.body-standard {
+  font-size: 1.05rem;
+  line-height: 1.75;
+  color: var(--text-secondary);
+}
+
+/* ==========================================================================
+   Global 1400px Grid Container & Spacing Scale
+   ========================================================================== */
+.container {
+  width: 100%;
+  max-width: var(--container-max);
+  margin-inline: auto;
+  padding-inline: clamp(1.5rem, 5vw, 4.5rem);
+  position: relative;
+  z-index: 1;
+}
+
+.section-spacer {
+  padding-block: clamp(5.5rem, 11vw, 9.5rem);
+  position: relative;
+  z-index: 1;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.section-spacer.no-border {
+  border-bottom: none;
+}
+
+/* Accessibility */
+:focus-visible {
+  outline: 2px solid var(--accent-purple);
+  outline-offset: 4px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
