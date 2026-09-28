@@ -3,7 +3,7 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import Navbar from '../components/Navbar';
 import HeroExperience from '../components/hero/HeroExperience';
-import DigiMarketrix from '../components/work/DigiMarketrix';
+import WorkExperience from '../components/work/WorkExperience';
 import PersonalBranding from '../components/work/PersonalBranding';
 import WebsiteBuilder from '../components/work/WebsiteBuilder';
 import LifeWithAakash from '../components/work/LifeWithAakash';
@@ -265,7 +265,7 @@ export default function HomePage() {
       <HeroExperience />
 
       {/* 3. Section 01: Digi Marketrix & Talentrix */}
-      <DigiMarketrix onOpenDrawer={openDrawer} onOpenProof={openProof} />
+      <WorkExperience onOpenDrawer={openDrawer} onOpenProof={openProof} />
 
       {/* 4. Section 02: Personal Branding Strategist */}
       <PersonalBranding onOpenDrawer={openDrawer} onOpenProof={openProof} />

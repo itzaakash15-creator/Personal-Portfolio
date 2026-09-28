@@ -1,7 +1,6 @@
 import React from 'react';
-import RoleFrame from './RoleFrame';
 
-export default function RoleSequence() {
+export default function RoleBackground() {
   return (
     <>
       {/* LAYER 3b: ENORMOUS BACKGROUND TYPOGRAPHY: I DON'T FIT INTO ONE BOX (Behind Aakash) */}
@@ -98,70 +97,17 @@ export default function RoleSequence() {
               <line x1="88" y1="72" x2="88" y2="128" />
               <line x1="116" y1="52" x2="116" y2="148" />
               <line x1="144" y1="32" x2="144" y2="168" />
-              <line x1="172" y1="56" x2="172" y2="144" />
-              <line x1="200" y1="20" x2="200" y2="180" stroke="#ffffff" strokeWidth="3" />
-              <line x1="228" y1="44" x2="228" y2="156" />
-              <line x1="256" y1="28" x2="256" y2="172" />
-              <line x1="284" y1="56" x2="284" y2="144" />
-              <line x1="312" y1="38" x2="312" y2="162" />
-              <line x1="340" y1="68" x2="340" y2="132" />
-              <line x1="368" y1="80" x2="368" y2="120" />
-              <line x1="396" y1="90" x2="396" y2="110" />
+              <line x1="172" y1="20" x2="172" y2="180" />
+              <line x1="200" y1="44" x2="200" y2="156" />
+              <line x1="228" y1="68" x2="228" y2="132" />
+              <line x1="256" y1="36" x2="256" y2="164" />
+              <line x1="284" y1="16" x2="284" y2="184" />
+              <line x1="312" y1="48" x2="312" y2="152" />
+              <line x1="340" y1="76" x2="340" y2="124" />
+              <line x1="368" y1="88" x2="368" y2="112" />
             </g>
           </svg>
         </div>
-      </div>
-
-      {/* TOP IDENTITY HISTORY ROW: Reserved slots for stored completed frames */}
-      <div className="identity-history-row" id="identity-history-row" aria-hidden="true">
-        <div className="history-grid-container">
-          <div className="history-slot" id="history-slot-1"></div>
-          <div className="history-slot" id="history-slot-2"></div>
-          <div className="history-slot" id="history-slot-3"></div>
-          <div className="history-slot" id="history-slot-4"></div>
-        </div>
-        <div className="history-collective-line" id="history-collective-line"></div>
-      </div>
-
-      {/* THE 4 ACTIVE EDITORIAL ROLE FRAMES */}
-      <div className="active-role-stage" id="active-role-stage">
-        <div className="active-role-spotlight" id="active-role-spotlight" aria-hidden="true"></div>
-
-        <RoleFrame
-          id="role-frame-1"
-          roleClass="role-frame-marketer"
-          num="01"
-          category="DISCIPLINE // STRATEGY"
-          title="MARKETER"
-          sub="STRATEGY • DIGITAL • GROWTH"
-        />
-
-        <RoleFrame
-          id="role-frame-2"
-          roleClass="role-frame-brand"
-          num="02"
-          category="DISCIPLINE // IDENTITY"
-          title="BRAND BUILDER"
-          sub="POSITIONING • TRUST • IDENTITY"
-        />
-
-        <RoleFrame
-          id="role-frame-3"
-          roleClass="role-frame-creator"
-          num="03"
-          category="DISCIPLINE // MEDIA"
-          title="CREATOR"
-          sub="STORYTELLING • VIDEO • CONTENT"
-        />
-
-        <RoleFrame
-          id="role-frame-4"
-          roleClass="role-frame-speaker"
-          num="04"
-          category="DISCIPLINE // VOICE"
-          title="SPEAKER"
-          sub="LIFE • MOTIVATION • COMMUNICATION"
-        />
       </div>
     </>
   );

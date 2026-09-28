@@ -6,11 +6,14 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import HeroLighting from './HeroLighting';
 import HeroPortrait from './HeroPortrait';
 import HeroProjectPreview from './HeroProjectPreview';
-import RoleSequence from '../identity/RoleSequence';
+import { HeroLeftFlank, HeroRightFlank } from './HeroFlanks';
+import IdentityExperience from '../identity/IdentityExperience';
+import { buildIdentityTimeline, attachIdentityParallax } from '../identity/identityTimeline';
+import WorkTransition from '../work/WorkTransition';
+import { buildWorkTransitionTimeline } from '../work/workTransitionTimeline';
 
 export default function HeroExperience() {
   const containerRef = useRef<HTMLDivElement>(null);
-  const hasRunEntrance = useRef<boolean>(false);
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
@@ -27,28 +30,22 @@ export default function HeroExperience() {
       const characterPortrait = document.getElementById('character-portrait');
       const aakashShadow = document.getElementById('aakash-contact-shadow');
 
-      // Backdrop Statement
+      // Identity Experience Elements
       const stmtBackdrop = document.getElementById('hero-statement-backdrop');
       const stmtLine1 = document.getElementById('stmt-line-1');
       const stmtLine2 = document.getElementById('stmt-line-2');
       const stmtLine3 = document.getElementById('stmt-line-3');
-
-      // Environmental Glowing Symbols
       const envSymbolsWrap = document.getElementById('role-env-symbols');
       const envSymMarketer = document.getElementById('env-sym-marketer');
       const envSymBrand = document.getElementById('env-sym-brand');
       const envSymCreator = document.getElementById('env-sym-creator');
       const envSymSpeaker = document.getElementById('env-sym-speaker');
-
-      // Active Role Frames & Warm Spotlight
       const roleStage = document.getElementById('active-role-stage');
       const roleSpotlight = document.getElementById('active-role-spotlight');
       const frame1 = document.getElementById('role-frame-1');
       const frame2 = document.getElementById('role-frame-2');
       const frame3 = document.getElementById('role-frame-3');
       const frame4 = document.getElementById('role-frame-4');
-
-      // Top Identity History System
       const historyRow = document.getElementById('identity-history-row');
       const historySlots = [
         document.getElementById('history-slot-1'),
@@ -58,13 +55,11 @@ export default function HeroExperience() {
       ];
       const historyCollectiveLine = document.getElementById('history-collective-line');
 
-      // Digi Marketrix Transition Phase
+      // Work Transition Elements
       const workTransition = document.getElementById('work-transition-phase');
       const projectApproach = document.getElementById('hero-project-approach');
 
-      // ----------------------------------------------------------------------
-      // ENTRANCE SEQUENCE (Single run protection)
-      // ----------------------------------------------------------------------
+      // Flank elements for entrance
       const leftLine = document.querySelector('.tag-accent-line-left') as HTMLElement | null;
       const leftTag1 = document.querySelector('#hero-left-tags .tag-item-1') as HTMLElement | null;
       const leftTag2 = document.querySelector('#hero-left-tags .tag-item-2') as HTMLElement | null;
@@ -82,12 +77,11 @@ export default function HeroExperience() {
       const anchorItems = document.querySelectorAll('.hero-anchor-item');
 
       const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const isTouch = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
 
       // ======================================================================
       // CharacterController: Responsive Parallax & Scroll Kinematics
       // ======================================================================
-      const isTouch = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
-
       const CharacterController = {
         isEntrancePlaying: false,
         current: {
@@ -433,50 +427,6 @@ export default function HeroExperience() {
 
         const getAnchorRightX = () => Math.min(Math.max(window.innerWidth * 0.22, 220), 380);
 
-        const getSlotDelta = (index: number) => {
-          const stage = roleStage || document.getElementById('active-role-stage');
-          const slot = historySlots[index] || document.getElementById(`history-slot-${index + 1}`);
-          if (!stage || !slot) return { x: 0, y: 0, scale: 0.38 };
-
-          const stageRect = stage.getBoundingClientRect();
-          const slotRect = slot.getBoundingClientRect();
-          if (!stageRect.width || !slotRect.width) return { x: 0, y: -200, scale: 0.38 };
-
-          const scale = Math.min(Math.max(slotRect.width / stageRect.width, 0.3), 0.44);
-          const x = slotRect.left - stageRect.left;
-          const y = slotRect.top - stageRect.top;
-          return { x, y, scale };
-        };
-
-        const markPath = envSymMarketer ? envSymMarketer.querySelector('.env-path-draw') : null;
-        if (markPath) gsap.set(markPath, { strokeDasharray: 480, strokeDashoffset: 480 });
-
-        const brandPaths = envSymBrand ? envSymBrand.querySelectorAll('.env-path-draw') : [];
-        if (brandPaths.length) brandPaths.forEach((p) => gsap.set(p, { strokeDasharray: 340, strokeDashoffset: 340 }));
-
-        const creatorBlades = envSymCreator ? envSymCreator.querySelectorAll('g path') : [];
-        if (creatorBlades.length) gsap.set(creatorBlades, { transformOrigin: '170px 170px', rotation: 18, scale: 0.88, opacity: 0.4 });
-
-        const speakerBars = envSymSpeaker ? envSymSpeaker.querySelectorAll('line') : [];
-        if (speakerBars.length) {
-          speakerBars.forEach((bar, idx) => {
-            if (idx > 0) gsap.set(bar, { transformOrigin: 'center center', scaleY: 0.1 });
-          });
-        }
-
-        [frame1, frame2, frame3, frame4].forEach((f) => {
-          if (f) {
-            gsap.set(f, {
-              transformPerspective: 1200,
-              transformOrigin: 'center bottom',
-              y: 100,
-              scale: 0.9,
-              rotateX: 9,
-              opacity: 0,
-            });
-          }
-        });
-
         const tl = gsap.timeline({
           scrollTrigger: {
             trigger: wrapper,
@@ -510,271 +460,43 @@ export default function HeroExperience() {
           tl.to(aakashShadow, { opacity: 1, duration: 0.9, ease: 'power2.out' }, 0.2);
         }
 
-        // Step 2: "I DON'T FIT INTO ONE BOX."
-        tl.to(stmtBackdrop, { opacity: 1, duration: 0.1 }, 1.2);
-        tl.fromTo(stmtLine1,
-          { scale: 0.94, filter: 'blur(7px)', opacity: 0, y: 35 },
-          { scale: 1, filter: 'blur(0px)', opacity: 0.55, y: 0, duration: 0.85, ease: 'power2.out' },
-          1.3
-        );
-        tl.to(stmtLine1, { opacity: 0.55, duration: 0.7 }, 2.15);
+        // Steps 2–7 & Identity Exit (Modular Builder)
+        buildIdentityTimeline(tl, {
+          stmtBackdrop,
+          stmtLine1,
+          stmtLine2,
+          stmtLine3,
+          envSymMarketer,
+          envSymBrand,
+          envSymCreator,
+          envSymSpeaker,
+          roleStage,
+          roleSpotlight,
+          frame1,
+          frame2,
+          frame3,
+          frame4,
+          historySlots,
+          historyCollectiveLine,
+          historyRow,
+          envSymbolsWrap,
+          wrapper,
+          characterScene,
+          getAnchorRightX,
+        });
 
-        tl.fromTo(stmtLine2,
-          { scale: 0.95, filter: 'blur(6px)', opacity: 0, y: 30 },
-          { scale: 1, filter: 'blur(0px)', opacity: 0.72, y: 0, duration: 0.85, ease: 'power2.out' },
-          2.85
-        );
-        tl.to(stmtLine1, { opacity: 0.42, y: -8, duration: 0.7, ease: 'power2.out' }, 2.85);
-        tl.to(stmtLine2, { opacity: 0.72, duration: 0.7 }, 3.7);
-
-        tl.fromTo(stmtLine3,
-          { scale: 0.96, filter: 'blur(5px)', opacity: 0, y: 25 },
-          { scale: 1, filter: 'blur(0px)', opacity: 0.98, y: 0, duration: 0.85, ease: 'power2.out' },
-          4.4
-        );
-        tl.to([stmtLine1, stmtLine2], { y: -16, duration: 0.7, ease: 'power2.out' }, 4.4);
-        tl.to(stmtLine2, { opacity: 0.58, duration: 0.7, ease: 'power2.out' }, 4.4);
-
-        // Hold sentence
-        tl.to(stmtBackdrop, { opacity: 1, filter: 'contrast(1.08)', duration: 2.2 }, 5.25);
-        tl.to(stmtBackdrop, { scale: 0.92, opacity: 0.12, filter: 'blur(4px) contrast(0.8)', duration: 0.9, ease: 'power2.inOut' }, 7.45);
-
-        // Role 01: MARKETER
-        if (envSymMarketer) {
-          tl.fromTo(envSymMarketer, { opacity: 0, scale: 0.9, y: 20 }, { opacity: 0.58, scale: 1, y: 0, duration: 0.85, ease: 'power2.out' }, 8.35);
-        }
-        if (markPath) {
-          tl.to(markPath, { strokeDashoffset: 0, duration: 0.9, ease: 'power2.out' }, 8.4);
-        }
-        if (roleSpotlight) {
-          tl.fromTo(roleSpotlight, { opacity: 0, scale: 0.85 }, { opacity: 0.85, scale: 1.0, duration: 0.7, ease: 'power2.out' }, 8.4);
-        }
-        if (frame1) {
-          tl.fromTo(frame1,
-            { y: 100, scale: 0.9, rotateX: 9, rotateZ: -2.0, opacity: 0 },
-            { y: 0, scale: 1, rotateX: 0, rotateZ: 0, opacity: 1, duration: 0.95, ease: 'power3.out' },
-            8.35
-          );
-        }
-        if (characterScene) {
-          tl.to(characterScene, { x: () => getAnchorRightX() + 6, duration: 0.8, ease: 'power1.out' }, 8.5);
-        }
-        tl.to(frame1, { opacity: 1, duration: 1.8 }, 9.3);
-
-        // Store Marketer into Slot 1
-        if (frame1) {
-          const subWrap = frame1.querySelector('.role-frame-sub-wrap');
-          const cat = frame1.querySelector('.role-frame-category');
-          const inner = frame1.querySelector('.role-frame-inner');
-          if (subWrap) tl.to(subWrap, { height: 0, opacity: 0, duration: 0.75, ease: 'power2.inOut' }, 11.1);
-          if (cat) tl.to(cat, { opacity: 0, duration: 0.6, ease: 'power2.inOut' }, 11.1);
-          if (inner) tl.to(inner, { padding: '12px 16px', duration: 0.85, ease: 'power2.inOut' }, 11.1);
-          tl.to(frame1, {
-            transformOrigin: 'top left',
-            x: () => getSlotDelta(0).x,
-            y: () => getSlotDelta(0).y,
-            scale: () => getSlotDelta(0).scale,
-            opacity: 0.65,
-            rotateX: 0,
-            rotateZ: 0,
-            duration: 1.1,
-            ease: 'power2.inOut',
-            onStart: () => frame1.classList.add('is-stored'),
-          }, 11.1);
-        }
-        if (envSymMarketer) tl.to(envSymMarketer, { opacity: 0.05, duration: 0.75, ease: 'power2.out' }, 11.3);
-        if (roleSpotlight) tl.to(roleSpotlight, { opacity: 0.25, duration: 0.7 }, 11.3);
-
-        // Role 02: BRAND BUILDER
-        if (envSymBrand) {
-          tl.fromTo(envSymBrand, { opacity: 0, scale: 0.9, y: 20 }, { opacity: 0.58, scale: 1, y: 0, duration: 0.85, ease: 'power2.out' }, 12.3);
-        }
-        if (brandPaths.length) {
-          tl.to(brandPaths, { strokeDashoffset: 0, duration: 0.9, stagger: 0.08, ease: 'power2.out' }, 12.35);
-        }
-        if (roleSpotlight) {
-          tl.to(roleSpotlight, { opacity: 0.88, scale: 1.05, duration: 0.7 }, 12.35);
-        }
-        if (frame2) {
-          tl.fromTo(frame2,
-            { y: 100, scale: 0.9, rotateX: 9, rotateZ: 2.0, opacity: 0 },
-            { y: 0, scale: 1, rotateX: 0, rotateZ: 0, opacity: 1, duration: 0.95, ease: 'power3.out' },
-            12.3
-          );
-        }
-        if (characterScene) {
-          tl.to(characterScene, { x: () => getAnchorRightX() - 4, duration: 0.8, ease: 'power1.out' }, 12.45);
-        }
-        tl.to(frame2, { opacity: 1, duration: 1.8 }, 13.25);
-
-        // Store Brand Builder into Slot 2
-        if (frame2) {
-          const subWrap = frame2.querySelector('.role-frame-sub-wrap');
-          const cat = frame2.querySelector('.role-frame-category');
-          const inner = frame2.querySelector('.role-frame-inner');
-          if (subWrap) tl.to(subWrap, { height: 0, opacity: 0, duration: 0.75, ease: 'power2.inOut' }, 15.05);
-          if (cat) tl.to(cat, { opacity: 0, duration: 0.6, ease: 'power2.inOut' }, 15.05);
-          if (inner) tl.to(inner, { padding: '12px 16px', duration: 0.85, ease: 'power2.inOut' }, 15.05);
-          tl.to(frame2, {
-            transformOrigin: 'top left',
-            x: () => getSlotDelta(1).x,
-            y: () => getSlotDelta(1).y,
-            scale: () => getSlotDelta(1).scale,
-            opacity: 0.65,
-            rotateX: 0,
-            rotateZ: 0,
-            duration: 1.1,
-            ease: 'power2.inOut',
-            onStart: () => frame2.classList.add('is-stored'),
-          }, 15.05);
-        }
-        if (envSymBrand) tl.to(envSymBrand, { opacity: 0.05, duration: 0.75, ease: 'power2.out' }, 15.25);
-        if (roleSpotlight) tl.to(roleSpotlight, { opacity: 0.25, duration: 0.7 }, 15.25);
-
-        // Role 03: CREATOR
-        if (envSymCreator) {
-          tl.fromTo(envSymCreator, { opacity: 0, scale: 0.9, y: 20 }, { opacity: 0.6, scale: 1, y: 0, duration: 0.85, ease: 'power2.out' }, 16.25);
-        }
-        if (creatorBlades.length) {
-          tl.to(creatorBlades, { rotation: 0, scale: 1, opacity: 0.9, duration: 0.9, stagger: 0.04, ease: 'power2.out' }, 16.3);
-        }
-        if (roleSpotlight) {
-          tl.to(roleSpotlight, { opacity: 0.88, scale: 1.05, duration: 0.7 }, 16.3);
-        }
-        if (frame3) {
-          tl.fromTo(frame3,
-            { y: 100, scale: 0.9, rotateX: 9, rotateZ: -1.8, opacity: 0 },
-            { y: 0, scale: 1, rotateX: 0, rotateZ: 0, opacity: 1, duration: 0.95, ease: 'power3.out' },
-            16.25
-          );
-        }
-        if (characterScene) {
-          tl.to(characterScene, { x: () => getAnchorRightX() + 4, duration: 0.8, ease: 'power1.out' }, 16.4);
-        }
-        tl.to(frame3, { opacity: 1, duration: 1.8 }, 17.2);
-
-        // Store Creator into Slot 3
-        if (frame3) {
-          const subWrap = frame3.querySelector('.role-frame-sub-wrap');
-          const cat = frame3.querySelector('.role-frame-category');
-          const inner = frame3.querySelector('.role-frame-inner');
-          if (subWrap) tl.to(subWrap, { height: 0, opacity: 0, duration: 0.75, ease: 'power2.inOut' }, 19.0);
-          if (cat) tl.to(cat, { opacity: 0, duration: 0.6, ease: 'power2.inOut' }, 19.0);
-          if (inner) tl.to(inner, { padding: '12px 16px', duration: 0.85, ease: 'power2.inOut' }, 19.0);
-          tl.to(frame3, {
-            transformOrigin: 'top left',
-            x: () => getSlotDelta(2).x,
-            y: () => getSlotDelta(2).y,
-            scale: () => getSlotDelta(2).scale,
-            opacity: 0.65,
-            rotateX: 0,
-            rotateZ: 0,
-            duration: 1.1,
-            ease: 'power2.inOut',
-            onStart: () => frame3.classList.add('is-stored'),
-          }, 19.0);
-        }
-        if (envSymCreator) tl.to(envSymCreator, { opacity: 0.05, duration: 0.75, ease: 'power2.out' }, 19.2);
-        if (roleSpotlight) tl.to(roleSpotlight, { opacity: 0.25, duration: 0.7 }, 19.2);
-
-        // Role 04: SPEAKER
-        if (envSymSpeaker) {
-          tl.fromTo(envSymSpeaker, { opacity: 0, scale: 0.9, y: 20 }, { opacity: 0.6, scale: 1, y: 0, duration: 0.85, ease: 'power2.out' }, 20.2);
-        }
-        if (speakerBars.length) {
-          speakerBars.forEach((bar, idx) => {
-            if (idx > 0) tl.to(bar, { scaleY: 1, duration: 0.65, ease: 'back.out(1.5)' }, 20.25 + idx * 0.02);
-          });
-        }
-        if (roleSpotlight) {
-          tl.to(roleSpotlight, { opacity: 0.88, scale: 1.05, duration: 0.7 }, 20.25);
-        }
-        if (frame4) {
-          tl.fromTo(frame4,
-            { y: 100, scale: 0.9, rotateX: 9, rotateZ: 1.8, opacity: 0 },
-            { y: 0, scale: 1, rotateX: 0, rotateZ: 0, opacity: 1, duration: 0.95, ease: 'power3.out' },
-            20.2
-          );
-        }
-        if (characterScene) {
-          tl.to(characterScene, { x: () => getAnchorRightX(), duration: 0.8, ease: 'power1.out' }, 20.35);
-        }
-        tl.to(frame4, { opacity: 1, duration: 1.8 }, 21.15);
-
-        // Store Speaker into Slot 4
-        if (frame4) {
-          const subWrap = frame4.querySelector('.role-frame-sub-wrap');
-          const cat = frame4.querySelector('.role-frame-category');
-          const inner = frame4.querySelector('.role-frame-inner');
-          if (subWrap) tl.to(subWrap, { height: 0, opacity: 0, duration: 0.75, ease: 'power2.inOut' }, 22.95);
-          if (cat) tl.to(cat, { opacity: 0, duration: 0.6, ease: 'power2.inOut' }, 22.95);
-          if (inner) tl.to(inner, { padding: '12px 16px', duration: 0.85, ease: 'power2.inOut' }, 22.95);
-          tl.to(frame4, {
-            transformOrigin: 'top left',
-            x: () => getSlotDelta(3).x,
-            y: () => getSlotDelta(3).y,
-            scale: () => getSlotDelta(3).scale,
-            opacity: 0.65,
-            rotateX: 0,
-            rotateZ: 0,
-            duration: 1.1,
-            ease: 'power2.inOut',
-            onStart: () => frame4.classList.add('is-stored'),
-          }, 22.95);
-        }
-        if (envSymSpeaker) tl.to(envSymSpeaker, { opacity: 0.05, duration: 0.75, ease: 'power2.out' }, 23.15);
-        if (roleSpotlight) tl.to(roleSpotlight, { opacity: 0, duration: 0.7 }, 23.15);
-
-        // Step 7: Completed History Row & Collective Line
-        const storedFrames = [frame1, frame2, frame3, frame4].filter(Boolean);
-        if (storedFrames.length) {
-          tl.to(storedFrames, { opacity: 0.95, duration: 0.65, ease: 'power2.out' }, 24.15);
-        }
-        if (historyCollectiveLine) {
-          tl.fromTo(historyCollectiveLine, { scaleX: 0 }, { scaleX: 1, duration: 0.85, ease: 'power2.out' }, 24.25);
-        }
-        tl.to(wrapper, { duration: 1.6 }, 24.8);
-
-        // Step 8: Transition into Digi Marketrix
-        if (historyRow) tl.to(historyRow, { y: -25, opacity: 0, duration: 0.85, ease: 'power2.in' }, 26.4);
-        if (storedFrames.length) tl.to(storedFrames, { y: '-=25', opacity: 0, duration: 0.85, ease: 'power2.in' }, 26.4);
-        if (stmtBackdrop) tl.to(stmtBackdrop, { opacity: 0, duration: 0.85, ease: 'power2.in' }, 26.4);
-        if (envSymbolsWrap) tl.to(envSymbolsWrap, { opacity: 0, duration: 0.85, ease: 'power2.in' }, 26.4);
-
-        tl.to(characterScene, {
-          x: () => getAnchorRightX() * 1.5,
-          scale: 0.94,
-          opacity: 0.32,
-          duration: 1.1,
-          ease: 'power2.inOut',
-        }, 26.4);
-
-        if (characterPortrait) tl.to(characterPortrait, { y: -15, duration: 1.1, ease: 'power2.inOut' }, 26.4);
-        if (radialLight) tl.to(radialLight, { opacity: 0.22, scale: 0.85, duration: 1.1, ease: 'power2.inOut' }, 26.4);
-
-        tl.to(workTransition, { opacity: 1, duration: 0.1 }, 26.5);
-        tl.fromTo('#work-kicker', { y: 18, opacity: 0 }, { y: 0, opacity: 1, duration: 0.65, ease: 'power2.out' }, 26.6);
-        tl.fromTo('#work-title-digi', { y: '100%', opacity: 0 }, { y: '0%', opacity: 1, duration: 0.85, ease: 'power3.out' }, 26.9);
-        tl.fromTo('#work-title-marketrix', { y: '100%', opacity: 0 }, { y: '0%', opacity: 1, duration: 0.85, ease: 'power3.out' }, 27.05);
-        tl.fromTo('#work-subtitle', { y: 14, opacity: 0 }, { y: 0, opacity: 1, duration: 0.75, ease: 'power2.out' }, 27.4);
-
-        tl.to(characterScene, { opacity: 0, duration: 0.8, ease: 'power2.in' }, 28.2);
-        if (radialLight) tl.to(radialLight, { opacity: 0, duration: 0.8 }, 28.2);
-        tl.to(workTransition, { scale: 0.94, y: -18, duration: 0.9, ease: 'power2.out' }, 28.3);
-
-        if (projectApproach) {
-          tl.fromTo(projectApproach,
-            { opacity: 0, scale: 0.85, y: 35 },
-            { opacity: 1, scale: 1.0, y: 0, duration: 1.15, ease: 'power3.out' },
-            28.3
-          );
-        }
-        tl.to(workTransition, { opacity: 1, duration: 0.9 }, 29.45);
+        // Step 8: Work Transition Phase (Modular Builder)
+        buildWorkTransitionTimeline(tl, {
+          characterScene,
+          characterPortrait,
+          radialLight,
+          workTransition,
+          projectApproach,
+          getAnchorRightX,
+        });
 
         // ----------------------------------------------------------------------
         // POINTER INTERACTION (Desktop Only — Micro-Interactions & Calm Parallax)
-        // Aakash: strict limit max ±3px X, ±2.5px Y (calm anchor, no face distortion)
-        // Constellation objects: subtle depth ±5px
         // ----------------------------------------------------------------------
         if (window.matchMedia('(min-width: 1025px)').matches) {
           let mouseX = 0, mouseY = 0;
@@ -789,44 +511,20 @@ export default function HeroExperience() {
             mouseX += (targetX - mouseX) * 0.08;
             mouseY += (targetY - mouseY) * 0.08;
 
-            // Aakash: calm anchor! strictly max ±3px, ±2.5px
             if (characterPortrait && !CharacterController.isEntrancePlaying) {
               gsap.set(characterPortrait, {
                 x: mouseX * 3,
-                y: mouseY * 2.5
+                y: mouseY * 2.5,
               });
             }
 
-            // Active role frames subtle architectural 3D response (active center stage only)
-            const activeFrames = [frame1, frame2, frame3, frame4];
-            activeFrames.forEach((f) => {
-              if (f && !f.classList.contains('is-stored') && gsap.getProperty(f, 'opacity') > 0.7) {
-                gsap.set(f, {
-                  rotateY: mouseX * 4,
-                  rotateX: -mouseY * 3
-                });
-              }
-            });
-
-            // Environmental symbols subtle parallax
-            const activeEnvSyms = [envSymMarketer, envSymBrand, envSymCreator, envSymSpeaker];
-            activeEnvSyms.forEach((sym, i) => {
-              if (sym) {
-                const factor = i % 2 === 0 ? 4 : 2.5;
-                gsap.set(sym, {
-                  x: mouseX * factor,
-                  y: mouseY * factor
-                });
-              }
-            });
-
-            // Role spotlight responds gently
-            if (roleSpotlight) {
-              gsap.set(roleSpotlight, {
-                x: mouseX * 8,
-                y: mouseY * 6
-              });
-            }
+            attachIdentityParallax(
+              mouseX,
+              mouseY,
+              [frame1, frame2, frame3, frame4],
+              [envSymMarketer, envSymBrand, envSymCreator, envSymSpeaker],
+              roleSpotlight
+            );
           });
         }
       });
@@ -995,173 +693,21 @@ export default function HeroExperience() {
           PORTFOLIO
         </div>
 
-        {/* LAYER 3b, 3c, History Row & Active Roles */}
-        <RoleSequence />
+        {/* LAYER 3b, 3c: Statement Backdrop, Environmental SVG Symbols, Completed History Row, Active Role Stage */}
+        <IdentityExperience />
 
         {/* LAYER 4, 5 & 6: Poster Grid Composition (Left Flank, Centered Aakash, Right Flank) */}
         <div className="hero-poster-grid">
-          {/* LEFT FLANK: Identity fragments, Greeting, Statement, and CTAs */}
-          <div className="hero-flank hero-flank-left" id="hero-left-flank">
-            <div className="hero-tag-cluster hero-tag-left-cluster" id="hero-left-tags">
-              <span className="tag-accent-line tag-accent-line-left" aria-hidden="true"></span>
-              <div className="tag-reveal-wrap tag-reveal-left">
-                <span className="poster-tag tag-item-1">MARKETER.</span>
-                <span className="poster-tag-separator">/</span>
-                <span className="poster-tag tag-item-2">BRAND BUILDER.</span>
-              </div>
-            </div>
-
-            <div className="hero-greeting-block" id="hero-greeting">
-              <span className="hero-salutation">Hello, I&apos;m</span>
-              <h1 className="hero-poster-name">AAKASH.</h1>
-            </div>
-
-            <div className="hero-positioning-block" id="hero-positioning">
-              <p className="hero-poster-statement">
-                I build brands, digital experiences<br />
-                and <span className="hero-serif-accent">ideas that move people.</span>
-              </p>
-              <p className="hero-poster-subtext">
-                Turning ideas into real commercial opportunities through marketing, high-retention media, and scalable web platforms.
-              </p>
-            </div>
-
-            <div className="hero-cta-cluster" id="hero-cta-cluster">
-              <a href="#work" className="btn-editorial">
-                <span>Explore My Work →</span>
-              </a>
-              <a href="#about" className="btn-editorial-outline">
-                <span>About Me →</span>
-              </a>
-            </div>
-          </div>
-
-          {/* CENTER SUBJECT: AAKASH */}
+          <HeroLeftFlank />
           <HeroPortrait />
-
-          {/* RIGHT FLANK */}
-          <div className="hero-flank hero-flank-right" id="hero-right-flank">
-            <div className="hero-tag-cluster hero-tag-right-cluster" id="hero-right-tags">
-              <div className="tag-reveal-wrap tag-reveal-right">
-                <span className="poster-tag tag-item-1">CREATOR.</span>
-                <span className="poster-tag-separator">/</span>
-                <span className="poster-tag tag-item-2">SPEAKER.</span>
-              </div>
-              <span className="tag-accent-line tag-accent-line-right" aria-hidden="true"></span>
-            </div>
-
-            <div className="hero-right-mantra" id="hero-right-mantra">
-              <span className="poster-kicker-mono">CORE PHILOSOPHY</span>
-              <h3 className="poster-mantra-title">
-                TURNING IDEAS<br />
-                INTO EXPERIENCES.
-              </h3>
-            </div>
-
-            <div className="hero-anchors-stream" id="hero-anchors">
-              {/* Anchor 01 */}
-              <div
-                className="hero-anchor-item active"
-                data-index="01"
-                data-preview="/assets/proofs_optimized/digi_marketrix_office.jpg"
-                data-title="DIGI MARKETRIX"
-                data-sub="Marketing the Digital Presence"
-                data-kicker="SELECTED WORK / 01"
-              >
-                <div className="anchor-step-row">
-                  <span className="anchor-index">01</span>
-                  <span className="anchor-line" aria-hidden="true"></span>
-                </div>
-                <div className="anchor-body">
-                  <div className="anchor-title-wrap">
-                    <span className="anchor-title">DIGI MARKETRIX</span>
-                  </div>
-                  <div className="anchor-sub-wrap">
-                    <span className="anchor-sub">Marketing the Digital Presence</span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Anchor 02 */}
-              <div
-                className="hero-anchor-item"
-                data-index="02"
-                data-preview="/assets/proofs_optimized/purple_collection_bts.jpg"
-                data-title="PERSONAL BRANDING STRATEGIST"
-                data-sub="Brand Building"
-                data-kicker="STRATEGY / 02"
-              >
-                <div className="anchor-step-row">
-                  <span className="anchor-index">02</span>
-                  <span className="anchor-line" aria-hidden="true"></span>
-                </div>
-                <div className="anchor-body">
-                  <div className="anchor-title-wrap">
-                    <span className="anchor-title">PERSONAL BRANDING STRATEGIST</span>
-                  </div>
-                  <div className="anchor-sub-wrap">
-                    <span className="anchor-sub">Brand Building</span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Anchor 03 */}
-              <div
-                className="hero-anchor-item"
-                data-index="03"
-                data-preview="/assets/proofs_optimized/lwa_page.jpg"
-                data-title="LIFE WITH AAKASH"
-                data-sub="Life & Motivational Content"
-                data-kicker="CONTENT & REFLECTION / 03"
-              >
-                <div className="anchor-step-row">
-                  <span className="anchor-index">03</span>
-                  <span className="anchor-line" aria-hidden="true"></span>
-                </div>
-                <div className="anchor-body">
-                  <div className="anchor-title-wrap">
-                    <span className="anchor-title">LIFE WITH AAKASH</span>
-                  </div>
-                  <div className="anchor-sub-wrap">
-                    <span className="anchor-sub">Life &amp; Motivational Content</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+          <HeroRightFlank />
         </div>
 
         {/* Hover preview */}
         <HeroProjectPreview />
 
         {/* Transition Phase into Digi Marketrix */}
-        <div className="work-transition-phase" id="work-transition-phase">
-          <div className="work-transition-kicker-mask">
-            <span className="work-transition-label" id="work-kicker">SELECTED WORK / 01</span>
-          </div>
-          <div className="work-title-mask-line">
-            <h2 className="work-title-word" id="work-title-digi">DIGI</h2>
-          </div>
-          <div className="work-title-mask-line">
-            <h2 className="work-title-word" id="work-title-marketrix">MARKETRIX</h2>
-          </div>
-          <div className="work-sub-mask-wrap">
-            <p className="work-transition-subtitle" id="work-subtitle">Digital Marketing &nbsp;·&nbsp; Strategy &nbsp;·&nbsp; Brand Growth</p>
-          </div>
-        </div>
-
-        {/* Approach Canvas */}
-        <div className="hero-project-approach-canvas" id="hero-project-approach" aria-hidden="true">
-          <div className="project-approach-frame">
-            <img
-              src="/assets/experience_digi_marketrix.jpg"
-              alt="Digi Marketrix Commercial Case Study Production"
-              className="project-approach-img"
-              id="project-approach-img"
-            />
-            <div className="project-approach-glow"></div>
-          </div>
-        </div>
+        <WorkTransition />
       </section>
     </div>
   );

@@ -4,3 +4,9 @@ node_modules/
 *.log
 Proofs/
 .next/
+*.tsbuildinfo
+.env*
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
