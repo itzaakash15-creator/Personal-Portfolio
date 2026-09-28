@@ -22,21 +22,21 @@ export default function Navbar() {
   return (
     <header className={`site-header ${isScrolled ? 'scrolled' : ''}`} id="site-header">
       <nav className="nav-container" aria-label="Main Navigation">
+        {/* Left: Brand */}
         <a href="#hero" className="nav-brand" aria-label="AAKASH Home">
           <span>
             AAKASH<span className="brand-period">.</span>
           </span>
         </a>
 
+        {/* Center: Simplified Three-Pillar Links (Work, Proof, About) */}
         <div className="nav-center-links">
           <a href="#work" className="nav-link">WORK</a>
-          <a href="#speaking" className="nav-link">SPEAKING</a>
-          <a href="#creator" className="nav-link">CREATOR</a>
-          <a href="#journey" className="nav-link">JOURNEY</a>
           <a href="#proof" className="nav-link">PROOF</a>
           <a href="#about" className="nav-link">ABOUT</a>
         </div>
 
+        {/* Right: Direct Action CTA */}
         <div className="nav-right-action">
           <a href="#contact" className="nav-connect-btn" aria-label="Connect with Aakash">
             <span>LET&apos;S CONNECT ↗</span>
@@ -49,19 +49,19 @@ export default function Navbar() {
             aria-expanded={isMobileOpen}
             onClick={() => setIsMobileOpen(!isMobileOpen)}
           >
-            <span></span>
-            <span></span>
+            <span className="mobile-toggle-text">{isMobileOpen ? 'CLOSE' : 'MENU'}</span>
+            <div className="mobile-toggle-bars" aria-hidden="true">
+              <span></span>
+              <span></span>
+            </div>
           </button>
         </div>
       </nav>
 
-      {/* Mobile Full-Screen Menu with Large Typography */}
+      {/* Mobile Full-Screen Menu: Work, Proof, About, Let's Connect */}
       <div className={`mobile-drawer ${isMobileOpen ? 'open' : ''}`} id="mobile-drawer">
         <div className="mobile-drawer-links">
           <a href="#work" className="nav-link" onClick={closeMobile}>WORK</a>
-          <a href="#speaking" className="nav-link" onClick={closeMobile}>SPEAKING</a>
-          <a href="#creator" className="nav-link" onClick={closeMobile}>CREATOR</a>
-          <a href="#journey" className="nav-link" onClick={closeMobile}>JOURNEY</a>
           <a href="#proof" className="nav-link" onClick={closeMobile}>PROOF</a>
           <a href="#about" className="nav-link" onClick={closeMobile}>ABOUT</a>
         </div>

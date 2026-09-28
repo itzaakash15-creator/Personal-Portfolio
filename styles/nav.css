@@ -120,31 +120,51 @@
   box-shadow: 0 4px 18px rgba(216, 195, 165, 0.25);
 }
 
-/* Mobile Toggle */
+/* Mobile Toggle: AAKASH. MENU */
 .mobile-nav-toggle {
   display: none;
-  width: 44px;
-  height: 44px;
+  height: 40px;
+  align-items: center;
+  gap: 8px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: #ffffff;
+  padding: 0.25rem 0.5rem;
+}
+
+.mobile-toggle-text {
+  font-family: var(--font-mono);
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: var(--accent-gold);
+  text-transform: uppercase;
+}
+
+.mobile-toggle-bars {
+  display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  gap: 6px;
-  color: #ffffff;
+  gap: 5px;
+  width: 20px;
+  height: 16px;
 }
 
-.mobile-nav-toggle span {
-  width: 24px;
+.mobile-toggle-bars span {
+  width: 20px;
   height: 1.5px;
   background-color: #ffffff;
   transition: transform 0.25s ease, opacity 0.25s ease;
 }
 
-.mobile-nav-toggle.open span:nth-child(1) {
-  transform: translateY(7.5px) rotate(45deg);
+.mobile-nav-toggle.open .mobile-toggle-bars span:nth-child(1) {
+  transform: translateY(3.25px) rotate(45deg);
 }
 
-.mobile-nav-toggle.open span:nth-child(2) {
-  transform: translateY(-7.5px) rotate(-45deg);
+.mobile-nav-toggle.open .mobile-toggle-bars span:nth-child(2) {
+  transform: translateY(-3.25px) rotate(-45deg);
 }
 
 /* Mobile Full-Screen Menu with Large Typography */

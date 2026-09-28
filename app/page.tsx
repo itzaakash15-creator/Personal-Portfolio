@@ -57,12 +57,15 @@ export default function HomePage() {
     gsap.registerPlugin(ScrollTrigger);
 
     const navSectionMap = [
-      { id: 'about', target: 'about' },
+      { id: 'future', target: 'about' },
       { id: 'vision', target: 'about' },
+      { id: 'journey', target: 'about' },
+      { id: 'about', target: 'about' },
+      { id: 'clients', target: 'proof' },
       { id: 'proof', target: 'proof' },
-      { id: 'journey', target: 'journey' },
-      { id: 'creator', target: 'creator' },
-      { id: 'speaking', target: 'speaking' },
+      { id: 'speaking', target: 'work' },
+      { id: 'web', target: 'work' },
+      { id: 'creator', target: 'work' },
       { id: 'branding', target: 'work' },
       { id: 'experience', target: 'work' },
       { id: 'work', target: 'work' },
