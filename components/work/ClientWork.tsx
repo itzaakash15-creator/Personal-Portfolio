@@ -12,21 +12,20 @@ export default function ClientWork({ onOpenProof }: ClientWorkProps) {
   const cardRef = useRef<HTMLDivElement>(null);
   const posRef = useRef({ x: -500, y: -500 });
   const targetRef = useRef({ x: -500, y: -500 });
+  const isRunning = useRef(false);
   const rafId = useRef<number | null>(null);
 
-  // Smooth inertial cursor following with viewport clamping
+  // Smooth inertial cursor following with viewport clamping (runs only on hover)
   const updateCardPosition = useCallback(() => {
     const card = cardRef.current;
     if (card) {
-      // Lerp smoothing factor ~0.16 for responsive yet smooth inertia
-      posRef.current.x += (targetRef.current.x - posRef.current.x) * 0.16;
-      posRef.current.y += (targetRef.current.y - posRef.current.y) * 0.16;
+      posRef.current.x += (targetRef.current.x - posRef.current.x) * 0.18;
+      posRef.current.y += (targetRef.current.y - posRef.current.y) * 0.18;
 
       const cardWidth = 340;
       const cardHeight = 220;
       const padding = 24;
 
-      // Safe viewport boundary clamping
       const maxX = window.innerWidth - cardWidth / 2 - padding;
       const minX = cardWidth / 2 + padding;
       const maxY = window.innerHeight - cardHeight / 2 - padding;
@@ -35,22 +34,38 @@ export default function ClientWork({ onOpenProof }: ClientWorkProps) {
       const clampedX = Math.max(minX, Math.min(maxX, posRef.current.x + 30));
       const clampedY = Math.max(minY, Math.min(maxY, posRef.current.y - 10));
 
-      card.style.transform = `translate3d(${clampedX}px, ${clampedY}px, 0) translate(-50%, -50%)`;
-    }
+      card.style.transform = `translate3d(${clampedX.toFixed(1)}px, ${clampedY.toFixed(1)}px, 0) translate(-50%, -50%)`;
 
-    rafId.current = requestAnimationFrame(updateCardPosition);
+      const diff = Math.abs(targetRef.current.x - posRef.current.x) + Math.abs(targetRef.current.y - posRef.current.y);
+      if (diff > 0.5 && isRunning.current) {
+        rafId.current = requestAnimationFrame(updateCardPosition);
+      } else {
+        isRunning.current = false;
+      }
+    }
   }, []);
 
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (window.innerWidth <= 960) return;
+    targetRef.current = { x: e.clientX, y: e.clientY };
+    if (!isRunning.current && hoveredProject) {
+      isRunning.current = true;
+      rafId.current = requestAnimationFrame(updateCardPosition);
+    }
+  };
+
   useEffect(() => {
-    rafId.current = requestAnimationFrame(updateCardPosition);
+    if (hoveredProject) {
+      isRunning.current = true;
+      rafId.current = requestAnimationFrame(updateCardPosition);
+    } else {
+      isRunning.current = false;
+      if (rafId.current) cancelAnimationFrame(rafId.current);
+    }
     return () => {
       if (rafId.current) cancelAnimationFrame(rafId.current);
     };
-  }, [updateCardPosition]);
-
-  const handleMouseMove = (e: React.MouseEvent) => {
-    targetRef.current = { x: e.clientX, y: e.clientY };
-  };
+  }, [hoveredProject, updateCardPosition]);
 
   return (
     <section

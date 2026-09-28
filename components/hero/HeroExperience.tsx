@@ -800,7 +800,7 @@ export default function HeroExperience() {
 
       // Global top scroll return safety: ensures portrait, scene and lighting smoothly restore when returning to top
       const handleScrollReturn = () => {
-        if (window.scrollY <= 40) {
+        if (window.scrollY <= 80) {
           const portraitOp = characterPortrait ? Number(gsap.getProperty(characterPortrait, 'opacity')) : 1;
           const sceneOp = characterScene ? Number(gsap.getProperty(characterScene, 'opacity')) : 1;
           if (portraitOp < 0.95 || sceneOp < 0.95) {

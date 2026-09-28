@@ -3,14 +3,14 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import Navbar from '../components/Navbar';
 import HeroExperience from '../components/hero/HeroExperience';
-import WorkExperience from '../components/work/WorkExperience';
+import ExecutiveHook from '../components/work/ExecutiveHook';
+import DigiMarketrix from '../components/work/DigiMarketrix';
 import PersonalBranding from '../components/work/PersonalBranding';
 import WebsiteBuilder from '../components/work/WebsiteBuilder';
 import LifeWithAakash from '../components/work/LifeWithAakash';
 import CredibilityTrust from '../components/work/CredibilityTrust';
 import ClientWork from '../components/work/ClientWork';
-import Journey from '../components/work/Journey';
-import FutureDirection from '../components/work/FutureDirection';
+import AboutJourney from '../components/work/AboutJourney';
 import Contact from '../components/Contact';
 import Footer from '../components/Footer';
 import CaseDrawers from '../components/modals/CaseDrawers';
@@ -267,31 +267,31 @@ export default function HomePage() {
       {/* 2. Locked Hero + Locked Four-Role Scroll Experience */}
       <HeroExperience />
 
-      {/* 3. Section 01: Digi Marketrix & Talentrix */}
-      <WorkExperience onOpenDrawer={openDrawer} onOpenProof={openProof} />
+      {/* 3. First Section After Role-Scroll: Strong Strategic Hook */}
+      <ExecutiveHook onOpenProof={openProof} />
 
-      {/* 4. Section 02: Personal Branding Strategist */}
+      {/* 4. Section 01: Digi Marketrix & Talentrix Case Study */}
+      <DigiMarketrix onOpenDrawer={openDrawer} onOpenProof={openProof} />
+
+      {/* 5. Section 02: Personal Branding Strategist */}
       <PersonalBranding onOpenDrawer={openDrawer} onOpenProof={openProof} />
 
-      {/* 5. Section 03: Website Builder */}
+      {/* 6. Section 03: Website Builder */}
       <WebsiteBuilder onOpenDrawer={openDrawer} onOpenProof={openProof} />
 
-      {/* 6. Section 04: Life with Aakash */}
+      {/* 7. Section 04: Life with Aakash */}
       <LifeWithAakash onOpenProof={openProof} />
 
-      {/* 7. Section 05: Supporting Credibility (Trust / Awards) */}
+      {/* 8. Section 05: Supporting Credibility (Verified Proof Cards & Tabs) */}
       <CredibilityTrust onOpenDrawer={openDrawer} onOpenProof={openProof} />
 
-      {/* 8. Section 06: Clients & Production Index */}
+      {/* 9. Section 06: Clients & Production Index */}
       <ClientWork onOpenProof={openProof} />
 
-      {/* 9. Section 07: The Progression (Journey) */}
-      <Journey onOpenProof={openProof} />
+      {/* 10. Section 07: About & Progression Journey & Future Horizons */}
+      <AboutJourney onOpenProof={openProof} />
 
-      {/* 10. Section 08: Future Horizons */}
-      <FutureDirection />
-
-      {/* 11. Section 09: Contact / Collaboration */}
+      {/* 11. Section 08: Contact / Collaboration */}
       <Contact onShowToast={showToast} />
 
       {/* 12. Footer */}

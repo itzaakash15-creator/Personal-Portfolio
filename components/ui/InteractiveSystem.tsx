@@ -115,7 +115,7 @@ export default function InteractiveSystem() {
     const magneticCleanups: Array<() => void> = [];
     if (!prefersReducedMotion && window.innerWidth > 960) {
       const magneticButtons = document.querySelectorAll<HTMLElement>(
-        '.btn-editorial, .btn-editorial-outline, .nav-connect-btn, .proof-pill-btn'
+        '.pro-btn-primary, .pro-btn-outline, .nav-connect-btn, .pro-proof-tab-btn, .pro-ctrl-btn, .btn-editorial, .btn-editorial-outline, .proof-pill-btn'
       );
 
       magneticButtons.forEach((btn) => {

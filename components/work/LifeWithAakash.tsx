@@ -19,21 +19,18 @@ export default function LifeWithAakash({ onOpenProof }: LifeWithAakashProps) {
 
     const ctx = gsap.context(() => {
       if (videoFrameRef.current) {
-        // Thumbnail begins out of focus & deeper in space, then sharpens as it enters viewport
         gsap.fromTo(
           videoFrameRef.current,
           {
-            scale: 0.88,
-            y: 60,
-            filter: 'blur(10px)',
-            opacity: 0.3,
+            scale: 0.9,
+            y: 45,
+            opacity: 0.35,
           },
           {
             scale: 1,
             y: 0,
-            filter: 'blur(0px)',
             opacity: 1,
-            duration: 1.35,
+            duration: 1.25,
             ease: 'power3.out',
             scrollTrigger: {
               trigger: videoFrameRef.current,
@@ -56,17 +53,20 @@ export default function LifeWithAakash({ onOpenProof }: LifeWithAakashProps) {
     const y = (e.clientY - rect.top) / rect.height - 0.5;
 
     gsap.to(videoFrameRef.current, {
-      x: x * 10,
-      y: y * 8,
-      duration: 0.45,
+      x: x * 8,
+      y: y * 6,
+      rotateY: x * 4,
+      rotateX: -y * 4,
+      duration: 0.4,
       ease: 'power1.out',
+      transformPerspective: 1200,
     });
 
     if (depthLayerRef.current) {
       gsap.to(depthLayerRef.current, {
-        x: x * -14,
-        y: y * -12,
-        duration: 0.55,
+        x: x * -10,
+        y: y * -8,
+        duration: 0.5,
         ease: 'power1.out',
       });
     }
@@ -74,45 +74,44 @@ export default function LifeWithAakash({ onOpenProof }: LifeWithAakashProps) {
 
   const handleMouseLeave = () => {
     if (!videoFrameRef.current) return;
-    gsap.to(videoFrameRef.current, { x: 0, y: 0, duration: 0.6, ease: 'power2.out' });
+    gsap.to(videoFrameRef.current, {
+      x: 0,
+      y: 0,
+      rotateY: 0,
+      rotateX: 0,
+      duration: 0.6,
+      ease: 'power2.out',
+    });
     if (depthLayerRef.current) {
       gsap.to(depthLayerRef.current, { x: 0, y: 0, duration: 0.6, ease: 'power2.out' });
     }
   };
 
   return (
-    <section className="pro-section" id="speaking" ref={sectionRef}>
-      <div className="pro-bg-radial" style={{ top: '25%', left: '5%' }} aria-hidden="true"></div>
-
+    <section className="pro-section pro-chapter-card" id="speaking" ref={sectionRef}>
       <div className="pro-container">
-        <div className="pro-lwa-grid">
-          {/* Left Column: Hook + Title + Subtitle + Action */}
-          <div className="pro-lwa-content">
+        <div className="pro-chapter-grid">
+          {/* Left Column: Title + One-Line Impact + 3 Chips + CTAs */}
+          <div className="pro-chapter-content">
             <div className="pro-kicker-row">
               <span className="pro-kicker-dot" aria-hidden="true"></span>
-              <span className="pro-kicker-text">04 // VOICE · PURPOSE · INFLUENCE</span>
+              <span className="pro-kicker-text">CASE STUDY // 04</span>
             </div>
 
-            {/* Hook: REACH PEOPLE. CONNECT WITH PEOPLE. */}
-            <h2 className="pro-hook-headline" style={{ marginBottom: '1rem' }}>
-              REACH PEOPLE.<br />
-              <span style={{ color: '#d4af37' }}>CONNECT WITH PEOPLE.</span>
-            </h2>
+            <h3 className="pro-chapter-title">
+              LIFE WITH<br />
+              <span style={{ color: '#d4af37' }}>AAKASH</span>
+            </h3>
 
-            <p style={{ fontFamily: 'var(--font-heading, "Syne", sans-serif)', fontSize: 'clamp(1.5rem, 3vw, 2.4rem)', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '-0.025em', color: '#ffffff', margin: '0 0 0.5rem 0' }}>
-              LIFE WITH AAKASH
+            <p className="pro-chapter-impact">
+              A spoken-word motivational platform engineered around human connection, reaching 59K+ organic peak viewership with zero paid advertising.
             </p>
 
-            <p style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: '0.78rem', color: '#a1a1aa', letterSpacing: '0.18em', textTransform: 'uppercase', marginBottom: '1.75rem' }}>
-              REFLECTION · LIFE · MOTIVATION
-            </p>
-
-            {/* Credibility Signal */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '2rem' }}>
-              <span style={{ width: '7px', height: '7px', borderRadius: '50%', background: '#d4af37', boxShadow: '0 0 10px #d4af37' }}></span>
-              <span style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: '0.76rem', color: '#f4f4f5', letterSpacing: '0.12em', fontWeight: 600 }}>
-                59.1K+ ORGANIC PEAK VIEWERSHIP · ZERO PAID ADS
-              </span>
+            {/* 3 Compact Supporting Details/Chips */}
+            <div className="pro-chapter-chips">
+              <span className="pro-chip">59.1K+ ORGANIC PEAK</span>
+              <span className="pro-chip">ZERO PAID ADS</span>
+              <span className="pro-chip">AUTHENTIC COMMUNITY</span>
             </div>
 
             <div className="pro-btn-cluster">
@@ -134,32 +133,17 @@ export default function LifeWithAakash({ onOpenProof }: LifeWithAakashProps) {
             </div>
           </div>
 
-          {/* Right Column: One Dominant Vertical Video + Background Supporting Layer */}
+          {/* Right Column: Dominant Vertical Video Canvas with 3D Tilt */}
           <div
-            className="pro-video-stage"
+            className="pro-chapter-media-wrap"
             onMouseMove={handleMouseMove}
             onMouseLeave={handleMouseLeave}
           >
             {/* Background supporting video layer */}
             <div
+              className="pro-media-depth-peek"
               ref={depthLayerRef}
-              style={{
-                position: 'absolute',
-                top: '20px',
-                right: '-20px',
-                width: '92%',
-                height: '92%',
-                borderRadius: '16px',
-                backgroundImage: 'url(/assets/proofs_optimized/lwa_organic_views.jpg)',
-                backgroundSize: 'cover',
-                backgroundPosition: 'center',
-                opacity: 0.28,
-                filter: 'blur(3px)',
-                zIndex: 1,
-                border: '1px solid rgba(212, 175, 55, 0.2)',
-                pointerEvents: 'none',
-                transition: 'transform 0.5s ease',
-              }}
+              style={{ backgroundImage: 'url(/assets/proofs_optimized/lwa_organic_views.jpg)' }}
               aria-hidden="true"
             ></div>
 
@@ -176,12 +160,12 @@ export default function LifeWithAakash({ onOpenProof }: LifeWithAakashProps) {
                 }
               }}
               aria-label="View Life With Aakash profile and video proof"
-              style={{ zIndex: 2 }}
             >
               <img
                 src="/assets/proofs_optimized/lwa_page.jpg"
                 alt="Life With Aakash Spoken-Word Video and Platform Profile"
                 loading="lazy"
+                decoding="async"
               />
 
               {/* Play Badge */}
@@ -190,36 +174,12 @@ export default function LifeWithAakash({ onOpenProof }: LifeWithAakashProps) {
               </div>
 
               {/* Bottom Badge */}
-              <div
-                style={{
-                  position: 'absolute',
-                  bottom: '1rem',
-                  left: '1rem',
-                  right: '1rem',
-                  background: 'rgba(8, 8, 10, 0.85)',
-                  backdropFilter: 'blur(10px)',
-                  padding: '0.6rem 1rem',
-                  borderRadius: '8px',
-                  border: '1px solid rgba(212, 175, 55, 0.3)',
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                  fontFamily: 'var(--font-mono, monospace)',
-                  fontSize: '0.72rem',
-                  color: '#d4af37',
-                  letterSpacing: '0.08em',
-                }}
-              >
+              <div className="pro-video-bar-bottom">
                 <span>@LIFE.WITH_AAKASH</span>
                 <span style={{ color: '#ffffff', fontWeight: 700 }}>PLAY ↗</span>
               </div>
             </div>
           </div>
-        </div>
-
-        {/* Transition: Video frame shrinks into gallery object */}
-        <div className="pro-trans-video-to-artifact" aria-hidden="true">
-          <div className="pro-trans-artifact-spot"></div>
         </div>
       </div>
     </section>

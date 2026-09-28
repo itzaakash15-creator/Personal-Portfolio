@@ -980,3 +980,721 @@
   background: linear-gradient(90deg, rgba(212, 175, 55, 0.5), rgba(255, 255, 255, 0.08) 60%, transparent);
 }
 
+/* ==========================================================================
+   EXECUTIVE HOOK & CHAPTER UPGRADES (PERFORMANCE + EDITORIAL MOTION)
+   ========================================================================== */
+
+/* Background Marquee */
+.pro-marquee-bg {
+  position: absolute;
+  top: 15%;
+  left: 0;
+  width: 100%;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0.025;
+  white-space: nowrap;
+}
+
+.pro-marquee-track {
+  display: inline-flex;
+  font-family: var(--font-heading, 'Syne', sans-serif);
+  font-size: clamp(4rem, 9vw, 9.5rem);
+  font-weight: 900;
+  color: #ffffff;
+  letter-spacing: -0.03em;
+  text-transform: uppercase;
+  animation: proMarqueeDrift 45s linear infinite;
+  will-change: transform;
+}
+
+@keyframes proMarqueeDrift {
+  0% { transform: translate3d(0, 0, 0); }
+  100% { transform: translate3d(-50%, 0, 0); }
+}
+
+/* Executive Hook Layout */
+.pro-hook-layout {
+  display: grid;
+  grid-template-columns: 1.15fr 0.85fr;
+  align-items: center;
+  gap: clamp(2.5rem, 5vw, 5.5rem);
+  position: relative;
+  z-index: 2;
+}
+
+.pro-chips-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+  margin-block: 1.5rem;
+}
+
+.pro-highlight-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0.45rem 0.95rem;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 4px;
+  font-family: var(--font-mono, monospace);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: #e4e4e7;
+  transition: border-color 0.25s ease, background-color 0.25s ease;
+}
+
+.pro-highlight-chip:hover {
+  border-color: rgba(212, 175, 55, 0.4);
+  background: rgba(212, 175, 55, 0.05);
+}
+
+.chip-bullet {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background-color: #d4af37;
+  box-shadow: 0 0 6px rgba(212, 175, 55, 0.6);
+}
+
+/* Stats Row */
+.pro-stats-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.25rem;
+  margin-top: 2rem;
+  padding-top: 1.75rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.pro-stat-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.pro-stat-num {
+  font-family: var(--font-heading, 'Syne', sans-serif);
+  font-size: clamp(1.4rem, 2.4vw, 2rem);
+  font-weight: 800;
+  color: #ffffff;
+  letter-spacing: -0.03em;
+}
+
+.pro-stat-label {
+  font-family: var(--font-mono, monospace);
+  font-size: 0.68rem;
+  color: #a1a1aa;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+/* 3D Proof Card in Hook */
+.pro-proof-card-3d {
+  position: relative;
+  border-radius: 12px;
+  border: 1px solid rgba(212, 175, 55, 0.25);
+  background: #0d0d11;
+  padding: 8px;
+  cursor: pointer;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.65), 0 0 35px rgba(212, 175, 55, 0.08);
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  will-change: transform;
+}
+
+.pro-proof-card-3d:hover {
+  border-color: rgba(212, 175, 55, 0.5);
+  box-shadow: 0 25px 65px rgba(0, 0, 0, 0.75), 0 0 45px rgba(212, 175, 55, 0.15);
+}
+
+.pro-card-image-wrap {
+  position: relative;
+  border-radius: 8px;
+  overflow: hidden;
+  aspect-ratio: 4 / 3.2;
+}
+
+.pro-card-image-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.pro-card-badge-top {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0.35rem 0.7rem;
+  background: rgba(10, 10, 14, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(212, 175, 55, 0.3);
+  border-radius: 4px;
+  font-family: var(--font-mono, monospace);
+  font-size: 0.68rem;
+  font-weight: 600;
+  color: #f4f4f5;
+  letter-spacing: 0.1em;
+}
+
+.status-live-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: #27c93f;
+  box-shadow: 0 0 8px #27c93f;
+}
+
+.pro-card-badge-bottom {
+  position: absolute;
+  bottom: 12px;
+  left: 12px;
+  right: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 0.9rem;
+  background: rgba(10, 10, 14, 0.9);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
+  font-family: var(--font-mono, monospace);
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: #e4e4e7;
+  letter-spacing: 0.08em;
+}
+
+/* ==========================================================================
+   CASE STUDY CHAPTERS (PUNCHY, CONCISE, ZERO FLUFF)
+   ========================================================================== */
+.pro-chapter-grid {
+  display: grid;
+  grid-template-columns: 1.05fr 0.95fr;
+  align-items: center;
+  gap: clamp(2.5rem, 5vw, 5.5rem);
+}
+
+.pro-chapter-title {
+  font-family: var(--font-heading, 'Syne', sans-serif);
+  font-size: clamp(2.4rem, 4.8vw, 4.2rem);
+  font-weight: 800;
+  line-height: 0.94;
+  letter-spacing: -0.035em;
+  text-transform: uppercase;
+  color: #ffffff;
+  margin-bottom: 1.15rem;
+}
+
+.pro-chapter-impact {
+  font-family: var(--font-sans, 'Inter', sans-serif);
+  font-size: clamp(0.95rem, 1.2vw, 1.08rem);
+  color: #d4d4d8;
+  line-height: 1.55;
+  max-width: 44ch;
+  margin-bottom: 1.35rem;
+}
+
+.pro-chapter-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin-bottom: 1.6rem;
+}
+
+.pro-chip {
+  display: inline-block;
+  font-family: var(--font-mono, monospace);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  color: #d4af37;
+  padding: 0.35rem 0.75rem;
+  background: rgba(212, 175, 55, 0.06);
+  border: 1px solid rgba(212, 175, 55, 0.2);
+  border-radius: 4px;
+}
+
+.pro-chapter-media-wrap {
+  position: relative;
+  border-radius: 12px;
+  will-change: transform;
+}
+
+.pro-chapter-main-frame {
+  position: relative;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid rgba(212, 175, 55, 0.3);
+  box-shadow: 0 16px 45px rgba(0, 0, 0, 0.65);
+  cursor: pointer;
+  z-index: 2;
+  background: #09090c;
+}
+
+.pro-chapter-main-frame img {
+  width: 100%;
+  height: 100%;
+  aspect-ratio: 16 / 10.5;
+  object-fit: cover;
+  display: block;
+}
+
+/* ==========================================================================
+   PROOF SECTION REDESIGN (TABS + INTERACTIVE CARDS)
+   ========================================================================== */
+.pro-proof-header {
+  text-align: center;
+  margin-bottom: 3.5rem;
+}
+
+.pro-proof-tabs {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 4px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.pro-proof-tab-btn {
+  font-family: var(--font-mono, monospace);
+  font-size: 0.74rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  color: #a1a1aa;
+  background: transparent;
+  border: none;
+  padding: 0.55rem 1.15rem;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.pro-proof-tab-btn:hover {
+  color: #ffffff;
+}
+
+.pro-proof-tab-btn.active {
+  background: #d4af37;
+  color: #070709;
+  font-weight: 700;
+  box-shadow: 0 4px 14px rgba(212, 175, 55, 0.25);
+}
+
+.pro-proof-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.75rem;
+}
+
+.pro-proof-card {
+  position: relative;
+  background: #0d0d11;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  will-change: transform;
+}
+
+.pro-proof-card:hover {
+  border-color: rgba(212, 175, 55, 0.45);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.7), 0 0 25px rgba(212, 175, 55, 0.1);
+}
+
+.pro-proof-card-media {
+  position: relative;
+  aspect-ratio: 16 / 10.5;
+  overflow: hidden;
+  background: #09090b;
+}
+
+.pro-proof-card-media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.pro-proof-card:hover .pro-proof-card-media img {
+  transform: scale(1.05);
+}
+
+.pro-proof-tag {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  font-family: var(--font-mono, monospace);
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: #d4af37;
+  background: rgba(8, 8, 11, 0.88);
+  border: 1px solid rgba(212, 175, 55, 0.35);
+  border-radius: 4px;
+  padding: 0.25rem 0.55rem;
+  z-index: 2;
+}
+
+.pro-proof-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(7, 7, 9, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: 3;
+}
+
+.pro-proof-card:hover .pro-proof-overlay {
+  opacity: 1;
+}
+
+.pro-proof-view-btn {
+  font-family: var(--font-mono, monospace);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: #070709;
+  background: #d4af37;
+  padding: 0.5rem 1.1rem;
+  border-radius: 4px;
+}
+
+.pro-proof-card-info {
+  padding: 1.25rem 1.15rem;
+}
+
+.pro-proof-cat-label {
+  display: block;
+  font-family: var(--font-mono, monospace);
+  font-size: 0.68rem;
+  letter-spacing: 0.12em;
+  color: #71717a;
+  text-transform: uppercase;
+  margin-bottom: 0.4rem;
+}
+
+.pro-proof-card-title {
+  font-family: var(--font-heading, 'Syne', sans-serif);
+  font-size: 0.98rem;
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: -0.015em;
+  line-height: 1.25;
+  margin-bottom: 0.45rem;
+}
+
+.pro-proof-card-sub {
+  font-family: var(--font-sans, 'Inter', sans-serif);
+  font-size: 0.82rem;
+  color: #a1a1aa;
+  line-height: 1.45;
+  margin: 0;
+}
+
+/* ==========================================================================
+   ABOUT & JOURNEY SECTION (CLEAN EDITORIAL TIMELINE & DUAL HORIZONS)
+   ========================================================================== */
+.pro-about-intro {
+  margin-bottom: 4rem;
+}
+
+.pro-about-bio-grid {
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  align-items: start;
+  gap: 3rem;
+  margin-top: 1.5rem;
+}
+
+.pro-about-bio-lead {
+  font-family: var(--font-sans, 'Inter', sans-serif);
+  font-size: clamp(1rem, 1.35vw, 1.15rem);
+  line-height: 1.65;
+  color: #d4d4d8;
+}
+
+.pro-about-traits {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.pro-trait-badge {
+  font-family: var(--font-mono, monospace);
+  font-size: 0.76rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  color: #e4e4e7;
+  padding: 0.6rem 1rem;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 4px;
+}
+
+.pro-subheading-title {
+  font-family: var(--font-heading, 'Syne', sans-serif);
+  font-size: clamp(1.4rem, 2.6vw, 2.2rem);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: #ffffff;
+  margin: 0;
+}
+
+.pro-journey-wrap {
+  margin-bottom: 4.5rem;
+  padding: 2.5rem;
+  background: rgba(13, 13, 17, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+}
+
+.pro-journey-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-bottom: 2rem;
+}
+
+.pro-journey-subtag {
+  font-family: var(--font-mono, monospace);
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+  color: #d4af37;
+  text-transform: uppercase;
+}
+
+.pro-timeline-rail {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 0.5rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  padding-bottom: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.pro-timeline-node {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  text-align: center;
+  padding: 0.5rem 0.25rem;
+  transition: all 0.25s ease;
+}
+
+.node-year {
+  font-family: var(--font-mono, monospace);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: #71717a;
+  transition: color 0.25s ease;
+}
+
+.node-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: #3f3f46;
+  transition: all 0.25s ease;
+}
+
+.node-title-mini {
+  font-family: var(--font-mono, monospace);
+  font-size: 0.65rem;
+  color: #71717a;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  transition: color 0.25s ease;
+}
+
+.pro-timeline-node:hover .node-year,
+.pro-timeline-node.active .node-year {
+  color: #ffffff;
+}
+
+.pro-timeline-node.active .node-dot {
+  background: #d4af37;
+  box-shadow: 0 0 10px #d4af37;
+  transform: scale(1.35);
+}
+
+.pro-timeline-node.active .node-title-mini {
+  color: #d4af37;
+}
+
+.pro-milestone-card {
+  padding: 1.75rem;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(212, 175, 55, 0.25);
+  border-radius: 8px;
+}
+
+.pro-milestone-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.6rem;
+}
+
+.pro-milestone-year {
+  font-family: var(--font-mono, monospace);
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #d4af37;
+  letter-spacing: 0.1em;
+}
+
+.pro-milestone-role {
+  font-family: var(--font-mono, monospace);
+  font-size: 0.72rem;
+  color: #a1a1aa;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.pro-milestone-title {
+  font-family: var(--font-heading, 'Syne', sans-serif);
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: #ffffff;
+  letter-spacing: -0.015em;
+  margin-bottom: 0.5rem;
+}
+
+.pro-milestone-desc {
+  font-family: var(--font-sans, 'Inter', sans-serif);
+  font-size: 0.92rem;
+  color: #d4d4d8;
+  line-height: 1.55;
+  margin: 0;
+}
+
+/* Future Horizons Grid */
+.pro-future-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+}
+
+.pro-future-card {
+  padding: 2.25rem;
+  background: rgba(13, 13, 17, 0.75);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  transition: border-color 0.3s ease;
+}
+
+.pro-future-card:hover {
+  border-color: rgba(212, 175, 55, 0.35);
+}
+
+.pro-future-kicker {
+  display: block;
+  font-family: var(--font-mono, monospace);
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: #d4af37;
+  letter-spacing: 0.12em;
+  margin-bottom: 0.5rem;
+}
+
+.pro-future-title {
+  font-family: var(--font-heading, 'Syne', sans-serif);
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: #ffffff;
+  letter-spacing: -0.015em;
+  margin-bottom: 1rem;
+}
+
+.pro-future-status-row {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1.25rem;
+}
+
+.status-tag {
+  font-family: var(--font-mono, monospace);
+  font-size: 0.65rem;
+  letter-spacing: 0.08em;
+  padding: 0.2rem 0.55rem;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+  color: #a1a1aa;
+}
+
+.status-tag.active {
+  background: rgba(212, 175, 55, 0.15);
+  border-color: #d4af37;
+  color: #d4af37;
+  font-weight: 700;
+}
+
+.pro-future-desc {
+  font-family: var(--font-sans, 'Inter', sans-serif);
+  font-size: 0.92rem;
+  color: #a1a1aa;
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* ==========================================================================
+   RESPONSIVE DESIGN BREAKPOINTS (CLEAN TABLET & MOBILE)
+   ========================================================================== */
+@media (max-width: 1080px) {
+  .pro-proof-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .pro-timeline-rail {
+    grid-template-columns: repeat(3, 1fr);
+    row-gap: 1rem;
+  }
+}
+
+@media (max-width: 960px) {
+  .pro-hook-layout,
+  .pro-chapter-grid,
+  .pro-about-bio-grid,
+  .pro-future-grid {
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+  }
+
+  .pro-stats-row {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .pro-proof-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .pro-timeline-rail {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+

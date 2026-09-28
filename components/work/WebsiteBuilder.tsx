@@ -20,13 +20,12 @@ export default function WebsiteBuilder({ onOpenDrawer, onOpenProof }: WebsiteBui
 
     const ctx = gsap.context(() => {
       if (canvasRef.current) {
-        // Perspective entrance: enters from perspective, settles to flat
         gsap.fromTo(
           canvasRef.current,
           {
-            rotateX: 7,
-            scale: 0.88,
-            y: 80,
+            rotateX: 6,
+            scale: 0.9,
+            y: 50,
             opacity: 0.35,
           },
           {
@@ -34,7 +33,7 @@ export default function WebsiteBuilder({ onOpenDrawer, onOpenProof }: WebsiteBui
             scale: 1,
             y: 0,
             opacity: 1,
-            duration: 1.35,
+            duration: 1.25,
             ease: 'power3.out',
             scrollTrigger: {
               trigger: canvasRef.current,
@@ -57,12 +56,12 @@ export default function WebsiteBuilder({ onOpenDrawer, onOpenProof }: WebsiteBui
     const y = (e.clientY - rect.top) / rect.height - 0.5;
 
     gsap.to(canvasRef.current, {
-      rotateY: x * 4,
-      rotateX: -y * 3.5,
-      y: -6 + y * 4,
-      duration: 0.45,
+      rotateY: x * 5,
+      rotateX: -y * 4,
+      y: -4 + y * 4,
+      duration: 0.4,
       ease: 'power1.out',
-      transformPerspective: 1400,
+      transformPerspective: 1200,
     });
   };
 
@@ -72,43 +71,62 @@ export default function WebsiteBuilder({ onOpenDrawer, onOpenProof }: WebsiteBui
       rotateY: 0,
       rotateX: 0,
       y: 0,
-      duration: 0.65,
+      duration: 0.6,
       ease: 'power2.out',
     });
   };
 
   return (
-    <section className="pro-section" id="web" data-alias="about" ref={sectionRef}>
+    <section className="pro-section pro-chapter-card" id="web" data-alias="about" ref={sectionRef}>
       <span id="about" style={{ position: 'absolute', top: 0, left: 0, pointerEvents: 'none' }} aria-hidden="true"></span>
-      <div className="pro-bg-radial" style={{ top: '10%', right: '10%' }} aria-hidden="true"></div>
 
       <div className="pro-container">
-        {/* Minimal Central Hook */}
-        <div className="pro-web-layout">
-          <div className="pro-web-header">
-            <div className="pro-kicker-row" style={{ justifyContent: 'center' }}>
+        <div className="pro-chapter-grid">
+          {/* Left Column: Title + One-Line Impact + 3 Chips + CTAs */}
+          <div className="pro-chapter-content">
+            <div className="pro-kicker-row">
               <span className="pro-kicker-dot" aria-hidden="true"></span>
-              <span className="pro-kicker-text">03 // FUNCTIONAL CODE &amp; INTERFACES</span>
+              <span className="pro-kicker-text">CASE STUDY // 03</span>
             </div>
 
-            {/* Hook: IDEA → INTERFACE → LIVE. */}
-            <h2 className="pro-hook-headline" style={{ marginBottom: '0.6rem', textAlign: 'center' }}>
-              IDEA → INTERFACE →<br />
-              <span style={{ color: '#d4af37' }}>LIVE.</span>
-            </h2>
+            <h3 className="pro-chapter-title">
+              WEBSITE<br />
+              <span style={{ color: '#d4af37' }}>BUILDER</span>
+            </h3>
 
-            <p style={{ fontFamily: 'var(--font-heading, "Syne", sans-serif)', fontSize: 'clamp(1.4rem, 2.8vw, 2.2rem)', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '-0.02em', color: '#ffffff', margin: '0 0 0.5rem 0' }}>
-              WEBSITE BUILDER
+            <p className="pro-chapter-impact">
+              Crafting bespoke, high-performance web applications that merge thoughtful interaction design with commercial conversion.
             </p>
 
-            <p style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: '0.78rem', color: '#a1a1aa', letterSpacing: '0.18em', textTransform: 'uppercase', margin: 0 }}>
-              DESIGN · BUILD · DEPLOY
-            </p>
+            {/* 3 Compact Supporting Details/Chips */}
+            <div className="pro-chapter-chips">
+              <span className="pro-chip">BESPOKE UI/UX</span>
+              <span className="pro-chip">FULL-STACK ARCHITECTURE</span>
+              <span className="pro-chip">LIVE CLIENT DEPLOYMENT</span>
+            </div>
+
+            <div className="pro-btn-cluster">
+              <a
+                href="https://jayashakthitoursandtravels.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="pro-btn-primary"
+              >
+                VIEW LIVE ↗
+              </a>
+              <button
+                type="button"
+                className="pro-btn-outline"
+                onClick={() => onOpenDrawer?.('drawer-web')}
+              >
+                SYSTEM ARCHITECTURE ↗
+              </button>
+            </div>
           </div>
 
-          {/* Central Visual: Real Jayashakthi Tours & Travels Website in 3D Browser Canvas */}
+          {/* Right Column: Central Visual in 3D Browser Canvas */}
           <div
-            className="pro-browser-stage"
+            className="pro-chapter-media-wrap"
             ref={browserStageRef}
             onMouseMove={handleMouseMove}
             onMouseLeave={handleMouseLeave}
@@ -137,17 +155,7 @@ export default function WebsiteBuilder({ onOpenDrawer, onOpenProof }: WebsiteBui
                   <span style={{ color: '#27c93f', fontSize: '0.65rem' }}>●</span>
                   <span>https://jayashakthitoursandtravels.com</span>
                 </div>
-                <span
-                  style={{
-                    fontFamily: 'var(--font-mono, monospace)',
-                    fontSize: '0.68rem',
-                    color: '#d4af37',
-                    letterSpacing: '0.1em',
-                    textTransform: 'uppercase',
-                  }}
-                >
-                  LIVE PROD
-                </span>
+                <span className="pro-browser-tag">LIVE PROD</span>
               </div>
 
               {/* Real Website Image Interface */}
@@ -156,43 +164,14 @@ export default function WebsiteBuilder({ onOpenDrawer, onOpenProof }: WebsiteBui
                   src="/assets/proofs_optimized/jayashakthi_website.jpg"
                   alt="Jayashakthi Tours & Travels Live Production Website Interface"
                   loading="lazy"
+                  decoding="async"
                 />
-
-                {/* Hover Action Overlay */}
-                <div className="pro-browser-action-overlay">
-                  <span
-                    className="pro-btn-primary"
-                    style={{ pointerEvents: 'none' }}
-                  >
-                    INSPECT PROOF ↗
-                  </span>
+                <div className="pro-media-badge">
+                  <span>INSPECT PROOF</span>
+                  <span style={{ color: '#d4af37' }}>↗</span>
                 </div>
               </div>
             </div>
-          </div>
-
-          {/* Action CTAs */}
-          <div className="pro-btn-cluster" style={{ justifyContent: 'center', marginTop: '2.5rem' }}>
-            <a
-              href="https://jayashakthitoursandtravels.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="pro-btn-primary"
-            >
-              VIEW LIVE ↗
-            </a>
-            <button
-              type="button"
-              className="pro-btn-outline"
-              onClick={() => onOpenDrawer?.('drawer-web')}
-            >
-              SYSTEM ARCHITECTURE ↗
-            </button>
-          </div>
-
-          {/* Transition: Browser screen darkens and transforms into video frame */}
-          <div className="pro-trans-canvas-to-video" aria-hidden="true">
-            <div className="pro-trans-canvas-to-video-taper"></div>
           </div>
         </div>
       </div>

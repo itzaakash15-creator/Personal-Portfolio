@@ -24,16 +24,15 @@ export default function PersonalBranding({ onOpenDrawer, onOpenProof }: Personal
     gsap.registerPlugin(ScrollTrigger);
 
     const ctx = gsap.context(() => {
-      // Entrance animation for spatial reel stack
       if (stackRef.current) {
         gsap.fromTo(
           stackRef.current,
-          { opacity: 0.2, scale: 0.88, y: 70 },
+          { opacity: 0.2, scale: 0.9, y: 50 },
           {
             opacity: 1,
             scale: 1,
             y: 0,
-            duration: 1.25,
+            duration: 1.15,
             ease: 'power3.out',
             scrollTrigger: {
               trigger: stackRef.current,
@@ -45,10 +44,9 @@ export default function PersonalBranding({ onOpenDrawer, onOpenProof }: Personal
       }
     }, sectionRef);
 
-    // Sequential subtle cycle for supporting terms
     const interval = setInterval(() => {
       setActiveWordIdx((prev) => (prev + 1) % triadTerms.length);
-    }, 2200);
+    }, 2400);
 
     return () => {
       ctx.revert();
@@ -63,59 +61,67 @@ export default function PersonalBranding({ onOpenDrawer, onOpenProof }: Personal
     const x = (e.clientX - rect.left) / rect.width - 0.5;
     const y = (e.clientY - rect.top) / rect.height - 0.5;
 
-    // Front media moves slightly
     if (layer1Ref.current) {
-      gsap.to(layer1Ref.current, { x: x * 14, y: y * 12, duration: 0.45, ease: 'power1.out' });
+      gsap.to(layer1Ref.current, { x: x * 12, y: y * 10, duration: 0.4, ease: 'power1.out' });
     }
-    // Background media moves less
     if (layer2Ref.current) {
-      gsap.to(layer2Ref.current, { x: 35 + x * 7, y: -15 + y * 6, duration: 0.55, ease: 'power1.out' });
+      gsap.to(layer2Ref.current, { x: 30 + x * 6, y: -12 + y * 5, duration: 0.5, ease: 'power1.out' });
     }
     if (layer3Ref.current) {
-      gsap.to(layer3Ref.current, { x: -35 + x * -4, y: 25 + y * -3, duration: 0.65, ease: 'power1.out' });
+      gsap.to(layer3Ref.current, { x: -30 + x * -4, y: 20 + y * -3, duration: 0.6, ease: 'power1.out' });
     }
   };
 
   const handleMouseLeave = () => {
     if (layer1Ref.current) gsap.to(layer1Ref.current, { x: 0, y: 0, duration: 0.6, ease: 'power2.out' });
-    if (layer2Ref.current) gsap.to(layer2Ref.current, { x: 35, y: -15, duration: 0.6, ease: 'power2.out' });
-    if (layer3Ref.current) gsap.to(layer3Ref.current, { x: -35, y: 25, duration: 0.6, ease: 'power2.out' });
+    if (layer2Ref.current) gsap.to(layer2Ref.current, { x: 30, y: -12, duration: 0.6, ease: 'power2.out' });
+    if (layer3Ref.current) gsap.to(layer3Ref.current, { x: -30, y: 20, duration: 0.6, ease: 'power2.out' });
   };
 
   return (
-    <section className="pro-section" id="branding" data-alias="creator" ref={sectionRef}>
+    <section className="pro-section pro-chapter-card" id="branding" data-alias="creator" ref={sectionRef}>
       <span id="creator" style={{ position: 'absolute', top: 0, left: 0, pointerEvents: 'none' }} aria-hidden="true"></span>
-      <div className="pro-bg-radial" style={{ top: '20%', left: '-8%' }} aria-hidden="true"></div>
 
       <div className="pro-container">
-        <div className="pro-branding-wrapper">
-          {/* Left Column: Hook + Title + Supporting Terms + Action (Zero paragraphs) */}
-          <div className="pro-branding-content">
+        <div className="pro-chapter-grid">
+          {/* Left Column: Title + One-Line Impact + 3 Chips + CTAs */}
+          <div className="pro-chapter-content">
             <div className="pro-kicker-row">
               <span className="pro-kicker-dot" aria-hidden="true"></span>
-              <span className="pro-kicker-text">02 // STRATEGY &amp; POSITIONING</span>
+              <span className="pro-kicker-text">CASE STUDY // 02</span>
             </div>
 
-            <h2 className="pro-branding-hook-large">
-              TRUST<br />
-              <span style={{ color: '#d4af37' }}>&gt; ATTENTION</span>
-            </h2>
+            <h3 className="pro-chapter-title">
+              PERSONAL BRANDING<br />
+              <span style={{ color: '#d4af37' }}>STRATEGIST</span>
+            </h3>
 
-            <p style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: '0.82rem', color: '#ffffff', letterSpacing: '0.14em', textTransform: 'uppercase', marginBottom: '1.5rem', fontWeight: 700 }}>
-              PERSONAL BRANDING STRATEGIST
+            <p className="pro-chapter-impact">
+              Architecting founder authority and converting passive attention into long-term trust through high-retention cinematic storytelling.
             </p>
 
-            {/* Small supporting terms only: POSITION · CONTENT · TRUST */}
-            <div className="pro-branding-triad">
+            {/* 3 Compact Supporting Details/Chips */}
+            <div className="pro-chapter-chips">
+              <span className="pro-chip">POSITIONING ARCHITECTURE</span>
+              <span className="pro-chip">HIGH-RETENTION REELS</span>
+              <span className="pro-chip">FOUNDER TRUST SYSTEMS</span>
+            </div>
+
+            {/* Triad Cycle Accent */}
+            <div className="pro-triad-pills" style={{ display: 'flex', gap: '0.6rem', marginBlock: '1.25rem' }}>
               {triadTerms.map((term, idx) => (
                 <span
                   key={term}
-                  className="pro-triad-word"
                   style={{
-                    opacity: activeWordIdx === idx ? 1 : 0.45,
-                    borderColor: activeWordIdx === idx ? '#d4af37' : 'rgba(212, 175, 55, 0.15)',
-                    transform: activeWordIdx === idx ? 'scale(1.05)' : 'scale(1)',
-                    transition: 'all 0.35s ease',
+                    fontFamily: 'var(--font-mono, monospace)',
+                    fontSize: '0.7rem',
+                    letterSpacing: '0.12em',
+                    padding: '0.25rem 0.65rem',
+                    borderRadius: '4px',
+                    border: '1px solid',
+                    borderColor: activeWordIdx === idx ? '#d4af37' : 'rgba(255, 255, 255, 0.1)',
+                    color: activeWordIdx === idx ? '#d4af37' : '#71717a',
+                    transition: 'all 0.3s ease',
                   }}
                 >
                   {term}
@@ -141,9 +147,9 @@ export default function PersonalBranding({ onOpenDrawer, onOpenProof }: Personal
             </div>
           </div>
 
-          {/* Right Column: Layered Media Canvas (3 Real Reels / Campaigns) */}
+          {/* Right Column: Layered Real Media Canvas (Tilt + Parallax) */}
           <div
-            className="pro-spatial-reel-stack"
+            className="pro-chapter-media-wrap"
             ref={stackRef}
             onMouseMove={handleMouseMove}
             onMouseLeave={handleMouseLeave}
@@ -154,6 +160,7 @@ export default function PersonalBranding({ onOpenDrawer, onOpenProof }: Personal
                 src="/assets/proofs_optimized/chinnadurai_scripting.jpg"
                 alt="Chinnadurai Scripting Documentation"
                 loading="lazy"
+                decoding="async"
               />
             </div>
 
@@ -163,6 +170,7 @@ export default function PersonalBranding({ onOpenDrawer, onOpenProof }: Personal
                 src="/assets/proofs_optimized/chinnadurai_retention.jpg"
                 alt="Chinnadurai 15k+ Retention Graph"
                 loading="lazy"
+                decoding="async"
               />
             </div>
 
@@ -171,24 +179,27 @@ export default function PersonalBranding({ onOpenDrawer, onOpenProof }: Personal
               className="pro-reel-layer pro-reel-layer-1"
               ref={layer1Ref}
               onClick={() => onOpenProof?.('purple-bts')}
-              title="Click to view full-resolution production evidence"
+              role="button"
+              tabIndex={0}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  onOpenProof?.('purple-bts');
+                }
+              }}
+              aria-label="Inspect Purple Collection On-Location Creative Direction"
             >
               <img
                 src="/assets/proofs_optimized/purple_collection_bts.jpg"
                 alt="Purple Collection On-Location Creative Direction"
                 loading="lazy"
+                decoding="async"
               />
               <div className="pro-media-badge">
                 <span>VIEW REEL</span>
-                <span>↗</span>
+                <span style={{ color: '#d4af37' }}>↗</span>
               </div>
             </div>
           </div>
-        </div>
-
-        {/* Transition: Vertical reel stretches/widens into browser canvas */}
-        <div className="pro-trans-reel-to-canvas" aria-hidden="true">
-          <div className="pro-trans-reel-to-canvas-expand"></div>
         </div>
       </div>
     </section>

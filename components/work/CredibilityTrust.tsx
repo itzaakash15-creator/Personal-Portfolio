@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
@@ -9,82 +9,102 @@ interface CredibilityTrustProps {
   onOpenProof?: (proofKey: string) => void;
 }
 
-interface AwardItem {
+interface ProofCardItem {
   id: string;
-  num: string;
+  category: 'awards' | 'certificates' | 'growth';
+  categoryLabel: string;
   title: string;
-  category: string;
-  year: string;
+  subtitle: string;
   image: string;
   proofKey: string;
-  rotation: number;
+  tag: string;
 }
 
-const AWARDS_LIST: AwardItem[] = [
+const PROOF_CARDS: ProofCardItem[] = [
   {
-    id: 'award-1',
-    num: '01 / 03',
+    id: 'proof-1',
+    category: 'awards',
+    categoryLabel: 'AWARDS & HONORS',
     title: 'TWIN HEART BUSINESS EXCELLENCE AWARD',
-    category: 'HONORARY STAGE RECOGNITION',
-    year: 'HONORS · VERIFIED',
+    subtitle: 'Honorary stage recognition for business leadership and digital impact.',
     image: '/assets/proofs_optimized/award_1_business_excellence.jpg',
     proofKey: 'award-business-excellence',
-    rotation: 2.5,
+    tag: 'HONORARY DISTINCTION',
   },
   {
-    id: 'award-2',
-    num: '02 / 03',
+    id: 'proof-2',
+    category: 'awards',
+    categoryLabel: 'AWARDS & HONORS',
     title: 'STATE LEVEL TALENT COMPETITION 2025',
-    category: 'STATE-LEVEL FIRST HONORS',
-    year: '2025 · VERIFIED FIRST PLACE',
+    subtitle: 'First place honors in state-wide oratorical and communication distinctions.',
     image: '/assets/proofs_optimized/award_2_talent_competition.jpg',
     proofKey: 'award-talent-competition',
-    rotation: -2,
+    tag: '1ST PLACE TROPHY',
   },
   {
-    id: 'award-3',
-    num: '03 / 03',
-    title: 'CERTIFIED AGENCY INTERNSHIP CREDENTIAL',
-    category: 'DIGI MARKETRIX AGENCY ISSUED',
-    year: '2023 – 2026 · SIGNED BY CEO',
+    id: 'proof-3',
+    category: 'certificates',
+    categoryLabel: 'CERTIFICATES',
+    title: 'DIGI MARKETRIX CERTIFIED CREDENTIAL',
+    subtitle: 'Signed by CEO Antony Joyson Fernando verifying 3 years of agency execution.',
     image: '/assets/proofs_optimized/digi_marketrix_certificate.jpg',
     proofKey: 'digi-cert',
-    rotation: 2,
+    tag: 'SIGNED BY CEO',
+  },
+  {
+    id: 'proof-4',
+    category: 'growth',
+    categoryLabel: 'GROWTH & CLIENT METRICS',
+    title: 'CHINNADURAI 15K+ RETENTION ANALYTICS',
+    subtitle: 'Documented organic retention spike on client brand positioning campaigns.',
+    image: '/assets/proofs_optimized/chinnadurai_retention.jpg',
+    proofKey: 'chinnadurai-retention',
+    tag: 'VERIFIED METRICS',
+  },
+  {
+    id: 'proof-5',
+    category: 'growth',
+    categoryLabel: 'GROWTH & CLIENT METRICS',
+    title: 'PURPLE COLLECTION COMMERCIAL DIRECTING',
+    subtitle: 'On-location cinematography and creative direction for commercial brand assets.',
+    image: '/assets/proofs_optimized/purple_collection_bts.jpg',
+    proofKey: 'purple-bts',
+    tag: 'FIELD PRODUCTION',
+  },
+  {
+    id: 'proof-6',
+    category: 'growth',
+    categoryLabel: 'GROWTH & CLIENT METRICS',
+    title: 'LIFE WITH AAKASH 59.1K+ ORGANIC REACH',
+    subtitle: 'Spoken-word media metrics proving high-trust community engagement with zero ad spend.',
+    image: '/assets/proofs_optimized/lwa_organic_views.jpg',
+    proofKey: 'lwa-views',
+    tag: 'ZERO PAID ADS',
   },
 ];
 
 export default function CredibilityTrust({ onOpenDrawer, onOpenProof }: CredibilityTrustProps) {
-  const [currentIdx, setCurrentIdx] = useState(0);
-  const activeAward = AWARDS_LIST[currentIdx];
+  const [activeTab, setActiveTab] = useState<'all' | 'awards' | 'certificates' | 'growth'>('all');
   const sectionRef = useRef<HTMLElement>(null);
-  const artifactRef = useRef<HTMLDivElement>(null);
+  const gridRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
     gsap.registerPlugin(ScrollTrigger);
 
     const ctx = gsap.context(() => {
-      if (artifactRef.current) {
-        // Entrance: slide in, rotate into soft spotlight
+      if (gridRef.current) {
         gsap.fromTo(
-          artifactRef.current,
+          gridRef.current.children,
+          { y: 30, opacity: 0 },
           {
-            x: 50,
-            y: 35,
-            rotateZ: activeAward.rotation * 1.8,
-            opacity: 0.25,
-            scale: 0.92,
-          },
-          {
-            x: 0,
             y: 0,
-            rotateZ: activeAward.rotation,
             opacity: 1,
-            scale: 1,
-            duration: 1.15,
-            ease: 'power3.out',
+            duration: 0.9,
+            stagger: 0.08,
+            ease: 'power2.out',
             scrollTrigger: {
-              trigger: artifactRef.current,
+              trigger: gridRef.current,
               start: 'top 85%',
               toggleActions: 'play none none reverse',
             },
@@ -94,197 +114,124 @@ export default function CredibilityTrust({ onOpenDrawer, onOpenProof }: Credibil
     }, sectionRef);
 
     return () => ctx.revert();
-  }, [currentIdx, activeAward.rotation]);
+  }, []);
 
-  const handleNext = () => {
-    if (artifactRef.current) {
-      gsap.to(artifactRef.current, {
-        x: -35,
-        opacity: 0.3,
-        duration: 0.22,
-        ease: 'power2.in',
-        onComplete: () => {
-          setCurrentIdx((prev) => (prev + 1) % AWARDS_LIST.length);
-          const nextAward = AWARDS_LIST[(currentIdx + 1) % AWARDS_LIST.length];
-          gsap.fromTo(
-            artifactRef.current,
-            { x: 45, opacity: 0.3, rotateZ: nextAward.rotation * 1.6 },
-            { x: 0, opacity: 1, rotateZ: nextAward.rotation, duration: 0.45, ease: 'power2.out' }
-          );
-        },
-      });
-    } else {
-      setCurrentIdx((prev) => (prev + 1) % AWARDS_LIST.length);
-    }
+  const filteredCards = activeTab === 'all'
+    ? PROOF_CARDS
+    : PROOF_CARDS.filter((card) => card.category === activeTab);
+
+  // Subtle 3D tilt on card hover
+  const handleCardMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (window.innerWidth < 960) return;
+    const card = e.currentTarget;
+    const rect = card.getBoundingClientRect();
+    const x = (e.clientX - rect.left) / rect.width - 0.5;
+    const y = (e.clientY - rect.top) / rect.height - 0.5;
+
+    gsap.to(card, {
+      rotateY: x * 5,
+      rotateX: -y * 5,
+      scale3d: 1.015,
+      duration: 0.35,
+      ease: 'power1.out',
+      transformPerspective: 1000,
+    });
   };
 
-  const handlePrev = () => {
-    if (artifactRef.current) {
-      gsap.to(artifactRef.current, {
-        x: 35,
-        opacity: 0.3,
-        duration: 0.22,
-        ease: 'power2.in',
-        onComplete: () => {
-          setCurrentIdx((prev) => (prev - 1 + AWARDS_LIST.length) % AWARDS_LIST.length);
-          const prevAward = AWARDS_LIST[(currentIdx - 1 + AWARDS_LIST.length) % AWARDS_LIST.length];
-          gsap.fromTo(
-            artifactRef.current,
-            { x: -45, opacity: 0.3, rotateZ: prevAward.rotation * 1.6 },
-            { x: 0, opacity: 1, rotateZ: prevAward.rotation, duration: 0.45, ease: 'power2.out' }
-          );
-        },
-      });
-    } else {
-      setCurrentIdx((prev) => (prev - 1 + AWARDS_LIST.length) % AWARDS_LIST.length);
-    }
+  const handleCardMouseLeave = (e: React.MouseEvent<HTMLDivElement>) => {
+    const card = e.currentTarget;
+    gsap.to(card, {
+      rotateY: 0,
+      rotateX: 0,
+      scale3d: 1,
+      duration: 0.5,
+      ease: 'power2.out',
+    });
   };
+
+  const tabs: { key: 'all' | 'awards' | 'certificates' | 'growth'; label: string }[] = [
+    { key: 'all', label: 'ALL PROOFS' },
+    { key: 'awards', label: 'AWARDS & HONORS' },
+    { key: 'certificates', label: 'CERTIFICATES' },
+    { key: 'growth', label: 'GROWTH & METRICS' },
+  ];
 
   return (
-    <section className="pro-section" id="proof" ref={sectionRef}>
-      <div className="pro-bg-radial" style={{ top: '20%', right: '15%' }} aria-hidden="true"></div>
-
+    <section className="pro-section pro-proof-section" id="proof" ref={sectionRef}>
       <div className="pro-container">
-        {/* Gallery Section Header: RECOGNIZED. */}
-        <div className="pro-awards-header">
+        {/* Section Header */}
+        <div className="pro-proof-header">
           <div className="pro-kicker-row" style={{ justifyContent: 'center' }}>
             <span className="pro-kicker-dot" aria-hidden="true"></span>
-            <span className="pro-kicker-text">05 // PHYSICAL EVIDENCE &amp; RECOGNITION</span>
+            <span className="pro-kicker-text">05 // VERIFIED PROOF OF WORK</span>
           </div>
 
-          <h2 className="pro-hook-headline" style={{ fontSize: 'clamp(2.6rem, 5.2vw, 4.6rem)', marginBottom: '0.4rem' }}>
-            RECOGNIZED.
+          <h2 className="pro-hook-headline" style={{ textAlign: 'center', marginInline: 'auto' }}>
+            RECOGNIZED &amp;<br />
+            <span style={{ color: '#d4af37' }}>VERIFIED.</span>
           </h2>
 
-          <p style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: '0.78rem', color: '#71717a', letterSpacing: '0.14em', textTransform: 'uppercase' }}>
-            GALLERY OF AUTHENTIC STAGE TROPHIES &amp; OFFICIAL CREDENTIALS
+          <p className="pro-hook-sub" style={{ textAlign: 'center', marginInline: 'auto', marginBottom: '2.5rem' }}>
+            Authentic stage trophies, official credentials, and live analytics validating real commercial outcomes.
           </p>
+
+          {/* Category Tabs */}
+          <div className="pro-proof-tabs">
+            {tabs.map((tab) => (
+              <button
+                key={tab.key}
+                type="button"
+                className={`pro-proof-tab-btn ${activeTab === tab.key ? 'active' : ''}`}
+                onClick={() => setActiveTab(tab.key)}
+              >
+                {tab.label}
+              </button>
+            ))}
+          </div>
         </div>
 
-        {/* Gallery Stage: One Award Object at a Time under Soft Directional Spotlight */}
-        <div className="pro-gallery-stage">
-          {/* Spotlight Hero Object Box */}
-          <div className="pro-artifact-spotlight-box">
-            <div className="pro-artifact-glow" aria-hidden="true"></div>
-
+        {/* Interactive Proof Cards Grid */}
+        <div className="pro-proof-grid" ref={gridRef}>
+          {filteredCards.map((card) => (
             <div
-              className="pro-artifact-frame"
-              ref={artifactRef}
-              style={{ transform: `rotate(${activeAward.rotation}deg)` }}
-              onClick={() => onOpenProof?.(activeAward.proofKey)}
+              key={card.id}
+              className="pro-proof-card"
+              onMouseMove={handleCardMouseMove}
+              onMouseLeave={handleCardMouseLeave}
+              onClick={() => onOpenProof?.(card.proofKey)}
               role="button"
               tabIndex={0}
               onKeyDown={(e) => {
                 if (e.key === 'Enter' || e.key === ' ') {
-                  onOpenProof?.(activeAward.proofKey);
+                  onOpenProof?.(card.proofKey);
                 }
               }}
-              aria-label={`Inspect ${activeAward.title}`}
+              aria-label={`Inspect ${card.title}`}
             >
-              <img
-                src={activeAward.image}
-                alt={activeAward.title}
-                loading="lazy"
-              />
+              {/* Media Container */}
+              <div className="pro-proof-card-media">
+                <img
+                  src={card.image}
+                  alt={card.title}
+                  loading="lazy"
+                  decoding="async"
+                />
+                <span className="pro-proof-tag">{card.tag}</span>
+                <div className="pro-proof-overlay">
+                  <span className="pro-proof-view-btn">
+                    VIEW PROOF ↗
+                  </span>
+                </div>
+              </div>
 
-              <div
-                style={{
-                  position: 'absolute',
-                  bottom: '1rem',
-                  right: '1rem',
-                  background: 'rgba(8, 8, 10, 0.85)',
-                  backdropFilter: 'blur(10px)',
-                  padding: '0.45rem 0.9rem',
-                  borderRadius: '999px',
-                  border: '1px solid rgba(212, 175, 55, 0.4)',
-                  fontFamily: 'var(--font-mono, monospace)',
-                  fontSize: '0.72rem',
-                  fontWeight: 700,
-                  color: '#d4af37',
-                  letterSpacing: '0.08em',
-                }}
-              >
-                VIEW PROOF ↗
+              {/* Text Meta */}
+              <div className="pro-proof-card-info">
+                <span className="pro-proof-cat-label">{card.categoryLabel}</span>
+                <h4 className="pro-proof-card-title">{card.title}</h4>
+                <p className="pro-proof-card-sub">{card.subtitle}</p>
               </div>
             </div>
-          </div>
-
-          {/* Label & Details Beside the Object */}
-          <div className="pro-artifact-info">
-            <span className="pro-artifact-num">{activeAward.num}</span>
-
-            <span
-              style={{
-                fontFamily: 'var(--font-mono, monospace)',
-                fontSize: '0.74rem',
-                color: '#d4af37',
-                letterSpacing: '0.14em',
-                textTransform: 'uppercase',
-                marginBottom: '0.4rem',
-              }}
-            >
-              {activeAward.category}
-            </span>
-
-            <h3 className="pro-artifact-title">{activeAward.title}</h3>
-
-            <div
-              style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '0.6rem',
-                padding: '0.35rem 0.75rem',
-                background: 'rgba(255, 255, 255, 0.05)',
-                border: '1px solid rgba(255, 255, 255, 0.1)',
-                borderRadius: '4px',
-                width: 'fit-content',
-                marginBottom: '1.5rem',
-              }}
-            >
-              <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#27c93f' }}></span>
-              <span style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: '0.72rem', color: '#f4f4f5', letterSpacing: '0.1em' }}>
-                {activeAward.year}
-              </span>
-            </div>
-
-            {/* Gallery Navigation Controls: Prev / Next */}
-            <div className="pro-gallery-controls">
-              <button
-                type="button"
-                className="pro-ctrl-btn"
-                onClick={handlePrev}
-                aria-label="Previous award"
-              >
-                ← PREV
-              </button>
-              <button
-                type="button"
-                className="pro-ctrl-btn"
-                onClick={handleNext}
-                aria-label="Next award"
-                style={{ borderColor: 'rgba(212, 175, 55, 0.4)', color: '#d4af37' }}
-              >
-                NEXT →
-              </button>
-            </div>
-
-            {/* Deep dive option */}
-            <div style={{ marginTop: '1.75rem' }}>
-              <button
-                type="button"
-                className="pro-btn-primary"
-                onClick={() => onOpenProof?.(activeAward.proofKey)}
-                style={{ fontSize: '0.74rem' }}
-              >
-                VIEW PROOF ↗
-              </button>
-            </div>
-          </div>
-        </div>
-
-        {/* Transition: Award artifact moves away as typography index enters */}
-        <div className="pro-trans-artifact-to-index" aria-hidden="true">
-          <div className="pro-trans-index-line"></div>
+          ))}
         </div>
       </div>
     </section>
