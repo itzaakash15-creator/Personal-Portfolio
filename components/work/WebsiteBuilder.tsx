@@ -20,7 +20,7 @@ export default function WebsiteBuilder({ onOpenDrawer, onOpenProof }: WebsiteBui
 
     const ctx = gsap.context(() => {
       if (canvasRef.current) {
-        // Perspective entrance: rotateX: 7deg, scale: 0.88, translateY: 80px -> settles to 0, 1, 0
+        // Perspective entrance: enters from perspective, settles to flat
         gsap.fromTo(
           canvasRef.current,
           {
@@ -49,7 +49,7 @@ export default function WebsiteBuilder({ onOpenDrawer, onOpenProof }: WebsiteBui
     return () => ctx.revert();
   }, []);
 
-  // Subtle pointer depth response (no exaggerated tilt)
+  // Subtle perspective response on cursor hover
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     if (!canvasRef.current || window.innerWidth < 960) return;
     const rect = canvasRef.current.getBoundingClientRect();
@@ -79,12 +79,11 @@ export default function WebsiteBuilder({ onOpenDrawer, onOpenProof }: WebsiteBui
 
   return (
     <section className="pro-section" id="web" data-alias="about" ref={sectionRef}>
-      {/* Anchor aliases for smooth navigation */}
       <span id="about" style={{ position: 'absolute', top: 0, left: 0, pointerEvents: 'none' }} aria-hidden="true"></span>
       <div className="pro-bg-radial" style={{ top: '10%', right: '10%' }} aria-hidden="true"></div>
 
       <div className="pro-container">
-        {/* Minimal Editorial Header */}
+        {/* Minimal Central Hook */}
         <div className="pro-web-layout">
           <div className="pro-web-header">
             <div className="pro-kicker-row" style={{ justifyContent: 'center' }}>
@@ -92,21 +91,22 @@ export default function WebsiteBuilder({ onOpenDrawer, onOpenProof }: WebsiteBui
               <span className="pro-kicker-text">03 // FUNCTIONAL CODE &amp; INTERFACES</span>
             </div>
 
-            <h2 className="pro-hook-headline" style={{ marginBottom: '0.8rem' }}>
-              WEBSITE<br />
-              <span style={{ color: '#d4af37' }}>BUILDER</span>
+            {/* Hook: IDEA → INTERFACE → LIVE. */}
+            <h2 className="pro-hook-headline" style={{ marginBottom: '0.6rem', textAlign: 'center' }}>
+              IDEA → INTERFACE →<br />
+              <span style={{ color: '#d4af37' }}>LIVE.</span>
             </h2>
 
-            <p className="pro-kicker-text" style={{ color: '#a1a1aa', letterSpacing: '0.22em', marginBottom: '0.75rem' }}>
-              DESIGN · BUILD · DEPLOY
+            <p style={{ fontFamily: 'var(--font-heading, "Syne", sans-serif)', fontSize: 'clamp(1.4rem, 2.8vw, 2.2rem)', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '-0.02em', color: '#ffffff', margin: '0 0 0.5rem 0' }}>
+              WEBSITE BUILDER
             </p>
 
-            <p style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: '0.82rem', color: '#71717a', textTransform: 'uppercase', letterSpacing: '0.12em' }}>
-              JAYASHAKTHI TOURS &amp; TRAVELS — LIVE COMMERCIAL PLATFORM
+            <p style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: '0.78rem', color: '#a1a1aa', letterSpacing: '0.18em', textTransform: 'uppercase', margin: 0 }}>
+              DESIGN · BUILD · DEPLOY
             </p>
           </div>
 
-          {/* Floating 3D Perspective Browser Canvas */}
+          {/* Central Visual: Real Jayashakthi Tours & Travels Website in 3D Browser Canvas */}
           <div
             className="pro-browser-stage"
             ref={browserStageRef}
@@ -124,7 +124,7 @@ export default function WebsiteBuilder({ onOpenDrawer, onOpenProof }: WebsiteBui
                   onOpenProof?.('jayashakthi-site');
                 }
               }}
-              aria-label="Inspect Jayashakthi Tours & Travels website"
+              aria-label="Inspect Jayashakthi Tours & Travels website proof"
             >
               {/* Browser Chrome Bar */}
               <div className="pro-browser-chrome">
@@ -154,7 +154,7 @@ export default function WebsiteBuilder({ onOpenDrawer, onOpenProof }: WebsiteBui
               <div className="pro-browser-body">
                 <img
                   src="/assets/proofs_optimized/jayashakthi_website.jpg"
-                  alt="Jayashakthi Tours & Travels Live Website Interface"
+                  alt="Jayashakthi Tours & Travels Live Production Website Interface"
                   loading="lazy"
                 />
 
@@ -164,14 +164,14 @@ export default function WebsiteBuilder({ onOpenDrawer, onOpenProof }: WebsiteBui
                     className="pro-btn-primary"
                     style={{ pointerEvents: 'none' }}
                   >
-                    INSPECT SYSTEM PROOF ↗
+                    INSPECT PROOF ↗
                   </span>
                 </div>
               </div>
             </div>
           </div>
 
-          {/* Minimal Credibility Actions */}
+          {/* Action CTAs */}
           <div className="pro-btn-cluster" style={{ justifyContent: 'center', marginTop: '2.5rem' }}>
             <a
               href="https://jayashakthitoursandtravels.com"

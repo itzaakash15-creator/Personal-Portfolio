@@ -32,7 +32,7 @@ export default function DigiMarketrix({ onOpenDrawer, onOpenProof }: DigiMarketr
           {
             y: '0%',
             opacity: 1,
-            duration: 1.0,
+            duration: 0.95,
             ease: 'power3.out',
             scrollTrigger: {
               trigger: sectionRef.current,
@@ -48,9 +48,9 @@ export default function DigiMarketrix({ onOpenDrawer, onOpenProof }: DigiMarketr
           {
             y: '0%',
             opacity: 1,
-            duration: 1.0,
+            duration: 0.95,
             ease: 'power3.out',
-            delay: 0.12,
+            delay: 0.1,
             scrollTrigger: {
               trigger: sectionRef.current,
               start: 'top 80%',
@@ -70,7 +70,7 @@ export default function DigiMarketrix({ onOpenDrawer, onOpenProof }: DigiMarketr
             y: 0,
             rotateZ: 0,
             opacity: 1,
-            duration: 1.25,
+            duration: 1.2,
             ease: 'power2.out',
             scrollTrigger: {
               trigger: mainVisual,
@@ -93,16 +93,16 @@ export default function DigiMarketrix({ onOpenDrawer, onOpenProof }: DigiMarketr
     const y = (e.clientY - rect.top) / rect.height - 0.5;
 
     gsap.to(mediaRef.current, {
-      x: x * 14,
-      y: y * 12,
+      x: x * 8,
+      y: y * 7,
       duration: 0.5,
       ease: 'power1.out',
     });
 
     if (depthLayerRef.current) {
       gsap.to(depthLayerRef.current, {
-        x: x * -18,
-        y: y * -16,
+        x: x * -10,
+        y: y * -9,
         duration: 0.6,
         ease: 'power1.out',
       });
@@ -129,11 +129,11 @@ export default function DigiMarketrix({ onOpenDrawer, onOpenProof }: DigiMarketr
           <div className="pro-digi-content">
             <div className="pro-kicker-row">
               <span className="pro-kicker-dot" aria-hidden="true"></span>
-              <span className="pro-kicker-text">01 // 3 YEARS · DIGITAL MARKETING</span>
+              <span className="pro-kicker-text">PROFESSIONAL EXPERIENCE / 01</span>
             </div>
 
             <h2 className="pro-hook-headline">
-              REAL WORK.<br />
+              3 YEARS.<br />
               <span style={{ color: '#d4af37' }}>REAL RESPONSIBILITY.</span>
             </h2>
 
@@ -146,15 +146,23 @@ export default function DigiMarketrix({ onOpenDrawer, onOpenProof }: DigiMarketr
               </div>
             </div>
 
-            {/* Typography-integrated factual markers (No generic cards) */}
-            <div className="pro-facts-row">
-              <div className="pro-fact-item">
-                <span className="pro-fact-num">03</span>
-                <span className="pro-fact-label">Years Agency Execution</span>
+            <p style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: '0.78rem', color: '#a1a1aa', letterSpacing: '0.14em', textTransform: 'uppercase', marginBottom: '1.25rem' }}>
+              DIGITAL MARKETING · CONTENT · INFLUENCER MARKETING
+            </p>
+
+            {/* Floating Factual Anchors (Not in generic cards) */}
+            <div className="pro-floating-anchors">
+              <div className="pro-anchor-tag">
+                <span className="anchor-bullet"></span>
+                <span>03 YEARS AGENCY</span>
               </div>
-              <div className="pro-fact-item">
-                <span className="pro-fact-num" style={{ color: '#ffffff' }}>CERTIFIED</span>
-                <span className="pro-fact-label">Full-Time Internship</span>
+              <div className="pro-anchor-tag">
+                <span className="anchor-bullet" style={{ background: '#ffffff', boxShadow: '0 0 8px rgba(255,255,255,0.6)' }}></span>
+                <span>INTERNSHIP</span>
+              </div>
+              <div className="pro-anchor-tag">
+                <span className="anchor-bullet"></span>
+                <span>TALENTRIX INITIATIVE</span>
               </div>
             </div>
 

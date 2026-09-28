@@ -7,7 +7,7 @@ export default function WorkTransition() {
       <div className="work-transition-phase" id="work-transition-phase">
         <div className="work-transition-kicker-mask">
           <span className="work-transition-label" id="work-kicker">
-            SELECTED WORK / 01
+            PROFESSIONAL EXPERIENCE / 01
           </span>
         </div>
         <div className="work-title-mask-line">
@@ -22,7 +22,7 @@ export default function WorkTransition() {
         </div>
         <div className="work-sub-mask-wrap">
           <p className="work-transition-subtitle" id="work-subtitle">
-            Digital Marketing &nbsp;·&nbsp; Strategy &nbsp;·&nbsp; Brand Growth
+            Digital Marketing &nbsp;·&nbsp; Content &nbsp;·&nbsp; Influencer Marketing
           </p>
         </div>
       </div>
@@ -31,8 +31,8 @@ export default function WorkTransition() {
       <div className="hero-project-approach-canvas" id="hero-project-approach" aria-hidden="true">
         <div className="project-approach-frame">
           <img
-            src="/assets/experience_digi_marketrix.jpg"
-            alt="Digi Marketrix Commercial Case Study Production"
+            src="/assets/proofs_optimized/digi_marketrix_office.jpg"
+            alt="Digi Marketrix Agency Studio Workplace and 3D Logo Wall"
             className="project-approach-img"
             id="project-approach-img"
           />

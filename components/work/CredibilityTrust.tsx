@@ -29,7 +29,7 @@ const AWARDS_LIST: AwardItem[] = [
     year: 'HONORS · VERIFIED',
     image: '/assets/proofs_optimized/award_1_business_excellence.jpg',
     proofKey: 'award-business-excellence',
-    rotation: 3,
+    rotation: 2.5,
   },
   {
     id: 'award-2',
@@ -39,7 +39,7 @@ const AWARDS_LIST: AwardItem[] = [
     year: '2025 · VERIFIED FIRST PLACE',
     image: '/assets/proofs_optimized/award_2_talent_competition.jpg',
     proofKey: 'award-talent-competition',
-    rotation: -2.5,
+    rotation: -2,
   },
   {
     id: 'award-3',
@@ -49,7 +49,7 @@ const AWARDS_LIST: AwardItem[] = [
     year: '2023 – 2026 · SIGNED BY CEO',
     image: '/assets/proofs_optimized/digi_marketrix_certificate.jpg',
     proofKey: 'digi-cert',
-    rotation: 2.5,
+    rotation: 2,
   },
 ];
 
@@ -65,15 +65,15 @@ export default function CredibilityTrust({ onOpenDrawer, onOpenProof }: Credibil
 
     const ctx = gsap.context(() => {
       if (artifactRef.current) {
-        // Entrance: slide in, rotate 2-4 deg, settle into soft spotlight
+        // Entrance: slide in, rotate into soft spotlight
         gsap.fromTo(
           artifactRef.current,
           {
-            x: 60,
-            y: 40,
-            rotateZ: activeAward.rotation * 2,
+            x: 50,
+            y: 35,
+            rotateZ: activeAward.rotation * 1.8,
             opacity: 0.25,
-            scale: 0.9,
+            scale: 0.92,
           },
           {
             x: 0,
@@ -96,20 +96,20 @@ export default function CredibilityTrust({ onOpenDrawer, onOpenProof }: Credibil
     return () => ctx.revert();
   }, [currentIdx, activeAward.rotation]);
 
-  // Next / Prev handlers with physics transition
   const handleNext = () => {
     if (artifactRef.current) {
       gsap.to(artifactRef.current, {
-        x: -40,
+        x: -35,
         opacity: 0.3,
-        duration: 0.25,
+        duration: 0.22,
         ease: 'power2.in',
         onComplete: () => {
           setCurrentIdx((prev) => (prev + 1) % AWARDS_LIST.length);
+          const nextAward = AWARDS_LIST[(currentIdx + 1) % AWARDS_LIST.length];
           gsap.fromTo(
             artifactRef.current,
-            { x: 50, opacity: 0.3, rotateZ: AWARDS_LIST[(currentIdx + 1) % AWARDS_LIST.length].rotation * 1.8 },
-            { x: 0, opacity: 1, rotateZ: AWARDS_LIST[(currentIdx + 1) % AWARDS_LIST.length].rotation, duration: 0.5, ease: 'power2.out' }
+            { x: 45, opacity: 0.3, rotateZ: nextAward.rotation * 1.6 },
+            { x: 0, opacity: 1, rotateZ: nextAward.rotation, duration: 0.45, ease: 'power2.out' }
           );
         },
       });
@@ -121,17 +121,17 @@ export default function CredibilityTrust({ onOpenDrawer, onOpenProof }: Credibil
   const handlePrev = () => {
     if (artifactRef.current) {
       gsap.to(artifactRef.current, {
-        x: 40,
+        x: 35,
         opacity: 0.3,
-        duration: 0.25,
+        duration: 0.22,
         ease: 'power2.in',
         onComplete: () => {
           setCurrentIdx((prev) => (prev - 1 + AWARDS_LIST.length) % AWARDS_LIST.length);
-          const nextAward = AWARDS_LIST[(currentIdx - 1 + AWARDS_LIST.length) % AWARDS_LIST.length];
+          const prevAward = AWARDS_LIST[(currentIdx - 1 + AWARDS_LIST.length) % AWARDS_LIST.length];
           gsap.fromTo(
             artifactRef.current,
-            { x: -50, opacity: 0.3, rotateZ: nextAward.rotation * 1.8 },
-            { x: 0, opacity: 1, rotateZ: nextAward.rotation, duration: 0.5, ease: 'power2.out' }
+            { x: -45, opacity: 0.3, rotateZ: prevAward.rotation * 1.6 },
+            { x: 0, opacity: 1, rotateZ: prevAward.rotation, duration: 0.45, ease: 'power2.out' }
           );
         },
       });
@@ -152,11 +152,11 @@ export default function CredibilityTrust({ onOpenDrawer, onOpenProof }: Credibil
             <span className="pro-kicker-text">05 // PHYSICAL EVIDENCE &amp; RECOGNITION</span>
           </div>
 
-          <h2 className="pro-hook-headline" style={{ fontSize: 'clamp(3rem, 7vw, 6.2rem)', marginBottom: '0.5rem' }}>
+          <h2 className="pro-hook-headline" style={{ fontSize: 'clamp(2.6rem, 5.2vw, 4.6rem)', marginBottom: '0.4rem' }}>
             RECOGNIZED.
           </h2>
 
-          <p style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: '0.8rem', color: '#71717a', letterSpacing: '0.14em', textTransform: 'uppercase' }}>
+          <p style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: '0.78rem', color: '#71717a', letterSpacing: '0.14em', textTransform: 'uppercase' }}>
             GALLERY OF AUTHENTIC STAGE TROPHIES &amp; OFFICIAL CREDENTIALS
           </p>
         </div>
@@ -204,7 +204,7 @@ export default function CredibilityTrust({ onOpenDrawer, onOpenProof }: Credibil
                   letterSpacing: '0.08em',
                 }}
               >
-                INSPECT ↗
+                VIEW PROOF ↗
               </div>
             </div>
           </div>
@@ -216,11 +216,11 @@ export default function CredibilityTrust({ onOpenDrawer, onOpenProof }: Credibil
             <span
               style={{
                 fontFamily: 'var(--font-mono, monospace)',
-                fontSize: '0.76rem',
+                fontSize: '0.74rem',
                 color: '#d4af37',
                 letterSpacing: '0.14em',
                 textTransform: 'uppercase',
-                marginBottom: '0.5rem',
+                marginBottom: '0.4rem',
               }}
             >
               {activeAward.category}
@@ -233,12 +233,12 @@ export default function CredibilityTrust({ onOpenDrawer, onOpenProof }: Credibil
                 display: 'inline-flex',
                 alignItems: 'center',
                 gap: '0.6rem',
-                padding: '0.4rem 0.8rem',
+                padding: '0.35rem 0.75rem',
                 background: 'rgba(255, 255, 255, 0.05)',
                 border: '1px solid rgba(255, 255, 255, 0.1)',
                 borderRadius: '4px',
                 width: 'fit-content',
-                marginBottom: '1.8rem',
+                marginBottom: '1.5rem',
               }}
             >
               <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#27c93f' }}></span>
@@ -269,14 +269,14 @@ export default function CredibilityTrust({ onOpenDrawer, onOpenProof }: Credibil
             </div>
 
             {/* Deep dive option */}
-            <div style={{ marginTop: '2rem' }}>
+            <div style={{ marginTop: '1.75rem' }}>
               <button
                 type="button"
-                className="pro-btn-outline"
-                onClick={() => onOpenDrawer?.('drawer-proof-vault')}
+                className="pro-btn-primary"
+                onClick={() => onOpenProof?.(activeAward.proofKey)}
                 style={{ fontSize: '0.74rem' }}
               >
-                VIEW FULL PROOF VAULT ↗
+                VIEW PROOF ↗
               </button>
             </div>
           </div>

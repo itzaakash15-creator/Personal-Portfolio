@@ -244,24 +244,121 @@ export default function HeroExperience() {
       CharacterController.init();
 
       // ======================================================================
-      // Cinematic Personal-Portfolio Poster Entrance (2–2.5 seconds total)
+      // Cinematic Personal-Portfolio Poster Entrance & Scroll Reversibility
       // ======================================================================
-      const settleHeroImmediately = () => {
+      const restoreHeroState = (smooth = true) => {
         CharacterController.isEntrancePlaying = false;
-        if (portfolioWord) {
-          portfolioWord.style.opacity = '0.92';
-          portfolioWord.style.clipPath = 'none';
-          portfolioWord.style.letterSpacing = '-0.055em';
-          portfolioWord.style.transform = 'translate(-50%, -50%)';
+
+        if (smooth) {
+          // Smooth return over 500–800ms equivalent visual motion (650ms, power2.out)
+          if (characterPortrait) {
+            gsap.to(characterPortrait, {
+              opacity: 1,
+              y: 0,
+              scale: 1,
+              duration: 0.65,
+              ease: 'power2.out',
+              overwrite: 'auto',
+              onStart: () => {
+                if (characterPortrait) {
+                  characterPortrait.style.visibility = 'visible';
+                  characterPortrait.style.display = 'block';
+                }
+              },
+            });
+          }
+
+          if (characterScene) {
+            gsap.to(characterScene, {
+              opacity: 1,
+              x: 0,
+              scale: 1,
+              duration: 0.65,
+              ease: 'power2.out',
+              overwrite: 'auto',
+              onStart: () => {
+                if (characterScene) {
+                  characterScene.style.visibility = 'visible';
+                  characterScene.style.display = 'flex';
+                }
+              },
+            });
+          }
+
+          if (radialLight) {
+            gsap.to(radialLight, {
+              opacity: 0.65,
+              x: 0,
+              scale: 1,
+              duration: 0.65,
+              ease: 'power2.out',
+              overwrite: 'auto',
+            });
+          }
+
+          if (portfolioWord) {
+            gsap.to(portfolioWord, {
+              opacity: 0.92,
+              scale: 1,
+              duration: 0.65,
+              ease: 'power2.out',
+              overwrite: 'auto',
+            });
+          }
+
+          if (leftFlank) {
+            gsap.to(leftFlank, {
+              opacity: 1,
+              x: 0,
+              duration: 0.65,
+              ease: 'power2.out',
+              overwrite: 'auto',
+            });
+          }
+
+          if (rightFlank) {
+            gsap.to(rightFlank, {
+              opacity: 1,
+              x: 0,
+              duration: 0.65,
+              ease: 'power2.out',
+              overwrite: 'auto',
+            });
+          }
+        } else {
+          // Immediate snap for instant initialization or bypass
+          if (characterPortrait) {
+            characterPortrait.style.opacity = '1';
+            characterPortrait.style.visibility = 'visible';
+            characterPortrait.style.display = 'block';
+            characterPortrait.style.transform = 'none';
+          }
+          if (characterScene) {
+            characterScene.style.opacity = '1';
+            characterScene.style.visibility = 'visible';
+            characterScene.style.display = 'flex';
+            characterScene.style.transform = 'none';
+          }
+          if (radialLight) {
+            radialLight.style.opacity = '0.65';
+            radialLight.style.transform = 'translate3d(-50%, -50%, 0)';
+          }
+          if (portfolioWord) {
+            portfolioWord.style.opacity = '0.92';
+            portfolioWord.style.clipPath = 'none';
+            portfolioWord.style.letterSpacing = '-0.055em';
+            portfolioWord.style.transform = 'translate(-50%, -50%)';
+          }
+          if (leftFlank) {
+            leftFlank.style.opacity = '1';
+            leftFlank.style.transform = 'none';
+          }
+          if (rightFlank) {
+            rightFlank.style.opacity = '1';
+            rightFlank.style.transform = 'none';
+          }
         }
-        if (characterPortrait) {
-          characterPortrait.style.opacity = '1';
-          characterPortrait.style.transform = 'none';
-        }
-        if (radialLight) {
-          radialLight.style.opacity = '0.65';
-          radialLight.style.transform = 'translate3d(-50%, -50%, 0)';
-        }
+
         if (leftLine) leftLine.style.transform = 'scaleX(1)';
         if (rightLine) rightLine.style.transform = 'scaleX(1)';
         [leftTag1, leftTag2, rightTag1, rightTag2].forEach((tag) => {
@@ -288,6 +385,10 @@ export default function HeroExperience() {
           if (sub) { sub.style.opacity = '1'; sub.style.transform = 'none'; }
         });
         CharacterController.requestTick();
+      };
+
+      const settleHeroImmediately = () => {
+        restoreHeroState(false);
       };
 
       if (prefersReducedMotion || window.scrollY > 40) {
@@ -435,6 +536,26 @@ export default function HeroExperience() {
             pin: true,
             scrub: 1.5,
             anticipatePin: 1,
+            onEnterBack: () => {
+              if (characterScene) {
+                characterScene.style.visibility = 'visible';
+                characterScene.style.display = 'flex';
+              }
+              if (characterPortrait) {
+                characterPortrait.style.visibility = 'visible';
+                characterPortrait.style.display = 'block';
+              }
+            },
+            onLeaveBack: () => {
+              // Returning completely to the Hero landing state
+              restoreHeroState(true);
+            },
+            onUpdate: (self) => {
+              // Smooth return when scrolling upward into the initial Hero state
+              if (self.direction === -1 && self.progress < 0.04) {
+                restoreHeroState(true);
+              }
+            },
           },
         });
 
@@ -511,7 +632,8 @@ export default function HeroExperience() {
             mouseX += (targetX - mouseX) * 0.08;
             mouseY += (targetY - mouseY) * 0.08;
 
-            if (characterPortrait && !CharacterController.isEntrancePlaying) {
+            // Only apply mouse parallax on portrait when in hero zone (< 120px) so it doesn't fight ScrollTrigger
+            if (characterPortrait && !CharacterController.isEntrancePlaying && window.scrollY < 120) {
               gsap.set(characterPortrait, {
                 x: mouseX * 3,
                 y: mouseY * 2.5,
@@ -675,6 +797,18 @@ export default function HeroExperience() {
           previewStage.style.transform = `translate(${(normX * 6).toFixed(1)}px, ${(normY * 4).toFixed(1)}px) scale(1) rotate(0deg)`;
         }, { passive: true });
       }
+
+      // Global top scroll return safety: ensures portrait, scene and lighting smoothly restore when returning to top
+      const handleScrollReturn = () => {
+        if (window.scrollY <= 40) {
+          const portraitOp = characterPortrait ? Number(gsap.getProperty(characterPortrait, 'opacity')) : 1;
+          const sceneOp = characterScene ? Number(gsap.getProperty(characterScene, 'opacity')) : 1;
+          if (portraitOp < 0.95 || sceneOp < 0.95) {
+            restoreHeroState(true);
+          }
+        }
+      };
+      window.addEventListener('scroll', handleScrollReturn, { passive: true });
     }, containerRef);
 
     return () => {

@@ -50,23 +50,24 @@
 
 .pro-hook-headline {
   font-family: var(--font-heading, 'Syne', sans-serif);
-  font-size: clamp(2.4rem, 5vw, 4.4rem);
+  font-size: clamp(2.2rem, 4.4vw, 3.8rem);
   font-weight: 800;
-  line-height: 1.05;
+  line-height: 0.96;
   letter-spacing: -0.035em;
   text-transform: uppercase;
   color: #ffffff;
-  margin-bottom: 1.5rem;
+  max-width: 14ch;
+  margin-bottom: 1.25rem;
 }
 
 .pro-hook-sub {
   font-family: var(--font-sans, 'Inter', sans-serif);
-  font-size: clamp(0.95rem, 1.2vw, 1.15rem);
+  font-size: clamp(0.92rem, 1.15vw, 1.05rem);
   color: #a1a1aa;
   font-weight: 400;
-  max-width: 48ch;
-  line-height: 1.6;
-  margin-bottom: 2rem;
+  max-width: 44ch;
+  line-height: 1.55;
+  margin-bottom: 1.75rem;
 }
 
 .pro-title-mask {
@@ -79,18 +80,18 @@
   flex-wrap: wrap;
   align-items: center;
   gap: 1rem;
-  margin-top: 2rem;
+  margin-top: 1.8rem;
 }
 
 .pro-btn-primary {
   display: inline-flex;
   align-items: center;
   gap: 0.6rem;
-  padding: 0.85rem 1.6rem;
+  padding: 0.8rem 1.5rem;
   background: #d4af37;
   color: #08080a;
   font-family: var(--font-mono, monospace);
-  font-size: 0.78rem;
+  font-size: 0.76rem;
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -113,11 +114,11 @@
   display: inline-flex;
   align-items: center;
   gap: 0.6rem;
-  padding: 0.85rem 1.6rem;
+  padding: 0.8rem 1.5rem;
   background: transparent;
   color: #ffffff;
   font-family: var(--font-mono, monospace);
-  font-size: 0.78rem;
+  font-size: 0.76rem;
   font-weight: 600;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -159,47 +160,48 @@
 
 .pro-digi-wordmark {
   font-family: var(--font-heading, 'Syne', sans-serif);
-  font-size: clamp(3.2rem, 6.8vw, 6.4rem);
+  font-size: clamp(2.8rem, 5.4vw, 4.8rem);
   font-weight: 800;
-  line-height: 0.92;
-  letter-spacing: -0.04em;
+  line-height: 0.94;
+  letter-spacing: -0.035em;
   text-transform: uppercase;
-  margin-bottom: 1.8rem;
+  margin-bottom: 1.25rem;
+  max-width: 10ch;
 }
 
 .pro-digi-wordmark span {
   display: block;
 }
 
-.pro-facts-row {
+/* Floating Factual Anchors: 3 YEARS · INTERNSHIP · TALENTRIX (Zero generic cards) */
+.pro-floating-anchors {
   display: flex;
-  align-items: baseline;
-  gap: 2rem;
-  margin-top: 1.5rem;
-  padding-top: 1.5rem;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1.5rem;
+  margin-top: 1.4rem;
+  padding-top: 1.25rem;
   border-top: 1px solid rgba(255, 255, 255, 0.08);
 }
 
-.pro-fact-item {
-  display: flex;
-  flex-direction: column;
-}
-
-.pro-fact-num {
-  font-family: var(--font-heading, 'Syne', sans-serif);
-  font-size: clamp(1.8rem, 2.8vw, 2.6rem);
-  font-weight: 800;
-  color: #d4af37;
-  line-height: 1;
-}
-
-.pro-fact-label {
+.pro-anchor-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
   font-family: var(--font-mono, monospace);
-  font-size: 0.72rem;
-  letter-spacing: 0.12em;
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: #a1a1aa;
-  margin-top: 0.35rem;
+  color: #f4f4f5;
+}
+
+.pro-anchor-tag .anchor-bullet {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #d4af37;
+  box-shadow: 0 0 8px #d4af37;
 }
 
 .pro-media-stage {
@@ -299,13 +301,13 @@
 
 .pro-talentrix-title {
   font-family: var(--font-heading, 'Syne', sans-serif);
-  font-size: clamp(3rem, 6.2vw, 5.8rem);
+  font-size: clamp(2.5rem, 4.8vw, 4.2rem);
   font-weight: 800;
-  line-height: 0.95;
+  line-height: 0.94;
   letter-spacing: -0.035em;
   text-transform: uppercase;
   color: #ffffff;
-  margin-bottom: 1.25rem;
+  margin-bottom: 1rem;
 }
 
 .pro-talentrix-poster {
@@ -343,12 +345,13 @@
 
 .pro-branding-hook-large {
   font-family: var(--font-heading, 'Syne', sans-serif);
-  font-size: clamp(2.8rem, 6vw, 5.2rem);
+  font-size: clamp(2.4rem, 4.6vw, 4.0rem);
   font-weight: 800;
-  line-height: 1.0;
+  line-height: 0.96;
   letter-spacing: -0.04em;
   text-transform: uppercase;
-  margin-bottom: 1.5rem;
+  margin-bottom: 1.25rem;
+  max-width: 12ch;
 }
 
 .pro-branding-triad {
@@ -682,21 +685,22 @@
 
 .pro-artifact-title {
   font-family: var(--font-heading, 'Syne', sans-serif);
-  font-size: clamp(2rem, 3.8vw, 3.2rem);
+  font-size: clamp(1.8rem, 3.2vw, 2.6rem);
   font-weight: 800;
-  line-height: 1.05;
+  line-height: 1.02;
   letter-spacing: -0.03em;
   text-transform: uppercase;
   color: #ffffff;
-  margin-bottom: 1rem;
+  margin-bottom: 0.85rem;
+  max-width: 18ch;
 }
 
 .pro-artifact-desc {
   font-family: var(--font-sans, 'Inter', sans-serif);
-  font-size: 0.98rem;
+  font-size: 0.95rem;
   color: #a1a1aa;
   line-height: 1.55;
-  margin-bottom: 1.75rem;
+  margin-bottom: 1.5rem;
 }
 
 .pro-gallery-controls {
@@ -766,11 +770,12 @@
 
 .pro-client-name {
   font-family: var(--font-heading, 'Syne', sans-serif);
-  font-size: clamp(1.6rem, 3.4vw, 3.2rem);
+  font-size: clamp(1.4rem, 2.6vw, 2.3rem);
   font-weight: 800;
-  letter-spacing: -0.03em;
+  letter-spacing: -0.025em;
   text-transform: uppercase;
   color: #ffffff;
+  line-height: 1.0;
 }
 
 .pro-client-service {

@@ -86,30 +86,31 @@ export default function LifeWithAakash({ onOpenProof }: LifeWithAakashProps) {
 
       <div className="pro-container">
         <div className="pro-lwa-grid">
-          {/* Left Column: Minimal Typography & Emotion */}
+          {/* Left Column: Hook + Title + Subtitle + Action */}
           <div className="pro-lwa-content">
             <div className="pro-kicker-row">
               <span className="pro-kicker-dot" aria-hidden="true"></span>
               <span className="pro-kicker-text">04 // VOICE · PURPOSE · INFLUENCE</span>
             </div>
 
-            <h2 className="pro-hook-headline" style={{ marginBottom: '1.2rem' }}>
-              LIFE WITH<br />
-              <span style={{ color: '#d4af37' }}>AAKASH</span>
+            {/* Hook: REACH PEOPLE. CONNECT WITH PEOPLE. */}
+            <h2 className="pro-hook-headline" style={{ marginBottom: '1rem' }}>
+              REACH PEOPLE.<br />
+              <span style={{ color: '#d4af37' }}>CONNECT WITH PEOPLE.</span>
             </h2>
 
-            <p className="pro-kicker-text" style={{ color: '#a1a1aa', letterSpacing: '0.2em', marginBottom: '1.5rem' }}>
-              LIFE · REFLECTION · MOTIVATION
+            <p style={{ fontFamily: 'var(--font-heading, "Syne", sans-serif)', fontSize: 'clamp(1.5rem, 3vw, 2.4rem)', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '-0.025em', color: '#ffffff', margin: '0 0 0.5rem 0' }}>
+              LIFE WITH AAKASH
             </p>
 
-            <p className="pro-hook-sub" style={{ marginBottom: '2rem' }}>
-              Spoken-word perspectives on discipline, mindset, and authentic self-mastery. Real engagement earned through conviction, not algorithms.
+            <p style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: '0.78rem', color: '#a1a1aa', letterSpacing: '0.18em', textTransform: 'uppercase', marginBottom: '1.75rem' }}>
+              REFLECTION · LIFE · MOTIVATION
             </p>
 
             {/* Credibility Signal */}
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '2rem' }}>
-              <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#d4af37', boxShadow: '0 0 12px #d4af37' }}></span>
-              <span style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: '0.78rem', color: '#f4f4f5', letterSpacing: '0.12em', fontWeight: 600 }}>
+              <span style={{ width: '7px', height: '7px', borderRadius: '50%', background: '#d4af37', boxShadow: '0 0 10px #d4af37' }}></span>
+              <span style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: '0.76rem', color: '#f4f4f5', letterSpacing: '0.12em', fontWeight: 600 }}>
                 59.1K+ ORGANIC PEAK VIEWERSHIP · ZERO PAID ADS
               </span>
             </div>
@@ -133,13 +134,13 @@ export default function LifeWithAakash({ onOpenProof }: LifeWithAakashProps) {
             </div>
           </div>
 
-          {/* Right Column: One Vertical Video Stage with Depth Peek */}
+          {/* Right Column: One Dominant Vertical Video + Background Supporting Layer */}
           <div
             className="pro-video-stage"
             onMouseMove={handleMouseMove}
             onMouseLeave={handleMouseLeave}
           >
-            {/* Subtle secondary depth layer behind */}
+            {/* Background supporting video layer */}
             <div
               ref={depthLayerRef}
               style={{
@@ -162,7 +163,7 @@ export default function LifeWithAakash({ onOpenProof }: LifeWithAakashProps) {
               aria-hidden="true"
             ></div>
 
-            {/* Main Vertical Video Frame */}
+            {/* Dominant Real Vertical Video Frame */}
             <div
               className="pro-video-frame"
               ref={videoFrameRef}
@@ -183,7 +184,7 @@ export default function LifeWithAakash({ onOpenProof }: LifeWithAakashProps) {
                 loading="lazy"
               />
 
-              {/* Play / Inspect Badge */}
+              {/* Play Badge */}
               <div className="pro-video-play-badge" aria-hidden="true">
                 ▶
               </div>

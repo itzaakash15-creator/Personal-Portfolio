@@ -17,7 +17,7 @@ export default function PersonalBranding({ onOpenDrawer, onOpenProof }: Personal
   const layer3Ref = useRef<HTMLDivElement>(null);
   const [activeWordIdx, setActiveWordIdx] = useState(0);
 
-  const triadWords = ['POSITION', 'CREATE', 'BUILD TRUST'];
+  const triadTerms = ['POSITION', 'CONTENT', 'TRUST'];
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
@@ -45,32 +45,34 @@ export default function PersonalBranding({ onOpenDrawer, onOpenProof }: Personal
       }
     }, sectionRef);
 
-    // Subtle sequential cycle for triad words
+    // Sequential subtle cycle for supporting terms
     const interval = setInterval(() => {
-      setActiveWordIdx((prev) => (prev + 1) % triadWords.length);
-    }, 2400);
+      setActiveWordIdx((prev) => (prev + 1) % triadTerms.length);
+    }, 2200);
 
     return () => {
       ctx.revert();
       clearInterval(interval);
     };
-  }, [triadWords.length]);
+  }, [triadTerms.length]);
 
-  // Differential 3-layer pointer parallax
+  // Differential 3-layer pointer parallax: front moves slightly, background moves less
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     if (!stackRef.current || window.innerWidth < 960) return;
     const rect = stackRef.current.getBoundingClientRect();
     const x = (e.clientX - rect.left) / rect.width - 0.5;
     const y = (e.clientY - rect.top) / rect.height - 0.5;
 
+    // Front media moves slightly
     if (layer1Ref.current) {
-      gsap.to(layer1Ref.current, { x: x * 20, y: y * 16, duration: 0.45, ease: 'power1.out' });
+      gsap.to(layer1Ref.current, { x: x * 14, y: y * 12, duration: 0.45, ease: 'power1.out' });
     }
+    // Background media moves less
     if (layer2Ref.current) {
-      gsap.to(layer2Ref.current, { x: 35 + x * 10, y: -15 + y * 8, duration: 0.55, ease: 'power1.out' });
+      gsap.to(layer2Ref.current, { x: 35 + x * 7, y: -15 + y * 6, duration: 0.55, ease: 'power1.out' });
     }
     if (layer3Ref.current) {
-      gsap.to(layer3Ref.current, { x: -35 + x * -6, y: 25 + y * -5, duration: 0.65, ease: 'power1.out' });
+      gsap.to(layer3Ref.current, { x: -35 + x * -4, y: 25 + y * -3, duration: 0.65, ease: 'power1.out' });
     }
   };
 
@@ -87,11 +89,11 @@ export default function PersonalBranding({ onOpenDrawer, onOpenProof }: Personal
 
       <div className="pro-container">
         <div className="pro-branding-wrapper">
-          {/* Left Column: Hook + Title + Triad Words + Action */}
+          {/* Left Column: Hook + Title + Supporting Terms + Action (Zero paragraphs) */}
           <div className="pro-branding-content">
             <div className="pro-kicker-row">
               <span className="pro-kicker-dot" aria-hidden="true"></span>
-              <span className="pro-kicker-text">02 // POSITIONING · CONTENT · IDENTITY</span>
+              <span className="pro-kicker-text">02 // STRATEGY &amp; POSITIONING</span>
             </div>
 
             <h2 className="pro-branding-hook-large">
@@ -99,24 +101,24 @@ export default function PersonalBranding({ onOpenDrawer, onOpenProof }: Personal
               <span style={{ color: '#d4af37' }}>&gt; ATTENTION</span>
             </h2>
 
-            <p className="pro-hook-sub" style={{ textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+            <p style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: '0.82rem', color: '#ffffff', letterSpacing: '0.14em', textTransform: 'uppercase', marginBottom: '1.5rem', fontWeight: 700 }}>
               PERSONAL BRANDING STRATEGIST
             </p>
 
-            {/* Three words sequence */}
+            {/* Small supporting terms only: POSITION · CONTENT · TRUST */}
             <div className="pro-branding-triad">
-              {triadWords.map((word, idx) => (
+              {triadTerms.map((term, idx) => (
                 <span
-                  key={word}
+                  key={term}
                   className="pro-triad-word"
                   style={{
-                    opacity: activeWordIdx === idx ? 1 : 0.4,
+                    opacity: activeWordIdx === idx ? 1 : 0.45,
                     borderColor: activeWordIdx === idx ? '#d4af37' : 'rgba(212, 175, 55, 0.15)',
                     transform: activeWordIdx === idx ? 'scale(1.05)' : 'scale(1)',
-                    transition: 'all 0.4s ease',
+                    transition: 'all 0.35s ease',
                   }}
                 >
-                  {word}
+                  {term}
                 </span>
               ))}
             </div>
@@ -139,14 +141,14 @@ export default function PersonalBranding({ onOpenDrawer, onOpenProof }: Personal
             </div>
           </div>
 
-          {/* Right Column: Floating 3-Layer Spatial Reel Composition */}
+          {/* Right Column: Layered Media Canvas (3 Real Reels / Campaigns) */}
           <div
             className="pro-spatial-reel-stack"
             ref={stackRef}
             onMouseMove={handleMouseMove}
             onMouseLeave={handleMouseLeave}
           >
-            {/* Deep Layer 3 (Left edge) */}
+            {/* Deep layer 3 (Left edge) */}
             <div className="pro-reel-layer pro-reel-layer-3" ref={layer3Ref} aria-hidden="true">
               <img
                 src="/assets/proofs_optimized/chinnadurai_scripting.jpg"
