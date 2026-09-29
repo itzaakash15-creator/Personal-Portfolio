@@ -2,6 +2,7 @@
 
 import React, { useState, useCallback, useEffect } from 'react';
 import Navbar from '../components/Navbar';
+import SharedPortraitBridge from '../components/hero/SharedPortraitBridge';
 import HeroExperience from '../components/hero/HeroExperience';
 import IdentityExperience from '../components/identity/IdentityExperience';
 import ExecutiveHook from '../components/work/ExecutiveHook';
@@ -288,6 +289,9 @@ export default function HomePage() {
     <main className="main-content-flow">
       {/* 1. Navigation */}
       <Navbar />
+
+      {/* Shared Continuous Portrait Bridge (Hero -> Identity -> Gradual Exit) */}
+      <SharedPortraitBridge />
 
       {/* 2. Isolated Cinematic Hero Experience */}
       <HeroExperience />

@@ -383,6 +383,89 @@
   justify-content: center;
 }
 
+/* ==========================================================================
+   Shared Portrait Bridge — Cinematic Hero → Role Continuity
+   Single continuous portrait across Hero and Identity experiences
+   ========================================================================== */
+.shared-portrait-container {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 6;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  overflow: visible;
+  visibility: visible;
+}
+
+.shared-portrait-stage {
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  width: clamp(380px, 40vw, 640px);
+  margin-inline: auto;
+  flex-shrink: 0;
+  will-change: transform, opacity;
+}
+
+.portrait-dissolve-wrapper {
+  position: relative;
+  width: 100%;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  will-change: transform, opacity;
+}
+
+.portrait-gradient-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to top,
+    var(--bg-primary) 0%,
+    rgba(10, 10, 12, 0.96) 38%,
+    rgba(10, 10, 12, 0.6) 65%,
+    transparent 100%
+  );
+  opacity: 0;
+  pointer-events: none;
+  z-index: 6;
+  will-change: opacity;
+}
+
+.aakash-rim-light {
+  position: absolute;
+  top: 35%;
+  right: -25px;
+  width: clamp(260px, 30vw, 440px);
+  height: clamp(340px, 40vh, 520px);
+  background: radial-gradient(
+    ellipse at center,
+    rgba(212, 175, 55, 0.15) 0%,
+    rgba(212, 175, 55, 0.04) 50%,
+    transparent 75%
+  );
+  filter: blur(35px);
+  opacity: 0;
+  pointer-events: none;
+  z-index: 4;
+  will-change: opacity;
+}
+
+.hero-portrait-spacer {
+  width: clamp(380px, 40vw, 640px);
+  height: clamp(520px, 78vh, 880px);
+  max-height: 82vh;
+  visibility: hidden;
+  pointer-events: none;
+  flex-shrink: 0;
+}
+
 .hero-poster-portrait {
   position: relative;
   z-index: 5;
@@ -728,12 +811,6 @@
   overflow: hidden;
   z-index: 5;
   border-bottom: 1px solid var(--border-subtle);
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.35s ease;
-}
-
-.identity-section.is-active {
   opacity: 1;
   pointer-events: auto;
 }
@@ -3100,6 +3177,17 @@ textarea.form-input-clean {
     height: auto;
     opacity: 1;
     margin-inline: auto;
+  }
+  .hero-portrait-spacer {
+    height: clamp(320px, 56vh, 500px);
+    max-height: 56vh;
+    width: 100%;
+    max-width: 440px;
+    margin-inline: auto;
+  }
+  .shared-portrait-stage {
+    max-width: 440px;
+    width: 100%;
   }
   .hero-flank-left {
     order: 2;
