@@ -124,14 +124,8 @@ export default function HomePage() {
 
       const isHeroTarget = targetEl.id === 'hero' || targetEl.id === 'hero-experience';
 
-      if (isHeroTarget) {
-        if (typeof window !== 'undefined' && (window as any).__restoreHeroState) {
-          (window as any).__restoreHeroState(false);
-        }
-      } else {
-        if (typeof ScrollTrigger !== 'undefined') {
-          ScrollTrigger.refresh();
-        }
+      if (!isHeroTarget && typeof ScrollTrigger !== 'undefined') {
+        ScrollTrigger.refresh();
       }
 
       const headerOffset = 90;
@@ -152,9 +146,6 @@ export default function HomePage() {
 
       if (Math.abs(distance) < 5) {
         window.scrollTo(0, targetPos);
-        if (isHeroTarget && typeof window !== 'undefined' && (window as any).__restoreHeroState) {
-          (window as any).__restoreHeroState(true);
-        }
         if (typeof ScrollTrigger !== 'undefined') {
           ScrollTrigger.update();
         }
@@ -166,9 +157,6 @@ export default function HomePage() {
         window.scrollTo({ top: targetPos, behavior: 'instant' });
         if (typeof ScrollTrigger !== 'undefined') {
           ScrollTrigger.update();
-        }
-        if (isHeroTarget && typeof window !== 'undefined' && (window as any).__restoreHeroState) {
-          (window as any).__restoreHeroState(true);
         }
         return;
       }
@@ -196,9 +184,6 @@ export default function HomePage() {
           isNavScrolling = false;
           if (typeof ScrollTrigger !== 'undefined') {
             ScrollTrigger.update();
-          }
-          if (isHeroTarget && typeof window !== 'undefined' && (window as any).__restoreHeroState) {
-            (window as any).__restoreHeroState(true);
           }
           updateActiveNav();
         }
@@ -253,9 +238,6 @@ export default function HomePage() {
     function handleInitialHash() {
       if (window.location.hash === '#hero') {
         window.scrollTo(0, 0);
-        if (typeof window !== 'undefined' && (window as any).__restoreHeroState) {
-          (window as any).__restoreHeroState(true);
-        }
         if (typeof ScrollTrigger !== 'undefined') {
           ScrollTrigger.update();
         }

@@ -174,11 +174,11 @@
 /* LAYER 3: Enormous Background Typography AAKASH */
 .hero-poster-wordmark {
   position: absolute;
-  top: 42%;
+  top: 38%;
   left: 50%;
   transform: translate(-50%, -50%);
   font-family: var(--font-sans);
-  font-size: clamp(7.5rem, 18vw, 19.5rem);
+  font-size: clamp(8rem, 17vw, 18rem);
   font-weight: 900;
   line-height: 0.82;
   letter-spacing: -0.04em;
@@ -188,8 +188,8 @@
   pointer-events: none;
   z-index: 2;
   color: transparent;
-  -webkit-text-stroke: 1.5px rgba(255, 255, 255, 0.08);
-  background: linear-gradient(180deg, rgba(216, 195, 165, 0.16) 0%, rgba(255, 255, 255, 0.05) 45%, rgba(10, 10, 12, 0.01) 100%);
+  -webkit-text-stroke: 1.2px rgba(255, 255, 255, 0.08);
+  background: linear-gradient(180deg, rgba(216, 195, 165, 0.14) 0%, rgba(255, 255, 255, 0.04) 45%, rgba(10, 10, 12, 0.01) 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   will-change: transform, opacity;
