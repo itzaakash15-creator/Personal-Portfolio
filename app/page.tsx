@@ -122,13 +122,21 @@ export default function HomePage() {
     function scrollToAnchor(targetEl: HTMLElement, smooth = true) {
       if (!targetEl) return;
 
-      if (typeof ScrollTrigger !== 'undefined') {
-        ScrollTrigger.refresh();
+      const isHeroTarget = targetEl.id === 'hero' || targetEl.id === 'hero-experience';
+
+      if (isHeroTarget) {
+        if (typeof window !== 'undefined' && (window as any).__restoreHeroState) {
+          (window as any).__restoreHeroState(false);
+        }
+      } else {
+        if (typeof ScrollTrigger !== 'undefined') {
+          ScrollTrigger.refresh();
+        }
       }
 
       const headerOffset = 90;
       const rect = targetEl.getBoundingClientRect();
-      const targetPos = Math.max(0, rect.top + window.scrollY - headerOffset);
+      const targetPos = isHeroTarget ? 0 : Math.max(0, rect.top + window.scrollY - headerOffset);
 
       // Update active nav link immediately to match target
       const targetId = targetEl.id;
@@ -139,18 +147,34 @@ export default function HomePage() {
         link.classList.toggle('active', href === mappedTarget);
       });
 
+      const startPos = window.scrollY;
+      const distance = targetPos - startPos;
+
+      if (Math.abs(distance) < 5) {
+        window.scrollTo(0, targetPos);
+        if (isHeroTarget && typeof window !== 'undefined' && (window as any).__restoreHeroState) {
+          (window as any).__restoreHeroState(true);
+        }
+        if (typeof ScrollTrigger !== 'undefined') {
+          ScrollTrigger.update();
+        }
+        updateActiveNav();
+        return;
+      }
+
       if (!smooth) {
         window.scrollTo({ top: targetPos, behavior: 'instant' });
         if (typeof ScrollTrigger !== 'undefined') {
-          ScrollTrigger.refresh();
+          ScrollTrigger.update();
+        }
+        if (isHeroTarget && typeof window !== 'undefined' && (window as any).__restoreHeroState) {
+          (window as any).__restoreHeroState(true);
         }
         return;
       }
 
       isNavScrolling = true;
-      const startPos = window.scrollY;
-      const distance = targetPos - startPos;
-      const duration = Math.min(850, Math.max(400, Math.abs(distance) * 0.045));
+      const duration = Math.min(750, Math.max(400, Math.abs(distance) * 0.045));
       let startTime: number | null = null;
 
       function step(timestamp: number) {
@@ -171,7 +195,10 @@ export default function HomePage() {
           window.scrollTo(0, targetPos);
           isNavScrolling = false;
           if (typeof ScrollTrigger !== 'undefined') {
-            ScrollTrigger.refresh();
+            ScrollTrigger.update();
+          }
+          if (isHeroTarget && typeof window !== 'undefined' && (window as any).__restoreHeroState) {
+            (window as any).__restoreHeroState(true);
           }
           updateActiveNav();
         }
@@ -203,10 +230,11 @@ export default function HomePage() {
         }
       }
 
-      // Smooth anchor scrolling with pin awareness
-      const anchor = target.closest('a[href^="#"]') as HTMLAnchorElement | null;
+      // Smooth anchor scrolling with pin awareness (supports both '#hero' and '/#hero')
+      const anchor = target.closest('a[href^="#"], a[href^="/#"]') as HTMLAnchorElement | null;
       if (anchor) {
-        const href = anchor.getAttribute('href');
+        const rawHref = anchor.getAttribute('href') || '';
+        const href = rawHref.replace(/^\//, '');
         if (!href || href === '#') return;
         const targetEl = document.querySelector(href) as HTMLElement | null;
         if (targetEl) {
@@ -223,6 +251,16 @@ export default function HomePage() {
 
     // Handle URL hash on initial page load (prevent getting trapped in pinned hero spacer)
     function handleInitialHash() {
+      if (window.location.hash === '#hero') {
+        window.scrollTo(0, 0);
+        if (typeof window !== 'undefined' && (window as any).__restoreHeroState) {
+          (window as any).__restoreHeroState(true);
+        }
+        if (typeof ScrollTrigger !== 'undefined') {
+          ScrollTrigger.update();
+        }
+        return;
+      }
       if (window.location.hash && window.location.hash !== '#') {
         const targetEl = document.querySelector(window.location.hash) as HTMLElement | null;
         if (targetEl) {
@@ -242,6 +280,11 @@ export default function HomePage() {
 
     handleInitialHash();
     const onHashChange = () => {
+      if (window.location.hash === '#hero') {
+        const heroEl = document.getElementById('hero') || document.getElementById('hero-experience');
+        if (heroEl) scrollToAnchor(heroEl, true);
+        return;
+      }
       if (window.location.hash && window.location.hash !== '#') {
         const targetEl = document.querySelector(window.location.hash) as HTMLElement | null;
         if (targetEl) {

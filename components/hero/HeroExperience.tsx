@@ -13,6 +13,7 @@ import { buildWorkTransitionTimeline } from '../work/workTransitionTimeline';
 
 export default function HeroExperience() {
   const containerRef = useRef<HTMLDivElement>(null);
+  const desktopTlRef = useRef<gsap.core.Timeline | null>(null);
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
@@ -23,7 +24,10 @@ export default function HeroExperience() {
       const wrapper = document.getElementById('hero-experience');
       const leftFlank = document.getElementById('hero-left-flank');
       const rightFlank = document.getElementById('hero-right-flank');
-      const portfolioWord = document.getElementById('hero-portfolio-wordmark');
+      const wordmark =
+        document.getElementById('hero-bg-wordmark') ||
+        document.getElementById('hero-portfolio-wordmark') ||
+        (document.querySelector('.hero-poster-wordmark') as HTMLElement | null);
       const radialLight = document.getElementById('hero-radial-light');
       const characterScene = document.getElementById('character-scene');
       const characterStage = document.getElementById('character-stage');
@@ -59,7 +63,7 @@ export default function HeroExperience() {
       const workTransition = document.getElementById('work-transition-phase');
       const projectApproach = document.getElementById('hero-project-approach');
 
-      // Flank elements for entrance
+      // Flank elements for entrance & restoration
       const leftLine = document.querySelector('.tag-accent-line-left') as HTMLElement | null;
       const leftTag1 = document.querySelector('#hero-left-tags .tag-item-1') as HTMLElement | null;
       const leftTag2 = document.querySelector('#hero-left-tags .tag-item-2') as HTMLElement | null;
@@ -77,85 +81,252 @@ export default function HeroExperience() {
       const anchorItems = document.querySelectorAll('.hero-anchor-item');
 
       const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-      const isTouch = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+      const isHashHero =
+        typeof window !== 'undefined' &&
+        (window.location.hash === '#hero' || window.location.hash === '#hero-experience');
 
       // ======================================================================
-      // 1. Initial State Settlement
+      // 1. One Canonical Hero Rest State Function
       // ======================================================================
-      const settleHeroState = () => {
-        if (characterPortrait) {
-          gsap.set(characterPortrait, {
-            opacity: 1,
-            y: 0,
-            scale: 1,
-            clearProps: 'clipPath,transform',
-          });
-          characterPortrait.style.visibility = 'visible';
-          characterPortrait.style.display = 'block';
+      let isFirstLoadRunning = false;
+      let entranceTl: gsap.core.Timeline | null = null;
+
+      const restoreHeroState = (immediate = true) => {
+        // If an explicit restoration is called, kill any lingering entrance timeline
+        if (entranceTl && entranceTl.isActive()) {
+          entranceTl.kill();
         }
-        if (characterScene) {
-          gsap.set(characterScene, {
+        isFirstLoadRunning = false;
+
+        // Kill any lagging scrub tween from ScrollTrigger so it cannot overwrite our values
+        if (desktopTlRef.current) {
+          const st = desktopTlRef.current.scrollTrigger as any;
+          if (st) {
+            const scrub = st.getTween?.();
+            if (scrub) {
+              scrub.pause();
+              scrub.kill();
+            }
+          }
+          desktopTlRef.current.progress(0, true);
+        }
+
+        // Kill any conflicting tweens specifically on Hero elements
+        gsap.killTweensOf([
+          characterPortrait,
+          characterScene,
+          wordmark,
+          radialLight,
+          leftFlank,
+          rightFlank,
+        ]);
+
+        // Ensure any stored role cards from identity scroll section are unstored
+        [frame1, frame2, frame3, frame4].forEach((f) => {
+          f?.classList.remove('is-stored');
+        });
+
+        const approvedWordmarkOpacity = window.innerWidth <= 960 ? 0.15 : 0.92;
+
+        if (immediate) {
+          // Aakash Portrait: opacity 1, visible, display block, scale 1, pos 0
+          if (characterPortrait) {
+            gsap.set(characterPortrait, {
+              opacity: 1,
+              x: 0,
+              y: 0,
+              scale: 1,
+              rotation: 0,
+              clearProps: 'clipPath',
+            });
+            characterPortrait.style.visibility = 'visible';
+            characterPortrait.style.display = 'block';
+          }
+
+          // Character Scene & Stage
+          if (characterScene) {
+            gsap.set(characterScene, {
+              opacity: 1,
+              x: 0,
+              y: 0,
+              scale: 1,
+            });
+            characterScene.style.visibility = 'visible';
+            characterScene.style.display = 'flex';
+          }
+          if (characterStage) {
+            characterStage.style.transform = 'none';
+          }
+
+          // Contact Shadow
+          if (aakashShadow) {
+            gsap.set(aakashShadow, { opacity: 1 });
+            aakashShadow.style.visibility = 'visible';
+          }
+
+          // Background Wordmark (AAKASH)
+          if (wordmark) {
+            gsap.set(wordmark, {
+              opacity: approvedWordmarkOpacity,
+              scale: 1,
+              x: 0,
+              y: 0,
+              letterSpacing: window.innerWidth <= 960 ? '-0.03em' : '-0.04em',
+              clearProps: 'clipPath',
+            });
+            wordmark.style.visibility = 'visible';
+            wordmark.style.display = 'block';
+          }
+
+          // Radial Lighting
+          if (radialLight) {
+            gsap.set(radialLight, {
+              opacity: 0.65,
+              x: 0,
+              y: 0,
+              scale: 1,
+            });
+            radialLight.style.visibility = 'visible';
+          }
+
+          // Left & Right Flanks
+          if (leftFlank) {
+            gsap.set(leftFlank, { opacity: 1, x: 0 });
+            leftFlank.style.visibility = 'visible';
+          }
+          if (rightFlank) {
+            gsap.set(rightFlank, { opacity: 1, x: 0 });
+            rightFlank.style.visibility = 'visible';
+          }
+
+          // Flank Children & Details
+          if (leftLine) leftLine.style.transform = 'scaleX(1)';
+          if (rightLine) rightLine.style.transform = 'scaleX(1)';
+          [leftTag1, leftTag2, rightTag1, rightTag2].forEach((tag) => {
+            if (tag) {
+              tag.style.clipPath = 'none';
+              tag.style.opacity = '1';
+              tag.style.transform = 'none';
+            }
+          });
+          [leftSep, rightSep, greeting, positioning, ctaCluster, rightMantra].forEach((el) => {
+            if (el) {
+              el.style.opacity = '1';
+              el.style.transform = 'none';
+            }
+          });
+          anchorItems.forEach((anchor, idx) => {
+            const num = anchor.querySelector('.anchor-index') as HTMLElement | null;
+            const line = anchor.querySelector('.anchor-line') as HTMLElement | null;
+            const title = anchor.querySelector('.anchor-title') as HTMLElement | null;
+            const sub = anchor.querySelector('.anchor-sub') as HTMLElement | null;
+            if (num) { num.style.opacity = '1'; num.style.transform = 'none'; }
+            if (line) line.style.transform = idx === 0 ? 'scaleX(1)' : 'scaleX(0.35)';
+            if (title) { title.style.clipPath = 'none'; title.style.opacity = '1'; title.style.transform = 'none'; }
+            if (sub) { sub.style.opacity = '1'; sub.style.transform = 'none'; }
+          });
+        } else {
+          // Smooth return transition (500–700ms equivalent motion with premium easing)
+          if (characterPortrait) {
+            characterPortrait.style.visibility = 'visible';
+            characterPortrait.style.display = 'block';
+          }
+          if (characterScene) {
+            characterScene.style.visibility = 'visible';
+            characterScene.style.display = 'flex';
+          }
+          if (wordmark) {
+            wordmark.style.visibility = 'visible';
+            wordmark.style.display = 'block';
+          }
+          if (radialLight) radialLight.style.visibility = 'visible';
+          if (leftFlank) leftFlank.style.visibility = 'visible';
+          if (rightFlank) rightFlank.style.visibility = 'visible';
+
+          gsap.to(characterPortrait, {
             opacity: 1,
             x: 0,
+            y: 0,
             scale: 1,
+            rotation: 0,
+            duration: 0.6,
+            ease: 'power2.out',
           });
-          characterScene.style.visibility = 'visible';
-          characterScene.style.display = 'flex';
-        }
-        if (radialLight) {
-          gsap.set(radialLight, { opacity: 0.65, x: 0, scale: 1 });
-        }
-        if (portfolioWord) {
-          gsap.set(portfolioWord, {
-            opacity: 0.92,
-            scale: 1,
-            letterSpacing: '-0.055em',
-            clearProps: 'clipPath',
-          });
-        }
-        if (leftFlank) gsap.set(leftFlank, { opacity: 1, x: 0 });
-        if (rightFlank) gsap.set(rightFlank, { opacity: 1, x: 0 });
 
-        if (leftLine) leftLine.style.transform = 'scaleX(1)';
-        if (rightLine) rightLine.style.transform = 'scaleX(1)';
-        [leftTag1, leftTag2, rightTag1, rightTag2].forEach((tag) => {
-          if (tag) {
-            tag.style.clipPath = 'none';
-            tag.style.opacity = '1';
-            tag.style.transform = 'none';
-          }
-        });
-        [leftSep, rightSep, greeting, positioning, ctaCluster, rightMantra].forEach((el) => {
-          if (el) {
-            el.style.opacity = '1';
-            el.style.transform = 'none';
-          }
-        });
-        anchorItems.forEach((anchor, idx) => {
-          const num = anchor.querySelector('.anchor-index') as HTMLElement | null;
-          const line = anchor.querySelector('.anchor-line') as HTMLElement | null;
-          const title = anchor.querySelector('.anchor-title') as HTMLElement | null;
-          const sub = anchor.querySelector('.anchor-sub') as HTMLElement | null;
-          if (num) { num.style.opacity = '1'; num.style.transform = 'none'; }
-          if (line) line.style.transform = idx === 0 ? 'scaleX(1)' : 'scaleX(0.35)';
-          if (title) { title.style.clipPath = 'none'; title.style.opacity = '1'; title.style.transform = 'none'; }
-          if (sub) { sub.style.opacity = '1'; sub.style.transform = 'none'; }
-        });
+          gsap.to(characterScene, {
+            opacity: 1,
+            x: 0,
+            y: 0,
+            scale: 1,
+            duration: 0.6,
+            ease: 'power2.out',
+          });
+
+          if (characterStage) characterStage.style.transform = 'none';
+
+          gsap.to(wordmark, {
+            opacity: approvedWordmarkOpacity,
+            scale: 1,
+            duration: 0.6,
+            ease: 'power2.out',
+          });
+
+          gsap.to(radialLight, {
+            opacity: 0.65,
+            x: 0,
+            scale: 1,
+            duration: 0.6,
+            ease: 'power2.out',
+          });
+
+          gsap.to([leftFlank, rightFlank], {
+            opacity: 1,
+            x: 0,
+            duration: 0.5,
+            ease: 'power2.out',
+          });
+
+          // Ensure flank details are visible
+          if (leftLine) leftLine.style.transform = 'scaleX(1)';
+          if (rightLine) rightLine.style.transform = 'scaleX(1)';
+          [leftTag1, leftTag2, rightTag1, rightTag2, leftSep, rightSep, greeting, positioning, ctaCluster, rightMantra].forEach((el) => {
+            if (el) {
+              el.style.opacity = '1';
+              el.style.transform = 'none';
+            }
+          });
+        }
+
+        if (typeof ScrollTrigger !== 'undefined') {
+          ScrollTrigger.update();
+        }
       };
+
+      // Expose canonical restoration function for navbar-brand click and route return
+      (window as any).__restoreHeroState = (immediate = false) => {
+        restoreHeroState(immediate);
+      };
+
+      const onHeroRestoreEvent = (e: Event) => {
+        const detail = (e as CustomEvent).detail;
+        restoreHeroState(detail?.immediate ?? false);
+      };
+      window.addEventListener('hero:restore', onHeroRestoreEvent);
 
       // ======================================================================
       // 2. First-Load Hero Entrance (GPU-friendly, transforms + opacity)
       // ======================================================================
-      let entranceTl: gsap.core.Timeline | null = null;
-
-      if (prefersReducedMotion || window.scrollY > 40) {
-        settleHeroState();
+      if (prefersReducedMotion || window.scrollY > 40 || isHashHero) {
+        isFirstLoadRunning = false;
+        restoreHeroState(true);
       } else {
+        isFirstLoadRunning = true;
+
         if (radialLight) radialLight.style.opacity = '0.08';
-        if (portfolioWord) {
-          portfolioWord.style.opacity = '0';
-          portfolioWord.style.letterSpacing = '0.04em';
-          portfolioWord.style.clipPath = 'inset(100% 0% 0% 0%)';
+        if (wordmark) {
+          wordmark.style.opacity = '0';
+          wordmark.style.letterSpacing = '0.04em';
+          wordmark.style.clipPath = 'inset(100% 0% 0% 0%)';
         }
         if (characterPortrait) {
           characterPortrait.style.opacity = '0';
@@ -191,36 +362,43 @@ export default function HeroExperience() {
 
         entranceTl = gsap.timeline({
           onComplete: () => {
-            settleHeroState();
+            isFirstLoadRunning = false;
+            restoreHeroState(true);
           },
         });
 
-        // 1. PORTFOLIO mask-reveal
-        entranceTl.fromTo(
-          portfolioWord,
-          { opacity: 0, clipPath: 'inset(100% 0% 0% 0%)', letterSpacing: '0.04em' },
-          { opacity: 0.92, clipPath: 'inset(0% 0% 0% 0%)', letterSpacing: '-0.055em', duration: 0.7, ease: 'power3.out' },
-          0.2
-        );
+        // 1. Background AAKASH wordmark mask-reveal
+        if (wordmark) {
+          entranceTl.fromTo(
+            wordmark,
+            { opacity: 0, clipPath: 'inset(100% 0% 0% 0%)', letterSpacing: '0.04em' },
+            { opacity: 0.92, clipPath: 'inset(0% 0% 0% 0%)', letterSpacing: '-0.04em', duration: 0.7, ease: 'power3.out' },
+            0.2
+          );
+        }
 
-        // 2. AAKASH rises from below (85vh -> 0)
-        entranceTl.fromTo(
-          characterPortrait,
-          { y: '85vh', opacity: 0, scale: 0.97 },
-          { y: '0%', opacity: 1, scale: 1, duration: 1.1, ease: 'power3.out' },
-          0.5
-        );
-        entranceTl.to(characterPortrait, { y: '-4px', duration: 0.14, ease: 'power1.out' }, 1.6);
-        entranceTl.to(characterPortrait, { y: '0px', duration: 0.18, ease: 'power2.inOut' }, 1.74);
+        // 2. AAKASH portrait rises smoothly from below (85vh -> 0)
+        if (characterPortrait) {
+          entranceTl.fromTo(
+            characterPortrait,
+            { y: '85vh', opacity: 0, scale: 0.97 },
+            { y: '0%', opacity: 1, scale: 1, duration: 1.1, ease: 'power3.out' },
+            0.5
+          );
+          entranceTl.to(characterPortrait, { y: '-4px', duration: 0.14, ease: 'power1.out' }, 1.6);
+          entranceTl.to(characterPortrait, { y: '0px', duration: 0.18, ease: 'power2.inOut' }, 1.74);
+        }
 
         // 3. Backlight blooms behind Aakash
-        entranceTl.fromTo(
-          radialLight,
-          { opacity: 0.12 },
-          { opacity: 0.88, duration: 0.45, ease: 'power2.out' },
-          1.3
-        );
-        entranceTl.to(radialLight, { opacity: 0.65, duration: 0.45, ease: 'power2.inOut' }, 1.75);
+        if (radialLight) {
+          entranceTl.fromTo(
+            radialLight,
+            { opacity: 0.12 },
+            { opacity: 0.88, duration: 0.45, ease: 'power2.out' },
+            1.3
+          );
+          entranceTl.to(radialLight, { opacity: 0.65, duration: 0.45, ease: 'power2.inOut' }, 1.75);
+        }
 
         // 4. Side Details Assemble
         if (leftLine) entranceTl.to(leftLine, { scaleX: 1, duration: 0.22, ease: 'power2.out' }, 1.35);
@@ -258,11 +436,25 @@ export default function HeroExperience() {
           if (window.scrollY > 30) {
             window.removeEventListener('scroll', skipEntranceOnScroll);
             entranceTl?.kill();
-            settleHeroState();
+            isFirstLoadRunning = false;
+            restoreHeroState(true);
           }
         };
         window.addEventListener('scroll', skipEntranceOnScroll, { passive: true });
       }
+
+      // Safe scroll listener for continuous return-to-hero detection
+      let lastScrollY = typeof window !== 'undefined' ? window.scrollY : 0;
+      const onWindowScroll = () => {
+        const curY = window.scrollY;
+        const scrollingUp = curY < lastScrollY;
+        lastScrollY = curY;
+
+        if (!isFirstLoadRunning && (curY === 0 || (scrollingUp && curY <= 25))) {
+          restoreHeroState(true);
+        }
+      };
+      window.addEventListener('scroll', onWindowScroll, { passive: true });
 
       // ======================================================================
       // 3. Desktop Master ScrollTrigger Timeline
@@ -280,7 +472,7 @@ export default function HeroExperience() {
             start: 'top top',
             end: '+=5200',
             pin: true,
-            scrub: 0.8, // Responsive, crisp, weighted motion without delayed lag
+            scrub: 0.8,
             anticipatePin: 1,
             onEnterBack: () => {
               if (characterScene) {
@@ -291,19 +483,30 @@ export default function HeroExperience() {
                 characterPortrait.style.visibility = 'visible';
                 characterPortrait.style.display = 'block';
               }
+              if (wordmark) {
+                wordmark.style.visibility = 'visible';
+                wordmark.style.display = 'block';
+              }
             },
             onLeaveBack: () => {
-              // Smooth, rock-solid return to hero landing
-              tl.progress(0);
-              settleHeroState();
+              restoreHeroState(true);
+            },
+            onUpdate: (self) => {
+              if (self.scroll() === 0 || (self.direction === -1 && self.scroll() <= 25)) {
+                restoreHeroState(true);
+              }
             },
           },
         });
 
+        desktopTlRef.current = tl;
+
         // Step 1: Flanks Slide Out, Portrait Anchors to Right
         tl.to(leftFlank, { x: -60, opacity: 0, duration: 1.0, ease: 'power2.inOut' }, 0);
         tl.to(rightFlank, { x: 60, opacity: 0, duration: 1.0, ease: 'power2.inOut' }, 0);
-        tl.to(portfolioWord, { scale: 0.94, opacity: 0, duration: 0.9, ease: 'power2.inOut' }, 0.05);
+        if (wordmark) {
+          tl.to(wordmark, { scale: 0.94, opacity: 0, duration: 0.9, ease: 'power2.inOut' }, 0.05);
+        }
 
         tl.to(characterScene, {
           x: () => getAnchorRightX(),
@@ -571,6 +774,7 @@ export default function HeroExperience() {
     }, containerRef);
 
     return () => {
+      delete (window as any).__restoreHeroState;
       ctx.revert();
     };
   }, []);
@@ -581,9 +785,13 @@ export default function HeroExperience() {
         {/* LAYER 1 & 2: Atmospheric Studio Background & Cinematic Lighting */}
         <HeroLighting />
 
-        {/* LAYER 3: Enormous Background Typography PORTFOLIO (Behind Aakash) */}
-        <div className="hero-poster-wordmark" id="hero-portfolio-wordmark" aria-hidden="true">
-          PORTFOLIO
+        {/* LAYER 3: Enormous Background Typography AAKASH (Behind Aakash) */}
+        <div
+          className="hero-poster-wordmark"
+          id="hero-bg-wordmark"
+          aria-hidden="true"
+        >
+          AAKASH
         </div>
 
         {/* LAYER 3b, 3c: Statement Backdrop, Environmental SVG Symbols, Completed History Row, Active Role Stage */}

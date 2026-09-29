@@ -23,7 +23,7 @@ export default function Navbar() {
     <header className={`site-header ${isScrolled ? 'scrolled' : ''}`} id="site-header">
       <nav className="nav-container" aria-label="Main Navigation">
         {/* Left: Brand */}
-        <a href="#hero" className="nav-brand" aria-label="AAKASH Home">
+        <a href="/#hero" className="nav-brand" aria-label="AAKASH Home">
           <span>
             AAKASH<span className="brand-period">.</span>
           </span>

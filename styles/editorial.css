@@ -171,17 +171,17 @@
   will-change: transform;
 }
 
-/* LAYER 3: Enormous Background Typography PORTFOLIO */
+/* LAYER 3: Enormous Background Typography AAKASH */
 .hero-poster-wordmark {
   position: absolute;
   top: 42%;
   left: 50%;
   transform: translate(-50%, -50%);
   font-family: var(--font-sans);
-  font-size: clamp(8rem, 18.5vw, 20.5rem);
+  font-size: clamp(7.5rem, 18vw, 19.5rem);
   font-weight: 900;
   line-height: 0.82;
-  letter-spacing: -0.055em;
+  letter-spacing: -0.04em;
   text-transform: uppercase;
   white-space: nowrap;
   user-select: none;
@@ -193,7 +193,7 @@
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   will-change: transform, opacity;
-  opacity: 0.9;
+  opacity: 0.92;
 }
 
 /* POSTER GRID: 3-column Layout (Left Flank, Center Character, Right Flank) */
@@ -3045,9 +3045,10 @@ textarea.form-input-clean {
     padding-inline: 1.25rem;
   }
   .hero-poster-wordmark {
-    font-size: clamp(5.5rem, 19vw, 9.5rem);
+    font-size: clamp(4.5rem, 17vw, 8.5rem);
     top: 36%;
     opacity: 0.15;
+    letter-spacing: -0.03em;
   }
   .hero-center-subject {
     order: 1;
@@ -3059,10 +3060,10 @@ textarea.form-input-clean {
     margin-bottom: 1rem;
   }
   .hero-poster-portrait {
-    transform: none !important;
+    transform: none;
     max-height: 56vh;
     height: auto;
-    opacity: 1 !important;
+    opacity: 1;
     margin-inline: auto;
   }
   .hero-flank-left {
