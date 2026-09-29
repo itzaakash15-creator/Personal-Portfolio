@@ -7,10 +7,6 @@ import HeroLighting from './HeroLighting';
 import HeroPortrait from './HeroPortrait';
 import HeroProjectPreview from './HeroProjectPreview';
 import { HeroLeftFlank, HeroRightFlank } from './HeroFlanks';
-import IdentityExperience from '../identity/IdentityExperience';
-import { buildIdentityTimeline, attachIdentityParallax } from '../identity/identityTimeline';
-import WorkTransition from '../work/WorkTransition';
-import { buildWorkTransitionTimeline } from '../work/workTransitionTimeline';
 
 export default function HeroExperience() {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -21,7 +17,7 @@ export default function HeroExperience() {
     gsap.registerPlugin(ScrollTrigger);
 
     const ctx = gsap.context(() => {
-      const wrapper = document.getElementById('hero-experience');
+      const heroSection = document.getElementById('hero');
       const leftFlank = document.getElementById('hero-left-flank');
       const rightFlank = document.getElementById('hero-right-flank');
       const portfolioWord = document.getElementById('hero-portfolio-wordmark');
@@ -29,35 +25,6 @@ export default function HeroExperience() {
       const characterScene = document.getElementById('character-scene');
       const characterPortrait = document.getElementById('character-portrait');
       const aakashShadow = document.getElementById('aakash-contact-shadow');
-
-      // Identity Experience Elements
-      const stmtBackdrop = document.getElementById('hero-statement-backdrop');
-      const stmtLine1 = document.getElementById('stmt-line-1');
-      const stmtLine2 = document.getElementById('stmt-line-2');
-      const stmtLine3 = document.getElementById('stmt-line-3');
-      const envSymbolsWrap = document.getElementById('role-env-symbols');
-      const envSymMarketer = document.getElementById('env-sym-marketer');
-      const envSymBrand = document.getElementById('env-sym-brand');
-      const envSymCreator = document.getElementById('env-sym-creator');
-      const envSymSpeaker = document.getElementById('env-sym-speaker');
-      const roleStage = document.getElementById('active-role-stage');
-      const roleSpotlight = document.getElementById('active-role-spotlight');
-      const frame1 = document.getElementById('role-frame-1');
-      const frame2 = document.getElementById('role-frame-2');
-      const frame3 = document.getElementById('role-frame-3');
-      const frame4 = document.getElementById('role-frame-4');
-      const historyRow = document.getElementById('identity-history-row');
-      const historySlots = [
-        document.getElementById('history-slot-1'),
-        document.getElementById('history-slot-2'),
-        document.getElementById('history-slot-3'),
-        document.getElementById('history-slot-4'),
-      ];
-      const historyCollectiveLine = document.getElementById('history-collective-line');
-
-      // Work Transition Elements
-      const workTransition = document.getElementById('work-transition-phase');
-      const projectApproach = document.getElementById('hero-project-approach');
 
       // Flank elements for entrance
       const leftLine = document.querySelector('.tag-accent-line-left') as HTMLElement | null;
@@ -80,7 +47,7 @@ export default function HeroExperience() {
       const isTouch = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
 
       // ======================================================================
-      // CharacterController: Responsive Parallax & Scroll Kinematics
+      // CharacterController: Responsive Parallax & Studio Lighting
       // ======================================================================
       const CharacterController = {
         isEntrancePlaying: false,
@@ -132,23 +99,23 @@ export default function HeroExperience() {
           const isDesktop = () => window.innerWidth > 960 && !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
           const onPointerMove = (e: MouseEvent) => {
-            if (!isDesktop() || this.isEntrancePlaying) return;
+            if (!isDesktop() || this.isEntrancePlaying || window.scrollY > window.innerHeight) return;
 
             const normX = (e.clientX / window.innerWidth) * 2 - 1;
             const normY = (e.clientY / window.innerHeight) * 2 - 1;
 
-            this.target.pointerX = normX * 5.0;
-            this.target.pointerY = normY * 3.0;
-            this.target.lightX = normX * 10.0;
-            this.target.lightY = normY * 6.0;
-            this.target.dirLightX = -normX * 8.0;
-            this.target.dirLightY = -normY * 5.0;
-            this.target.wordmarkX = normX * 2.0;
-            this.target.wordmarkY = normY * 1.5;
-            this.target.flankX = normX * 2.0;
-            this.target.flankY = normY * 1.5;
-            this.target.shadowX = -normX * 8;
-            this.target.shadowY = 18 - normY * 4;
+            this.target.pointerX = normX * 4.5;
+            this.target.pointerY = normY * 2.8;
+            this.target.lightX = normX * 8.0;
+            this.target.lightY = normY * 5.0;
+            this.target.dirLightX = -normX * 6.0;
+            this.target.dirLightY = -normY * 4.0;
+            this.target.wordmarkX = normX * 1.8;
+            this.target.wordmarkY = normY * 1.2;
+            this.target.flankX = normX * 1.8;
+            this.target.flankY = normY * 1.2;
+            this.target.shadowX = -normX * 7;
+            this.target.shadowY = 18 - normY * 3;
 
             this.requestTick();
           };
@@ -244,13 +211,12 @@ export default function HeroExperience() {
       CharacterController.init();
 
       // ======================================================================
-      // Cinematic Personal-Portfolio Poster Entrance & Scroll Reversibility
+      // Canonical Hero Settle & Scroll Return Lifecycle
       // ======================================================================
       const restoreHeroState = (smooth = true) => {
         CharacterController.isEntrancePlaying = false;
 
         if (smooth) {
-          // Smooth return over 500–800ms equivalent visual motion (650ms, power2.out)
           if (characterPortrait) {
             gsap.to(characterPortrait, {
               opacity: 1,
@@ -300,6 +266,7 @@ export default function HeroExperience() {
             gsap.to(portfolioWord, {
               opacity: 0.92,
               scale: 1,
+              y: 0,
               duration: 0.65,
               ease: 'power2.out',
               overwrite: 'auto',
@@ -310,6 +277,7 @@ export default function HeroExperience() {
             gsap.to(leftFlank, {
               opacity: 1,
               x: 0,
+              y: 0,
               duration: 0.65,
               ease: 'power2.out',
               overwrite: 'auto',
@@ -320,6 +288,7 @@ export default function HeroExperience() {
             gsap.to(rightFlank, {
               opacity: 1,
               x: 0,
+              y: 0,
               duration: 0.65,
               ease: 'power2.out',
               overwrite: 'auto',
@@ -346,7 +315,7 @@ export default function HeroExperience() {
           if (portfolioWord) {
             portfolioWord.style.opacity = '0.92';
             portfolioWord.style.clipPath = 'none';
-            portfolioWord.style.letterSpacing = '-0.055em';
+            portfolioWord.style.letterSpacing = '-0.04em';
             portfolioWord.style.transform = 'translate(-50%, -50%)';
           }
           if (leftFlank) {
@@ -442,14 +411,14 @@ export default function HeroExperience() {
           },
         });
 
-        // 1. PORTFOLIO mask-reveal
+        // 1. AAKASH mask-reveal
         entranceTl.fromTo(portfolioWord,
           { opacity: 0, clipPath: 'inset(100% 0% 0% 0%)', letterSpacing: '0.04em' },
-          { opacity: 0.92, clipPath: 'inset(0% 0% 0% 0%)', letterSpacing: '-0.055em', duration: 0.70, ease: 'power3.out' },
+          { opacity: 0.92, clipPath: 'inset(0% 0% 0% 0%)', letterSpacing: '-0.04em', duration: 0.70, ease: 'power3.out' },
           0.22
         );
 
-        // 2. AAKASH rises from below (85vh -> 0%) with authentic settling physics (-4px -> 0px)
+        // 2. AAKASH portrait rises smoothly from below (85vh -> 0%) with authentic physics settling (-4px -> 0px)
         entranceTl.fromTo(characterPortrait,
           { y: '85vh', opacity: 0, scale: 0.97 },
           { y: '0%', opacity: 1, scale: 1, duration: 1.15, ease: 'power3.out' },
@@ -518,202 +487,34 @@ export default function HeroExperience() {
         window.addEventListener('touchstart', checkScrollSkip, { passive: true, once: true });
       }
 
-      // ----------------------------------------------------------------------
-      // SCROLLTRIGGER STORYTELLING (Desktop)
-      // ----------------------------------------------------------------------
+      // ======================================================================
+      // Restrained, Non-Destructive Hero Exit Timeline
+      // ======================================================================
       const mm = gsap.matchMedia();
 
-      mm.add('(min-width: 961px) and (prefers-reduced-motion: no-preference)', () => {
-        if (!wrapper || !characterScene) return;
+      mm.add('(min-width: 961px)', () => {
+        if (!heroSection) return;
 
-        const getAnchorRightX = () => Math.min(Math.max(window.innerWidth * 0.22, 220), 380);
-
-        const tl = gsap.timeline({
+        gsap.timeline({
           scrollTrigger: {
-            trigger: wrapper,
+            trigger: heroSection,
             start: 'top top',
-            end: '+=5200',
-            pin: true,
-            scrub: 1.5,
-            anticipatePin: 1,
-            onEnterBack: () => {
-              if (characterScene) {
-                characterScene.style.visibility = 'visible';
-                characterScene.style.display = 'flex';
-              }
-              if (characterPortrait) {
-                characterPortrait.style.visibility = 'visible';
-                characterPortrait.style.display = 'block';
-              }
-            },
+            end: 'bottom top',
+            scrub: 0.5,
             onLeaveBack: () => {
-              // Returning completely to the Hero landing state
               restoreHeroState(true);
             },
-            onUpdate: (self) => {
-              // Smooth return when scrolling upward into the initial Hero state
-              if (self.direction === -1 && self.progress < 0.04) {
-                restoreHeroState(true);
-              }
-            },
           },
-        });
-
-        // Step 1: Flanks Slide Out, Portrait Anchors to Right
-        tl.to(leftFlank, { x: -60, opacity: 0, duration: 1.0, ease: 'power2.inOut' }, 0);
-        tl.to(rightFlank, { x: 60, opacity: 0, duration: 1.0, ease: 'power2.inOut' }, 0);
-        tl.to(portfolioWord, { scale: 0.94, opacity: 0, duration: 0.9, ease: 'power2.inOut' }, 0.05);
-
-        tl.to(characterScene, {
-          x: () => getAnchorRightX(),
-          scale: 0.98,
-          duration: 1.1,
-          ease: 'power2.inOut',
-        }, 0.15);
-
-        if (characterPortrait) {
-          tl.to(characterPortrait, { scale: 0.98, opacity: 0.96, duration: 1.1, ease: 'power2.inOut' }, 0.15);
-        }
-        if (radialLight) {
-          tl.to(radialLight, { x: () => getAnchorRightX() * 0.75, duration: 1.1, ease: 'power2.inOut' }, 0.15);
-        }
-        if (aakashShadow) {
-          tl.to(aakashShadow, { opacity: 1, duration: 0.9, ease: 'power2.out' }, 0.2);
-        }
-
-        // Steps 2–7 & Identity Exit (Modular Builder)
-        buildIdentityTimeline(tl, {
-          stmtBackdrop,
-          stmtLine1,
-          stmtLine2,
-          stmtLine3,
-          envSymMarketer,
-          envSymBrand,
-          envSymCreator,
-          envSymSpeaker,
-          roleStage,
-          roleSpotlight,
-          frame1,
-          frame2,
-          frame3,
-          frame4,
-          historySlots,
-          historyCollectiveLine,
-          historyRow,
-          envSymbolsWrap,
-          wrapper,
-          characterScene,
-          getAnchorRightX,
-        });
-
-        // Step 8: Work Transition Phase (Modular Builder)
-        buildWorkTransitionTimeline(tl, {
-          characterScene,
-          characterPortrait,
-          radialLight,
-          workTransition,
-          projectApproach,
-          getAnchorRightX,
-        });
-
-        // ----------------------------------------------------------------------
-        // POINTER INTERACTION (Desktop Only — Micro-Interactions & Calm Parallax)
-        // ----------------------------------------------------------------------
-        if (window.matchMedia('(min-width: 1025px)').matches) {
-          let mouseX = 0, mouseY = 0;
-          let targetX = 0, targetY = 0;
-
-          window.addEventListener('mousemove', (e) => {
-            targetX = (e.clientX / window.innerWidth - 0.5) * 2;
-            targetY = (e.clientY / window.innerHeight - 0.5) * 2;
-          }, { passive: true });
-
-          gsap.ticker.add(() => {
-            mouseX += (targetX - mouseX) * 0.08;
-            mouseY += (targetY - mouseY) * 0.08;
-
-            // Only apply mouse parallax on portrait when in hero zone (< 120px) so it doesn't fight ScrollTrigger
-            if (characterPortrait && !CharacterController.isEntrancePlaying && window.scrollY < 120) {
-              gsap.set(characterPortrait, {
-                x: mouseX * 3,
-                y: mouseY * 2.5,
-              });
-            }
-
-            attachIdentityParallax(
-              mouseX,
-              mouseY,
-              [frame1, frame2, frame3, frame4],
-              [envSymMarketer, envSymBrand, envSymCreator, envSymSpeaker],
-              roleSpotlight
-            );
-          });
-        }
+        })
+        .to(leftFlank, { opacity: 0.35, y: -20, ease: 'none' }, 0)
+        .to(rightFlank, { opacity: 0.35, y: -20, ease: 'none' }, 0)
+        .to(portfolioWord, { opacity: 0.25, y: -25, ease: 'none' }, 0)
+        .to(characterPortrait, { opacity: 0.75, scale: 0.98, y: -15, ease: 'none' }, 0);
       });
 
-      // Mobile reveals
-      mm.add('(max-width: 960px)', () => {
-        const stmtLines = document.querySelectorAll('.stmt-line');
-        stmtLines.forEach((line) => {
-          gsap.fromTo(line,
-            { opacity: 0.35, y: 18 },
-            {
-              opacity: 1,
-              y: 0,
-              duration: 0.7,
-              ease: 'power2.out',
-              scrollTrigger: {
-                trigger: line,
-                start: 'top 88%',
-                end: 'top 65%',
-                scrub: 0.35,
-              },
-            }
-          );
-        });
-
-        const roleFrames = document.querySelectorAll('.editorial-role-frame');
-        roleFrames.forEach((frame) => {
-          gsap.fromTo(frame,
-            { opacity: 0.25, y: 25, scale: 0.94 },
-            {
-              opacity: 1,
-              y: 0,
-              scale: 1,
-              duration: 0.75,
-              ease: 'power2.out',
-              scrollTrigger: {
-                trigger: frame,
-                start: 'top 88%',
-                end: 'top 58%',
-                scrub: 0.35,
-              },
-            }
-          );
-        });
-
-        if (workTransition) {
-          gsap.fromTo(workTransition,
-            { opacity: 0.3, y: 25 },
-            {
-              opacity: 1,
-              y: 0,
-              duration: 0.8,
-              ease: 'power2.out',
-              scrollTrigger: {
-                trigger: workTransition,
-                start: 'top 85%',
-                end: 'top 55%',
-                scrub: 0.4,
-              },
-            }
-          );
-        }
-      });
-
-      // ----------------------------------------------------------------------
+      // ======================================================================
       // ANCHOR HOVER PREVIEW CONTROLLER
-      // ----------------------------------------------------------------------
+      // ======================================================================
       const previewStage = document.getElementById('hero-hover-preview');
       const previewImg = document.getElementById('hover-preview-img') as HTMLImageElement | null;
       const previewTitle = document.getElementById('hover-preview-title');
@@ -798,12 +599,11 @@ export default function HeroExperience() {
         }, { passive: true });
       }
 
-      // Global top scroll return safety: ensures portrait, scene and lighting smoothly restore when returning to top
+      // Global top scroll return safety: ensures portrait and hero state restore smoothly when returning to top
       const handleScrollReturn = () => {
-        if (window.scrollY <= 80) {
+        if (window.scrollY <= 40) {
           const portraitOp = characterPortrait ? Number(gsap.getProperty(characterPortrait, 'opacity')) : 1;
-          const sceneOp = characterScene ? Number(gsap.getProperty(characterScene, 'opacity')) : 1;
-          if (portraitOp < 0.95 || sceneOp < 0.95) {
+          if (portraitOp < 0.95) {
             restoreHeroState(true);
           }
         }
@@ -827,9 +627,6 @@ export default function HeroExperience() {
           AAKASH
         </div>
 
-        {/* LAYER 3b, 3c: Statement Backdrop, Environmental SVG Symbols, Completed History Row, Active Role Stage */}
-        <IdentityExperience />
-
         {/* LAYER 4, 5 & 6: Poster Grid Composition (Left Flank, Centered Aakash, Right Flank) */}
         <div className="hero-poster-grid">
           <HeroLeftFlank />
@@ -839,9 +636,6 @@ export default function HeroExperience() {
 
         {/* Hover preview */}
         <HeroProjectPreview />
-
-        {/* Transition Phase into Digi Marketrix */}
-        <WorkTransition />
       </section>
     </div>
   );

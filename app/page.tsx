@@ -3,6 +3,7 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import Navbar from '../components/Navbar';
 import HeroExperience from '../components/hero/HeroExperience';
+import IdentityExperience from '../components/identity/IdentityExperience';
 import ExecutiveHook from '../components/work/ExecutiveHook';
 import DigiMarketrix from '../components/work/DigiMarketrix';
 import PersonalBranding from '../components/work/PersonalBranding';
@@ -288,10 +289,13 @@ export default function HomePage() {
       {/* 1. Navigation */}
       <Navbar />
 
-      {/* 2. Locked Hero + Locked Four-Role Scroll Experience */}
+      {/* 2. Isolated Cinematic Hero Experience */}
       <HeroExperience />
 
-      {/* 3. First Section After Role-Scroll: Strong Strategic Hook */}
+      {/* 3. Isolated Four-Role Experience ("I DON'T FIT INTO ONE BOX") */}
+      <IdentityExperience />
+
+      {/* 4. First Section After Role-Scroll: Strong Strategic Hook */}
       <ExecutiveHook onOpenProof={openProof} />
 
       {/* 4. Section 01: Digi Marketrix & Talentrix Case Study */}
