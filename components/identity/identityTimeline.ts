@@ -72,31 +72,31 @@ export function buildIdentityTimeline(tl: gsap.core.Timeline, el: IdentityTimeli
   // Step 2: "I DON'T FIT INTO ONE BOX."
   tl.to(el.stmtBackdrop, { opacity: 1, duration: 0.1 }, 1.2);
   tl.fromTo(el.stmtLine1,
-    { scale: 0.94, filter: 'blur(7px)', opacity: 0, y: 35 },
-    { scale: 1, filter: 'blur(0px)', opacity: 0.55, y: 0, duration: 0.85, ease: 'power2.out' },
+    { scale: 0.94, opacity: 0, y: 35 },
+    { scale: 1, opacity: 0.55, y: 0, duration: 0.85, ease: 'power2.out' },
     1.3
   );
   tl.to(el.stmtLine1, { opacity: 0.55, duration: 0.7 }, 2.15);
 
   tl.fromTo(el.stmtLine2,
-    { scale: 0.95, filter: 'blur(6px)', opacity: 0, y: 30 },
-    { scale: 1, filter: 'blur(0px)', opacity: 0.72, y: 0, duration: 0.85, ease: 'power2.out' },
+    { scale: 0.95, opacity: 0, y: 30 },
+    { scale: 1, opacity: 0.72, y: 0, duration: 0.85, ease: 'power2.out' },
     2.85
   );
   tl.to(el.stmtLine1, { opacity: 0.42, y: -8, duration: 0.7, ease: 'power2.out' }, 2.85);
   tl.to(el.stmtLine2, { opacity: 0.72, duration: 0.7 }, 3.7);
 
   tl.fromTo(el.stmtLine3,
-    { scale: 0.96, filter: 'blur(5px)', opacity: 0, y: 25 },
-    { scale: 1, filter: 'blur(0px)', opacity: 0.98, y: 0, duration: 0.85, ease: 'power2.out' },
+    { scale: 0.96, opacity: 0, y: 25 },
+    { scale: 1, opacity: 0.98, y: 0, duration: 0.85, ease: 'power2.out' },
     4.4
   );
   tl.to([el.stmtLine1, el.stmtLine2], { y: -16, duration: 0.7, ease: 'power2.out' }, 4.4);
   tl.to(el.stmtLine2, { opacity: 0.58, duration: 0.7, ease: 'power2.out' }, 4.4);
 
   // Full sentence reading hold window
-  tl.to(el.stmtBackdrop, { opacity: 1, filter: 'contrast(1.08)', duration: 2.2 }, 5.25);
-  tl.to(el.stmtBackdrop, { scale: 0.92, opacity: 0.12, filter: 'blur(4px) contrast(0.8)', duration: 0.9, ease: 'power2.inOut' }, 7.45);
+  tl.to(el.stmtBackdrop, { opacity: 1, duration: 2.2 }, 5.25);
+  tl.to(el.stmtBackdrop, { scale: 0.92, opacity: 0.12, duration: 0.9, ease: 'power2.inOut' }, 7.45);
 
   // Role 01: MARKETER
   if (el.envSymMarketer) {
@@ -139,6 +139,7 @@ export function buildIdentityTimeline(tl: gsap.core.Timeline, el: IdentityTimeli
       duration: 1.1,
       ease: 'power2.inOut',
       onStart: () => el.frame1?.classList.add('is-stored'),
+      onReverseComplete: () => el.frame1?.classList.remove('is-stored'),
     }, 11.1);
   }
   if (el.envSymMarketer) tl.to(el.envSymMarketer, { opacity: 0.05, duration: 0.75, ease: 'power2.out' }, 11.3);
@@ -185,6 +186,7 @@ export function buildIdentityTimeline(tl: gsap.core.Timeline, el: IdentityTimeli
       duration: 1.1,
       ease: 'power2.inOut',
       onStart: () => el.frame2?.classList.add('is-stored'),
+      onReverseComplete: () => el.frame2?.classList.remove('is-stored'),
     }, 15.05);
   }
   if (el.envSymBrand) tl.to(el.envSymBrand, { opacity: 0.05, duration: 0.75, ease: 'power2.out' }, 15.25);
@@ -231,6 +233,7 @@ export function buildIdentityTimeline(tl: gsap.core.Timeline, el: IdentityTimeli
       duration: 1.1,
       ease: 'power2.inOut',
       onStart: () => el.frame3?.classList.add('is-stored'),
+      onReverseComplete: () => el.frame3?.classList.remove('is-stored'),
     }, 18.95);
   }
   if (el.envSymCreator) tl.to(el.envSymCreator, { opacity: 0.05, duration: 0.75, ease: 'power2.out' }, 19.15);
@@ -277,6 +280,7 @@ export function buildIdentityTimeline(tl: gsap.core.Timeline, el: IdentityTimeli
       duration: 1.1,
       ease: 'power2.inOut',
       onStart: () => el.frame4?.classList.add('is-stored'),
+      onReverseComplete: () => el.frame4?.classList.remove('is-stored'),
     }, 22.95);
   }
   if (el.envSymSpeaker) tl.to(el.envSymSpeaker, { opacity: 0.05, duration: 0.75, ease: 'power2.out' }, 23.15);
@@ -309,11 +313,14 @@ export function attachIdentityParallax(
   roleSpotlight: HTMLElement | null
 ) {
   frames.forEach((f) => {
-    if (f && !f.classList.contains('is-stored') && Number(gsap.getProperty(f, 'opacity')) > 0.7) {
-      gsap.set(f, {
-        rotateY: mouseX * 4,
-        rotateX: -mouseY * 3,
-      });
+    if (f && !f.classList.contains('is-stored')) {
+      const op = (f as any)._gsap?.opacity;
+      if (op === undefined || op > 0.6) {
+        gsap.set(f, {
+          rotateY: mouseX * 4,
+          rotateX: -mouseY * 3,
+        });
+      }
     }
   });
 

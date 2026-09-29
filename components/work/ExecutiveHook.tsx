@@ -1,8 +1,7 @@
 'use client';
 
 import React, { useRef, useEffect } from 'react';
-import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { gsap } from '../../lib/gsap';
 
 interface ExecutiveHookProps {
   onOpenProof?: (proofKey: string) => void;
@@ -15,45 +14,31 @@ export default function ExecutiveHook({ onOpenProof }: ExecutiveHookProps) {
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
-    gsap.registerPlugin(ScrollTrigger);
 
     const ctx = gsap.context(() => {
-      // Soft fade-up reveal for the hook statement
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: 'top 85%',
+          toggleActions: 'play none none reverse',
+        },
+      });
+
       if (headlineRef.current) {
-        gsap.fromTo(
+        tl.fromTo(
           headlineRef.current,
           { y: 35, opacity: 0 },
-          {
-            y: 0,
-            opacity: 1,
-            duration: 1.1,
-            ease: 'power3.out',
-            scrollTrigger: {
-              trigger: headlineRef.current,
-              start: 'top 85%',
-              toggleActions: 'play none none reverse',
-            },
-          }
+          { y: 0, opacity: 1, duration: 0.9, ease: 'power3.out' },
+          0
         );
       }
 
-      // Elegant slide-and-settle for the proof card
       if (cardRef.current) {
-        gsap.fromTo(
+        tl.fromTo(
           cardRef.current,
-          { scale: 0.92, y: 50, opacity: 0.3 },
-          {
-            scale: 1,
-            y: 0,
-            opacity: 1,
-            duration: 1.2,
-            ease: 'power2.out',
-            scrollTrigger: {
-              trigger: cardRef.current,
-              start: 'top 85%',
-              toggleActions: 'play none none reverse',
-            },
-          }
+          { scale: 0.92, y: 45, opacity: 0.3 },
+          { scale: 1, y: 0, opacity: 1, duration: 1.0, ease: 'power2.out' },
+          0.1
         );
       }
     }, sectionRef);

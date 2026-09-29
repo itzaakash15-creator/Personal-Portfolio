@@ -1,15 +1,25 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 
 export default function ScrollProgress() {
-  const [progress, setProgress] = useState(0);
+  const lineRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    let ticking = false;
+
     const handleScroll = () => {
-      const totalHeight = document.documentElement.scrollHeight - window.innerHeight;
-      const current = totalHeight > 0 ? (window.scrollY / totalHeight) * 100 : 0;
-      setProgress(Math.min(100, Math.max(0, current)));
+      if (!ticking) {
+        requestAnimationFrame(() => {
+          if (lineRef.current) {
+            const totalHeight = document.documentElement.scrollHeight - window.innerHeight;
+            const progress = totalHeight > 0 ? Math.min(1, Math.max(0, window.scrollY / totalHeight)) : 0;
+            lineRef.current.style.transform = `scaleX(${progress})`;
+          }
+          ticking = false;
+        });
+        ticking = true;
+      }
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
@@ -20,10 +30,11 @@ export default function ScrollProgress() {
 
   return (
     <div
+      ref={lineRef}
       className="scroll-progress-line"
       id="scroll-progress"
       aria-hidden="true"
-      style={{ width: `${progress}%` }}
+      style={{ width: '100%', transform: 'scaleX(0)', transformOrigin: 'left center' }}
     />
   );
 }

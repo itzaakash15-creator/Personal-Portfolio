@@ -1,8 +1,7 @@
 'use client';
 
 import React, { useEffect, useRef } from 'react';
-import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { gsap } from '../../lib/gsap';
 
 interface LifeWithAakashProps {
   onOpenProof?: (proofKey: string) => void;
@@ -15,7 +14,6 @@ export default function LifeWithAakash({ onOpenProof }: LifeWithAakashProps) {
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
-    gsap.registerPlugin(ScrollTrigger);
 
     const ctx = gsap.context(() => {
       if (videoFrameRef.current) {

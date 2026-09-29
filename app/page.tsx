@@ -19,8 +19,7 @@ import Toast from '../components/ui/Toast';
 import ScrollProgress from '../components/ui/ScrollProgress';
 import CursorBadge from '../components/ui/CursorBadge';
 import InteractiveSystem from '../components/ui/InteractiveSystem';
-import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { initGSAP, ScrollTrigger } from '../lib/gsap';
 
 export default function HomePage() {
   const [activeDrawer, setActiveDrawer] = useState<string | null>(null);
@@ -54,7 +53,7 @@ export default function HomePage() {
   useEffect(() => {
     if (typeof window === 'undefined') return;
 
-    gsap.registerPlugin(ScrollTrigger);
+    initGSAP();
 
     const navSectionMap = [
       { id: 'future', target: 'about' },

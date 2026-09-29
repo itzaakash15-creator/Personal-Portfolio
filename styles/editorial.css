@@ -130,7 +130,7 @@
     rgba(150, 130, 100, 0.025) 58%,
     transparent 82%
   );
-  filter: blur(85px);
+  filter: blur(35px);
   pointer-events: none;
   will-change: transform, opacity;
   opacity: 0.6;
@@ -148,7 +148,7 @@
     rgba(216, 195, 165, 0.015) 45%,
     transparent 72%
   );
-  filter: blur(80px);
+  filter: blur(30px);
   pointer-events: none;
   will-change: transform;
 }
@@ -166,7 +166,7 @@
     rgba(216, 195, 165, 0.015) 50%,
     transparent 70%
   );
-  filter: blur(65px);
+  filter: blur(25px);
   pointer-events: none;
   will-change: transform;
 }
@@ -795,7 +795,7 @@
   width: 100vw;
   height: 100vh;
   pointer-events: none;
-  z-index: 3.5;
+  z-index: 4;
   overflow: hidden;
 }
 
@@ -890,7 +890,7 @@
   width: clamp(400px, 45vw, 650px);
   height: clamp(320px, 35vh, 480px);
   background: radial-gradient(ellipse at center, rgba(212, 175, 55, 0.16) 0%, rgba(212, 175, 55, 0.04) 50%, transparent 75%);
-  filter: blur(55px);
+  filter: blur(24px);
   opacity: 0;
   pointer-events: none;
   z-index: 1;

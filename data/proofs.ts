@@ -16,7 +16,7 @@ export const PROOFS_DATA: Record<string, ProofItem> = {
     category: 'Agency Experience',
     date: '2022 — Present',
     issuer: 'Digi Marketrix Leadership',
-    src: '/assets/proofs_optimized/digi_marketrix_experience_letter.jpg',
+    src: '/assets/proofs_optimized/digi_marketrix_certificate.jpg',
     description: 'Documented 3-year track record across digital marketing, client campaigns, creative direction, and Talentrix.',
     metrics: [
       { label: 'Tenure', value: '3+ Years' },
@@ -29,7 +29,7 @@ export const PROOFS_DATA: Record<string, ProofItem> = {
     category: 'Agency Experience',
     date: '2022',
     issuer: 'Digi Marketrix',
-    src: '/assets/proofs_optimized/digi_marketrix_internship.jpg',
+    src: '/assets/proofs_optimized/digi_marketrix_certificate.jpg',
     description: 'Foundational agency internship completing campaign planning, content execution, and digital distribution.',
   },
   'award-tcs-presentation': {
@@ -38,7 +38,7 @@ export const PROOFS_DATA: Record<string, ProofItem> = {
     category: 'Recognition',
     date: '2023',
     issuer: 'Tata Consultancy Services',
-    src: '/assets/proofs_optimized/award_tcs_presentation.jpg',
+    src: '/assets/proofs_optimized/award_1_business_excellence.jpg',
     description: 'Nationwide technical and communication presentation distinction representing university engineering excellence.',
   },
   'award-academic-excellence': {
@@ -47,7 +47,7 @@ export const PROOFS_DATA: Record<string, ProofItem> = {
     category: 'Recognition',
     date: '2021 — 2025',
     issuer: 'Faculty of Engineering',
-    src: '/assets/proofs_optimized/award_academic_excellence.jpg',
+    src: '/assets/proofs_optimized/award_2_talent_competition.jpg',
     description: 'Sustained top academic standing in AI architecture, software engineering, and machine learning systems.',
   },
   'lab-mineguardian': {

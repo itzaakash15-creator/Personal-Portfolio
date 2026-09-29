@@ -11,27 +11,36 @@ export default function CursorBadge() {
     const isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
     if (isTouch || window.innerWidth <= 960) return;
 
-    let badgeX = 0;
-    let badgeY = 0;
-    let targetX = 0;
-    let targetY = 0;
-    let rafId: number;
+    let badgeX = -200;
+    let badgeY = -200;
+    let targetX = -200;
+    let targetY = -200;
+    let rafId: number | null = null;
+    let isTicking = false;
 
     const render = () => {
       badgeX += (targetX - badgeX) * 0.25;
       badgeY += (targetY - badgeY) * 0.25;
 
       if (badgeRef.current) {
-        badgeRef.current.style.left = `${badgeX}px`;
-        badgeRef.current.style.top = `${badgeY}px`;
+        badgeRef.current.style.transform = `translate3d(${badgeX.toFixed(1)}px, ${badgeY.toFixed(1)}px, 0)`;
       }
 
-      rafId = requestAnimationFrame(render);
+      const diff = Math.abs(targetX - badgeX) + Math.abs(targetY - badgeY);
+      if (diff > 0.5) {
+        rafId = requestAnimationFrame(render);
+      } else {
+        isTicking = false;
+      }
     };
 
     const handleMouseMove = (e: MouseEvent) => {
       targetX = e.clientX + 16;
       targetY = e.clientY + 16;
+      if (!isTicking) {
+        isTicking = true;
+        rafId = requestAnimationFrame(render);
+      }
     };
 
     const handleMouseOver = (e: MouseEvent) => {
@@ -46,13 +55,12 @@ export default function CursorBadge() {
     };
 
     window.addEventListener('mousemove', handleMouseMove, { passive: true });
-    document.addEventListener('mouseover', handleMouseOver);
-    rafId = requestAnimationFrame(render);
+    document.addEventListener('mouseover', handleMouseOver, { passive: true });
 
     return () => {
       window.removeEventListener('mousemove', handleMouseMove);
       document.removeEventListener('mouseover', handleMouseOver);
-      cancelAnimationFrame(rafId);
+      if (rafId) cancelAnimationFrame(rafId);
     };
   }, []);
 
@@ -62,6 +70,7 @@ export default function CursorBadge() {
       className={`cursor-context-badge ${isVisible ? 'visible' : ''}`}
       id="cursor-badge"
       aria-hidden="true"
+      style={{ position: 'fixed', top: 0, left: 0, pointerEvents: 'none' }}
     >
       <span className="cursor-badge-text" id="cursor-badge-text">
         {badgeText}

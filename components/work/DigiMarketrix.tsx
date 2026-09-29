@@ -1,8 +1,7 @@
 'use client';
 
 import React, { useEffect, useRef } from 'react';
-import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { gsap } from '../../lib/gsap';
 import Talentrix from './Talentrix';
 
 interface DigiMarketrixProps {
@@ -17,7 +16,6 @@ export default function DigiMarketrix({ onOpenDrawer, onOpenProof }: DigiMarketr
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
-    gsap.registerPlugin(ScrollTrigger);
 
     const ctx = gsap.context(() => {
       const mainVisual = mediaRef.current;

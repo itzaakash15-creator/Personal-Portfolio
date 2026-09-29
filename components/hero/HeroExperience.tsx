@@ -1,8 +1,7 @@
 'use client';
 
 import React, { useEffect, useRef } from 'react';
-import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { initGSAP, gsap, ScrollTrigger } from '../../lib/gsap';
 import HeroLighting from './HeroLighting';
 import HeroPortrait from './HeroPortrait';
 import HeroProjectPreview from './HeroProjectPreview';
@@ -18,7 +17,7 @@ export default function HeroExperience() {
   useEffect(() => {
     if (typeof window === 'undefined') return;
 
-    gsap.registerPlugin(ScrollTrigger);
+    initGSAP();
 
     const ctx = gsap.context(() => {
       const wrapper = document.getElementById('hero-experience');
@@ -27,6 +26,7 @@ export default function HeroExperience() {
       const portfolioWord = document.getElementById('hero-portfolio-wordmark');
       const radialLight = document.getElementById('hero-radial-light');
       const characterScene = document.getElementById('character-scene');
+      const characterStage = document.getElementById('character-stage');
       const characterPortrait = document.getElementById('character-portrait');
       const aakashShadow = document.getElementById('aakash-contact-shadow');
 
@@ -80,284 +80,41 @@ export default function HeroExperience() {
       const isTouch = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
 
       // ======================================================================
-      // CharacterController: Responsive Parallax & Scroll Kinematics
+      // 1. Initial State Settlement
       // ======================================================================
-      const CharacterController = {
-        isEntrancePlaying: false,
-        current: {
-          pointerX: 0,
-          pointerY: 0,
-          pointerScale: 1,
-          lightX: 0,
-          lightY: 0,
-          dirLightX: 0,
-          dirLightY: 0,
-          wordmarkX: 0,
-          wordmarkY: 0,
-          flankX: 0,
-          flankY: 0,
-          shadowX: 0,
-          shadowY: 18,
-        },
-        target: {
-          pointerX: 0,
-          pointerY: 0,
-          pointerScale: 1,
-          lightX: 0,
-          lightY: 0,
-          dirLightX: 0,
-          dirLightY: 0,
-          wordmarkX: 0,
-          wordmarkY: 0,
-          flankX: 0,
-          flankY: 0,
-          shadowX: 0,
-          shadowY: 18,
-        },
-        isTicking: false,
-        rafId: 0 as number,
-
-        init() {
-          if (characterPortrait) {
-            characterPortrait.style.opacity = '1';
-            characterPortrait.style.visibility = 'visible';
-            characterPortrait.style.display = 'block';
-          }
-          if (!isTouch && !prefersReducedMotion) {
-            this.bindPointerEvents();
-          }
-        },
-
-        bindPointerEvents() {
-          const isDesktop = () => window.innerWidth > 960 && !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-          const onPointerMove = (e: MouseEvent) => {
-            if (!isDesktop() || this.isEntrancePlaying) return;
-
-            const normX = (e.clientX / window.innerWidth) * 2 - 1;
-            const normY = (e.clientY / window.innerHeight) * 2 - 1;
-
-            this.target.pointerX = normX * 5.0;
-            this.target.pointerY = normY * 3.0;
-            this.target.lightX = normX * 10.0;
-            this.target.lightY = normY * 6.0;
-            this.target.dirLightX = -normX * 8.0;
-            this.target.dirLightY = -normY * 5.0;
-            this.target.wordmarkX = normX * 2.0;
-            this.target.wordmarkY = normY * 1.5;
-            this.target.flankX = normX * 2.0;
-            this.target.flankY = normY * 1.5;
-            this.target.shadowX = -normX * 8;
-            this.target.shadowY = 18 - normY * 4;
-
-            this.requestTick();
-          };
-
-          const onPointerLeave = () => {
-            if (!isDesktop()) return;
-            this.target.pointerX = 0;
-            this.target.pointerY = 0;
-            this.target.lightX = 0;
-            this.target.lightY = 0;
-            this.target.dirLightX = 0;
-            this.target.dirLightY = 0;
-            this.target.wordmarkX = 0;
-            this.target.wordmarkY = 0;
-            this.target.flankX = 0;
-            this.target.flankY = 0;
-            this.target.shadowX = 0;
-            this.target.shadowY = 18;
-
-            this.requestTick();
-          };
-
-          window.addEventListener('mousemove', onPointerMove, { passive: true });
-          window.addEventListener('mouseleave', onPointerLeave, { passive: true });
-        },
-
-        requestTick() {
-          if (!this.isTicking) {
-            this.isTicking = true;
-            this.rafId = requestAnimationFrame(() => this.update());
-          }
-        },
-
-        update() {
-          const c = this.current;
-          const t = this.target;
-
-          c.pointerX += (t.pointerX - c.pointerX) * 0.055;
-          c.pointerY += (t.pointerY - c.pointerY) * 0.055;
-          c.lightX += (t.lightX - c.lightX) * 0.040;
-          c.lightY += (t.lightY - c.lightY) * 0.040;
-          c.dirLightX += (t.dirLightX - c.dirLightX) * 0.040;
-          c.dirLightY += (t.dirLightY - c.dirLightY) * 0.040;
-          c.wordmarkX += (t.wordmarkX - c.wordmarkX) * 0.035;
-          c.wordmarkY += (t.wordmarkY - c.wordmarkY) * 0.035;
-          c.flankX += (t.flankX - c.flankX) * 0.065;
-          c.flankY += (t.flankY - c.flankY) * 0.065;
-          c.shadowX += (t.shadowX - c.shadowX) * 0.055;
-          c.shadowY += (t.shadowY - c.shadowY) * 0.055;
-
-          this.render();
-
-          const diff = Math.abs(t.pointerX - c.pointerX) +
-                       Math.abs(t.pointerY - c.pointerY) +
-                       Math.abs(t.lightX - c.lightX) +
-                       Math.abs(t.lightY - c.lightY) +
-                       Math.abs(t.wordmarkX - c.wordmarkX) +
-                       Math.abs(t.wordmarkY - c.wordmarkY);
-
-          if (diff > 0.005) {
-            this.rafId = requestAnimationFrame(() => this.update());
-          } else {
-            this.isTicking = false;
-          }
-        },
-
-        render() {
-          if (radialLight) {
-            radialLight.style.transform = `translate3d(calc(-50% + ${this.current.lightX.toFixed(2)}px), calc(-50% + ${this.current.lightY.toFixed(2)}px), 0)`;
-          }
-          const dirLightEl = document.querySelector('.hero-poster-side-light') as HTMLElement | null;
-          if (dirLightEl) {
-            dirLightEl.style.transform = `translate3d(${this.current.dirLightX.toFixed(2)}px, ${this.current.dirLightY.toFixed(2)}px, 0)`;
-          }
-          if (portfolioWord && !this.isEntrancePlaying) {
-            portfolioWord.style.transform = `translate(calc(-50% + ${this.current.wordmarkX.toFixed(2)}px), calc(-50% + ${this.current.wordmarkY.toFixed(2)}px))`;
-          }
-          if (leftFlank && !this.isEntrancePlaying) {
-            leftFlank.style.transform = `translate3d(${(-this.current.flankX).toFixed(2)}px, ${this.current.flankY.toFixed(2)}px, 0)`;
-          }
-          if (rightFlank && !this.isEntrancePlaying) {
-            rightFlank.style.transform = `translate3d(${this.current.flankX.toFixed(2)}px, ${this.current.flankY.toFixed(2)}px, 0)`;
-          }
-          if (characterPortrait && !this.isEntrancePlaying) {
-            const totalX = this.current.pointerX;
-            const totalY = this.current.pointerY;
-            characterPortrait.style.transform = `translate3d(${totalX.toFixed(2)}px, ${totalY.toFixed(2)}px, 0)`;
-            characterPortrait.style.filter = `contrast(1.08) brightness(0.97) saturate(0.9) drop-shadow(${this.current.shadowX.toFixed(1)}px ${this.current.shadowY.toFixed(1)}px 32px rgba(0, 0, 0, 0.7))`;
-          }
-        },
-      };
-
-      CharacterController.init();
-
-      // ======================================================================
-      // Cinematic Personal-Portfolio Poster Entrance & Scroll Reversibility
-      // ======================================================================
-      const restoreHeroState = (smooth = true) => {
-        CharacterController.isEntrancePlaying = false;
-
-        if (smooth) {
-          // Smooth return over 500–800ms equivalent visual motion (650ms, power2.out)
-          if (characterPortrait) {
-            gsap.to(characterPortrait, {
-              opacity: 1,
-              y: 0,
-              scale: 1,
-              duration: 0.65,
-              ease: 'power2.out',
-              overwrite: 'auto',
-              onStart: () => {
-                if (characterPortrait) {
-                  characterPortrait.style.visibility = 'visible';
-                  characterPortrait.style.display = 'block';
-                }
-              },
-            });
-          }
-
-          if (characterScene) {
-            gsap.to(characterScene, {
-              opacity: 1,
-              x: 0,
-              scale: 1,
-              duration: 0.65,
-              ease: 'power2.out',
-              overwrite: 'auto',
-              onStart: () => {
-                if (characterScene) {
-                  characterScene.style.visibility = 'visible';
-                  characterScene.style.display = 'flex';
-                }
-              },
-            });
-          }
-
-          if (radialLight) {
-            gsap.to(radialLight, {
-              opacity: 0.65,
-              x: 0,
-              scale: 1,
-              duration: 0.65,
-              ease: 'power2.out',
-              overwrite: 'auto',
-            });
-          }
-
-          if (portfolioWord) {
-            gsap.to(portfolioWord, {
-              opacity: 0.92,
-              scale: 1,
-              duration: 0.65,
-              ease: 'power2.out',
-              overwrite: 'auto',
-            });
-          }
-
-          if (leftFlank) {
-            gsap.to(leftFlank, {
-              opacity: 1,
-              x: 0,
-              duration: 0.65,
-              ease: 'power2.out',
-              overwrite: 'auto',
-            });
-          }
-
-          if (rightFlank) {
-            gsap.to(rightFlank, {
-              opacity: 1,
-              x: 0,
-              duration: 0.65,
-              ease: 'power2.out',
-              overwrite: 'auto',
-            });
-          }
-        } else {
-          // Immediate snap for instant initialization or bypass
-          if (characterPortrait) {
-            characterPortrait.style.opacity = '1';
-            characterPortrait.style.visibility = 'visible';
-            characterPortrait.style.display = 'block';
-            characterPortrait.style.transform = 'none';
-          }
-          if (characterScene) {
-            characterScene.style.opacity = '1';
-            characterScene.style.visibility = 'visible';
-            characterScene.style.display = 'flex';
-            characterScene.style.transform = 'none';
-          }
-          if (radialLight) {
-            radialLight.style.opacity = '0.65';
-            radialLight.style.transform = 'translate3d(-50%, -50%, 0)';
-          }
-          if (portfolioWord) {
-            portfolioWord.style.opacity = '0.92';
-            portfolioWord.style.clipPath = 'none';
-            portfolioWord.style.letterSpacing = '-0.055em';
-            portfolioWord.style.transform = 'translate(-50%, -50%)';
-          }
-          if (leftFlank) {
-            leftFlank.style.opacity = '1';
-            leftFlank.style.transform = 'none';
-          }
-          if (rightFlank) {
-            rightFlank.style.opacity = '1';
-            rightFlank.style.transform = 'none';
-          }
+      const settleHeroState = () => {
+        if (characterPortrait) {
+          gsap.set(characterPortrait, {
+            opacity: 1,
+            y: 0,
+            scale: 1,
+            clearProps: 'clipPath,transform',
+          });
+          characterPortrait.style.visibility = 'visible';
+          characterPortrait.style.display = 'block';
         }
+        if (characterScene) {
+          gsap.set(characterScene, {
+            opacity: 1,
+            x: 0,
+            scale: 1,
+          });
+          characterScene.style.visibility = 'visible';
+          characterScene.style.display = 'flex';
+        }
+        if (radialLight) {
+          gsap.set(radialLight, { opacity: 0.65, x: 0, scale: 1 });
+        }
+        if (portfolioWord) {
+          gsap.set(portfolioWord, {
+            opacity: 0.92,
+            scale: 1,
+            letterSpacing: '-0.055em',
+            clearProps: 'clipPath',
+          });
+        }
+        if (leftFlank) gsap.set(leftFlank, { opacity: 1, x: 0 });
+        if (rightFlank) gsap.set(rightFlank, { opacity: 1, x: 0 });
 
         if (leftLine) leftLine.style.transform = 'scaleX(1)';
         if (rightLine) rightLine.style.transform = 'scaleX(1)';
@@ -384,24 +141,21 @@ export default function HeroExperience() {
           if (title) { title.style.clipPath = 'none'; title.style.opacity = '1'; title.style.transform = 'none'; }
           if (sub) { sub.style.opacity = '1'; sub.style.transform = 'none'; }
         });
-        CharacterController.requestTick();
       };
 
-      const settleHeroImmediately = () => {
-        restoreHeroState(false);
-      };
+      // ======================================================================
+      // 2. First-Load Hero Entrance (GPU-friendly, transforms + opacity)
+      // ======================================================================
+      let entranceTl: gsap.core.Timeline | null = null;
 
       if (prefersReducedMotion || window.scrollY > 40) {
-        settleHeroImmediately();
+        settleHeroState();
       } else {
-        CharacterController.isEntrancePlaying = true;
-
         if (radialLight) radialLight.style.opacity = '0.08';
         if (portfolioWord) {
           portfolioWord.style.opacity = '0';
-          portfolioWord.style.clipPath = 'inset(100% 0% 0% 0%)';
           portfolioWord.style.letterSpacing = '0.04em';
-          portfolioWord.style.transform = 'translate(-50%, -50%)';
+          portfolioWord.style.clipPath = 'inset(100% 0% 0% 0%)';
         }
         if (characterPortrait) {
           characterPortrait.style.opacity = '0';
@@ -410,10 +164,10 @@ export default function HeroExperience() {
 
         if (leftLine) leftLine.style.transform = 'scaleX(0)';
         if (rightLine) rightLine.style.transform = 'scaleX(0)';
-        if (leftTag1) { leftTag1.style.clipPath = 'inset(0% 100% 0% 0%)'; leftTag1.style.opacity = '0'; leftTag1.style.transform = 'translateX(-8px)'; }
-        if (leftTag2) { leftTag2.style.clipPath = 'inset(0% 100% 0% 0%)'; leftTag2.style.opacity = '0'; leftTag2.style.transform = 'translateX(-8px)'; }
-        if (rightTag1) { rightTag1.style.clipPath = 'inset(0% 0% 0% 100%)'; rightTag1.style.opacity = '0'; rightTag1.style.transform = 'translateX(8px)'; }
-        if (rightTag2) { rightTag2.style.clipPath = 'inset(0% 0% 0% 100%)'; rightTag2.style.opacity = '0'; rightTag2.style.transform = 'translateX(8px)'; }
+        if (leftTag1) { leftTag1.style.clipPath = 'inset(0% 100% 0% 0%)'; leftTag1.style.opacity = '0'; }
+        if (leftTag2) { leftTag2.style.clipPath = 'inset(0% 100% 0% 0%)'; leftTag2.style.opacity = '0'; }
+        if (rightTag1) { rightTag1.style.clipPath = 'inset(0% 0% 0% 100%)'; rightTag1.style.opacity = '0'; }
+        if (rightTag2) { rightTag2.style.clipPath = 'inset(0% 0% 0% 100%)'; rightTag2.style.opacity = '0'; }
         if (leftSep) leftSep.style.opacity = '0';
         if (rightSep) rightSep.style.opacity = '0';
 
@@ -435,92 +189,84 @@ export default function HeroExperience() {
           if (sub) { sub.style.opacity = '0'; sub.style.transform = 'translate3d(0, 10px, 0)'; }
         });
 
-        const entranceTl = gsap.timeline({
+        entranceTl = gsap.timeline({
           onComplete: () => {
-            CharacterController.isEntrancePlaying = false;
-            CharacterController.requestTick();
+            settleHeroState();
           },
         });
 
         // 1. PORTFOLIO mask-reveal
-        entranceTl.fromTo(portfolioWord,
+        entranceTl.fromTo(
+          portfolioWord,
           { opacity: 0, clipPath: 'inset(100% 0% 0% 0%)', letterSpacing: '0.04em' },
-          { opacity: 0.92, clipPath: 'inset(0% 0% 0% 0%)', letterSpacing: '-0.055em', duration: 0.70, ease: 'power3.out' },
-          0.22
+          { opacity: 0.92, clipPath: 'inset(0% 0% 0% 0%)', letterSpacing: '-0.055em', duration: 0.7, ease: 'power3.out' },
+          0.2
         );
 
-        // 2. AAKASH rises from below (85vh -> 0%) with authentic settling physics (-4px -> 0px)
-        entranceTl.fromTo(characterPortrait,
+        // 2. AAKASH rises from below (85vh -> 0)
+        entranceTl.fromTo(
+          characterPortrait,
           { y: '85vh', opacity: 0, scale: 0.97 },
-          { y: '0%', opacity: 1, scale: 1, duration: 1.15, ease: 'power3.out' },
-          0.55
+          { y: '0%', opacity: 1, scale: 1, duration: 1.1, ease: 'power3.out' },
+          0.5
         );
-        entranceTl.to(characterPortrait, { y: '-4px', duration: 0.14, ease: 'power1.out' }, 1.70);
-        entranceTl.to(characterPortrait, { y: '0px', duration: 0.18, ease: 'power2.inOut' }, 1.84);
+        entranceTl.to(characterPortrait, { y: '-4px', duration: 0.14, ease: 'power1.out' }, 1.6);
+        entranceTl.to(characterPortrait, { y: '0px', duration: 0.18, ease: 'power2.inOut' }, 1.74);
 
         // 3. Backlight blooms behind Aakash
-        entranceTl.fromTo(radialLight,
+        entranceTl.fromTo(
+          radialLight,
           { opacity: 0.12 },
           { opacity: 0.88, duration: 0.45, ease: 'power2.out' },
-          1.35
+          1.3
         );
-        entranceTl.to(radialLight, { opacity: 0.65, duration: 0.45, ease: 'power2.inOut' }, 1.80);
+        entranceTl.to(radialLight, { opacity: 0.65, duration: 0.45, ease: 'power2.inOut' }, 1.75);
 
         // 4. Side Details Assemble
-        if (leftLine) entranceTl.to(leftLine, { scaleX: 1, duration: 0.22, ease: 'power2.out' }, 1.38);
-        if (leftTag1) entranceTl.to(leftTag1, { clipPath: 'inset(0% 0% 0% 0%)', opacity: 1, x: 0, duration: 0.26, ease: 'power2.out' }, 1.44);
-        if (leftSep) entranceTl.to(leftSep, { opacity: 1, duration: 0.15 }, 1.48);
-        if (leftTag2) entranceTl.to(leftTag2, { clipPath: 'inset(0% 0% 0% 0%)', opacity: 1, x: 0, duration: 0.26, ease: 'power2.out' }, 1.50);
+        if (leftLine) entranceTl.to(leftLine, { scaleX: 1, duration: 0.22, ease: 'power2.out' }, 1.35);
+        if (leftTag1) entranceTl.to(leftTag1, { clipPath: 'inset(0% 0% 0% 0%)', opacity: 1, duration: 0.26, ease: 'power2.out' }, 1.4);
+        if (leftSep) entranceTl.to(leftSep, { opacity: 1, duration: 0.15 }, 1.45);
+        if (leftTag2) entranceTl.to(leftTag2, { clipPath: 'inset(0% 0% 0% 0%)', opacity: 1, duration: 0.26, ease: 'power2.out' }, 1.48);
 
-        if (rightLine) entranceTl.to(rightLine, { scaleX: 1, duration: 0.22, ease: 'power2.out' }, 1.40);
-        if (rightTag1) entranceTl.to(rightTag1, { clipPath: 'inset(0% 0% 0% 0%)', opacity: 1, x: 0, duration: 0.26, ease: 'power2.out' }, 1.46);
-        if (rightSep) entranceTl.to(rightSep, { opacity: 1, duration: 0.15 }, 1.50);
-        if (rightTag2) entranceTl.to(rightTag2, { clipPath: 'inset(0% 0% 0% 0%)', opacity: 1, x: 0, duration: 0.26, ease: 'power2.out' }, 1.52);
+        if (rightLine) entranceTl.to(rightLine, { scaleX: 1, duration: 0.22, ease: 'power2.out' }, 1.36);
+        if (rightTag1) entranceTl.to(rightTag1, { clipPath: 'inset(0% 0% 0% 0%)', opacity: 1, duration: 0.26, ease: 'power2.out' }, 1.42);
+        if (rightSep) entranceTl.to(rightSep, { opacity: 1, duration: 0.15 }, 1.46);
+        if (rightTag2) entranceTl.to(rightTag2, { clipPath: 'inset(0% 0% 0% 0%)', opacity: 1, duration: 0.26, ease: 'power2.out' }, 1.5);
 
         // 5. Copy & CTAs
-        if (greeting) entranceTl.to(greeting, { opacity: 1, y: 0, duration: 0.45, ease: 'power2.out' }, 1.58);
-        if (positioning) entranceTl.to(positioning, { opacity: 1, y: 0, duration: 0.45, ease: 'power2.out' }, 1.66);
-        if (rightMantra) entranceTl.to(rightMantra, { opacity: 1, y: 0, duration: 0.45, ease: 'power2.out' }, 1.72);
+        if (greeting) entranceTl.to(greeting, { opacity: 1, y: 0, duration: 0.45, ease: 'power2.out' }, 1.55);
+        if (positioning) entranceTl.to(positioning, { opacity: 1, y: 0, duration: 0.45, ease: 'power2.out' }, 1.62);
+        if (rightMantra) entranceTl.to(rightMantra, { opacity: 1, y: 0, duration: 0.45, ease: 'power2.out' }, 1.68);
 
         anchorItems.forEach((anchor, idx) => {
-          const baseTime = 1.78 + idx * 0.10;
+          const baseTime = 1.74 + idx * 0.08;
           const num = anchor.querySelector('.anchor-index') as HTMLElement | null;
           const line = anchor.querySelector('.anchor-line') as HTMLElement | null;
           const title = anchor.querySelector('.anchor-title') as HTMLElement | null;
           const sub = anchor.querySelector('.anchor-sub') as HTMLElement | null;
 
-          if (num) entranceTl.to(num, { opacity: 1, y: 0, duration: 0.18, ease: 'power2.out' }, baseTime);
-          if (line) entranceTl.to(line, { scaleX: idx === 0 ? 1 : 0.35, duration: 0.22, ease: 'power2.out' }, baseTime + 0.04);
-          if (title) entranceTl.to(title, { clipPath: 'inset(0% 0% 0% 0%)', opacity: 1, y: 0, duration: 0.24, ease: 'power2.out' }, baseTime + 0.08);
-          if (sub) entranceTl.to(sub, { opacity: 1, y: 0, duration: 0.20, ease: 'power2.out' }, baseTime + 0.12);
+          if (num) entranceTl?.to(num, { opacity: 1, y: 0, duration: 0.18, ease: 'power2.out' }, baseTime);
+          if (line) entranceTl?.to(line, { scaleX: idx === 0 ? 1 : 0.35, duration: 0.22, ease: 'power2.out' }, baseTime + 0.03);
+          if (title) entranceTl?.to(title, { clipPath: 'inset(0% 0% 0% 0%)', opacity: 1, y: 0, duration: 0.22, ease: 'power2.out' }, baseTime + 0.06);
+          if (sub) entranceTl?.to(sub, { opacity: 1, y: 0, duration: 0.18, ease: 'power2.out' }, baseTime + 0.09);
         });
 
-        if (ctaCluster) entranceTl.to(ctaCluster, { opacity: 1, y: 0, duration: 0.45, ease: 'power2.out' }, 1.84);
+        if (ctaCluster) entranceTl.to(ctaCluster, { opacity: 1, y: 0, duration: 0.45, ease: 'power2.out' }, 1.8);
 
-        // Safety skip on user scroll or key interaction
-        let hasSkipped = false;
-        const checkScrollSkip = () => {
-          if (window.scrollY > 40 && !hasSkipped) {
-            triggerSkip();
+        // Instant settle if user scrolls before entrance finishes
+        const skipEntranceOnScroll = () => {
+          if (window.scrollY > 30) {
+            window.removeEventListener('scroll', skipEntranceOnScroll);
+            entranceTl?.kill();
+            settleHeroState();
           }
         };
-        const triggerSkip = () => {
-          if (hasSkipped) return;
-          hasSkipped = true;
-          window.removeEventListener('scroll', checkScrollSkip);
-          window.removeEventListener('keydown', triggerSkip);
-          window.removeEventListener('touchstart', checkScrollSkip);
-          entranceTl.kill();
-          settleHeroImmediately();
-        };
-        window.addEventListener('scroll', checkScrollSkip, { passive: true });
-        window.addEventListener('keydown', triggerSkip, { once: true });
-        window.addEventListener('touchstart', checkScrollSkip, { passive: true, once: true });
+        window.addEventListener('scroll', skipEntranceOnScroll, { passive: true });
       }
 
-      // ----------------------------------------------------------------------
-      // SCROLLTRIGGER STORYTELLING (Desktop)
-      // ----------------------------------------------------------------------
+      // ======================================================================
+      // 3. Desktop Master ScrollTrigger Timeline
+      // ======================================================================
       const mm = gsap.matchMedia();
 
       mm.add('(min-width: 961px) and (prefers-reduced-motion: no-preference)', () => {
@@ -534,7 +280,7 @@ export default function HeroExperience() {
             start: 'top top',
             end: '+=5200',
             pin: true,
-            scrub: 1.5,
+            scrub: 0.8, // Responsive, crisp, weighted motion without delayed lag
             anticipatePin: 1,
             onEnterBack: () => {
               if (characterScene) {
@@ -547,14 +293,9 @@ export default function HeroExperience() {
               }
             },
             onLeaveBack: () => {
-              // Returning completely to the Hero landing state
-              restoreHeroState(true);
-            },
-            onUpdate: (self) => {
-              // Smooth return when scrolling upward into the initial Hero state
-              if (self.direction === -1 && self.progress < 0.04) {
-                restoreHeroState(true);
-              }
+              // Smooth, rock-solid return to hero landing
+              tl.progress(0);
+              settleHeroState();
             },
           },
         });
@@ -581,7 +322,7 @@ export default function HeroExperience() {
           tl.to(aakashShadow, { opacity: 1, duration: 0.9, ease: 'power2.out' }, 0.2);
         }
 
-        // Steps 2–7 & Identity Exit (Modular Builder)
+        // Steps 2–7 & Identity Exit
         buildIdentityTimeline(tl, {
           stmtBackdrop,
           stmtLine1,
@@ -606,7 +347,7 @@ export default function HeroExperience() {
           getAnchorRightX,
         });
 
-        // Step 8: Work Transition Phase (Modular Builder)
+        // Step 8: Work Transition Phase
         buildWorkTransitionTimeline(tl, {
           characterScene,
           characterPortrait,
@@ -616,104 +357,142 @@ export default function HeroExperience() {
           getAnchorRightX,
         });
 
-        // ----------------------------------------------------------------------
-        // POINTER INTERACTION (Desktop Only — Micro-Interactions & Calm Parallax)
-        // ----------------------------------------------------------------------
-        if (window.matchMedia('(min-width: 1025px)').matches) {
-          let mouseX = 0, mouseY = 0;
-          let targetX = 0, targetY = 0;
+        // ====================================================================
+        // Subtle Desktop Pointer Tilt (Only in Hero Zone, Non-conflicting)
+        // ====================================================================
+        let targetNormX = 0;
+        let targetNormY = 0;
+        let curNormX = 0;
+        let curNormY = 0;
+        let isPointerRunning = false;
+        let pointerRafId = 0;
 
-          window.addEventListener('mousemove', (e) => {
-            targetX = (e.clientX / window.innerWidth - 0.5) * 2;
-            targetY = (e.clientY / window.innerHeight - 0.5) * 2;
-          }, { passive: true });
+        const updatePointerMotion = () => {
+          curNormX += (targetNormX - curNormX) * 0.07;
+          curNormY += (targetNormY - curNormY) * 0.07;
 
-          gsap.ticker.add(() => {
-            mouseX += (targetX - mouseX) * 0.08;
-            mouseY += (targetY - mouseY) * 0.08;
-
-            // Only apply mouse parallax on portrait when in hero zone (< 120px) so it doesn't fight ScrollTrigger
-            if (characterPortrait && !CharacterController.isEntrancePlaying && window.scrollY < 120) {
-              gsap.set(characterPortrait, {
-                x: mouseX * 3,
-                y: mouseY * 2.5,
-              });
+          // Apply subtle ambient parallax only when scrolled within the hero zone (< 100px)
+          if (window.scrollY < 100) {
+            if (characterStage) {
+              characterStage.style.transform = `translate3d(${(curNormX * 4).toFixed(1)}px, ${(curNormY * 3).toFixed(1)}px, 0)`;
             }
+            if (radialLight) {
+              radialLight.style.transform = `translate3d(calc(-50% + ${(curNormX * 8).toFixed(1)}px), calc(-50% + ${(curNormY * 5).toFixed(1)}px), 0)`;
+            }
+          }
 
-            attachIdentityParallax(
-              mouseX,
-              mouseY,
-              [frame1, frame2, frame3, frame4],
-              [envSymMarketer, envSymBrand, envSymCreator, envSymSpeaker],
-              roleSpotlight
-            );
-          });
-        }
+          // Identity active frame tilt
+          attachIdentityParallax(
+            curNormX,
+            curNormY,
+            [frame1, frame2, frame3, frame4],
+            [envSymMarketer, envSymBrand, envSymCreator, envSymSpeaker],
+            roleSpotlight
+          );
+
+          const diff = Math.abs(targetNormX - curNormX) + Math.abs(targetNormY - curNormY);
+          if (diff > 0.005) {
+            pointerRafId = requestAnimationFrame(updatePointerMotion);
+          } else {
+            isPointerRunning = false;
+          }
+        };
+
+        const onMouseMove = (e: MouseEvent) => {
+          if (window.scrollY > 2000) return; // Skip calculation when far down
+          targetNormX = (e.clientX / window.innerWidth - 0.5) * 2;
+          targetNormY = (e.clientY / window.innerHeight - 0.5) * 2;
+
+          if (!isPointerRunning) {
+            isPointerRunning = true;
+            pointerRafId = requestAnimationFrame(updatePointerMotion);
+          }
+        };
+
+        const onMouseLeave = () => {
+          targetNormX = 0;
+          targetNormY = 0;
+          if (!isPointerRunning) {
+            isPointerRunning = true;
+            pointerRafId = requestAnimationFrame(updatePointerMotion);
+          }
+        };
+
+        window.addEventListener('mousemove', onMouseMove, { passive: true });
+        window.addEventListener('mouseleave', onMouseLeave, { passive: true });
+
+        return () => {
+          window.removeEventListener('mousemove', onMouseMove);
+          window.removeEventListener('mouseleave', onMouseLeave);
+          if (pointerRafId) cancelAnimationFrame(pointerRafId);
+        };
       });
 
-      // Mobile reveals
+      // ======================================================================
+      // 4. Mobile Reveals (Lightweight, No-scrub for Instant Touch Response)
+      // ======================================================================
       mm.add('(max-width: 960px)', () => {
         const stmtLines = document.querySelectorAll('.stmt-line');
-        stmtLines.forEach((line) => {
-          gsap.fromTo(line,
-            { opacity: 0.35, y: 18 },
+        if (stmtLines.length) {
+          gsap.fromTo(
+            stmtLines,
+            { opacity: 0.35, y: 16 },
             {
               opacity: 1,
               y: 0,
               duration: 0.7,
+              stagger: 0.12,
               ease: 'power2.out',
               scrollTrigger: {
-                trigger: line,
-                start: 'top 88%',
-                end: 'top 65%',
-                scrub: 0.35,
+                trigger: '#hero-statement-backdrop',
+                start: 'top 85%',
+                toggleActions: 'play none none reverse',
               },
             }
           );
-        });
+        }
 
         const roleFrames = document.querySelectorAll('.editorial-role-frame');
         roleFrames.forEach((frame) => {
-          gsap.fromTo(frame,
-            { opacity: 0.25, y: 25, scale: 0.94 },
+          gsap.fromTo(
+            frame,
+            { opacity: 0.3, y: 20 },
             {
               opacity: 1,
               y: 0,
-              scale: 1,
-              duration: 0.75,
+              duration: 0.65,
               ease: 'power2.out',
               scrollTrigger: {
                 trigger: frame,
-                start: 'top 88%',
-                end: 'top 58%',
-                scrub: 0.35,
+                start: 'top 85%',
+                toggleActions: 'play none none reverse',
               },
             }
           );
         });
 
         if (workTransition) {
-          gsap.fromTo(workTransition,
-            { opacity: 0.3, y: 25 },
+          gsap.fromTo(
+            workTransition,
+            { opacity: 0.3, y: 20 },
             {
               opacity: 1,
               y: 0,
-              duration: 0.8,
+              duration: 0.7,
               ease: 'power2.out',
               scrollTrigger: {
                 trigger: workTransition,
                 start: 'top 85%',
-                end: 'top 55%',
-                scrub: 0.4,
+                toggleActions: 'play none none reverse',
               },
             }
           );
         }
       });
 
-      // ----------------------------------------------------------------------
-      // ANCHOR HOVER PREVIEW CONTROLLER
-      // ----------------------------------------------------------------------
+      // ======================================================================
+      // 5. Anchor Hover Preview Controller
+      // ======================================================================
       const previewStage = document.getElementById('hero-hover-preview');
       const previewImg = document.getElementById('hover-preview-img') as HTMLImageElement | null;
       const previewTitle = document.getElementById('hover-preview-title');
@@ -754,7 +533,7 @@ export default function HeroExperience() {
                 if (previewSub && subText) previewSub.textContent = subText;
                 if (previewKicker && kickerText) previewKicker.textContent = kickerText;
                 if (previewImg) previewImg.style.opacity = '1';
-              }, 120);
+              }, 100);
             } else {
               if (previewImg && previewSrc) {
                 previewImg.src = previewSrc;
@@ -786,29 +565,9 @@ export default function HeroExperience() {
             });
 
             previewStage.classList.remove('active');
-            previewStage.style.transform = '';
           });
         });
-
-        window.addEventListener('mousemove', (e) => {
-          if (window.innerWidth <= 960 || !previewStage.classList.contains('active')) return;
-          const normX = (e.clientX / window.innerWidth) * 2 - 1;
-          const normY = (e.clientY / window.innerHeight) * 2 - 1;
-          previewStage.style.transform = `translate(${(normX * 6).toFixed(1)}px, ${(normY * 4).toFixed(1)}px) scale(1) rotate(0deg)`;
-        }, { passive: true });
       }
-
-      // Global top scroll return safety: ensures portrait, scene and lighting smoothly restore when returning to top
-      const handleScrollReturn = () => {
-        if (window.scrollY <= 80) {
-          const portraitOp = characterPortrait ? Number(gsap.getProperty(characterPortrait, 'opacity')) : 1;
-          const sceneOp = characterScene ? Number(gsap.getProperty(characterScene, 'opacity')) : 1;
-          if (portraitOp < 0.95 || sceneOp < 0.95) {
-            restoreHeroState(true);
-          }
-        }
-      };
-      window.addEventListener('scroll', handleScrollReturn, { passive: true });
     }, containerRef);
 
     return () => {

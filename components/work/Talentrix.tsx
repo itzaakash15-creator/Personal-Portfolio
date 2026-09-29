@@ -1,8 +1,7 @@
 'use client';
 
 import React, { useEffect, useRef } from 'react';
-import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { gsap } from '../../lib/gsap';
 
 interface TalentrixProps {
   onOpenDrawer?: (drawerId: string) => void;
@@ -15,64 +14,44 @@ export default function Talentrix({ onOpenDrawer, onOpenProof }: TalentrixProps)
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
-    gsap.registerPlugin(ScrollTrigger);
 
     const ctx = gsap.context(() => {
       const sweepLine = document.getElementById('talentrix-sweep-line');
       const talentrixTitle = document.querySelector('.pro-talentrix-word');
       const poster = posterRef.current;
 
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: containerRef.current,
+          start: 'top 82%',
+          toggleActions: 'play none none reverse',
+        },
+      });
+
       if (sweepLine) {
-        gsap.fromTo(
+        tl.fromTo(
           sweepLine,
           { scaleX: 0 },
-          {
-            scaleX: 1,
-            duration: 1.2,
-            ease: 'power3.inOut',
-            scrollTrigger: {
-              trigger: sweepLine,
-              start: 'top 85%',
-              toggleActions: 'play none none reverse',
-            },
-          }
+          { scaleX: 1, duration: 1.0, ease: 'power3.inOut' },
+          0
         );
       }
 
       if (talentrixTitle) {
-        gsap.fromTo(
+        tl.fromTo(
           talentrixTitle,
           { y: '100%', opacity: 0 },
-          {
-            y: '0%',
-            opacity: 1,
-            duration: 1.1,
-            ease: 'power3.out',
-            scrollTrigger: {
-              trigger: containerRef.current,
-              start: 'top 80%',
-              toggleActions: 'play none none reverse',
-            },
-          }
+          { y: '0%', opacity: 1, duration: 0.9, ease: 'power3.out' },
+          0.1
         );
       }
 
       if (poster) {
-        gsap.fromTo(
+        tl.fromTo(
           poster,
-          { scale: 0.9, y: 50, opacity: 0.4 },
-          {
-            scale: 1,
-            y: 0,
-            opacity: 1,
-            duration: 1.2,
-            ease: 'power2.out',
-            scrollTrigger: {
-              trigger: poster,
-              start: 'top 85%',
-              toggleActions: 'play none none reverse',
-            },
-          }
+          { scale: 0.92, y: 40, opacity: 0.4 },
+          { scale: 1, y: 0, opacity: 1, duration: 1.0, ease: 'power2.out' },
+          0.15
         );
       }
     }, containerRef);

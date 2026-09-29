@@ -1,9 +1,38 @@
 import type { Metadata } from 'next';
 import React from 'react';
+import { Inter, Playfair_Display, JetBrains_Mono, Syne } from 'next/font/google';
 import '../styles/main.css';
 import '../styles/nav.css';
 import '../styles/editorial.css';
 import '../styles/professional-redesign.css';
+
+const inter = Inter({
+  subsets: ['latin'],
+  weight: ['300', '400', '500', '600', '700', '800', '900'],
+  variable: '--font-sans',
+  display: 'swap',
+});
+
+const playfair = Playfair_Display({
+  subsets: ['latin'],
+  weight: ['600', '700'],
+  variable: '--font-serif',
+  display: 'swap',
+});
+
+const jetbrainsMono = JetBrains_Mono({
+  subsets: ['latin'],
+  weight: ['400', '500', '600'],
+  variable: '--font-mono',
+  display: 'swap',
+});
+
+const syne = Syne({
+  subsets: ['latin'],
+  weight: ['700', '800'],
+  variable: '--font-syne',
+  display: 'swap',
+});
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://aakashk.vercel.app'),
@@ -48,15 +77,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
-      <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,600&family=Playfair+Display:ital,wght@0,600;0,700;1,400;1,600;1,700&family=JetBrains+Mono:wght@400;500;600&family=Syne:wght@700;800&display=swap"
-          rel="stylesheet"
-        />
-      </head>
+    <html
+      lang="en"
+      className={`${inter.variable} ${playfair.variable} ${jetbrainsMono.variable} ${syne.variable}`}
+    >
       <body>{children}</body>
     </html>
   );

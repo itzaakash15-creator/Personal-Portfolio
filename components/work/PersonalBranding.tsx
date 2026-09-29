@@ -1,8 +1,8 @@
 'use client';
 
+
 import React, { useEffect, useRef, useState } from 'react';
-import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { gsap } from '../../lib/gsap';
 
 interface PersonalBrandingProps {
   onOpenDrawer?: (drawerId: string) => void;
@@ -21,7 +21,6 @@ export default function PersonalBranding({ onOpenDrawer, onOpenProof }: Personal
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
-    gsap.registerPlugin(ScrollTrigger);
 
     const ctx = gsap.context(() => {
       if (stackRef.current) {
