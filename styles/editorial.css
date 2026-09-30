@@ -272,7 +272,10 @@
   display: inline-flex;
   align-items: center;
   gap: 0.55rem;
-  overflow: hidden;
+  overflow: visible;
+  white-space: nowrap;
+  width: fit-content;
+  min-width: max-content;
 }
 
 .poster-tag {
@@ -283,6 +286,7 @@
   text-transform: uppercase;
   color: var(--accent-champagne);
   display: inline-block;
+  white-space: nowrap;
   will-change: transform, clip-path, opacity;
 }
 
@@ -916,7 +920,7 @@
 .env-symbol-layer {
   position: absolute;
   top: 48%;
-  left: 36%;
+  left: 68%;
   transform: translate(-50%, -50%);
   width: clamp(380px, 48vw, 680px);
   height: auto;
@@ -986,9 +990,9 @@
 .active-role-stage {
   position: absolute;
   top: 52%;
-  left: clamp(2rem, 5.5vw, 6.5rem);
+  left: clamp(42vw, 45vw, 48vw);
   transform: translateY(-50%);
-  width: clamp(390px, 52vw, 680px);
+  width: clamp(390px, 48vw, 640px);
   max-width: min(90vw, 700px);
   z-index: 8;
   pointer-events: none;
@@ -1124,6 +1128,17 @@
   }
   .stmt-line-3 .stmt-text {
     font-size: clamp(4.2rem, 11vw, 8.4rem);
+  }
+}
+
+@media (max-width: 960px) {
+  .active-role-stage {
+    left: clamp(1.25rem, 5vw, 3rem);
+    width: clamp(340px, 90vw, 680px);
+    max-width: calc(100vw - 2.5rem);
+  }
+  .env-symbol-layer {
+    left: 50%;
   }
 }
 

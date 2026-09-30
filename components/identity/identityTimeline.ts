@@ -20,8 +20,6 @@ export interface IdentityTimelineElements {
   historyRow?: HTMLElement | null;
   envSymbolsWrap?: HTMLElement | null;
   wrapper?: HTMLElement | null;
-  characterScene: HTMLElement | null;
-  getAnchorRightX: () => number;
 }
 
 export function buildIdentityTimeline(tl: gsap.core.Timeline, el: IdentityTimelineElements) {
@@ -117,9 +115,6 @@ export function buildIdentityTimeline(tl: gsap.core.Timeline, el: IdentityTimeli
       8.35
     );
   }
-  if (el.characterScene) {
-    tl.to(el.characterScene, { x: () => el.getAnchorRightX() + 6, duration: 0.8, ease: 'power1.out', force3D: true }, 8.5);
-  }
   tl.to(el.frame1, { opacity: 1, duration: 1.8 }, 9.3);
 
   // Store Marketer into Slot 1
@@ -164,9 +159,6 @@ export function buildIdentityTimeline(tl: gsap.core.Timeline, el: IdentityTimeli
       { y: 0, scale: 1, rotateX: 0, rotateZ: 0, opacity: 1, duration: 0.95, ease: 'power3.out', force3D: true },
       12.3
     );
-  }
-  if (el.characterScene) {
-    tl.to(el.characterScene, { x: () => el.getAnchorRightX() - 4, duration: 0.8, ease: 'power1.out', force3D: true }, 12.45);
   }
   tl.to(el.frame2, { opacity: 1, duration: 1.8 }, 13.25);
 
@@ -213,9 +205,6 @@ export function buildIdentityTimeline(tl: gsap.core.Timeline, el: IdentityTimeli
       16.2
     );
   }
-  if (el.characterScene) {
-    tl.to(el.characterScene, { x: () => el.getAnchorRightX() + 4, duration: 0.8, ease: 'power1.out', force3D: true }, 16.35);
-  }
   tl.to(el.frame3, { opacity: 1, duration: 1.8 }, 17.15);
 
   // Store Creator into Slot 3
@@ -260,9 +249,6 @@ export function buildIdentityTimeline(tl: gsap.core.Timeline, el: IdentityTimeli
       { y: 0, scale: 1, rotateX: 0, rotateZ: 0, opacity: 1, duration: 0.95, ease: 'power3.out', force3D: true },
       20.1
     );
-  }
-  if (el.characterScene) {
-    tl.to(el.characterScene, { x: () => el.getAnchorRightX() - 2, duration: 0.8, ease: 'power1.out', force3D: true }, 20.25);
   }
   tl.to(el.frame4, { opacity: 1, duration: 1.8 }, 21.05);
 

@@ -252,6 +252,15 @@ export default function HeroExperience() {
         const entranceTl = gsap.timeline({
           onComplete: () => {
             (window as any).__heroEntranceDone = true;
+            [leftTag1, leftTag2, rightTag1, rightTag2].forEach((tag) => {
+              if (tag) {
+                tag.style.clipPath = 'none';
+                tag.style.opacity = '1';
+                tag.style.transform = 'none';
+              }
+            });
+            if (leftSep) { leftSep.style.opacity = '1'; leftSep.style.transform = 'none'; }
+            if (rightSep) { rightSep.style.opacity = '1'; rightSep.style.transform = 'none'; }
           },
         });
 
@@ -310,7 +319,7 @@ export default function HeroExperience() {
         if (rightLine) entranceTl.to(rightLine, { scaleX: 1, duration: 0.22, ease: 'power2.out' }, 1.12);
         if (rightTag1) entranceTl.to(rightTag1, { clipPath: 'inset(0% 0% 0% 0%)', opacity: 1, x: 0, duration: 0.24, ease: 'power2.out' }, 1.16);
         if (rightSep) entranceTl.to(rightSep, { opacity: 1, duration: 0.14 }, 1.20);
-        if (rightTag2) entranceTl.to(rightTag2, { clipPath: 'inset(0% 0% 100%)', opacity: 1, x: 0, duration: 0.24, ease: 'power2.out' }, 1.22);
+        if (rightTag2) entranceTl.to(rightTag2, { clipPath: 'inset(0% 0% 0% 0%)', opacity: 1, x: 0, duration: 0.24, ease: 'power2.out' }, 1.22);
 
         if (positioning) entranceTl.to(positioning, { opacity: 1, y: 0, duration: 0.45, ease: 'power2.out', force3D: true }, 1.26);
         if (rightMantra) entranceTl.to(rightMantra, { opacity: 1, y: 0, duration: 0.45, ease: 'power2.out', force3D: true }, 1.34);

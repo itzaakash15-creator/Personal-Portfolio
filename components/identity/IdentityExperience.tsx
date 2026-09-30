@@ -100,8 +100,6 @@ export default function IdentityExperience() {
           historyRow,
           envSymbolsWrap,
           wrapper: section,
-          characterScene: null,
-          getAnchorRightX: () => 0,
         });
 
         // Mouse Parallax for active role card (runs only when section is active)
