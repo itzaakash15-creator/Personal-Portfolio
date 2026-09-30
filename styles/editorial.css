@@ -311,13 +311,15 @@
 
 .hero-poster-name {
   font-family: var(--font-sans);
-  font-size: clamp(3.2rem, 6.5vw, 5.6rem);
+  font-size: clamp(3.8rem, 7.6vw, 6.5rem);
   font-weight: 900;
   line-height: 0.88;
-  letter-spacing: -0.04em;
+  letter-spacing: -0.035em;
   color: #ffffff;
   text-transform: uppercase;
   margin: 0;
+  text-shadow: 0 4px 30px rgba(0, 0, 0, 0.45);
+  will-change: transform, opacity, filter;
 }
 
 /* Positioning Block */

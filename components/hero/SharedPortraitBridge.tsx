@@ -19,22 +19,23 @@ export default function SharedPortraitBridge() {
       const dissolveWrapper = document.getElementById('portrait-dissolve-wrapper');
       const gradientOverlay = document.getElementById('portrait-gradient-overlay');
       const rimLight = document.getElementById('aakash-rim-light');
+      const workEl = document.getElementById('work');
 
       if (!characterScene || !characterPortrait || !container) return;
 
       const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
       const isTouch = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
 
-      // Calculates dynamic right-side anchor offset (7–12vw padding from right edge)
+      // Calculates dynamic right-side anchor offset (6–10vw padding from right edge)
       const getAnchorRightX = () => {
         if (typeof window === 'undefined') return 340;
         const w = window.innerWidth;
         if (w <= 960) return 0;
         const pw = Math.min(Math.max(w * 0.34, 380), 560);
-        const targetRightMargin = w * 0.09; // 9vw from right edge
+        const targetRightMargin = w * 0.08; // 8vw from right edge
         const desiredCenter = w - targetRightMargin - (pw * 0.47);
         const deltaX = desiredCenter - (w / 2);
-        return Math.max(deltaX, 220);
+        return Math.max(deltaX, 200);
       };
 
       // Canonical restore for top Hero state
@@ -49,7 +50,7 @@ export default function SharedPortraitBridge() {
             scale: 1,
             rotation: 0,
             opacity: 1,
-            duration: 0.6,
+            duration: 0.5,
             ease: 'power2.out',
             overwrite: 'auto',
           });
@@ -57,6 +58,7 @@ export default function SharedPortraitBridge() {
             gsap.to(dissolveWrapper, {
               opacity: 1,
               y: 0,
+              scale: 1,
               duration: 0.5,
               ease: 'power2.out',
               overwrite: 'auto',
@@ -77,7 +79,7 @@ export default function SharedPortraitBridge() {
             opacity: 1,
           });
           if (dissolveWrapper) {
-            gsap.set(dissolveWrapper, { opacity: 1, y: 0 });
+            gsap.set(dissolveWrapper, { opacity: 1, y: 0, scale: 1 });
           }
           if (gradientOverlay) {
             gsap.set(gradientOverlay, { opacity: 0 });
@@ -91,58 +93,37 @@ export default function SharedPortraitBridge() {
         }
       };
 
-      let isEntrancePlaying = false;
-      const isInitial = window.scrollY <= 40 && !prefersReducedMotion;
-
-      if (!isInitial) {
-        restoreHeroState(false);
-      } else {
-        isEntrancePlaying = true;
-        gsap.set(characterPortrait, {
-          y: '85vh',
-          opacity: 0,
-          scale: 0.97,
-        });
-
-        const entranceTl = gsap.timeline({
-          onComplete: () => {
-            isEntrancePlaying = false;
-          },
-        });
-
-        // Exact approved first-load physics rise: 85vh -> 0% with settling (-4px -> 0px)
-        entranceTl.fromTo(characterPortrait,
-          { y: '85vh', opacity: 0, scale: 0.97 },
-          { y: '0%', opacity: 1, scale: 1, duration: 1.15, ease: 'power3.out' },
-          0.55
-        );
-        entranceTl.to(characterPortrait, { y: '-4px', duration: 0.14, ease: 'power1.out' }, 1.70);
-        entranceTl.to(characterPortrait, { y: '0px', duration: 0.18, ease: 'power2.inOut' }, 1.84);
-
-        // Skip on early user interaction
-        let hasSkipped = false;
-        const triggerSkip = () => {
-          if (hasSkipped) return;
-          hasSkipped = true;
-          window.removeEventListener('scroll', checkScrollSkip);
-          window.removeEventListener('keydown', triggerSkip);
-          window.removeEventListener('touchstart', checkScrollSkip);
-          entranceTl.kill();
-          isEntrancePlaying = false;
-          restoreHeroState(false);
-        };
-        const checkScrollSkip = () => {
-          if (window.scrollY > 30 && !hasSkipped) {
-            triggerSkip();
+      // ======================================================================
+      // Triple-Layer Boundary Enforcement with Section 3 (#work / Executive Hook)
+      // Once the user enters Section 3 (#work), the portrait is guaranteed completely gone
+      // ======================================================================
+      const checkBoundary = () => {
+        if (!container) return;
+        if (workEl) {
+          const workRect = workEl.getBoundingClientRect();
+          // If Section 3 (#work) top has entered the viewport:
+          if (workRect.top <= window.innerHeight) {
+            container.style.display = 'none';
+            container.style.visibility = 'hidden';
+            return;
           }
-        };
-        window.addEventListener('scroll', checkScrollSkip, { passive: true });
-        window.addEventListener('keydown', triggerSkip, { once: true });
-        window.addEventListener('touchstart', checkScrollSkip, { passive: true, once: true });
-      }
+        }
+        // Within Hero and Roles:
+        container.style.display = 'flex';
+        container.style.visibility = 'visible';
+
+        // When returning to top Hero position:
+        if (window.scrollY <= 40) {
+          restoreHeroState(false);
+        }
+      };
+
+      window.addEventListener('scroll', checkBoundary, { passive: true });
+      checkBoundary();
 
       // ======================================================================
       // Master ScrollTrigger Portrait Bridge (Desktop)
+      // Controlled lifecycle: Hero -> Roles -> Disappear at Roles End
       // ======================================================================
       const mm = gsap.matchMedia();
 
@@ -151,28 +132,34 @@ export default function SharedPortraitBridge() {
           scrollTrigger: {
             trigger: '#hero-experience',
             start: 'top top',
-            endTrigger: '#future',
+            endTrigger: '#work',
             end: 'top bottom',
             scrub: 0.6,
             anticipatePin: 1,
             refreshPriority: -1,
             invalidateOnRefresh: true,
             onUpdate: (self) => {
-              if (self.progress === 0 && window.scrollY <= 40) {
-                restoreHeroState(false);
+              if (self.progress >= 0.999) {
+                container.style.display = 'none';
+                container.style.visibility = 'hidden';
+              } else {
+                container.style.display = 'flex';
+                container.style.visibility = 'visible';
               }
             },
             onLeave: () => {
+              container.style.display = 'none';
               container.style.visibility = 'hidden';
             },
             onEnterBack: () => {
+              container.style.display = 'flex';
               container.style.visibility = 'visible';
             },
           },
         });
 
-        // 1. Hero -> Identity Glide (0 -> 1.8):
-        // Portrait smoothly moves from center toward right side (7–12vw margin) with subtle cinematic arc
+        // 1. Hero -> Roles Glide (0 -> 1.8 units):
+        // Portrait smoothly moves from center toward right side (6–10vw margin) with subtle cinematic arc
         portraitTl.to(characterScene, {
           x: () => getAnchorRightX(),
           y: -12,
@@ -186,7 +173,7 @@ export default function SharedPortraitBridge() {
           portraitTl.fromTo(rimLight, { opacity: 0 }, { opacity: 0.65, duration: 1.8, ease: 'power1.inOut' }, 0);
         }
 
-        // 2. Identity Resting Position & Hold through 4 Roles (1.8 -> 8.2):
+        // 2. Roles Resting Position & Hold through 4 Roles (1.8 -> 7.5 units):
         // Settle rotation gently to 0, remain the steadfast human anchor while Marketer, Brand Builder, Creator, Speaker play
         portraitTl.to(characterScene, {
           rotation: 0,
@@ -199,24 +186,25 @@ export default function SharedPortraitBridge() {
           y: -12,
           scale: 0.94,
           opacity: 1,
-          duration: 6.0,
+          duration: 5.3,
         }, 2.2);
 
-        // 3. Gradual Cinematic Exit Dissolve (8.2 -> 10.0):
+        // 3. Gradual Cinematic Exit Dissolve (7.5 -> 10.0 units, final ~25% of Roles scroll):
         // Vertical gradient overlay dissolves lower body first, then whole portrait dissolves into dark background
         if (gradientOverlay) {
-          portraitTl.fromTo(gradientOverlay, { opacity: 0 }, { opacity: 1, duration: 1.0, ease: 'power2.in' }, 8.2);
+          portraitTl.fromTo(gradientOverlay, { opacity: 0 }, { opacity: 1, duration: 1.5, ease: 'power2.in' }, 7.5);
         }
         if (rimLight) {
-          portraitTl.to(rimLight, { opacity: 0, duration: 1.0 }, 8.4);
+          portraitTl.to(rimLight, { opacity: 0, duration: 1.2 }, 7.8);
         }
         if (dissolveWrapper) {
           portraitTl.to(dissolveWrapper, {
             opacity: 0,
-            y: -22,
-            duration: 1.4,
+            y: 20,
+            scale: 0.97,
+            duration: 2.0,
             ease: 'power2.inOut',
-          }, 8.6);
+          }, 8.0);
         }
       });
 
@@ -226,14 +214,16 @@ export default function SharedPortraitBridge() {
           scrollTrigger: {
             trigger: '#hero-experience',
             start: 'top top',
-            endTrigger: '#future',
+            endTrigger: '#work',
             end: 'top bottom',
             scrub: 0.3,
             refreshPriority: -1,
             onLeave: () => {
+              container.style.display = 'none';
               container.style.visibility = 'hidden';
             },
             onEnterBack: () => {
+              container.style.display = 'flex';
               container.style.visibility = 'visible';
             },
           },
@@ -248,18 +238,18 @@ export default function SharedPortraitBridge() {
         portraitTl.to(characterScene, {
           x: () => getAnchorRightX(),
           opacity: 1,
-          duration: 6.8,
+          duration: 6.3,
         }, 1.2);
 
         if (dissolveWrapper) {
           portraitTl.to(dissolveWrapper, {
             opacity: 0,
-            duration: 2.0,
-          }, 8.0);
+            duration: 2.5,
+          }, 7.5);
         }
       });
 
-      // Mobile adaptation: no large sideways glide, gentle scale and fade before role text
+      // Mobile adaptation: no horizontal overflow, gentle scale and fade before role text
       mm.add('(max-width: 960px)', () => {
         const portraitTl = gsap.timeline({
           scrollTrigger: {
@@ -270,9 +260,11 @@ export default function SharedPortraitBridge() {
             scrub: 0.5,
             invalidateOnRefresh: true,
             onLeave: () => {
+              container.style.display = 'none';
               container.style.visibility = 'hidden';
             },
             onEnterBack: () => {
+              container.style.display = 'flex';
               container.style.visibility = 'visible';
             },
           },
@@ -295,14 +287,14 @@ export default function SharedPortraitBridge() {
         }
       });
 
-      // Micro mouse parallax on child portrait image only in Hero zone (never conflicts with parent characterScene)
+      // Micro mouse parallax on wrapper only when in Hero zone and entrance is settled
       if (!isTouch && !prefersReducedMotion) {
         const isDesktop = () => window.innerWidth > 960;
         let pX = 0, pY = 0;
         let tX = 0, tY = 0;
 
         const onPointerMove = (e: MouseEvent) => {
-          if (!isDesktop() || isEntrancePlaying || window.scrollY > 80) return;
+          if (!isDesktop() || !(window as any).__heroEntranceDone || window.scrollY > 80) return;
           tX = (e.clientX / window.innerWidth - 0.5) * 6;
           tY = (e.clientY / window.innerHeight - 0.5) * 4;
         };
@@ -310,11 +302,11 @@ export default function SharedPortraitBridge() {
         window.addEventListener('mousemove', onPointerMove, { passive: true });
 
         const parallaxTick = () => {
-          if (window.scrollY < 80 && !isEntrancePlaying) {
+          if (window.scrollY < 80 && (window as any).__heroEntranceDone) {
             pX += (tX - pX) * 0.08;
             pY += (tY - pY) * 0.08;
-            if (characterPortrait) {
-              characterPortrait.style.transform = `translate3d(${pX.toFixed(2)}px, ${pY.toFixed(2)}px, 0)`;
+            if (dissolveWrapper && Math.abs(pX) > 0.01) {
+              dissolveWrapper.style.transform = `translate3d(${pX.toFixed(2)}px, ${pY.toFixed(2)}px, 0)`;
             }
           }
         };
@@ -326,14 +318,6 @@ export default function SharedPortraitBridge() {
           gsap.ticker.remove(parallaxTick);
         };
       }
-
-      // Global scroll return safety
-      const handleScrollReturn = () => {
-        if (window.scrollY <= 40) {
-          restoreHeroState(true);
-        }
-      };
-      window.addEventListener('scroll', handleScrollReturn, { passive: true });
     }, containerRef);
 
     return () => {

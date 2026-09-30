@@ -162,6 +162,23 @@ export default function HeroExperience() {
             el.style.transform = 'none';
           }
         });
+        const nameEl = document.querySelector('.hero-poster-name') as HTMLElement | null;
+        const salutationEl = document.querySelector('.hero-salutation') as HTMLElement | null;
+        const characterPortrait = document.getElementById('character-portrait') as HTMLElement | null;
+        if (nameEl) {
+          nameEl.style.opacity = '1';
+          nameEl.style.transform = 'none';
+          nameEl.style.filter = 'none';
+        }
+        if (salutationEl) {
+          salutationEl.style.opacity = '1';
+          salutationEl.style.transform = 'none';
+        }
+        if (characterPortrait) {
+          characterPortrait.style.opacity = '1';
+          characterPortrait.style.transform = 'none';
+        }
+        (window as any).__heroEntranceDone = true;
         anchorItems.forEach((anchor, idx) => {
           const num = anchor.querySelector('.anchor-index') as HTMLElement | null;
           const line = anchor.querySelector('.anchor-line') as HTMLElement | null;
@@ -177,6 +194,10 @@ export default function HeroExperience() {
       if (prefersReducedMotion || window.scrollY > 40) {
         restoreHeroState(false);
       } else {
+        const nameEl = document.querySelector('.hero-poster-name') as HTMLElement | null;
+        const salutationEl = document.querySelector('.hero-salutation') as HTMLElement | null;
+        const characterPortrait = document.getElementById('character-portrait') as HTMLElement | null;
+
         if (radialLight) radialLight.style.opacity = '0.08';
         if (portfolioWord) {
           portfolioWord.style.opacity = '0';
@@ -194,7 +215,21 @@ export default function HeroExperience() {
         if (leftSep) leftSep.style.opacity = '0';
         if (rightSep) rightSep.style.opacity = '0';
 
-        [greeting, positioning, ctaCluster, rightMantra].forEach((el) => {
+        if (salutationEl) {
+          salutationEl.style.opacity = '0';
+          salutationEl.style.transform = 'translate3d(0, 12px, 0)';
+        }
+        if (nameEl) {
+          nameEl.style.opacity = '0';
+          nameEl.style.transform = 'translate3d(0, 20px, 0)';
+          nameEl.style.filter = 'blur(6px)';
+        }
+        if (characterPortrait) {
+          characterPortrait.style.opacity = '0';
+          characterPortrait.style.transform = 'translate3d(0, 100px, 0) scale(0.95)';
+        }
+
+        [positioning, ctaCluster, rightMantra].forEach((el) => {
           if (el) {
             el.style.opacity = '0';
             el.style.transform = 'translate3d(0, 16px, 0)';
@@ -212,41 +247,76 @@ export default function HeroExperience() {
           if (sub) { sub.style.opacity = '0'; sub.style.transform = 'translate3d(0, 10px, 0)'; }
         });
 
-        const entranceTl = gsap.timeline();
+        const entranceTl = gsap.timeline({
+          onComplete: () => {
+            (window as any).__heroEntranceDone = true;
+          },
+        });
 
-        // 1. AAKASH mask-reveal
-        entranceTl.fromTo(portfolioWord,
-          { opacity: 0, clipPath: 'inset(100% 0% 0% 0%)', letterSpacing: '0.04em' },
-          { opacity: 0.92, clipPath: 'inset(0% 0% 0% 0%)', letterSpacing: '-0.04em', duration: 0.70, ease: 'power3.out' },
-          0.22
-        );
+        // STEP 1 — NAME APPEARS FIRST (0.05s)
+        // AAKASH. name entrance: opacity 0 -> 1, translateY 20px -> 0, subtle blur 6px -> 0, duration 800ms, power3.out
+        if (salutationEl) {
+          entranceTl.to(salutationEl, { opacity: 1, y: 0, duration: 0.65, ease: 'power3.out' }, 0.05);
+        }
+        if (nameEl) {
+          entranceTl.to(nameEl, {
+            opacity: 1,
+            y: 0,
+            filter: 'blur(0px)',
+            duration: 0.82,
+            ease: 'power3.out',
+          }, 0.08);
+        }
 
-        // 2. Backlight blooms
-        entranceTl.fromTo(radialLight,
-          { opacity: 0.12 },
-          { opacity: 0.88, duration: 0.45, ease: 'power2.out' },
-          1.35
-        );
-        entranceTl.to(radialLight, { opacity: 0.65, duration: 0.45, ease: 'power2.inOut' }, 1.80);
+        // Background giant typography AAKASH smoothly reveals behind
+        if (portfolioWord) {
+          entranceTl.fromTo(portfolioWord,
+            { opacity: 0, clipPath: 'inset(100% 0% 0% 0%)', letterSpacing: '0.04em' },
+            { opacity: 0.92, clipPath: 'inset(0% 0% 0% 0%)', letterSpacing: '-0.04em', duration: 0.72, ease: 'power3.out' },
+            0.12
+          );
+        }
 
-        // 3. Side Details Assemble
-        if (leftLine) entranceTl.to(leftLine, { scaleX: 1, duration: 0.22, ease: 'power2.out' }, 1.38);
-        if (leftTag1) entranceTl.to(leftTag1, { clipPath: 'inset(0% 0% 0% 0%)', opacity: 1, x: 0, duration: 0.26, ease: 'power2.out' }, 1.44);
-        if (leftSep) entranceTl.to(leftSep, { opacity: 1, duration: 0.15 }, 1.48);
-        if (leftTag2) entranceTl.to(leftTag2, { clipPath: 'inset(0% 0% 0% 0%)', opacity: 1, x: 0, duration: 0.26, ease: 'power2.out' }, 1.50);
+        // Atmospheric studio backlight blooms
+        if (radialLight) {
+          entranceTl.fromTo(radialLight,
+            { opacity: 0.12 },
+            { opacity: 0.75, duration: 0.6, ease: 'power2.out' },
+            0.25
+          );
+          entranceTl.to(radialLight, { opacity: 0.65, duration: 0.45, ease: 'power2.inOut' }, 1.35);
+        }
 
-        if (rightLine) entranceTl.to(rightLine, { scaleX: 1, duration: 0.22, ease: 'power2.out' }, 1.40);
-        if (rightTag1) entranceTl.to(rightTag1, { clipPath: 'inset(0% 0% 0% 0%)', opacity: 1, x: 0, duration: 0.26, ease: 'power2.out' }, 1.46);
-        if (rightSep) entranceTl.to(rightSep, { opacity: 1, duration: 0.15 }, 1.50);
-        if (rightTag2) entranceTl.to(rightTag2, { clipPath: 'inset(0% 0% 0% 100%)', opacity: 1, x: 0, duration: 0.26, ease: 'power2.out' }, 1.52);
+        // STEP 2 — PORTRAIT ENTERS (0.45s)
+        // Shortly AFTER name starts, portrait smoothly pops/rises up from below (translateY: 100px -> 0, scale: 0.95 -> 1, opacity: 0 -> 1, duration: 1.0s, power3.out)
+        // NO bounce animation. NO cartoon spring effect. NO aggressive scaling.
+        if (characterPortrait) {
+          entranceTl.to(characterPortrait, {
+            opacity: 1,
+            y: 0,
+            scale: 1,
+            duration: 1.0,
+            ease: 'power3.out',
+          }, 0.45);
+        }
 
-        // 4. Copy & CTAs
-        if (greeting) entranceTl.to(greeting, { opacity: 1, y: 0, duration: 0.45, ease: 'power2.out' }, 1.58);
-        if (positioning) entranceTl.to(positioning, { opacity: 1, y: 0, duration: 0.45, ease: 'power2.out' }, 1.66);
-        if (rightMantra) entranceTl.to(rightMantra, { opacity: 1, y: 0, duration: 0.45, ease: 'power2.out' }, 1.72);
+        // STEP 3 — HERO DETAILS APPEAR (1.10s)
+        // Only after the portrait begins settling into position, animate in remaining hero info
+        if (leftLine) entranceTl.to(leftLine, { scaleX: 1, duration: 0.22, ease: 'power2.out' }, 1.10);
+        if (leftTag1) entranceTl.to(leftTag1, { clipPath: 'inset(0% 0% 0% 0%)', opacity: 1, x: 0, duration: 0.24, ease: 'power2.out' }, 1.14);
+        if (leftSep) entranceTl.to(leftSep, { opacity: 1, duration: 0.14 }, 1.18);
+        if (leftTag2) entranceTl.to(leftTag2, { clipPath: 'inset(0% 0% 0% 0%)', opacity: 1, x: 0, duration: 0.24, ease: 'power2.out' }, 1.20);
+
+        if (rightLine) entranceTl.to(rightLine, { scaleX: 1, duration: 0.22, ease: 'power2.out' }, 1.12);
+        if (rightTag1) entranceTl.to(rightTag1, { clipPath: 'inset(0% 0% 0% 0%)', opacity: 1, x: 0, duration: 0.24, ease: 'power2.out' }, 1.16);
+        if (rightSep) entranceTl.to(rightSep, { opacity: 1, duration: 0.14 }, 1.20);
+        if (rightTag2) entranceTl.to(rightTag2, { clipPath: 'inset(0% 0% 0% 100%)', opacity: 1, x: 0, duration: 0.24, ease: 'power2.out' }, 1.22);
+
+        if (positioning) entranceTl.to(positioning, { opacity: 1, y: 0, duration: 0.45, ease: 'power2.out' }, 1.26);
+        if (rightMantra) entranceTl.to(rightMantra, { opacity: 1, y: 0, duration: 0.45, ease: 'power2.out' }, 1.34);
 
         anchorItems.forEach((anchor, idx) => {
-          const baseTime = 1.78 + idx * 0.10;
+          const baseTime = 1.38 + idx * 0.08;
           const num = anchor.querySelector('.anchor-index') as HTMLElement | null;
           const line = anchor.querySelector('.anchor-line') as HTMLElement | null;
           const title = anchor.querySelector('.anchor-title') as HTMLElement | null;
@@ -254,11 +324,11 @@ export default function HeroExperience() {
 
           if (num) entranceTl.to(num, { opacity: 1, y: 0, duration: 0.18, ease: 'power2.out' }, baseTime);
           if (line) entranceTl.to(line, { scaleX: idx === 0 ? 1 : 0.35, duration: 0.22, ease: 'power2.out' }, baseTime + 0.04);
-          if (title) entranceTl.to(title, { clipPath: 'inset(0% 0% 0% 0%)', opacity: 1, y: 0, duration: 0.24, ease: 'power2.out' }, baseTime + 0.08);
-          if (sub) entranceTl.to(sub, { opacity: 1, y: 0, duration: 0.20, ease: 'power2.out' }, baseTime + 0.12);
+          if (title) entranceTl.to(title, { clipPath: 'inset(0% 0% 0% 0%)', opacity: 1, y: 0, duration: 0.24, ease: 'power2.out' }, baseTime + 0.06);
+          if (sub) entranceTl.to(sub, { opacity: 1, y: 0, duration: 0.20, ease: 'power2.out' }, baseTime + 0.08);
         });
 
-        if (ctaCluster) entranceTl.to(ctaCluster, { opacity: 1, y: 0, duration: 0.45, ease: 'power2.out' }, 1.84);
+        if (ctaCluster) entranceTl.to(ctaCluster, { opacity: 1, y: 0, duration: 0.45, ease: 'power2.out' }, 1.55);
       }
 
       // Restrained, Non-Destructive Hero Exit Timeline
