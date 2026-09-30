@@ -34,6 +34,8 @@ export default function HeroExperience() {
       const portfolioWord = document.getElementById('hero-portfolio-wordmark');
       const radialLight = document.getElementById('hero-radial-light');
       const characterScene = document.getElementById('character-scene');
+      const portraitScrollLayer = document.getElementById('portrait-scroll-layer');
+      const portraitPointerLayer = document.getElementById('portrait-pointer-layer');
       const characterPortrait = document.getElementById('character-portrait');
       const aakashShadow = document.getElementById('aakash-contact-shadow');
 
@@ -129,6 +131,11 @@ export default function HeroExperience() {
             characterPortrait.style.opacity = '1';
             characterPortrait.style.visibility = 'visible';
             characterPortrait.style.display = 'block';
+          }
+          if (portraitScrollLayer) {
+            portraitScrollLayer.style.opacity = '1';
+            portraitScrollLayer.style.visibility = 'visible';
+            portraitScrollLayer.style.display = 'flex';
           }
           if (!isTouch && !prefersReducedMotion) {
             this.bindPointerEvents();
@@ -239,11 +246,10 @@ export default function HeroExperience() {
           if (rightFlank && !this.isEntrancePlaying) {
             rightFlank.style.transform = `translate3d(${this.current.flankX.toFixed(2)}px, ${this.current.flankY.toFixed(2)}px, 0)`;
           }
-          if (characterPortrait && !this.isEntrancePlaying) {
+          if (portraitPointerLayer && !this.isEntrancePlaying) {
             const totalX = this.current.pointerX;
             const totalY = this.current.pointerY;
-            characterPortrait.style.transform = `translate3d(${totalX.toFixed(2)}px, ${totalY.toFixed(2)}px, 0)`;
-            characterPortrait.style.filter = `contrast(1.08) brightness(0.97) saturate(0.9) drop-shadow(${this.current.shadowX.toFixed(1)}px ${this.current.shadowY.toFixed(1)}px 32px rgba(0, 0, 0, 0.7))`;
+            portraitPointerLayer.style.transform = `translate3d(${totalX.toFixed(2)}px, ${totalY.toFixed(2)}px, 0)`;
           }
         },
       };
@@ -258,11 +264,26 @@ export default function HeroExperience() {
 
         if (smooth) {
           // Smooth return over 500–800ms equivalent visual motion (650ms, power2.out)
-          if (characterPortrait) {
-            gsap.to(characterPortrait, {
+          if (portraitScrollLayer) {
+            gsap.to(portraitScrollLayer, {
               opacity: 1,
               y: 0,
               scale: 1,
+              duration: 0.65,
+              ease: 'power2.out',
+              overwrite: 'auto',
+              onStart: () => {
+                if (portraitScrollLayer) {
+                  portraitScrollLayer.style.visibility = 'visible';
+                  portraitScrollLayer.style.display = 'flex';
+                }
+              },
+            });
+          }
+
+          if (characterPortrait) {
+            gsap.to(characterPortrait, {
+              opacity: 1,
               duration: 0.65,
               ease: 'power2.out',
               overwrite: 'auto',
@@ -334,6 +355,12 @@ export default function HeroExperience() {
           }
         } else {
           // Immediate snap for instant initialization or bypass
+          if (portraitScrollLayer) {
+            portraitScrollLayer.style.opacity = '1';
+            portraitScrollLayer.style.visibility = 'visible';
+            portraitScrollLayer.style.display = 'flex';
+            portraitScrollLayer.style.transform = 'none';
+          }
           if (characterPortrait) {
             characterPortrait.style.opacity = '1';
             characterPortrait.style.visibility = 'visible';
@@ -414,9 +441,14 @@ export default function HeroExperience() {
           portfolioWord.style.letterSpacing = '0.04em';
           portfolioWord.style.transform = 'translate(-50%, -50%)';
         }
+        if (portraitScrollLayer) {
+          portraitScrollLayer.style.opacity = '0';
+          portraitScrollLayer.style.transform = 'translate3d(0, 85vh, 0) scale(0.97)';
+        }
         if (characterPortrait) {
-          characterPortrait.style.opacity = '0';
-          characterPortrait.style.transform = 'translate3d(0, 85vh, 0) scale(0.97)';
+          characterPortrait.style.opacity = '1';
+          characterPortrait.style.visibility = 'visible';
+          characterPortrait.style.display = 'block';
         }
 
         if (leftLine) leftLine.style.transform = 'scaleX(0)';
@@ -461,13 +493,16 @@ export default function HeroExperience() {
         );
 
         // 2. AAKASH rises from below (85vh -> 0%) with authentic settling physics (-4px -> 0px)
-        entranceTl.fromTo(characterPortrait,
-          { y: '85vh', opacity: 0, scale: 0.97 },
-          { y: '0%', opacity: 1, scale: 1, duration: 1.15, ease: 'power3.out' },
-          0.55
-        );
-        entranceTl.to(characterPortrait, { y: '-4px', duration: 0.14, ease: 'power1.out' }, 1.70);
-        entranceTl.to(characterPortrait, { y: '0px', duration: 0.18, ease: 'power2.inOut' }, 1.84);
+        const scrollTarget = portraitScrollLayer || characterPortrait;
+        if (scrollTarget) {
+          entranceTl.fromTo(scrollTarget,
+            { y: '85vh', opacity: 0, scale: 0.97 },
+            { y: '0%', opacity: 1, scale: 1, duration: 1.15, ease: 'power3.out' },
+            0.55
+          );
+          entranceTl.to(scrollTarget, { y: '-4px', duration: 0.14, ease: 'power1.out' }, 1.70);
+          entranceTl.to(scrollTarget, { y: '0px', duration: 0.18, ease: 'power2.inOut' }, 1.84);
+        }
 
         // 3. Backlight blooms behind Aakash
         entranceTl.fromTo(radialLight,
@@ -539,6 +574,31 @@ export default function HeroExperience() {
 
         const getAnchorRightX = () => Math.min(Math.max(window.innerWidth * 0.22, 220), 380);
 
+        const restoreIdentityPortraitState = (instant = false) => {
+          if (characterScene) {
+            characterScene.style.visibility = 'visible';
+            characterScene.style.display = 'flex';
+            if (instant) {
+              characterScene.style.opacity = '1';
+            } else {
+              const currentOp = Number(gsap.getProperty(characterScene, 'opacity'));
+              if (currentOp < 0.95) {
+                characterScene.style.opacity = '1';
+              }
+            }
+          }
+          if (portraitScrollLayer) {
+            portraitScrollLayer.style.visibility = 'visible';
+            portraitScrollLayer.style.display = 'flex';
+            portraitScrollLayer.style.opacity = '1';
+          }
+          if (characterPortrait) {
+            characterPortrait.style.visibility = 'visible';
+            characterPortrait.style.display = 'block';
+            characterPortrait.style.opacity = '1';
+          }
+        };
+
         const tl = gsap.timeline({
           scrollTrigger: {
             trigger: wrapper,
@@ -548,23 +608,26 @@ export default function HeroExperience() {
             scrub: 1.5,
             anticipatePin: 1,
             onEnterBack: () => {
-              if (characterScene) {
-                characterScene.style.visibility = 'visible';
-                characterScene.style.display = 'flex';
-              }
-              if (characterPortrait) {
-                characterPortrait.style.visibility = 'visible';
-                characterPortrait.style.display = 'block';
-              }
+              restoreIdentityPortraitState(true);
             },
             onLeaveBack: () => {
               // Returning completely to the Hero landing state
               restoreHeroState(true);
             },
             onUpdate: (self) => {
-              // Smooth return when scrolling upward into the initial Hero state
-              if (self.direction === -1 && self.progress < 0.04) {
-                restoreHeroState(true);
+              if (self.direction === -1) {
+                // Smooth return when scrolling upward into the initial Hero state (< 0.04)
+                if (self.progress < 0.04) {
+                  restoreHeroState(true);
+                }
+                // Returning upward through Identity / Role section (between 0.04 and 0.88)
+                else if (self.progress <= 0.88) {
+                  const sceneOp = characterScene ? Number(gsap.getProperty(characterScene, 'opacity')) : 1;
+                  const scrollOp = portraitScrollLayer ? Number(gsap.getProperty(portraitScrollLayer, 'opacity')) : 1;
+                  if (sceneOp < 0.95 || scrollOp < 0.95) {
+                    restoreIdentityPortraitState(false);
+                  }
+                }
               }
             },
           },
@@ -582,7 +645,9 @@ export default function HeroExperience() {
           ease: 'power2.inOut',
         }, 0.15);
 
-        if (characterPortrait) {
+        if (portraitScrollLayer) {
+          tl.to(portraitScrollLayer, { scale: 0.98, opacity: 0.96, duration: 1.1, ease: 'power2.inOut' }, 0.15);
+        } else if (characterPortrait) {
           tl.to(characterPortrait, { scale: 0.98, opacity: 0.96, duration: 1.1, ease: 'power2.inOut' }, 0.15);
         }
         if (radialLight) {
@@ -620,7 +685,7 @@ export default function HeroExperience() {
         // Step 8: Work Transition Phase (Modular Builder)
         buildWorkTransitionTimeline(tl, {
           characterScene,
-          characterPortrait,
+          characterPortrait: portraitScrollLayer || characterPortrait,
           radialLight,
           workTransition,
           projectApproach,
@@ -644,8 +709,8 @@ export default function HeroExperience() {
             mouseY += (targetY - mouseY) * 0.08;
 
             // Only apply mouse parallax on portrait when in hero zone (< 120px) so it doesn't fight ScrollTrigger
-            if (characterPortrait && !CharacterController.isEntrancePlaying && window.scrollY < 120) {
-              gsap.set(characterPortrait, {
+            if (portraitPointerLayer && !CharacterController.isEntrancePlaying && window.scrollY < 120) {
+              gsap.set(portraitPointerLayer, {
                 x: mouseX * 3,
                 y: mouseY * 2.5,
               });
@@ -812,7 +877,9 @@ export default function HeroExperience() {
       // Global top scroll return safety: ensures portrait, scene and lighting smoothly restore when returning to top
       const handleScrollReturn = () => {
         if (window.scrollY <= 80) {
-          const portraitOp = characterPortrait ? Number(gsap.getProperty(characterPortrait, 'opacity')) : 1;
+          const portraitOp = portraitScrollLayer
+            ? Number(gsap.getProperty(portraitScrollLayer, 'opacity'))
+            : (characterPortrait ? Number(gsap.getProperty(characterPortrait, 'opacity')) : 1);
           const sceneOp = characterScene ? Number(gsap.getProperty(characterScene, 'opacity')) : 1;
           if (portraitOp < 0.95 || sceneOp < 0.95) {
             restoreHeroState(true);

@@ -7,13 +7,19 @@ export default function HeroPortrait() {
         {/* Contact shadow beneath & behind Aakash for environmental depth integration */}
         <div className="aakash-contact-shadow" id="aakash-contact-shadow" aria-hidden="true"></div>
 
-        {/* High-resolution authentic cutout portrait with folded arms */}
-        <img
-          src="/assets/aakash_authentic_portrait.png"
-          alt="AAKASH — Creative Director, Marketer and Builder"
-          className="hero-poster-portrait"
-          id="character-portrait"
-        />
+        {/* Scroll & Entrance Animation Layer */}
+        <div className="portrait-scroll-layer" id="portrait-scroll-layer">
+          {/* Subtle Pointer/Mouse Parallax Layer ONLY */}
+          <div className="portrait-pointer-layer" id="portrait-pointer-layer">
+            {/* High-resolution authentic cutout portrait with folded arms */}
+            <img
+              src="/assets/aakash_authentic_portrait.png"
+              alt="AAKASH — Creative Director, Marketer and Builder"
+              className="hero-poster-portrait"
+              id="character-portrait"
+            />
+          </div>
+        </div>
 
         {/* Reserved 3D mount architecture for future model */}
         <div className="character-3d-mount" id="character-3d-mount"></div>
