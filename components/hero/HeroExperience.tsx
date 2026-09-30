@@ -18,6 +18,13 @@ export default function HeroExperience() {
   useEffect(() => {
     if (typeof window === 'undefined') return;
 
+    if ('scrollRestoration' in window.history) {
+      window.history.scrollRestoration = 'manual';
+    }
+    if (!window.location.hash || window.location.hash === '#') {
+      window.scrollTo(0, 0);
+    }
+
     gsap.registerPlugin(ScrollTrigger);
 
     const ctx = gsap.context(() => {
@@ -390,6 +397,10 @@ export default function HeroExperience() {
       const settleHeroImmediately = () => {
         restoreHeroState(false);
       };
+
+      if (!window.location.hash || window.location.hash === '#') {
+        window.scrollTo(0, 0);
+      }
 
       if (prefersReducedMotion || window.scrollY > 40) {
         settleHeroImmediately();

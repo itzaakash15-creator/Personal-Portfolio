@@ -19,11 +19,38 @@ export default function Navbar() {
     setIsMobileOpen(false);
   };
 
+  const handleHomeClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault();
+    if (typeof window === 'undefined') return;
+
+    setIsMobileOpen(false);
+
+    if ('scrollRestoration' in window.history) {
+      window.history.scrollRestoration = 'manual';
+    }
+
+    const homeUrl = window.location.origin + '/';
+
+    if (window.location.pathname === '/' && !window.location.search) {
+      window.history.replaceState(null, '', '/');
+      window.scrollTo(0, 0);
+      window.location.reload();
+    } else {
+      window.location.href = homeUrl;
+    }
+  };
+
   return (
     <header className={`site-header ${isScrolled ? 'scrolled' : ''}`} id="site-header">
       <nav className="nav-container" aria-label="Main Navigation">
-        {/* Left: Brand */}
-        <a href="#hero" className="nav-brand" aria-label="AAKASH Home">
+        {/* Left: Brand - True Home / Hard Refresh */}
+        <a
+          href="/"
+          className="nav-brand"
+          aria-label="Return to homepage"
+          onClick={handleHomeClick}
+          style={{ cursor: 'pointer' }}
+        >
           <span>
             AAKASH<span className="brand-period">.</span>
           </span>
