@@ -1,8 +1,7 @@
 'use client';
 
 import React, { useEffect, useRef } from 'react';
-import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { gsap, ScrollTrigger, initGSAP } from '../../lib/gsap';
 import RoleBackground from './RoleBackground';
 import RoleHistory from './RoleHistory';
 import RoleFrame from './RoleFrame';
@@ -22,7 +21,9 @@ export default function IdentityExperience() {
   useEffect(() => {
     if (typeof window === 'undefined') return;
 
-    gsap.registerPlugin(ScrollTrigger);
+    initGSAP();
+
+    const cleanups: Array<() => void> = [];
 
     const ctx = gsap.context(() => {
       const section = sectionRef.current;
@@ -60,11 +61,17 @@ export default function IdentityExperience() {
           scrollTrigger: {
             trigger: section,
             start: 'top top',
-            end: '+=4000',
+            end: '+=3800',
             pin: true,
-            scrub: 1.2,
+            scrub: 0.6,
             anticipatePin: 1,
             onEnter: () => {
+              if (section) section.classList.add('is-active');
+            },
+            onLeave: () => {
+              if (section) section.classList.remove('is-active');
+            },
+            onEnterBack: () => {
               if (section) section.classList.add('is-active');
             },
             onLeaveBack: () => {
@@ -97,12 +104,13 @@ export default function IdentityExperience() {
           getAnchorRightX: () => 0,
         });
 
-        // Mouse Parallax for active role card
+        // Mouse Parallax for active role card (runs only when section is active)
         if (window.matchMedia('(min-width: 1025px)').matches) {
           let mouseX = 0, mouseY = 0;
           let targetX = 0, targetY = 0;
 
           const onMouseMove = (e: MouseEvent) => {
+            if (!section.classList.contains('is-active')) return;
             targetX = (e.clientX / window.innerWidth - 0.5) * 2;
             targetY = (e.clientY / window.innerHeight - 0.5) * 2;
           };
@@ -110,6 +118,7 @@ export default function IdentityExperience() {
           window.addEventListener('mousemove', onMouseMove, { passive: true });
 
           const tick = () => {
+            if (!section.classList.contains('is-active')) return;
             mouseX += (targetX - mouseX) * 0.08;
             mouseY += (targetY - mouseY) * 0.08;
 
@@ -124,51 +133,52 @@ export default function IdentityExperience() {
 
           gsap.ticker.add(tick);
 
-          return () => {
+          cleanups.push(() => {
             window.removeEventListener('mousemove', onMouseMove);
             gsap.ticker.remove(tick);
-          };
+          });
         }
       });
 
-      // Mobile reveals
+      // Mobile reveals: One timeline per block without continuous scrub
       mm.add('(max-width: 960px)', () => {
         section.classList.add('is-active');
 
         const stmtLines = section.querySelectorAll('.stmt-line');
-        stmtLines.forEach((line) => {
-          gsap.fromTo(line,
+        if (stmtLines.length) {
+          gsap.fromTo(stmtLines,
             { opacity: 0.35, y: 18 },
             {
               opacity: 1,
               y: 0,
-              duration: 0.7,
+              duration: 0.6,
+              stagger: 0.12,
               ease: 'power2.out',
               scrollTrigger: {
-                trigger: line,
-                start: 'top 88%',
-                end: 'top 65%',
-                scrub: 0.35,
+                trigger: section,
+                start: 'top 80%',
+                toggleActions: 'play none none none',
+                once: true,
               },
             }
           );
-        });
+        }
 
         const roleFrames = section.querySelectorAll('.editorial-role-frame');
         roleFrames.forEach((frame) => {
           gsap.fromTo(frame,
-            { opacity: 0.25, y: 25, scale: 0.94 },
+            { opacity: 0.25, y: 25, scale: 0.95 },
             {
               opacity: 1,
               y: 0,
               scale: 1,
-              duration: 0.75,
+              duration: 0.6,
               ease: 'power2.out',
               scrollTrigger: {
                 trigger: frame,
-                start: 'top 88%',
-                end: 'top 58%',
-                scrub: 0.35,
+                start: 'top 85%',
+                toggleActions: 'play none none none',
+                once: true,
               },
             }
           );
@@ -177,6 +187,7 @@ export default function IdentityExperience() {
     }, sectionRef);
 
     return () => {
+      cleanups.forEach((c) => c());
       ctx.revert();
     };
   }, []);

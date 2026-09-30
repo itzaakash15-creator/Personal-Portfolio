@@ -1,11 +1,10 @@
 'use client';
 
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 
 export default function CursorBadge() {
-  const [badgeText, setBadgeText] = useState('VIEW');
-  const [isVisible, setIsVisible] = useState(false);
   const badgeRef = useRef<HTMLDivElement>(null);
+  const textRef = useRef<HTMLSpanElement>(null);
 
   useEffect(() => {
     const isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
@@ -45,12 +44,12 @@ export default function CursorBadge() {
 
     const handleMouseOver = (e: MouseEvent) => {
       const target = (e.target as HTMLElement).closest('[data-cursor]');
-      if (target) {
+      if (target && badgeRef.current && textRef.current) {
         const text = target.getAttribute('data-cursor') || 'VIEW';
-        setBadgeText(text);
-        setIsVisible(true);
-      } else {
-        setIsVisible(false);
+        textRef.current.textContent = text;
+        badgeRef.current.classList.add('visible');
+      } else if (badgeRef.current) {
+        badgeRef.current.classList.remove('visible');
       }
     };
 
@@ -67,13 +66,13 @@ export default function CursorBadge() {
   return (
     <div
       ref={badgeRef}
-      className={`cursor-context-badge ${isVisible ? 'visible' : ''}`}
+      className="cursor-context-badge"
       id="cursor-badge"
       aria-hidden="true"
       style={{ position: 'fixed', top: 0, left: 0, pointerEvents: 'none' }}
     >
-      <span className="cursor-badge-text" id="cursor-badge-text">
-        {badgeText}
+      <span ref={textRef} className="cursor-badge-text" id="cursor-badge-text">
+        VIEW
       </span>
       <span className="cursor-badge-arrow">↗</span>
     </div>

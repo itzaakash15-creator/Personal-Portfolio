@@ -11,6 +11,7 @@ interface TalentrixProps {
 export default function Talentrix({ onOpenDrawer, onOpenProof }: TalentrixProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const posterRef = useRef<HTMLDivElement>(null);
+  const rectRef = useRef<DOMRect | null>(null);
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
@@ -41,7 +42,7 @@ export default function Talentrix({ onOpenDrawer, onOpenProof }: TalentrixProps)
         tl.fromTo(
           talentrixTitle,
           { y: '100%', opacity: 0 },
-          { y: '0%', opacity: 1, duration: 0.9, ease: 'power3.out' },
+          { y: '0%', opacity: 1, duration: 0.9, ease: 'power3.out', force3D: true },
           0.1
         );
       }
@@ -50,7 +51,7 @@ export default function Talentrix({ onOpenDrawer, onOpenProof }: TalentrixProps)
         tl.fromTo(
           poster,
           { scale: 0.92, y: 40, opacity: 0.4 },
-          { scale: 1, y: 0, opacity: 1, duration: 1.0, ease: 'power2.out' },
+          { scale: 1, y: 0, opacity: 1, duration: 1.0, ease: 'power2.out', force3D: true },
           0.15
         );
       }
@@ -59,23 +60,29 @@ export default function Talentrix({ onOpenDrawer, onOpenProof }: TalentrixProps)
     return () => ctx.revert();
   }, []);
 
+  const handleMouseEnter = (e: React.MouseEvent<HTMLDivElement>) => {
+    rectRef.current = e.currentTarget.getBoundingClientRect();
+  };
+
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     if (!posterRef.current || window.innerWidth < 960) return;
-    const rect = posterRef.current.getBoundingClientRect();
+    const rect = rectRef.current || e.currentTarget.getBoundingClientRect();
     const x = (e.clientX - rect.left) / rect.width - 0.5;
     const y = (e.clientY - rect.top) / rect.height - 0.5;
 
     gsap.to(posterRef.current, {
       x: x * 16,
       y: y * 14,
-      duration: 0.45,
+      duration: 0.35,
       ease: 'power1.out',
+      force3D: true,
     });
   };
 
   const handleMouseLeave = () => {
+    rectRef.current = null;
     if (!posterRef.current) return;
-    gsap.to(posterRef.current, { x: 0, y: 0, duration: 0.6, ease: 'power2.out' });
+    gsap.to(posterRef.current, { x: 0, y: 0, duration: 0.5, ease: 'power2.out', force3D: true });
   };
 
   return (
@@ -121,6 +128,7 @@ export default function Talentrix({ onOpenDrawer, onOpenProof }: TalentrixProps)
       <div
         className="pro-talentrix-poster"
         ref={posterRef}
+        onMouseEnter={handleMouseEnter}
         onMouseMove={handleMouseMove}
         onMouseLeave={handleMouseLeave}
         onClick={() => onOpenProof?.('digi-gimbal')}
@@ -130,6 +138,7 @@ export default function Talentrix({ onOpenDrawer, onOpenProof }: TalentrixProps)
           src="/assets/proofs_optimized/digi_marketrix_gimbal_shoot.jpg"
           alt="Aakash operating 3-axis motorized gimbal during commercial production"
           loading="lazy"
+          decoding="async"
         />
         <div className="pro-media-badge">
           <span>EXPLORE</span>

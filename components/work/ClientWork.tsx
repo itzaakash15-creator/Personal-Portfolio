@@ -151,49 +151,48 @@ export default function ClientWork({ onOpenProof }: ClientWorkProps) {
           className={`pro-cursor-preview-card ${hoveredProject ? 'is-active' : ''}`}
           aria-hidden="true"
         >
-          {hoveredProject && (
-            <div style={{ position: 'relative', width: '100%', height: '100%' }}>
-              <img
-                src={hoveredProject.previewImg}
-                alt={hoveredProject.title}
-                loading="eager"
-              />
-              <div
+          <div style={{ position: 'relative', width: '100%', height: '100%' }}>
+            <img
+              src={hoveredProject?.previewImg || selectedProjects[0]?.previewImg}
+              alt={hoveredProject?.title || 'Preview'}
+              loading="lazy"
+              decoding="async"
+            />
+            <div
+              style={{
+                position: 'absolute',
+                bottom: 0,
+                left: 0,
+                right: 0,
+                background: 'linear-gradient(to top, rgba(8, 8, 10, 0.95), transparent)',
+                padding: '1.2rem 1rem 0.6rem',
+              }}
+            >
+              <p
                 style={{
-                  position: 'absolute',
-                  bottom: 0,
-                  left: 0,
-                  right: 0,
-                  background: 'linear-gradient(to top, rgba(8, 8, 10, 0.95), transparent)',
-                  padding: '1.2rem 1rem 0.6rem',
+                  fontFamily: 'var(--font-mono, monospace)',
+                  fontSize: '0.68rem',
+                  color: '#d4af37',
+                  letterSpacing: '0.12em',
+                  textTransform: 'uppercase',
+                  margin: 0,
                 }}
               >
-                <p
-                  style={{
-                    fontFamily: 'var(--font-mono, monospace)',
-                    fontSize: '0.68rem',
-                    color: '#d4af37',
-                    letterSpacing: '0.12em',
-                    textTransform: 'uppercase',
-                    margin: 0,
-                  }}
-                >
-                  {hoveredProject.category}
-                </p>
-                <p
-                  style={{
-                    fontFamily: 'var(--font-sans, sans-serif)',
-                    fontSize: '0.78rem',
-                    color: '#ffffff',
-                    fontWeight: 600,
-                    margin: '0.2rem 0 0',
-                  }}
-                >
-                  {hoveredProject.title}
-                </p>
-              </div>
+                {hoveredProject?.category || ''}
+              </p>
+              <p
+                style={{
+                  fontFamily: 'var(--font-sans, sans-serif)',
+                  fontSize: '0.78rem',
+                  color: '#ffffff',
+                  fontWeight: 600,
+                  margin: '0.2rem 0 0',
+                }}
+              >
+                {hoveredProject?.title || ''}
+              </p>
             </div>
-          )}
+          </div>
         </div>
       </div>
     </section>

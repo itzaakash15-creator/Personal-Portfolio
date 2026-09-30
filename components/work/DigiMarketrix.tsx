@@ -13,6 +13,7 @@ export default function DigiMarketrix({ onOpenDrawer, onOpenProof }: DigiMarketr
   const sectionRef = useRef<HTMLElement>(null);
   const mediaRef = useRef<HTMLDivElement>(null);
   const depthLayerRef = useRef<HTMLDivElement>(null);
+  const rectRef = useRef<DOMRect | null>(null);
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
@@ -29,6 +30,7 @@ export default function DigiMarketrix({ onOpenDrawer, onOpenProof }: DigiMarketr
             opacity: 1,
             duration: 1.1,
             ease: 'power2.out',
+            force3D: true,
             scrollTrigger: {
               trigger: mainVisual,
               start: 'top 85%',
@@ -42,10 +44,14 @@ export default function DigiMarketrix({ onOpenDrawer, onOpenProof }: DigiMarketr
     return () => ctx.revert();
   }, []);
 
-  // Subtle 3D tilt on hover (transform only, no layout shifts)
+  const handleMouseEnter = (e: React.MouseEvent<HTMLDivElement>) => {
+    rectRef.current = e.currentTarget.getBoundingClientRect();
+  };
+
+  // Subtle 3D tilt on hover (cached rect, transform only, no layout shifts)
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     if (!mediaRef.current || window.innerWidth < 960) return;
-    const rect = mediaRef.current.getBoundingClientRect();
+    const rect = rectRef.current || e.currentTarget.getBoundingClientRect();
     const x = (e.clientX - rect.left) / rect.width - 0.5;
     const y = (e.clientY - rect.top) / rect.height - 0.5;
 
@@ -53,32 +59,36 @@ export default function DigiMarketrix({ onOpenDrawer, onOpenProof }: DigiMarketr
       rotateY: x * 6,
       rotateX: -y * 6,
       scale3d: 1.015,
-      duration: 0.4,
+      duration: 0.35,
       ease: 'power1.out',
       transformPerspective: 1200,
+      force3D: true,
     });
 
     if (depthLayerRef.current) {
       gsap.to(depthLayerRef.current, {
         x: x * -10,
         y: y * -8,
-        duration: 0.5,
+        duration: 0.45,
         ease: 'power1.out',
+        force3D: true,
       });
     }
   };
 
   const handleMouseLeave = () => {
+    rectRef.current = null;
     if (!mediaRef.current) return;
     gsap.to(mediaRef.current, {
       rotateY: 0,
       rotateX: 0,
       scale3d: 1,
-      duration: 0.6,
+      duration: 0.5,
       ease: 'power2.out',
+      force3D: true,
     });
     if (depthLayerRef.current) {
-      gsap.to(depthLayerRef.current, { x: 0, y: 0, duration: 0.6, ease: 'power2.out' });
+      gsap.to(depthLayerRef.current, { x: 0, y: 0, duration: 0.5, ease: 'power2.out', force3D: true });
     }
   };
 
@@ -130,6 +140,7 @@ export default function DigiMarketrix({ onOpenDrawer, onOpenProof }: DigiMarketr
           {/* Right Column: Dominant Real Visual with Subtle 3D Tilt */}
           <div
             className="pro-chapter-media-wrap"
+            onMouseEnter={handleMouseEnter}
             onMouseMove={handleMouseMove}
             onMouseLeave={handleMouseLeave}
           >

@@ -125,11 +125,6 @@ export default function HomePage() {
       if (!targetEl) return;
 
       const isHeroTarget = targetEl.id === 'hero' || targetEl.id === 'hero-experience';
-
-      if (!isHeroTarget && typeof ScrollTrigger !== 'undefined') {
-        ScrollTrigger.refresh();
-      }
-
       const headerOffset = 90;
       const rect = targetEl.getBoundingClientRect();
       const targetPos = isHeroTarget ? 0 : Math.max(0, rect.top + window.scrollY - headerOffset);
@@ -164,7 +159,7 @@ export default function HomePage() {
       }
 
       isNavScrolling = true;
-      const duration = Math.min(750, Math.max(400, Math.abs(distance) * 0.045));
+      const duration = Math.min(650, Math.max(350, Math.abs(distance) * 0.035));
       let startTime: number | null = null;
 
       function step(timestamp: number) {
@@ -240,9 +235,6 @@ export default function HomePage() {
     function handleInitialHash() {
       if (window.location.hash === '#hero') {
         window.scrollTo(0, 0);
-        if (typeof ScrollTrigger !== 'undefined') {
-          ScrollTrigger.update();
-        }
         return;
       }
       if (window.location.hash && window.location.hash !== '#') {
@@ -251,13 +243,9 @@ export default function HomePage() {
           if ('scrollRestoration' in history) {
             history.scrollRestoration = 'manual';
           }
-          scrollToAnchor(targetEl, false);
-          setTimeout(() => {
+          requestAnimationFrame(() => {
             scrollToAnchor(targetEl, false);
-          }, 150);
-          setTimeout(() => {
-            scrollToAnchor(targetEl, false);
-          }, 500);
+          });
         }
       }
     }

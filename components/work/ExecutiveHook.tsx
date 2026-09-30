@@ -11,6 +11,7 @@ export default function ExecutiveHook({ onOpenProof }: ExecutiveHookProps) {
   const sectionRef = useRef<HTMLElement>(null);
   const cardRef = useRef<HTMLDivElement>(null);
   const headlineRef = useRef<HTMLHeadingElement>(null);
+  const rectRef = useRef<DOMRect | null>(null);
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
@@ -28,7 +29,7 @@ export default function ExecutiveHook({ onOpenProof }: ExecutiveHookProps) {
         tl.fromTo(
           headlineRef.current,
           { y: 35, opacity: 0 },
-          { y: 0, opacity: 1, duration: 0.9, ease: 'power3.out' },
+          { y: 0, opacity: 1, duration: 0.9, ease: 'power3.out', force3D: true },
           0
         );
       }
@@ -37,7 +38,7 @@ export default function ExecutiveHook({ onOpenProof }: ExecutiveHookProps) {
         tl.fromTo(
           cardRef.current,
           { scale: 0.92, y: 45, opacity: 0.3 },
-          { scale: 1, y: 0, opacity: 1, duration: 1.0, ease: 'power2.out' },
+          { scale: 1, y: 0, opacity: 1, duration: 1.0, ease: 'power2.out', force3D: true },
           0.1
         );
       }
@@ -46,10 +47,14 @@ export default function ExecutiveHook({ onOpenProof }: ExecutiveHookProps) {
     return () => ctx.revert();
   }, []);
 
-  // Subtle 3D tilt on hover (transform only, no layout shift)
+  const handleMouseEnter = (e: React.MouseEvent<HTMLDivElement>) => {
+    rectRef.current = e.currentTarget.getBoundingClientRect();
+  };
+
+  // Subtle 3D tilt on hover (cached rect, transform only, no layout shift)
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     if (!cardRef.current || window.innerWidth < 960) return;
-    const rect = cardRef.current.getBoundingClientRect();
+    const rect = rectRef.current || e.currentTarget.getBoundingClientRect();
     const x = (e.clientX - rect.left) / rect.width - 0.5;
     const y = (e.clientY - rect.top) / rect.height - 0.5;
 
@@ -57,20 +62,23 @@ export default function ExecutiveHook({ onOpenProof }: ExecutiveHookProps) {
       rotateY: x * 6,
       rotateX: -y * 6,
       scale3d: 1.015,
-      duration: 0.4,
+      duration: 0.35,
       ease: 'power1.out',
       transformPerspective: 1200,
+      force3D: true,
     });
   };
 
   const handleMouseLeave = () => {
+    rectRef.current = null;
     if (!cardRef.current) return;
     gsap.to(cardRef.current, {
       rotateY: 0,
       rotateX: 0,
       scale3d: 1,
-      duration: 0.6,
+      duration: 0.5,
       ease: 'power2.out',
+      force3D: true,
     });
   };
 
@@ -142,6 +150,7 @@ export default function ExecutiveHook({ onOpenProof }: ExecutiveHookProps) {
             <div
               className="pro-proof-card-3d"
               ref={cardRef}
+              onMouseEnter={handleMouseEnter}
               onMouseMove={handleMouseMove}
               onMouseLeave={handleMouseLeave}
               onClick={() => onOpenProof?.('digi-working')}

@@ -75,7 +75,7 @@ export default function InteractiveSystem() {
     }
 
     // ========================================================================
-    // 2. Desktop Magnetic Buttons
+    // 2. Desktop Magnetic Buttons (Cached Rects on Enter)
     // ========================================================================
     if (isDesktop()) {
       const magneticButtons = document.querySelectorAll<HTMLElement>(
@@ -84,18 +84,24 @@ export default function InteractiveSystem() {
 
       magneticButtons.forEach((btn) => {
         let isHovered = false;
-        const onMouseMove = (e: MouseEvent) => {
-          if (!isHovered) return;
-          const rect = btn.getBoundingClientRect();
-          const x = (e.clientX - rect.left - rect.width / 2) * 0.18;
-          const y = (e.clientY - rect.top - rect.height / 2) * 0.18;
-          btn.style.transform = `translate3d(${x.toFixed(1)}px, ${y.toFixed(1)}px, 0)`;
-        };
+        let cachedRect: DOMRect | null = null;
+
         const onMouseEnter = () => {
           isHovered = true;
+          cachedRect = btn.getBoundingClientRect();
         };
+
+        const onMouseMove = (e: MouseEvent) => {
+          if (!isHovered) return;
+          if (!cachedRect) cachedRect = btn.getBoundingClientRect();
+          const x = (e.clientX - cachedRect.left - cachedRect.width / 2) * 0.18;
+          const y = (e.clientY - cachedRect.top - cachedRect.height / 2) * 0.18;
+          btn.style.transform = `translate3d(${x.toFixed(1)}px, ${y.toFixed(1)}px, 0)`;
+        };
+
         const onMouseLeave = () => {
           isHovered = false;
+          cachedRect = null;
           btn.style.transform = 'translate3d(0, 0, 0)';
         };
 
@@ -152,6 +158,7 @@ export default function InteractiveSystem() {
       let currentY = 0;
       let isTracking = false;
       let paneRafId = 0;
+      let cachedListRect: DOMRect | null = null;
 
       const animatePane = () => {
         currentY += (targetY - currentY) * 0.12;
@@ -164,10 +171,14 @@ export default function InteractiveSystem() {
         }
       };
 
+      const onListEnter = () => {
+        cachedListRect = projectList.getBoundingClientRect();
+      };
+
       const onListMove = (e: MouseEvent) => {
-        const rect = projectList.getBoundingClientRect();
-        const relativeY = e.clientY - rect.top;
-        const progress = (relativeY / rect.height) * 2 - 1;
+        if (!cachedListRect) cachedListRect = projectList.getBoundingClientRect();
+        const relativeY = e.clientY - cachedListRect.top;
+        const progress = (relativeY / cachedListRect.height) * 2 - 1;
         targetY = progress * 24;
 
         if (!isTracking) {
@@ -177,6 +188,7 @@ export default function InteractiveSystem() {
       };
 
       const onListLeave = () => {
+        cachedListRect = null;
         targetY = 0;
         if (!isTracking) {
           isTracking = true;
@@ -184,10 +196,12 @@ export default function InteractiveSystem() {
         }
       };
 
+      projectList.addEventListener('mouseenter', onListEnter);
       projectList.addEventListener('mousemove', onListMove, { passive: true });
       projectList.addEventListener('mouseleave', onListLeave);
 
       cleanups.push(() => {
+        projectList.removeEventListener('mouseenter', onListEnter);
         projectList.removeEventListener('mousemove', onListMove);
         projectList.removeEventListener('mouseleave', onListLeave);
         if (paneRafId) cancelAnimationFrame(paneRafId);
@@ -250,10 +264,12 @@ export default function InteractiveSystem() {
       let isDown = false;
       let startX = 0;
       let scrollLeft = 0;
+      let cachedOffsetLeft = 0;
 
       const onMouseDown = (e: MouseEvent) => {
         isDown = true;
-        startX = e.pageX - speakingViewport.offsetLeft;
+        cachedOffsetLeft = speakingViewport.offsetLeft;
+        startX = e.pageX - cachedOffsetLeft;
         scrollLeft = speakingViewport.scrollLeft;
       };
 
@@ -264,7 +280,7 @@ export default function InteractiveSystem() {
       const onMouseMove = (e: MouseEvent) => {
         if (!isDown) return;
         e.preventDefault();
-        const x = e.pageX - speakingViewport.offsetLeft;
+        const x = e.pageX - cachedOffsetLeft;
         const walk = (x - startX) * 1.6;
         speakingViewport.scrollLeft = scrollLeft - walk;
       };

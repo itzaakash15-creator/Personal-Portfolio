@@ -8,7 +8,7 @@ import '../styles/professional-redesign.css';
 
 const inter = Inter({
   subsets: ['latin'],
-  weight: ['300', '400', '500', '600', '700', '800', '900'],
+  weight: ['400', '600', '700', '800'],
   variable: '--font-sans',
   display: 'swap',
 });
@@ -22,7 +22,7 @@ const playfair = Playfair_Display({
 
 const jetbrainsMono = JetBrains_Mono({
   subsets: ['latin'],
-  weight: ['400', '500', '600'],
+  weight: ['400', '600'],
   variable: '--font-mono',
   display: 'swap',
 });
