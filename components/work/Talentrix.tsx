@@ -1,7 +1,8 @@
 'use client';
 
 import React, { useEffect, useRef } from 'react';
-import { gsap } from '../../lib/gsap';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 interface TalentrixProps {
   onOpenDrawer?: (drawerId: string) => void;
@@ -11,48 +12,67 @@ interface TalentrixProps {
 export default function Talentrix({ onOpenDrawer, onOpenProof }: TalentrixProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const posterRef = useRef<HTMLDivElement>(null);
-  const rectRef = useRef<DOMRect | null>(null);
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
+    gsap.registerPlugin(ScrollTrigger);
 
     const ctx = gsap.context(() => {
       const sweepLine = document.getElementById('talentrix-sweep-line');
       const talentrixTitle = document.querySelector('.pro-talentrix-word');
       const poster = posterRef.current;
 
-      const tl = gsap.timeline({
-        scrollTrigger: {
-          trigger: containerRef.current,
-          start: 'top 82%',
-          toggleActions: 'play none none reverse',
-        },
-      });
-
       if (sweepLine) {
-        tl.fromTo(
+        gsap.fromTo(
           sweepLine,
           { scaleX: 0 },
-          { scaleX: 1, duration: 1.0, ease: 'power3.inOut' },
-          0
+          {
+            scaleX: 1,
+            duration: 1.2,
+            ease: 'power3.inOut',
+            scrollTrigger: {
+              trigger: sweepLine,
+              start: 'top 85%',
+              toggleActions: 'play none none reverse',
+            },
+          }
         );
       }
 
       if (talentrixTitle) {
-        tl.fromTo(
+        gsap.fromTo(
           talentrixTitle,
           { y: '100%', opacity: 0 },
-          { y: '0%', opacity: 1, duration: 0.9, ease: 'power3.out', force3D: true },
-          0.1
+          {
+            y: '0%',
+            opacity: 1,
+            duration: 1.1,
+            ease: 'power3.out',
+            scrollTrigger: {
+              trigger: containerRef.current,
+              start: 'top 80%',
+              toggleActions: 'play none none reverse',
+            },
+          }
         );
       }
 
       if (poster) {
-        tl.fromTo(
+        gsap.fromTo(
           poster,
-          { scale: 0.92, y: 40, opacity: 0.4 },
-          { scale: 1, y: 0, opacity: 1, duration: 1.0, ease: 'power2.out', force3D: true },
-          0.15
+          { scale: 0.9, y: 50, opacity: 0.4 },
+          {
+            scale: 1,
+            y: 0,
+            opacity: 1,
+            duration: 1.2,
+            ease: 'power2.out',
+            scrollTrigger: {
+              trigger: poster,
+              start: 'top 85%',
+              toggleActions: 'play none none reverse',
+            },
+          }
         );
       }
     }, containerRef);
@@ -60,29 +80,23 @@ export default function Talentrix({ onOpenDrawer, onOpenProof }: TalentrixProps)
     return () => ctx.revert();
   }, []);
 
-  const handleMouseEnter = (e: React.MouseEvent<HTMLDivElement>) => {
-    rectRef.current = e.currentTarget.getBoundingClientRect();
-  };
-
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     if (!posterRef.current || window.innerWidth < 960) return;
-    const rect = rectRef.current || e.currentTarget.getBoundingClientRect();
+    const rect = posterRef.current.getBoundingClientRect();
     const x = (e.clientX - rect.left) / rect.width - 0.5;
     const y = (e.clientY - rect.top) / rect.height - 0.5;
 
     gsap.to(posterRef.current, {
       x: x * 16,
       y: y * 14,
-      duration: 0.35,
+      duration: 0.45,
       ease: 'power1.out',
-      force3D: true,
     });
   };
 
   const handleMouseLeave = () => {
-    rectRef.current = null;
     if (!posterRef.current) return;
-    gsap.to(posterRef.current, { x: 0, y: 0, duration: 0.5, ease: 'power2.out', force3D: true });
+    gsap.to(posterRef.current, { x: 0, y: 0, duration: 0.6, ease: 'power2.out' });
   };
 
   return (
@@ -128,7 +142,6 @@ export default function Talentrix({ onOpenDrawer, onOpenProof }: TalentrixProps)
       <div
         className="pro-talentrix-poster"
         ref={posterRef}
-        onMouseEnter={handleMouseEnter}
         onMouseMove={handleMouseMove}
         onMouseLeave={handleMouseLeave}
         onClick={() => onOpenProof?.('digi-gimbal')}
@@ -138,7 +151,6 @@ export default function Talentrix({ onOpenDrawer, onOpenProof }: TalentrixProps)
           src="/assets/proofs_optimized/digi_marketrix_gimbal_shoot.jpg"
           alt="Aakash operating 3-axis motorized gimbal during commercial production"
           loading="lazy"
-          decoding="async"
         />
         <div className="pro-media-badge">
           <span>EXPLORE</span>

@@ -2,9 +2,7 @@
 
 import React, { useState, useCallback, useEffect } from 'react';
 import Navbar from '../components/Navbar';
-import SharedPortraitBridge from '../components/hero/SharedPortraitBridge';
 import HeroExperience from '../components/hero/HeroExperience';
-import IdentityExperience from '../components/identity/IdentityExperience';
 import ExecutiveHook from '../components/work/ExecutiveHook';
 import DigiMarketrix from '../components/work/DigiMarketrix';
 import PersonalBranding from '../components/work/PersonalBranding';
@@ -21,7 +19,8 @@ import Toast from '../components/ui/Toast';
 import ScrollProgress from '../components/ui/ScrollProgress';
 import CursorBadge from '../components/ui/CursorBadge';
 import InteractiveSystem from '../components/ui/InteractiveSystem';
-import { initGSAP, ScrollTrigger } from '../lib/gsap';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 export default function HomePage() {
   const [activeDrawer, setActiveDrawer] = useState<string | null>(null);
@@ -55,7 +54,7 @@ export default function HomePage() {
   useEffect(() => {
     if (typeof window === 'undefined') return;
 
-    initGSAP();
+    gsap.registerPlugin(ScrollTrigger);
 
     const navSectionMap = [
       { id: 'future', target: 'about' },
@@ -124,10 +123,13 @@ export default function HomePage() {
     function scrollToAnchor(targetEl: HTMLElement, smooth = true) {
       if (!targetEl) return;
 
-      const isHeroTarget = targetEl.id === 'hero' || targetEl.id === 'hero-experience';
+      if (typeof ScrollTrigger !== 'undefined') {
+        ScrollTrigger.refresh();
+      }
+
       const headerOffset = 90;
       const rect = targetEl.getBoundingClientRect();
-      const targetPos = isHeroTarget ? 0 : Math.max(0, rect.top + window.scrollY - headerOffset);
+      const targetPos = Math.max(0, rect.top + window.scrollY - headerOffset);
 
       // Update active nav link immediately to match target
       const targetId = targetEl.id;
@@ -138,28 +140,18 @@ export default function HomePage() {
         link.classList.toggle('active', href === mappedTarget);
       });
 
-      const startPos = window.scrollY;
-      const distance = targetPos - startPos;
-
-      if (Math.abs(distance) < 5) {
-        window.scrollTo(0, targetPos);
-        if (typeof ScrollTrigger !== 'undefined') {
-          ScrollTrigger.update();
-        }
-        updateActiveNav();
-        return;
-      }
-
       if (!smooth) {
         window.scrollTo({ top: targetPos, behavior: 'instant' });
         if (typeof ScrollTrigger !== 'undefined') {
-          ScrollTrigger.update();
+          ScrollTrigger.refresh();
         }
         return;
       }
 
       isNavScrolling = true;
-      const duration = Math.min(650, Math.max(350, Math.abs(distance) * 0.035));
+      const startPos = window.scrollY;
+      const distance = targetPos - startPos;
+      const duration = Math.min(850, Math.max(400, Math.abs(distance) * 0.045));
       let startTime: number | null = null;
 
       function step(timestamp: number) {
@@ -180,7 +172,7 @@ export default function HomePage() {
           window.scrollTo(0, targetPos);
           isNavScrolling = false;
           if (typeof ScrollTrigger !== 'undefined') {
-            ScrollTrigger.update();
+            ScrollTrigger.refresh();
           }
           updateActiveNav();
         }
@@ -212,11 +204,10 @@ export default function HomePage() {
         }
       }
 
-      // Smooth anchor scrolling with pin awareness (supports both '#hero' and '/#hero')
-      const anchor = target.closest('a[href^="#"], a[href^="/#"]') as HTMLAnchorElement | null;
+      // Smooth anchor scrolling with pin awareness
+      const anchor = target.closest('a[href^="#"]') as HTMLAnchorElement | null;
       if (anchor) {
-        const rawHref = anchor.getAttribute('href') || '';
-        const href = rawHref.replace(/^\//, '');
+        const href = anchor.getAttribute('href');
         if (!href || href === '#') return;
         const targetEl = document.querySelector(href) as HTMLElement | null;
         if (targetEl) {
@@ -233,30 +224,25 @@ export default function HomePage() {
 
     // Handle URL hash on initial page load (prevent getting trapped in pinned hero spacer)
     function handleInitialHash() {
-      if (window.location.hash === '#hero') {
-        window.scrollTo(0, 0);
-        return;
-      }
       if (window.location.hash && window.location.hash !== '#') {
         const targetEl = document.querySelector(window.location.hash) as HTMLElement | null;
         if (targetEl) {
           if ('scrollRestoration' in history) {
             history.scrollRestoration = 'manual';
           }
-          requestAnimationFrame(() => {
+          scrollToAnchor(targetEl, false);
+          setTimeout(() => {
             scrollToAnchor(targetEl, false);
-          });
+          }, 150);
+          setTimeout(() => {
+            scrollToAnchor(targetEl, false);
+          }, 500);
         }
       }
     }
 
     handleInitialHash();
     const onHashChange = () => {
-      if (window.location.hash === '#hero') {
-        const heroEl = document.getElementById('hero') || document.getElementById('hero-experience');
-        if (heroEl) scrollToAnchor(heroEl, true);
-        return;
-      }
       if (window.location.hash && window.location.hash !== '#') {
         const targetEl = document.querySelector(window.location.hash) as HTMLElement | null;
         if (targetEl) {
@@ -278,16 +264,10 @@ export default function HomePage() {
       {/* 1. Navigation */}
       <Navbar />
 
-      {/* Shared Continuous Portrait Bridge (Hero -> Identity -> Gradual Exit) */}
-      <SharedPortraitBridge />
-
-      {/* 2. Isolated Cinematic Hero Experience */}
+      {/* 2. Locked Hero + Locked Four-Role Scroll Experience */}
       <HeroExperience />
 
-      {/* 3. Isolated Four-Role Experience ("I DON'T FIT INTO ONE BOX") */}
-      <IdentityExperience />
-
-      {/* 4. First Section After Role-Scroll: Strong Strategic Hook */}
+      {/* 3. First Section After Role-Scroll: Strong Strategic Hook */}
       <ExecutiveHook onOpenProof={openProof} />
 
       {/* 4. Section 01: Digi Marketrix & Talentrix Case Study */}

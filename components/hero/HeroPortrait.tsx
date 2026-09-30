@@ -13,10 +13,6 @@ export default function HeroPortrait() {
           alt="AAKASH — Creative Director, Marketer and Builder"
           className="hero-poster-portrait"
           id="character-portrait"
-          width={682}
-          height={1024}
-          loading="eager"
-          decoding="async"
         />
 
         {/* Reserved 3D mount architecture for future model */}

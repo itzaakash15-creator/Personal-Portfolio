@@ -1,11 +1,10 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: false,
-  transpilePackages: ['gsap'],
+  transpilePackages: ['three', '@react-three/fiber', '@react-three/drei', 'gsap'],
   images: {
     unoptimized: true,
   },
-  poweredByHeader: false,
 };
 
 module.exports = nextConfig;

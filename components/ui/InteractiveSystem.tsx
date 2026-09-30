@@ -10,107 +10,128 @@ export default function InteractiveSystem() {
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     const isDesktop = () => window.innerWidth > 960 && !prefersReducedMotion && !isTouch;
 
-    const cleanups: Array<() => void> = [];
-
     // ========================================================================
-    // 1. Subtle Spotlight Tracking (Transforms only, NO full-document style invalidation)
+    // 1. Centralized Spatial Pointer & Depth Parallax Engine
+    // Sets CSS custom properties on documentElement:
+    // --depth-bg-x, --depth-bg-y, --depth-mid-x, --depth-mid-y, --tilt-x, --tilt-y, --depth-fg-x, --depth-fg-y
     // ========================================================================
+    const root = document.documentElement;
     const spotlightEl = document.getElementById('speaking-spotlight');
     const contactSpotlight = document.querySelector('.contact-warm-spotlight') as HTMLElement | null;
 
-    if (isDesktop() && (spotlightEl || contactSpotlight)) {
-      let targetX = 0;
-      let targetY = 0;
-      let curX = 0;
-      let curY = 0;
-      let isRunning = false;
-      let rafId = 0;
+    const spatialState = {
+      bgX: 0, bgY: 0, targetBgX: 0, targetBgY: 0,
+      midX: 0, midY: 0, tiltX: 0, tiltY: 0, targetMidX: 0, targetMidY: 0, targetTiltX: 0, targetTiltY: 0,
+      fgX: 0, fgY: 0, targetFgX: 0, targetFgY: 0,
+      spotlightX: 0, spotlightY: 0, targetSpotlightX: 0, targetSpotlightY: 0,
+    };
 
-      const updateSpotlight = () => {
-        curX += (targetX - curX) * 0.05;
-        curY += (targetY - curY) * 0.05;
+    let isSpatialRunning = false;
+    const lerp = 0.065;
 
-        const transformStr = `translate3d(${curX.toFixed(1)}px, ${curY.toFixed(1)}px, 0)`;
-        if (spotlightEl) spotlightEl.style.transform = transformStr;
-        if (contactSpotlight) contactSpotlight.style.transform = transformStr;
+    function updateSpatial() {
+      spatialState.bgX += (spatialState.targetBgX - spatialState.bgX) * lerp;
+      spatialState.bgY += (spatialState.targetBgY - spatialState.bgY) * lerp;
+      spatialState.midX += (spatialState.targetMidX - spatialState.midX) * lerp;
+      spatialState.midY += (spatialState.targetMidY - spatialState.midY) * lerp;
+      spatialState.tiltX += (spatialState.targetTiltX - spatialState.tiltX) * lerp;
+      spatialState.tiltY += (spatialState.targetTiltY - spatialState.tiltY) * lerp;
+      spatialState.fgX += (spatialState.targetFgX - spatialState.fgX) * lerp;
+      spatialState.fgY += (spatialState.targetFgY - spatialState.fgY) * lerp;
+      spatialState.spotlightX += (spatialState.targetSpotlightX - spatialState.spotlightX) * (lerp * 0.8);
+      spatialState.spotlightY += (spatialState.targetSpotlightY - spatialState.spotlightY) * (lerp * 0.8);
 
-        const diff = Math.abs(targetX - curX) + Math.abs(targetY - curY);
-        if (diff > 0.05) {
-          rafId = requestAnimationFrame(updateSpotlight);
-        } else {
-          isRunning = false;
-        }
-      };
+      root.style.setProperty('--depth-bg-x', `${spatialState.bgX.toFixed(2)}px`);
+      root.style.setProperty('--depth-bg-y', `${spatialState.bgY.toFixed(2)}px`);
+      root.style.setProperty('--depth-mid-x', `${spatialState.midX.toFixed(2)}px`);
+      root.style.setProperty('--depth-mid-y', `${spatialState.midY.toFixed(2)}px`);
+      root.style.setProperty('--tilt-x', `${spatialState.tiltX.toFixed(2)}deg`);
+      root.style.setProperty('--tilt-y', `${spatialState.tiltY.toFixed(2)}deg`);
+      root.style.setProperty('--depth-fg-x', `${spatialState.fgX.toFixed(2)}px`);
+      root.style.setProperty('--depth-fg-y', `${spatialState.fgY.toFixed(2)}px`);
 
-      const onPointerMove = (e: MouseEvent) => {
-        if (!isDesktop()) return;
-        const normX = (e.clientX / window.innerWidth) * 2 - 1;
-        const normY = (e.clientY / window.innerHeight) * 2 - 1;
-        targetX = normX * 18;
-        targetY = normY * 12;
+      if (spotlightEl) {
+        spotlightEl.style.transform = `translate3d(${spatialState.spotlightX.toFixed(2)}px, ${spatialState.spotlightY.toFixed(2)}px, 0)`;
+      }
+      if (contactSpotlight) {
+        contactSpotlight.style.transform = `translate3d(${spatialState.spotlightX.toFixed(2)}px, ${spatialState.spotlightY.toFixed(2)}px, 0)`;
+      }
 
-        if (!isRunning) {
-          isRunning = true;
-          rafId = requestAnimationFrame(updateSpotlight);
-        }
-      };
+      const diff = Math.abs(spatialState.targetBgX - spatialState.bgX) +
+                   Math.abs(spatialState.targetBgY - spatialState.bgY) +
+                   Math.abs(spatialState.targetMidX - spatialState.midX) +
+                   Math.abs(spatialState.targetMidY - spatialState.midY) +
+                   Math.abs(spatialState.targetFgX - spatialState.fgX) +
+                   Math.abs(spatialState.targetFgY - spatialState.fgY);
 
-      const onPointerLeave = () => {
-        targetX = 0;
-        targetY = 0;
-        if (!isRunning) {
-          isRunning = true;
-          rafId = requestAnimationFrame(updateSpotlight);
-        }
-      };
-
-      window.addEventListener('mousemove', onPointerMove, { passive: true });
-      window.addEventListener('mouseleave', onPointerLeave, { passive: true });
-
-      cleanups.push(() => {
-        window.removeEventListener('mousemove', onPointerMove);
-        window.removeEventListener('mouseleave', onPointerLeave);
-        if (rafId) cancelAnimationFrame(rafId);
-      });
+      if (diff > 0.005) {
+        requestAnimationFrame(updateSpatial);
+      } else {
+        isSpatialRunning = false;
+      }
     }
 
+    const onPointerMoveSpatial = (e: MouseEvent) => {
+      if (!isDesktop()) return;
+      const normX = (e.clientX / window.innerWidth) * 2 - 1;
+      const normY = (e.clientY / window.innerHeight) * 2 - 1;
+
+      spatialState.targetBgX = normX * 1.8;
+      spatialState.targetBgY = normY * 1.2;
+      spatialState.targetMidX = normX * 4.2;
+      spatialState.targetMidY = normY * 3.0;
+      spatialState.targetTiltX = -normY * 1.4;
+      spatialState.targetTiltY = normX * 1.4;
+      spatialState.targetFgX = normX * 6.5;
+      spatialState.targetFgY = normY * 4.5;
+      spatialState.targetSpotlightX = normX * 22;
+      spatialState.targetSpotlightY = normY * 14;
+
+      if (!isSpatialRunning) {
+        isSpatialRunning = true;
+        requestAnimationFrame(updateSpatial);
+      }
+    };
+
+    const onPointerLeaveSpatial = () => {
+      spatialState.targetBgX = 0; spatialState.targetBgY = 0;
+      spatialState.targetMidX = 0; spatialState.targetMidY = 0;
+      spatialState.targetTiltX = 0; spatialState.targetTiltY = 0;
+      spatialState.targetFgX = 0; spatialState.targetFgY = 0;
+      spatialState.targetSpotlightX = 0; spatialState.targetSpotlightY = 0;
+
+      if (!isSpatialRunning) {
+        isSpatialRunning = true;
+        requestAnimationFrame(updateSpatial);
+      }
+    };
+
+    window.addEventListener('mousemove', onPointerMoveSpatial, { passive: true });
+    window.addEventListener('mouseleave', onPointerLeaveSpatial, { passive: true });
+
     // ========================================================================
-    // 2. Desktop Magnetic Buttons (Cached Rects on Enter)
+    // 2. Desktop Magnetic Button Interaction
     // ========================================================================
-    if (isDesktop()) {
+    const magneticCleanups: Array<() => void> = [];
+    if (!prefersReducedMotion && window.innerWidth > 960) {
       const magneticButtons = document.querySelectorAll<HTMLElement>(
         '.pro-btn-primary, .pro-btn-outline, .nav-connect-btn, .pro-proof-tab-btn, .pro-ctrl-btn, .btn-editorial, .btn-editorial-outline, .proof-pill-btn'
       );
 
       magneticButtons.forEach((btn) => {
-        let isHovered = false;
-        let cachedRect: DOMRect | null = null;
-
-        const onMouseEnter = () => {
-          isHovered = true;
-          cachedRect = btn.getBoundingClientRect();
-        };
-
         const onMouseMove = (e: MouseEvent) => {
-          if (!isHovered) return;
-          if (!cachedRect) cachedRect = btn.getBoundingClientRect();
-          const x = (e.clientX - cachedRect.left - cachedRect.width / 2) * 0.18;
-          const y = (e.clientY - cachedRect.top - cachedRect.height / 2) * 0.18;
-          btn.style.transform = `translate3d(${x.toFixed(1)}px, ${y.toFixed(1)}px, 0)`;
+          const rect = btn.getBoundingClientRect();
+          const x = (e.clientX - rect.left - rect.width / 2) * 0.18;
+          const y = (e.clientY - rect.top - rect.height / 2) * 0.18;
+          btn.style.transform = `translate3d(${x.toFixed(2)}px, ${y.toFixed(2)}px, 0)`;
         };
-
         const onMouseLeave = () => {
-          isHovered = false;
-          cachedRect = null;
           btn.style.transform = 'translate3d(0, 0, 0)';
         };
 
-        btn.addEventListener('mouseenter', onMouseEnter);
-        btn.addEventListener('mousemove', onMouseMove, { passive: true });
+        btn.addEventListener('mousemove', onMouseMove);
         btn.addEventListener('mouseleave', onMouseLeave);
-
-        cleanups.push(() => {
-          btn.removeEventListener('mouseenter', onMouseEnter);
+        magneticCleanups.push(() => {
           btn.removeEventListener('mousemove', onMouseMove);
           btn.removeEventListener('mouseleave', onMouseLeave);
         });
@@ -124,7 +145,7 @@ export default function InteractiveSystem() {
     if (proofWall) {
       const wallItems = proofWall.querySelectorAll<HTMLElement>('.proof-wall-item');
       wallItems.forEach((item) => {
-        const onEnter = () => {
+        item.addEventListener('mouseenter', () => {
           wallItems.forEach((other) => {
             if (other === item) {
               other.classList.add('proof-focused');
@@ -134,77 +155,93 @@ export default function InteractiveSystem() {
               other.classList.add('proof-dimmed');
             }
           });
-        };
-        item.addEventListener('mouseenter', onEnter);
-        cleanups.push(() => item.removeEventListener('mouseenter', onEnter));
+        });
       });
 
-      const onWallLeave = () => {
+      proofWall.addEventListener('mouseleave', () => {
         wallItems.forEach((item) => {
           item.classList.remove('proof-focused', 'proof-dimmed');
         });
-      };
-      proofWall.addEventListener('mouseleave', onWallLeave);
-      cleanups.push(() => proofWall.removeEventListener('mouseleave', onWallLeave));
+      });
     }
 
     // ========================================================================
-    // 4. Project Index Preview Tracking (#clients & #other-work)
+    // 4. Interactive Project Index Preview System (#clients & #other-work)
     // ========================================================================
+    const projectRows = document.querySelectorAll<HTMLElement>('.horizontal-project-row, .index-row-item');
+    const previewImg = (document.getElementById('editorial-preview-img') || document.getElementById('project-preview-img')) as HTMLImageElement | null;
+    const previewCat = document.getElementById('editorial-preview-cat') || document.getElementById('project-preview-cat');
+    const previewTitle = document.getElementById('editorial-preview-title') || document.getElementById('project-preview-title');
+    const previewScope = document.getElementById('editorial-preview-scope');
+
+    if (projectRows.length && previewImg) {
+      projectRows.forEach((row) => {
+        const updatePreview = () => {
+          projectRows.forEach((r) => r.classList.remove('active-index'));
+          row.classList.add('active-index');
+
+          const imgSrc = row.getAttribute('data-preview-img');
+          const cat = row.getAttribute('data-preview-cat');
+          const title = row.getAttribute('data-preview-title');
+          const scope = row.getAttribute('data-preview-scope');
+
+          if (imgSrc && !previewImg.src.endsWith(imgSrc)) {
+            previewImg.style.opacity = '0.3';
+            previewImg.style.transform = 'scale(0.985)';
+            setTimeout(() => {
+              previewImg.src = imgSrc;
+              previewImg.style.opacity = '1';
+              previewImg.style.transform = 'scale(1)';
+            }, 110);
+          }
+
+          if (previewCat && cat) previewCat.textContent = cat;
+          if (previewTitle && title) previewTitle.textContent = title;
+          if (previewScope && scope) previewScope.textContent = scope;
+        };
+
+        row.addEventListener('mouseenter', updatePreview);
+        row.addEventListener('click', updatePreview);
+      });
+    }
+
+    // Project Index Smooth Spatial Preview Tracking
     const projectList = document.getElementById('project-index-list');
     const projectPreviewPane = document.getElementById('project-preview-pane');
-    if (projectList && projectPreviewPane && isDesktop()) {
+    if (projectList && projectPreviewPane && window.innerWidth > 960) {
       let targetY = 0;
       let currentY = 0;
       let isTracking = false;
-      let paneRafId = 0;
-      let cachedListRect: DOMRect | null = null;
 
       const animatePane = () => {
-        currentY += (targetY - currentY) * 0.12;
-        projectPreviewPane.style.transform = `translate3d(0, ${currentY.toFixed(1)}px, 0)`;
+        currentY += (targetY - currentY) * 0.1;
+        projectPreviewPane.style.transform = `translate3d(0, ${currentY.toFixed(2)}px, 0)`;
 
         if (Math.abs(targetY - currentY) > 0.1) {
-          paneRafId = requestAnimationFrame(animatePane);
+          requestAnimationFrame(animatePane);
         } else {
           isTracking = false;
         }
       };
 
-      const onListEnter = () => {
-        cachedListRect = projectList.getBoundingClientRect();
-      };
-
-      const onListMove = (e: MouseEvent) => {
-        if (!cachedListRect) cachedListRect = projectList.getBoundingClientRect();
-        const relativeY = e.clientY - cachedListRect.top;
-        const progress = (relativeY / cachedListRect.height) * 2 - 1;
+      projectList.addEventListener('mousemove', (e) => {
+        const rect = projectList.getBoundingClientRect();
+        const relativeY = e.clientY - rect.top;
+        const progress = (relativeY / rect.height) * 2 - 1;
         targetY = progress * 24;
 
         if (!isTracking) {
           isTracking = true;
-          paneRafId = requestAnimationFrame(animatePane);
+          requestAnimationFrame(animatePane);
         }
-      };
+      }, { passive: true });
 
-      const onListLeave = () => {
-        cachedListRect = null;
+      projectList.addEventListener('mouseleave', () => {
         targetY = 0;
         if (!isTracking) {
           isTracking = true;
-          paneRafId = requestAnimationFrame(animatePane);
+          requestAnimationFrame(animatePane);
         }
-      };
-
-      projectList.addEventListener('mouseenter', onListEnter);
-      projectList.addEventListener('mousemove', onListMove, { passive: true });
-      projectList.addEventListener('mouseleave', onListLeave);
-
-      cleanups.push(() => {
-        projectList.removeEventListener('mouseenter', onListEnter);
-        projectList.removeEventListener('mousemove', onListMove);
-        projectList.removeEventListener('mouseleave', onListLeave);
-        if (paneRafId) cancelAnimationFrame(paneRafId);
       });
     }
 
@@ -216,7 +253,7 @@ export default function InteractiveSystem() {
 
     if (railBtns.length) {
       railBtns.forEach((btn) => {
-        const onClick = (e: MouseEvent) => {
+        btn.addEventListener('click', (e) => {
           const targetId = btn.getAttribute('data-target');
           if (!targetId) return;
 
@@ -227,72 +264,54 @@ export default function InteractiveSystem() {
             const targetY = targetEl.getBoundingClientRect().top + window.scrollY - headerOffset;
             window.scrollTo({ top: targetY, behavior: 'smooth' });
           }
-        };
-        btn.addEventListener('click', onClick);
-        cleanups.push(() => btn.removeEventListener('click', onClick));
+        });
       });
 
       if ('IntersectionObserver' in window && yearBlocks.length > 0) {
-        const railObserver = new IntersectionObserver(
-          (entries) => {
-            entries.forEach((entry) => {
-              if (entry.isIntersecting) {
-                const chapterId = entry.target.id;
-                railBtns.forEach((btn) => {
-                  const matches = btn.getAttribute('data-target') === chapterId;
-                  btn.classList.toggle('active', matches);
-                });
-              }
-            });
-          },
-          {
-            rootMargin: '-25% 0px -50% 0px',
-            threshold: 0.1,
-          }
-        );
+        const railObserver = new IntersectionObserver((entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              const chapterId = entry.target.id;
+              railBtns.forEach((btn) => {
+                const matches = btn.getAttribute('data-target') === chapterId;
+                btn.classList.toggle('active', matches);
+              });
+            }
+          });
+        }, {
+          rootMargin: '-25% 0px -50% 0px',
+          threshold: 0.1,
+        });
 
         yearBlocks.forEach((block) => railObserver.observe(block));
-        cleanups.push(() => railObserver.disconnect());
       }
     }
 
     // ========================================================================
-    // 6. Speaking Horizontal Gallery Drag Handling
+    // 6. Motivational Speaking Horizontal Gallery Drag & Wheel Handling
     // ========================================================================
     const speakingViewport = document.querySelector<HTMLElement>('.speaking-horizontal-viewport');
     if (speakingViewport) {
       let isDown = false;
       let startX = 0;
       let scrollLeft = 0;
-      let cachedOffsetLeft = 0;
 
-      const onMouseDown = (e: MouseEvent) => {
+      speakingViewport.addEventListener('mousedown', (e) => {
         isDown = true;
-        cachedOffsetLeft = speakingViewport.offsetLeft;
-        startX = e.pageX - cachedOffsetLeft;
+        startX = e.pageX - speakingViewport.offsetLeft;
         scrollLeft = speakingViewport.scrollLeft;
-      };
+      });
 
-      const onMouseUp = () => {
+      window.addEventListener('mouseup', () => {
         isDown = false;
-      };
+      });
 
-      const onMouseMove = (e: MouseEvent) => {
+      speakingViewport.addEventListener('mousemove', (e) => {
         if (!isDown) return;
         e.preventDefault();
-        const x = e.pageX - cachedOffsetLeft;
+        const x = e.pageX - speakingViewport.offsetLeft;
         const walk = (x - startX) * 1.6;
         speakingViewport.scrollLeft = scrollLeft - walk;
-      };
-
-      speakingViewport.addEventListener('mousedown', onMouseDown);
-      window.addEventListener('mouseup', onMouseUp);
-      speakingViewport.addEventListener('mousemove', onMouseMove);
-
-      cleanups.push(() => {
-        speakingViewport.removeEventListener('mousedown', onMouseDown);
-        window.removeEventListener('mouseup', onMouseUp);
-        speakingViewport.removeEventListener('mousemove', onMouseMove);
       });
     }
 
@@ -304,7 +323,7 @@ export default function InteractiveSystem() {
 
     if (filterBtns.length && proofCards.length) {
       filterBtns.forEach((btn) => {
-        const onClick = () => {
+        btn.addEventListener('click', () => {
           filterBtns.forEach((b) => b.classList.remove('active'));
           btn.classList.add('active');
           const filter = (btn.getAttribute('data-filter') || 'all').toLowerCase();
@@ -314,24 +333,18 @@ export default function InteractiveSystem() {
             const categories = category.split(/\s+/);
             if (filter === 'all' || categories.includes(filter)) {
               card.style.display = 'flex';
-              requestAnimationFrame(() => {
-                card.style.opacity = '1';
-              });
+              setTimeout(() => { card.style.opacity = '1'; }, 20);
             } else {
               card.style.opacity = '0';
-              setTimeout(() => {
-                card.style.display = 'none';
-              }, 200);
+              setTimeout(() => { card.style.display = 'none'; }, 200);
             }
           });
-        };
-        btn.addEventListener('click', onClick);
-        cleanups.push(() => btn.removeEventListener('click', onClick));
+        });
       });
     }
 
     // ========================================================================
-    // 8. Career Progression Nodes Inspector
+    // 8. Interactive Journey System (Career Progression & Inspector Panel)
     // ========================================================================
     const journeyNodes = document.querySelectorAll<HTMLElement>('.journey-node');
     const panelYear = document.getElementById('panel-year');
@@ -342,7 +355,7 @@ export default function InteractiveSystem() {
 
     if (journeyNodes.length) {
       journeyNodes.forEach((node) => {
-        const onClick = () => {
+        node.addEventListener('click', () => {
           journeyNodes.forEach((n) => n.classList.remove('active'));
           node.classList.add('active');
 
@@ -369,14 +382,14 @@ export default function InteractiveSystem() {
               panelProofBtn.style.display = 'none';
             }
           }
-        };
-        node.addEventListener('click', onClick);
-        cleanups.push(() => node.removeEventListener('click', onClick));
+        });
       });
     }
 
     return () => {
-      cleanups.forEach((cleanup) => cleanup());
+      window.removeEventListener('mousemove', onPointerMoveSpatial);
+      window.removeEventListener('mouseleave', onPointerLeaveSpatial);
+      magneticCleanups.forEach((cleanup) => cleanup());
     };
   }, []);
 

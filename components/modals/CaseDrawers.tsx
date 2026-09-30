@@ -27,8 +27,6 @@ export default function CaseDrawers({ activeDrawerId, onClose, onOpenProof }: Ca
     };
   }, [activeDrawerId, onClose]);
 
-  if (!activeDrawerId) return null;
-
   return (
     <>
       {/* Drawer 01: Digi Marketrix & Talentrix Full Case Study */}

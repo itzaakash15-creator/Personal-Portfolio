@@ -1,7 +1,8 @@
 'use client';
 
 import React, { useState, useRef, useEffect } from 'react';
-import { gsap } from '../../lib/gsap';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 interface AboutJourneyProps {
   onOpenProof?: (proofKey: string) => void;
@@ -68,6 +69,7 @@ export default function AboutJourney({ onOpenProof }: AboutJourneyProps) {
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
+    gsap.registerPlugin(ScrollTrigger);
 
     const ctx = gsap.context(() => {
       if (timelineRef.current) {

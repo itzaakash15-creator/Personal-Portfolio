@@ -1,7 +1,8 @@
 'use client';
 
 import React, { useEffect, useRef } from 'react';
-import { gsap } from '../../lib/gsap';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 interface WebsiteBuilderProps {
   onOpenDrawer?: (drawerId: string) => void;
@@ -12,10 +13,10 @@ export default function WebsiteBuilder({ onOpenDrawer, onOpenProof }: WebsiteBui
   const sectionRef = useRef<HTMLElement>(null);
   const browserStageRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLDivElement>(null);
-  const rectRef = useRef<DOMRect | null>(null);
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
+    gsap.registerPlugin(ScrollTrigger);
 
     const ctx = gsap.context(() => {
       if (canvasRef.current) {
@@ -34,7 +35,6 @@ export default function WebsiteBuilder({ onOpenDrawer, onOpenProof }: WebsiteBui
             opacity: 1,
             duration: 1.25,
             ease: 'power3.out',
-            force3D: true,
             scrollTrigger: {
               trigger: canvasRef.current,
               start: 'top 85%',
@@ -48,14 +48,10 @@ export default function WebsiteBuilder({ onOpenDrawer, onOpenProof }: WebsiteBui
     return () => ctx.revert();
   }, []);
 
-  const handleMouseEnter = (e: React.MouseEvent<HTMLDivElement>) => {
-    rectRef.current = e.currentTarget.getBoundingClientRect();
-  };
-
-  // Subtle perspective response on cursor hover (cached rect, no layout thrashing)
+  // Subtle perspective response on cursor hover
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     if (!canvasRef.current || window.innerWidth < 960) return;
-    const rect = rectRef.current || e.currentTarget.getBoundingClientRect();
+    const rect = canvasRef.current.getBoundingClientRect();
     const x = (e.clientX - rect.left) / rect.width - 0.5;
     const y = (e.clientY - rect.top) / rect.height - 0.5;
 
@@ -63,23 +59,20 @@ export default function WebsiteBuilder({ onOpenDrawer, onOpenProof }: WebsiteBui
       rotateY: x * 5,
       rotateX: -y * 4,
       y: -4 + y * 4,
-      duration: 0.35,
+      duration: 0.4,
       ease: 'power1.out',
       transformPerspective: 1200,
-      force3D: true,
     });
   };
 
   const handleMouseLeave = () => {
-    rectRef.current = null;
     if (!canvasRef.current) return;
     gsap.to(canvasRef.current, {
       rotateY: 0,
       rotateX: 0,
       y: 0,
-      duration: 0.5,
+      duration: 0.6,
       ease: 'power2.out',
-      force3D: true,
     });
   };
 
@@ -135,7 +128,6 @@ export default function WebsiteBuilder({ onOpenDrawer, onOpenProof }: WebsiteBui
           <div
             className="pro-chapter-media-wrap"
             ref={browserStageRef}
-            onMouseEnter={handleMouseEnter}
             onMouseMove={handleMouseMove}
             onMouseLeave={handleMouseLeave}
           >

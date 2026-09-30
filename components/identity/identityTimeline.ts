@@ -20,6 +20,8 @@ export interface IdentityTimelineElements {
   historyRow?: HTMLElement | null;
   envSymbolsWrap?: HTMLElement | null;
   wrapper?: HTMLElement | null;
+  characterScene: HTMLElement | null;
+  getAnchorRightX: () => number;
 }
 
 export function buildIdentityTimeline(tl: gsap.core.Timeline, el: IdentityTimelineElements) {
@@ -63,44 +65,42 @@ export function buildIdentityTimeline(tl: gsap.core.Timeline, el: IdentityTimeli
         scale: 0.9,
         rotateX: 9,
         opacity: 0,
-        force3D: true,
       });
     }
   });
 
   // Step 2: "I DON'T FIT INTO ONE BOX."
-  // GPU-friendly transforms: y, scale, opacity (no continuous blur repainting on scroll)
   tl.to(el.stmtBackdrop, { opacity: 1, duration: 0.1 }, 1.2);
   tl.fromTo(el.stmtLine1,
-    { scale: 0.94, opacity: 0, y: 35 },
-    { scale: 1, opacity: 0.55, y: 0, duration: 0.85, ease: 'power2.out', force3D: true },
+    { scale: 0.94, filter: 'blur(7px)', opacity: 0, y: 35 },
+    { scale: 1, filter: 'blur(0px)', opacity: 0.55, y: 0, duration: 0.85, ease: 'power2.out' },
     1.3
   );
   tl.to(el.stmtLine1, { opacity: 0.55, duration: 0.7 }, 2.15);
 
   tl.fromTo(el.stmtLine2,
-    { scale: 0.95, opacity: 0, y: 30 },
-    { scale: 1, opacity: 0.72, y: 0, duration: 0.85, ease: 'power2.out', force3D: true },
+    { scale: 0.95, filter: 'blur(6px)', opacity: 0, y: 30 },
+    { scale: 1, filter: 'blur(0px)', opacity: 0.72, y: 0, duration: 0.85, ease: 'power2.out' },
     2.85
   );
-  tl.to(el.stmtLine1, { opacity: 0.42, y: -8, duration: 0.7, ease: 'power2.out', force3D: true }, 2.85);
+  tl.to(el.stmtLine1, { opacity: 0.42, y: -8, duration: 0.7, ease: 'power2.out' }, 2.85);
   tl.to(el.stmtLine2, { opacity: 0.72, duration: 0.7 }, 3.7);
 
   tl.fromTo(el.stmtLine3,
-    { scale: 0.96, opacity: 0, y: 25 },
-    { scale: 1, opacity: 0.98, y: 0, duration: 0.85, ease: 'power2.out', force3D: true },
+    { scale: 0.96, filter: 'blur(5px)', opacity: 0, y: 25 },
+    { scale: 1, filter: 'blur(0px)', opacity: 0.98, y: 0, duration: 0.85, ease: 'power2.out' },
     4.4
   );
-  tl.to([el.stmtLine1, el.stmtLine2], { y: -16, duration: 0.7, ease: 'power2.out', force3D: true }, 4.4);
+  tl.to([el.stmtLine1, el.stmtLine2], { y: -16, duration: 0.7, ease: 'power2.out' }, 4.4);
   tl.to(el.stmtLine2, { opacity: 0.58, duration: 0.7, ease: 'power2.out' }, 4.4);
 
   // Full sentence reading hold window
-  tl.to(el.stmtBackdrop, { opacity: 1, duration: 2.2 }, 5.25);
-  tl.to(el.stmtBackdrop, { scale: 0.92, opacity: 0.12, duration: 0.9, ease: 'power2.inOut', force3D: true }, 7.45);
+  tl.to(el.stmtBackdrop, { opacity: 1, filter: 'contrast(1.08)', duration: 2.2 }, 5.25);
+  tl.to(el.stmtBackdrop, { scale: 0.92, opacity: 0.12, filter: 'blur(4px) contrast(0.8)', duration: 0.9, ease: 'power2.inOut' }, 7.45);
 
   // Role 01: MARKETER
   if (el.envSymMarketer) {
-    tl.fromTo(el.envSymMarketer, { opacity: 0, scale: 0.9, y: 20 }, { opacity: 0.58, scale: 1, y: 0, duration: 0.85, ease: 'power2.out', force3D: true }, 8.35);
+    tl.fromTo(el.envSymMarketer, { opacity: 0, scale: 0.9, y: 20 }, { opacity: 0.58, scale: 1, y: 0, duration: 0.85, ease: 'power2.out' }, 8.35);
   }
   if (markPath) {
     tl.to(markPath, { strokeDashoffset: 0, duration: 0.9, ease: 'power2.out' }, 8.4);
@@ -111,9 +111,12 @@ export function buildIdentityTimeline(tl: gsap.core.Timeline, el: IdentityTimeli
   if (el.frame1) {
     tl.fromTo(el.frame1,
       { y: 100, scale: 0.9, rotateX: 9, rotateZ: -2.0, opacity: 0 },
-      { y: 0, scale: 1, rotateX: 0, rotateZ: 0, opacity: 1, duration: 0.95, ease: 'power3.out', force3D: true },
+      { y: 0, scale: 1, rotateX: 0, rotateZ: 0, opacity: 1, duration: 0.95, ease: 'power3.out' },
       8.35
     );
+  }
+  if (el.characterScene) {
+    tl.to(el.characterScene, { x: () => el.getAnchorRightX() + 6, duration: 0.8, ease: 'power1.out' }, 8.5);
   }
   tl.to(el.frame1, { opacity: 1, duration: 1.8 }, 9.3);
 
@@ -135,9 +138,7 @@ export function buildIdentityTimeline(tl: gsap.core.Timeline, el: IdentityTimeli
       rotateZ: 0,
       duration: 1.1,
       ease: 'power2.inOut',
-      force3D: true,
       onStart: () => el.frame1?.classList.add('is-stored'),
-      onReverseComplete: () => el.frame1?.classList.remove('is-stored'),
     }, 11.1);
   }
   if (el.envSymMarketer) tl.to(el.envSymMarketer, { opacity: 0.05, duration: 0.75, ease: 'power2.out' }, 11.3);
@@ -145,7 +146,7 @@ export function buildIdentityTimeline(tl: gsap.core.Timeline, el: IdentityTimeli
 
   // Role 02: BRAND BUILDER
   if (el.envSymBrand) {
-    tl.fromTo(el.envSymBrand, { opacity: 0, scale: 0.9, y: 20 }, { opacity: 0.58, scale: 1, y: 0, duration: 0.85, ease: 'power2.out', force3D: true }, 12.3);
+    tl.fromTo(el.envSymBrand, { opacity: 0, scale: 0.9, y: 20 }, { opacity: 0.58, scale: 1, y: 0, duration: 0.85, ease: 'power2.out' }, 12.3);
   }
   if (brandPaths.length) {
     tl.to(brandPaths, { strokeDashoffset: 0, duration: 0.9, stagger: 0.08, ease: 'power2.out' }, 12.35);
@@ -156,9 +157,12 @@ export function buildIdentityTimeline(tl: gsap.core.Timeline, el: IdentityTimeli
   if (el.frame2) {
     tl.fromTo(el.frame2,
       { y: 100, scale: 0.9, rotateX: 9, rotateZ: 2.0, opacity: 0 },
-      { y: 0, scale: 1, rotateX: 0, rotateZ: 0, opacity: 1, duration: 0.95, ease: 'power3.out', force3D: true },
+      { y: 0, scale: 1, rotateX: 0, rotateZ: 0, opacity: 1, duration: 0.95, ease: 'power3.out' },
       12.3
     );
+  }
+  if (el.characterScene) {
+    tl.to(el.characterScene, { x: () => el.getAnchorRightX() - 4, duration: 0.8, ease: 'power1.out' }, 12.45);
   }
   tl.to(el.frame2, { opacity: 1, duration: 1.8 }, 13.25);
 
@@ -180,9 +184,7 @@ export function buildIdentityTimeline(tl: gsap.core.Timeline, el: IdentityTimeli
       rotateZ: 0,
       duration: 1.1,
       ease: 'power2.inOut',
-      force3D: true,
       onStart: () => el.frame2?.classList.add('is-stored'),
-      onReverseComplete: () => el.frame2?.classList.remove('is-stored'),
     }, 15.05);
   }
   if (el.envSymBrand) tl.to(el.envSymBrand, { opacity: 0.05, duration: 0.75, ease: 'power2.out' }, 15.25);
@@ -190,7 +192,7 @@ export function buildIdentityTimeline(tl: gsap.core.Timeline, el: IdentityTimeli
 
   // Role 03: CREATOR
   if (el.envSymCreator) {
-    tl.fromTo(el.envSymCreator, { opacity: 0, scale: 0.9, y: 20 }, { opacity: 0.58, scale: 1, y: 0, duration: 0.85, ease: 'power2.out', force3D: true }, 16.2);
+    tl.fromTo(el.envSymCreator, { opacity: 0, scale: 0.9, y: 20 }, { opacity: 0.58, scale: 1, y: 0, duration: 0.85, ease: 'power2.out' }, 16.2);
   }
   if (creatorBlades.length) {
     tl.to(creatorBlades, { rotation: 0, scale: 1, opacity: 0.85, duration: 0.9, ease: 'power2.out' }, 16.25);
@@ -201,9 +203,12 @@ export function buildIdentityTimeline(tl: gsap.core.Timeline, el: IdentityTimeli
   if (el.frame3) {
     tl.fromTo(el.frame3,
       { y: 100, scale: 0.9, rotateX: 9, rotateZ: -1.5, opacity: 0 },
-      { y: 0, scale: 1, rotateX: 0, rotateZ: 0, opacity: 1, duration: 0.95, ease: 'power3.out', force3D: true },
+      { y: 0, scale: 1, rotateX: 0, rotateZ: 0, opacity: 1, duration: 0.95, ease: 'power3.out' },
       16.2
     );
+  }
+  if (el.characterScene) {
+    tl.to(el.characterScene, { x: () => el.getAnchorRightX() + 4, duration: 0.8, ease: 'power1.out' }, 16.35);
   }
   tl.to(el.frame3, { opacity: 1, duration: 1.8 }, 17.15);
 
@@ -225,9 +230,7 @@ export function buildIdentityTimeline(tl: gsap.core.Timeline, el: IdentityTimeli
       rotateZ: 0,
       duration: 1.1,
       ease: 'power2.inOut',
-      force3D: true,
       onStart: () => el.frame3?.classList.add('is-stored'),
-      onReverseComplete: () => el.frame3?.classList.remove('is-stored'),
     }, 18.95);
   }
   if (el.envSymCreator) tl.to(el.envSymCreator, { opacity: 0.05, duration: 0.75, ease: 'power2.out' }, 19.15);
@@ -235,7 +238,7 @@ export function buildIdentityTimeline(tl: gsap.core.Timeline, el: IdentityTimeli
 
   // Role 04: SPEAKER
   if (el.envSymSpeaker) {
-    tl.fromTo(el.envSymSpeaker, { opacity: 0, scale: 0.9, y: 20 }, { opacity: 0.58, scale: 1, y: 0, duration: 0.85, ease: 'power2.out', force3D: true }, 20.1);
+    tl.fromTo(el.envSymSpeaker, { opacity: 0, scale: 0.9, y: 20 }, { opacity: 0.58, scale: 1, y: 0, duration: 0.85, ease: 'power2.out' }, 20.1);
   }
   if (speakerBars.length) {
     tl.to(speakerBars, { scaleY: 1, duration: 0.85, stagger: 0.03, ease: 'power2.out' }, 20.15);
@@ -246,9 +249,12 @@ export function buildIdentityTimeline(tl: gsap.core.Timeline, el: IdentityTimeli
   if (el.frame4) {
     tl.fromTo(el.frame4,
       { y: 100, scale: 0.9, rotateX: 9, rotateZ: 1.5, opacity: 0 },
-      { y: 0, scale: 1, rotateX: 0, rotateZ: 0, opacity: 1, duration: 0.95, ease: 'power3.out', force3D: true },
+      { y: 0, scale: 1, rotateX: 0, rotateZ: 0, opacity: 1, duration: 0.95, ease: 'power3.out' },
       20.1
     );
+  }
+  if (el.characterScene) {
+    tl.to(el.characterScene, { x: () => el.getAnchorRightX() - 2, duration: 0.8, ease: 'power1.out' }, 20.25);
   }
   tl.to(el.frame4, { opacity: 1, duration: 1.8 }, 21.05);
 
@@ -270,9 +276,7 @@ export function buildIdentityTimeline(tl: gsap.core.Timeline, el: IdentityTimeli
       rotateZ: 0,
       duration: 1.1,
       ease: 'power2.inOut',
-      force3D: true,
       onStart: () => el.frame4?.classList.add('is-stored'),
-      onReverseComplete: () => el.frame4?.classList.remove('is-stored'),
     }, 22.95);
   }
   if (el.envSymSpeaker) tl.to(el.envSymSpeaker, { opacity: 0.05, duration: 0.75, ease: 'power2.out' }, 23.15);
@@ -291,8 +295,8 @@ export function buildIdentityTimeline(tl: gsap.core.Timeline, el: IdentityTimeli
   }
 
   // Step 8 (Identity Exit): Clean transition into next phase
-  if (el.historyRow) tl.to(el.historyRow, { y: -25, opacity: 0, duration: 0.85, ease: 'power2.in', force3D: true }, 26.4);
-  if (storedFrames.length) tl.to(storedFrames, { y: '-=25', opacity: 0, duration: 0.85, ease: 'power2.in', force3D: true }, 26.4);
+  if (el.historyRow) tl.to(el.historyRow, { y: -25, opacity: 0, duration: 0.85, ease: 'power2.in' }, 26.4);
+  if (storedFrames.length) tl.to(storedFrames, { y: '-=25', opacity: 0, duration: 0.85, ease: 'power2.in' }, 26.4);
   if (el.stmtBackdrop) tl.to(el.stmtBackdrop, { opacity: 0, duration: 0.85, ease: 'power2.in' }, 26.4);
   if (el.envSymbolsWrap) tl.to(el.envSymbolsWrap, { opacity: 0, duration: 0.85, ease: 'power2.in' }, 26.4);
 }
@@ -309,7 +313,6 @@ export function attachIdentityParallax(
       gsap.set(f, {
         rotateY: mouseX * 4,
         rotateX: -mouseY * 3,
-        force3D: true,
       });
     }
   });
@@ -320,7 +323,6 @@ export function attachIdentityParallax(
       gsap.set(sym, {
         x: mouseX * factor,
         y: mouseY * factor,
-        force3D: true,
       });
     }
   });
@@ -329,7 +331,6 @@ export function attachIdentityParallax(
     gsap.set(roleSpotlight, {
       x: mouseX * 8,
       y: mouseY * 6,
-      force3D: true,
     });
   }
 }

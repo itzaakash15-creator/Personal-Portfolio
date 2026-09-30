@@ -130,7 +130,7 @@
     rgba(150, 130, 100, 0.025) 58%,
     transparent 82%
   );
-  filter: blur(35px);
+  filter: blur(85px);
   pointer-events: none;
   will-change: transform, opacity;
   opacity: 0.6;
@@ -148,7 +148,7 @@
     rgba(216, 195, 165, 0.015) 45%,
     transparent 72%
   );
-  filter: blur(30px);
+  filter: blur(80px);
   pointer-events: none;
   will-change: transform;
 }
@@ -166,34 +166,34 @@
     rgba(216, 195, 165, 0.015) 50%,
     transparent 70%
   );
-  filter: blur(25px);
+  filter: blur(65px);
   pointer-events: none;
   will-change: transform;
 }
 
-/* LAYER 3: Enormous Background Typography AAKASH */
+/* LAYER 3: Enormous Background Typography PORTFOLIO */
 .hero-poster-wordmark {
   position: absolute;
-  top: 38%;
+  top: 42%;
   left: 50%;
   transform: translate(-50%, -50%);
   font-family: var(--font-sans);
-  font-size: clamp(8rem, 17vw, 18rem);
+  font-size: clamp(8rem, 18.5vw, 20.5rem);
   font-weight: 900;
   line-height: 0.82;
-  letter-spacing: -0.04em;
+  letter-spacing: -0.055em;
   text-transform: uppercase;
   white-space: nowrap;
   user-select: none;
   pointer-events: none;
   z-index: 2;
   color: transparent;
-  -webkit-text-stroke: 1.2px rgba(255, 255, 255, 0.08);
-  background: linear-gradient(180deg, rgba(216, 195, 165, 0.14) 0%, rgba(255, 255, 255, 0.04) 45%, rgba(10, 10, 12, 0.01) 100%);
+  -webkit-text-stroke: 1.5px rgba(255, 255, 255, 0.08);
+  background: linear-gradient(180deg, rgba(216, 195, 165, 0.16) 0%, rgba(255, 255, 255, 0.05) 45%, rgba(10, 10, 12, 0.01) 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   will-change: transform, opacity;
-  opacity: 0.92;
+  opacity: 0.9;
 }
 
 /* POSTER GRID: 3-column Layout (Left Flank, Center Character, Right Flank) */
@@ -272,10 +272,7 @@
   display: inline-flex;
   align-items: center;
   gap: 0.55rem;
-  overflow: visible;
-  white-space: nowrap;
-  width: fit-content;
-  min-width: max-content;
+  overflow: hidden;
 }
 
 .poster-tag {
@@ -286,7 +283,6 @@
   text-transform: uppercase;
   color: var(--accent-champagne);
   display: inline-block;
-  white-space: nowrap;
   will-change: transform, clip-path, opacity;
 }
 
@@ -315,15 +311,13 @@
 
 .hero-poster-name {
   font-family: var(--font-sans);
-  font-size: clamp(3.8rem, 7.6vw, 6.5rem);
+  font-size: clamp(3.2rem, 6.5vw, 5.6rem);
   font-weight: 900;
   line-height: 0.88;
-  letter-spacing: -0.035em;
+  letter-spacing: -0.04em;
   color: #ffffff;
   text-transform: uppercase;
   margin: 0;
-  text-shadow: 0 4px 30px rgba(0, 0, 0, 0.45);
-  will-change: transform, opacity, filter;
 }
 
 /* Positioning Block */
@@ -387,89 +381,6 @@
   display: flex;
   align-items: flex-end;
   justify-content: center;
-}
-
-/* ==========================================================================
-   Shared Portrait Bridge — Cinematic Hero → Role Continuity
-   Single continuous portrait across Hero and Identity experiences
-   ========================================================================== */
-.shared-portrait-container {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  pointer-events: none;
-  z-index: 6;
-  display: flex;
-  align-items: flex-end;
-  justify-content: center;
-  overflow: visible;
-  visibility: visible;
-}
-
-.shared-portrait-stage {
-  position: relative;
-  display: flex;
-  align-items: flex-end;
-  justify-content: center;
-  width: clamp(380px, 40vw, 640px);
-  margin-inline: auto;
-  flex-shrink: 0;
-  will-change: transform, opacity;
-}
-
-.portrait-dissolve-wrapper {
-  position: relative;
-  width: 100%;
-  display: flex;
-  align-items: flex-end;
-  justify-content: center;
-  will-change: transform, opacity;
-}
-
-.portrait-gradient-overlay {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    to top,
-    var(--bg-primary) 0%,
-    rgba(10, 10, 12, 0.96) 38%,
-    rgba(10, 10, 12, 0.6) 65%,
-    transparent 100%
-  );
-  opacity: 0;
-  pointer-events: none;
-  z-index: 6;
-  will-change: opacity;
-}
-
-.aakash-rim-light {
-  position: absolute;
-  top: 35%;
-  right: -25px;
-  width: clamp(260px, 30vw, 440px);
-  height: clamp(340px, 40vh, 520px);
-  background: radial-gradient(
-    ellipse at center,
-    rgba(212, 175, 55, 0.15) 0%,
-    rgba(212, 175, 55, 0.04) 50%,
-    transparent 75%
-  );
-  filter: blur(35px);
-  opacity: 0;
-  pointer-events: none;
-  z-index: 4;
-  will-change: opacity;
-}
-
-.hero-portrait-spacer {
-  width: clamp(380px, 40vw, 640px);
-  height: clamp(520px, 78vh, 880px);
-  max-height: 82vh;
-  visibility: hidden;
-  pointer-events: none;
-  flex-shrink: 0;
 }
 
 .hero-poster-portrait {
@@ -804,35 +715,6 @@
 }
 
 /* ==========================================================================
-   2b. Identity: "I DON'T FIT INTO ONE BOX" + Four Role Experience
-   Hard isolated cinematic section with dedicated ScrollTrigger pinning
-   ========================================================================== */
-.identity-section {
-  position: relative;
-  isolation: isolate;
-  width: 100%;
-  height: 100vh;
-  min-height: 100vh;
-  background-color: var(--bg-primary);
-  overflow: hidden;
-  z-index: 5;
-  border-bottom: 1px solid var(--border-subtle);
-  opacity: 1;
-  pointer-events: auto;
-}
-
-@media (max-width: 960px) {
-  .identity-section {
-    height: auto;
-    min-height: auto;
-    opacity: 1;
-    pointer-events: auto;
-    overflow: visible;
-    padding: clamp(3rem, 8vw, 6rem) 1.25rem;
-  }
-}
-
-/* ==========================================================================
    SCROLL PHASE 2: ENORMOUS BACKGROUND TYPOGRAPHY "I DON'T FIT INTO ONE BOX."
    Positioned behind Aakash with three typographic depth levels.
    ========================================================================== */
@@ -913,14 +795,14 @@
   width: 100vw;
   height: 100vh;
   pointer-events: none;
-  z-index: 4;
+  z-index: 3.5;
   overflow: hidden;
 }
 
 .env-symbol-layer {
   position: absolute;
   top: 48%;
-  left: 68%;
+  left: 36%;
   transform: translate(-50%, -50%);
   width: clamp(380px, 48vw, 680px);
   height: auto;
@@ -990,10 +872,10 @@
 .active-role-stage {
   position: absolute;
   top: 52%;
-  left: clamp(42vw, 45vw, 48vw);
+  left: clamp(2rem, 5.5vw, 6.5rem);
   transform: translateY(-50%);
-  width: clamp(390px, 48vw, 640px);
-  max-width: min(90vw, 700px);
+  width: clamp(380px, 48vw, 660px);
+  max-width: 58vw;
   z-index: 8;
   pointer-events: none;
   perspective: 1200px;
@@ -1008,7 +890,7 @@
   width: clamp(400px, 45vw, 650px);
   height: clamp(320px, 35vh, 480px);
   background: radial-gradient(ellipse at center, rgba(212, 175, 55, 0.16) 0%, rgba(212, 175, 55, 0.04) 50%, transparent 75%);
-  filter: blur(24px);
+  filter: blur(55px);
   opacity: 0;
   pointer-events: none;
   z-index: 1;
@@ -1079,9 +961,9 @@
 
 .role-frame-title {
   font-family: var(--font-sans);
-  font-size: clamp(2.1rem, 3.8vw, 3.8rem);
+  font-size: clamp(2.4rem, 4.4vw, 4.2rem);
   font-weight: 900;
-  line-height: 0.95;
+  line-height: 0.92;
   letter-spacing: -0.04em;
   text-transform: uppercase;
   color: #ffffff;
@@ -1128,17 +1010,6 @@
   }
   .stmt-line-3 .stmt-text {
     font-size: clamp(4.2rem, 11vw, 8.4rem);
-  }
-}
-
-@media (max-width: 960px) {
-  .active-role-stage {
-    left: clamp(1.25rem, 5vw, 3rem);
-    width: clamp(340px, 90vw, 680px);
-    max-width: calc(100vw - 2.5rem);
-  }
-  .env-symbol-layer {
-    left: 50%;
   }
 }
 
@@ -3174,10 +3045,9 @@ textarea.form-input-clean {
     padding-inline: 1.25rem;
   }
   .hero-poster-wordmark {
-    font-size: clamp(4.5rem, 17vw, 8.5rem);
+    font-size: clamp(5.5rem, 19vw, 9.5rem);
     top: 36%;
     opacity: 0.15;
-    letter-spacing: -0.03em;
   }
   .hero-center-subject {
     order: 1;
@@ -3189,22 +3059,11 @@ textarea.form-input-clean {
     margin-bottom: 1rem;
   }
   .hero-poster-portrait {
-    transform: none;
+    transform: none !important;
     max-height: 56vh;
     height: auto;
-    opacity: 1;
+    opacity: 1 !important;
     margin-inline: auto;
-  }
-  .hero-portrait-spacer {
-    height: clamp(320px, 56vh, 500px);
-    max-height: 56vh;
-    width: 100%;
-    max-width: 440px;
-    margin-inline: auto;
-  }
-  .shared-portrait-stage {
-    max-width: 440px;
-    width: 100%;
   }
   .hero-flank-left {
     order: 2;

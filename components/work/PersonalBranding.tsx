@@ -1,7 +1,8 @@
 'use client';
 
-import React, { useEffect, useRef } from 'react';
-import { gsap } from '../../lib/gsap';
+import React, { useEffect, useRef, useState } from 'react';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 interface PersonalBrandingProps {
   onOpenDrawer?: (drawerId: string) => void;
@@ -14,13 +15,13 @@ export default function PersonalBranding({ onOpenDrawer, onOpenProof }: Personal
   const layer1Ref = useRef<HTMLDivElement>(null);
   const layer2Ref = useRef<HTMLDivElement>(null);
   const layer3Ref = useRef<HTMLDivElement>(null);
-  const pillsRef = useRef<HTMLDivElement>(null);
-  const rectRef = useRef<DOMRect | null>(null);
+  const [activeWordIdx, setActiveWordIdx] = useState(0);
 
   const triadTerms = ['POSITION', 'CONTENT', 'TRUST'];
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
+    gsap.registerPlugin(ScrollTrigger);
 
     const ctx = gsap.context(() => {
       if (stackRef.current) {
@@ -33,7 +34,6 @@ export default function PersonalBranding({ onOpenDrawer, onOpenProof }: Personal
             y: 0,
             duration: 1.15,
             ease: 'power3.out',
-            force3D: true,
             scrollTrigger: {
               trigger: stackRef.current,
               start: 'top 82%',
@@ -44,53 +44,38 @@ export default function PersonalBranding({ onOpenDrawer, onOpenProof }: Personal
       }
     }, sectionRef);
 
-    let wordIdx = 0;
     const interval = setInterval(() => {
-      wordIdx = (wordIdx + 1) % 3;
-      if (pillsRef.current) {
-        const pills = pillsRef.current.children;
-        for (let i = 0; i < pills.length; i++) {
-          const el = pills[i] as HTMLElement;
-          const isActive = i === wordIdx;
-          el.style.borderColor = isActive ? '#d4af37' : 'rgba(255, 255, 255, 0.1)';
-          el.style.color = isActive ? '#d4af37' : '#71717a';
-        }
-      }
+      setActiveWordIdx((prev) => (prev + 1) % triadTerms.length);
     }, 2400);
 
     return () => {
       ctx.revert();
       clearInterval(interval);
     };
-  }, []);
+  }, [triadTerms.length]);
 
-  const handleMouseEnter = (e: React.MouseEvent<HTMLDivElement>) => {
-    rectRef.current = e.currentTarget.getBoundingClientRect();
-  };
-
-  // Differential 3-layer pointer parallax without continuous layout recalculation
+  // Differential 3-layer pointer parallax: front moves slightly, background moves less
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     if (!stackRef.current || window.innerWidth < 960) return;
-    const rect = rectRef.current || e.currentTarget.getBoundingClientRect();
+    const rect = stackRef.current.getBoundingClientRect();
     const x = (e.clientX - rect.left) / rect.width - 0.5;
     const y = (e.clientY - rect.top) / rect.height - 0.5;
 
     if (layer1Ref.current) {
-      gsap.to(layer1Ref.current, { x: x * 12, y: y * 10, duration: 0.35, ease: 'power1.out', force3D: true });
+      gsap.to(layer1Ref.current, { x: x * 12, y: y * 10, duration: 0.4, ease: 'power1.out' });
     }
     if (layer2Ref.current) {
-      gsap.to(layer2Ref.current, { x: 30 + x * 6, y: -12 + y * 5, duration: 0.45, ease: 'power1.out', force3D: true });
+      gsap.to(layer2Ref.current, { x: 30 + x * 6, y: -12 + y * 5, duration: 0.5, ease: 'power1.out' });
     }
     if (layer3Ref.current) {
-      gsap.to(layer3Ref.current, { x: -30 + x * -4, y: 20 + y * -3, duration: 0.55, ease: 'power1.out', force3D: true });
+      gsap.to(layer3Ref.current, { x: -30 + x * -4, y: 20 + y * -3, duration: 0.6, ease: 'power1.out' });
     }
   };
 
   const handleMouseLeave = () => {
-    rectRef.current = null;
-    if (layer1Ref.current) gsap.to(layer1Ref.current, { x: 0, y: 0, duration: 0.5, ease: 'power2.out', force3D: true });
-    if (layer2Ref.current) gsap.to(layer2Ref.current, { x: 30, y: -12, duration: 0.5, ease: 'power2.out', force3D: true });
-    if (layer3Ref.current) gsap.to(layer3Ref.current, { x: -30, y: 20, duration: 0.5, ease: 'power2.out', force3D: true });
+    if (layer1Ref.current) gsap.to(layer1Ref.current, { x: 0, y: 0, duration: 0.6, ease: 'power2.out' });
+    if (layer2Ref.current) gsap.to(layer2Ref.current, { x: 30, y: -12, duration: 0.6, ease: 'power2.out' });
+    if (layer3Ref.current) gsap.to(layer3Ref.current, { x: -30, y: 20, duration: 0.6, ease: 'power2.out' });
   };
 
   return (
@@ -122,8 +107,8 @@ export default function PersonalBranding({ onOpenDrawer, onOpenProof }: Personal
               <span className="pro-chip">FOUNDER TRUST SYSTEMS</span>
             </div>
 
-            {/* Triad Cycle Accent (Direct DOM styling without React rerenders) */}
-            <div ref={pillsRef} className="pro-triad-pills" style={{ display: 'flex', gap: '0.6rem', marginBlock: '1.25rem' }}>
+            {/* Triad Cycle Accent */}
+            <div className="pro-triad-pills" style={{ display: 'flex', gap: '0.6rem', marginBlock: '1.25rem' }}>
               {triadTerms.map((term, idx) => (
                 <span
                   key={term}
@@ -134,8 +119,8 @@ export default function PersonalBranding({ onOpenDrawer, onOpenProof }: Personal
                     padding: '0.25rem 0.65rem',
                     borderRadius: '4px',
                     border: '1px solid',
-                    borderColor: idx === 0 ? '#d4af37' : 'rgba(255, 255, 255, 0.1)',
-                    color: idx === 0 ? '#d4af37' : '#71717a',
+                    borderColor: activeWordIdx === idx ? '#d4af37' : 'rgba(255, 255, 255, 0.1)',
+                    color: activeWordIdx === idx ? '#d4af37' : '#71717a',
                     transition: 'all 0.3s ease',
                   }}
                 >
@@ -166,7 +151,6 @@ export default function PersonalBranding({ onOpenDrawer, onOpenProof }: Personal
           <div
             className="pro-chapter-media-wrap"
             ref={stackRef}
-            onMouseEnter={handleMouseEnter}
             onMouseMove={handleMouseMove}
             onMouseLeave={handleMouseLeave}
           >

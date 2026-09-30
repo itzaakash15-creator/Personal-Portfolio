@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useCallback, useRef } from 'react';
+import React, { useEffect, useCallback } from 'react';
 import { proofData, ProofItem } from '../../data/proof';
 
 interface ProofModalProps {
@@ -10,7 +10,6 @@ interface ProofModalProps {
 }
 
 export default function ProofModal({ currentKey, onClose, onSelectKey }: ProofModalProps) {
-  const videoRef = useRef<HTMLVideoElement>(null);
   const proofKeys = Object.keys(proofData);
   const isOpen = Boolean(currentKey && proofData[currentKey]);
   const item: ProofItem | undefined = currentKey ? proofData[currentKey] : undefined;
@@ -19,28 +18,18 @@ export default function ProofModal({ currentKey, onClose, onSelectKey }: ProofMo
   const navigateProof = useCallback(
     (direction: number) => {
       if (proofKeys.length === 0) return;
-      if (videoRef.current) {
-        videoRef.current.pause();
-      }
       const nextIdx = (currentIndex + direction + proofKeys.length) % proofKeys.length;
       onSelectKey(proofKeys[nextIdx]);
     },
     [currentIndex, onSelectKey, proofKeys]
   );
 
-  const handleClose = useCallback(() => {
-    if (videoRef.current) {
-      videoRef.current.pause();
-    }
-    onClose();
-  }, [onClose]);
-
   useEffect(() => {
     if (!isOpen) return;
 
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
-        handleClose();
+        onClose();
       } else if (e.key === 'ArrowLeft') {
         navigateProof(-1);
       } else if (e.key === 'ArrowRight') {
@@ -54,11 +43,8 @@ export default function ProofModal({ currentKey, onClose, onSelectKey }: ProofMo
     return () => {
       document.body.style.overflow = '';
       window.removeEventListener('keydown', handleKeyDown);
-      if (videoRef.current) {
-        videoRef.current.pause();
-      }
     };
-  }, [isOpen, handleClose, navigateProof]);
+  }, [isOpen, onClose, navigateProof]);
 
   if (!isOpen || !item) return null;
 
@@ -86,7 +72,7 @@ export default function ProofModal({ currentKey, onClose, onSelectKey }: ProofMo
       aria-modal="true"
       aria-labelledby="proof-modal-title"
     >
-      <div className="proof-modal-backdrop" id="proof-modal-backdrop" onClick={handleClose}></div>
+      <div className="proof-modal-backdrop" id="proof-modal-backdrop" onClick={onClose}></div>
       <div className="proof-modal-dialog">
         <div className="proof-modal-header">
           <div className="proof-modal-header-left">
@@ -104,7 +90,7 @@ export default function ProofModal({ currentKey, onClose, onSelectKey }: ProofMo
               className="proof-modal-close-btn"
               id="proof-modal-close"
               aria-label="Close modal"
-              onClick={handleClose}
+              onClick={onClose}
             >
               ✕
             </button>
@@ -137,12 +123,11 @@ export default function ProofModal({ currentKey, onClose, onSelectKey }: ProofMo
             {item.type === 'video' ? (
               <video
                 key={vidSrc}
-                ref={videoRef}
                 className="proof-modal-video"
                 controls
                 playsInline
-                preload="metadata"
                 poster={posterSrc || ''}
+                autoPlay
               >
                 <source src={vidSrc} type="video/mp4" />
                 <source src={vidSrc} type="video/quicktime" />
@@ -153,8 +138,6 @@ export default function ProofModal({ currentKey, onClose, onSelectKey }: ProofMo
                 src={imgSrc}
                 alt={item.title}
                 className="proof-modal-image"
-                loading="eager"
-                decoding="async"
               />
             )}
           </div>

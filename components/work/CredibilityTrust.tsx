@@ -1,7 +1,8 @@
 'use client';
 
 import React, { useState, useRef, useEffect } from 'react';
-import { gsap } from '../../lib/gsap';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 interface CredibilityTrustProps {
   onOpenDrawer?: (drawerId: string) => void;
@@ -86,10 +87,10 @@ export default function CredibilityTrust({ onOpenDrawer, onOpenProof }: Credibil
   const [activeTab, setActiveTab] = useState<'all' | 'awards' | 'certificates' | 'growth'>('all');
   const sectionRef = useRef<HTMLElement>(null);
   const gridRef = useRef<HTMLDivElement>(null);
-  const cardRectMap = useRef<WeakMap<HTMLElement, DOMRect>>(new WeakMap());
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
+    gsap.registerPlugin(ScrollTrigger);
 
     const ctx = gsap.context(() => {
       if (gridRef.current) {
@@ -102,7 +103,6 @@ export default function CredibilityTrust({ onOpenDrawer, onOpenProof }: Credibil
             duration: 0.9,
             stagger: 0.08,
             ease: 'power2.out',
-            force3D: true,
             scrollTrigger: {
               trigger: gridRef.current,
               start: 'top 85%',
@@ -120,15 +120,11 @@ export default function CredibilityTrust({ onOpenDrawer, onOpenProof }: Credibil
     ? PROOF_CARDS
     : PROOF_CARDS.filter((card) => card.category === activeTab);
 
-  const handleCardMouseEnter = (e: React.MouseEvent<HTMLDivElement>) => {
-    cardRectMap.current.set(e.currentTarget, e.currentTarget.getBoundingClientRect());
-  };
-
-  // Subtle 3D tilt on card hover (cached rect, transform only, no layout thrashing)
+  // Subtle 3D tilt on card hover
   const handleCardMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     if (window.innerWidth < 960) return;
     const card = e.currentTarget;
-    const rect = cardRectMap.current.get(card) || card.getBoundingClientRect();
+    const rect = card.getBoundingClientRect();
     const x = (e.clientX - rect.left) / rect.width - 0.5;
     const y = (e.clientY - rect.top) / rect.height - 0.5;
 
@@ -139,20 +135,17 @@ export default function CredibilityTrust({ onOpenDrawer, onOpenProof }: Credibil
       duration: 0.35,
       ease: 'power1.out',
       transformPerspective: 1000,
-      force3D: true,
     });
   };
 
   const handleCardMouseLeave = (e: React.MouseEvent<HTMLDivElement>) => {
     const card = e.currentTarget;
-    cardRectMap.current.delete(card);
     gsap.to(card, {
       rotateY: 0,
       rotateX: 0,
       scale3d: 1,
       duration: 0.5,
       ease: 'power2.out',
-      force3D: true,
     });
   };
 
@@ -170,26 +163,24 @@ export default function CredibilityTrust({ onOpenDrawer, onOpenProof }: Credibil
         <div className="pro-proof-header">
           <div className="pro-kicker-row" style={{ justifyContent: 'center' }}>
             <span className="pro-kicker-dot" aria-hidden="true"></span>
-            <span className="pro-kicker-text">05 // VERIFIABLE PROOF &amp; EVIDENCE</span>
+            <span className="pro-kicker-text">05 // VERIFIED PROOF OF WORK</span>
           </div>
 
-          <h2 className="pro-hook-headline" style={{ textAlign: 'center' }}>
-            PROOF OVER<br />
-            <span style={{ color: '#d4af37' }}>PROMISES.</span>
+          <h2 className="pro-hook-headline" style={{ textAlign: 'center', marginInline: 'auto' }}>
+            RECOGNIZED &amp;<br />
+            <span style={{ color: '#d4af37' }}>VERIFIED.</span>
           </h2>
 
-          <p style={{ textAlign: 'center', maxWidth: '580px', marginInline: 'auto', color: '#a1a1aa', fontSize: '0.95rem', lineHeight: 1.6, marginTop: '0.75rem' }}>
-            Every capability claimed on this site is backed by physical artifacts, verified client metrics, agency certifications, and documented stage honors.
+          <p className="pro-hook-sub" style={{ textAlign: 'center', marginInline: 'auto', marginBottom: '2.5rem' }}>
+            Authentic stage trophies, official credentials, and live analytics validating real commercial outcomes.
           </p>
 
-          {/* Interactive Filter Pills */}
-          <div className="pro-proof-tabs-bar" role="tablist" aria-label="Proof Categories">
+          {/* Category Tabs */}
+          <div className="pro-proof-tabs">
             {tabs.map((tab) => (
               <button
                 key={tab.key}
                 type="button"
-                role="tab"
-                aria-selected={activeTab === tab.key}
                 className={`pro-proof-tab-btn ${activeTab === tab.key ? 'active' : ''}`}
                 onClick={() => setActiveTab(tab.key)}
               >
@@ -205,7 +196,6 @@ export default function CredibilityTrust({ onOpenDrawer, onOpenProof }: Credibil
             <div
               key={card.id}
               className="pro-proof-card"
-              onMouseEnter={handleCardMouseEnter}
               onMouseMove={handleCardMouseMove}
               onMouseLeave={handleCardMouseLeave}
               onClick={() => onOpenProof?.(card.proofKey)}

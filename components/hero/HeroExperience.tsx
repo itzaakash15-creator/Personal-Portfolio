@@ -1,10 +1,16 @@
 'use client';
 
 import React, { useEffect, useRef } from 'react';
-import { gsap, ScrollTrigger, initGSAP } from '../../lib/gsap';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import HeroLighting from './HeroLighting';
+import HeroPortrait from './HeroPortrait';
 import HeroProjectPreview from './HeroProjectPreview';
 import { HeroLeftFlank, HeroRightFlank } from './HeroFlanks';
+import IdentityExperience from '../identity/IdentityExperience';
+import { buildIdentityTimeline, attachIdentityParallax } from '../identity/identityTimeline';
+import WorkTransition from '../work/WorkTransition';
+import { buildWorkTransitionTimeline } from '../work/workTransitionTimeline';
 
 export default function HeroExperience() {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -12,16 +18,46 @@ export default function HeroExperience() {
   useEffect(() => {
     if (typeof window === 'undefined') return;
 
-    initGSAP();
-
-    const cleanups: Array<() => void> = [];
+    gsap.registerPlugin(ScrollTrigger);
 
     const ctx = gsap.context(() => {
-      const heroSection = document.getElementById('hero');
+      const wrapper = document.getElementById('hero-experience');
       const leftFlank = document.getElementById('hero-left-flank');
       const rightFlank = document.getElementById('hero-right-flank');
       const portfolioWord = document.getElementById('hero-portfolio-wordmark');
       const radialLight = document.getElementById('hero-radial-light');
+      const characterScene = document.getElementById('character-scene');
+      const characterPortrait = document.getElementById('character-portrait');
+      const aakashShadow = document.getElementById('aakash-contact-shadow');
+
+      // Identity Experience Elements
+      const stmtBackdrop = document.getElementById('hero-statement-backdrop');
+      const stmtLine1 = document.getElementById('stmt-line-1');
+      const stmtLine2 = document.getElementById('stmt-line-2');
+      const stmtLine3 = document.getElementById('stmt-line-3');
+      const envSymbolsWrap = document.getElementById('role-env-symbols');
+      const envSymMarketer = document.getElementById('env-sym-marketer');
+      const envSymBrand = document.getElementById('env-sym-brand');
+      const envSymCreator = document.getElementById('env-sym-creator');
+      const envSymSpeaker = document.getElementById('env-sym-speaker');
+      const roleStage = document.getElementById('active-role-stage');
+      const roleSpotlight = document.getElementById('active-role-spotlight');
+      const frame1 = document.getElementById('role-frame-1');
+      const frame2 = document.getElementById('role-frame-2');
+      const frame3 = document.getElementById('role-frame-3');
+      const frame4 = document.getElementById('role-frame-4');
+      const historyRow = document.getElementById('identity-history-row');
+      const historySlots = [
+        document.getElementById('history-slot-1'),
+        document.getElementById('history-slot-2'),
+        document.getElementById('history-slot-3'),
+        document.getElementById('history-slot-4'),
+      ];
+      const historyCollectiveLine = document.getElementById('history-collective-line');
+
+      // Work Transition Elements
+      const workTransition = document.getElementById('work-transition-phase');
+      const projectApproach = document.getElementById('hero-project-approach');
 
       // Flank elements for entrance
       const leftLine = document.querySelector('.tag-accent-line-left') as HTMLElement | null;
@@ -43,9 +79,212 @@ export default function HeroExperience() {
       const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
       const isTouch = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
 
-      // Canonical restore for Hero elements (Restores typography, flanks & lighting cleanly)
+      // ======================================================================
+      // CharacterController: Responsive Parallax & Scroll Kinematics
+      // ======================================================================
+      const CharacterController = {
+        isEntrancePlaying: false,
+        current: {
+          pointerX: 0,
+          pointerY: 0,
+          pointerScale: 1,
+          lightX: 0,
+          lightY: 0,
+          dirLightX: 0,
+          dirLightY: 0,
+          wordmarkX: 0,
+          wordmarkY: 0,
+          flankX: 0,
+          flankY: 0,
+          shadowX: 0,
+          shadowY: 18,
+        },
+        target: {
+          pointerX: 0,
+          pointerY: 0,
+          pointerScale: 1,
+          lightX: 0,
+          lightY: 0,
+          dirLightX: 0,
+          dirLightY: 0,
+          wordmarkX: 0,
+          wordmarkY: 0,
+          flankX: 0,
+          flankY: 0,
+          shadowX: 0,
+          shadowY: 18,
+        },
+        isTicking: false,
+        rafId: 0 as number,
+
+        init() {
+          if (characterPortrait) {
+            characterPortrait.style.opacity = '1';
+            characterPortrait.style.visibility = 'visible';
+            characterPortrait.style.display = 'block';
+          }
+          if (!isTouch && !prefersReducedMotion) {
+            this.bindPointerEvents();
+          }
+        },
+
+        bindPointerEvents() {
+          const isDesktop = () => window.innerWidth > 960 && !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+          const onPointerMove = (e: MouseEvent) => {
+            if (!isDesktop() || this.isEntrancePlaying) return;
+
+            const normX = (e.clientX / window.innerWidth) * 2 - 1;
+            const normY = (e.clientY / window.innerHeight) * 2 - 1;
+
+            this.target.pointerX = normX * 5.0;
+            this.target.pointerY = normY * 3.0;
+            this.target.lightX = normX * 10.0;
+            this.target.lightY = normY * 6.0;
+            this.target.dirLightX = -normX * 8.0;
+            this.target.dirLightY = -normY * 5.0;
+            this.target.wordmarkX = normX * 2.0;
+            this.target.wordmarkY = normY * 1.5;
+            this.target.flankX = normX * 2.0;
+            this.target.flankY = normY * 1.5;
+            this.target.shadowX = -normX * 8;
+            this.target.shadowY = 18 - normY * 4;
+
+            this.requestTick();
+          };
+
+          const onPointerLeave = () => {
+            if (!isDesktop()) return;
+            this.target.pointerX = 0;
+            this.target.pointerY = 0;
+            this.target.lightX = 0;
+            this.target.lightY = 0;
+            this.target.dirLightX = 0;
+            this.target.dirLightY = 0;
+            this.target.wordmarkX = 0;
+            this.target.wordmarkY = 0;
+            this.target.flankX = 0;
+            this.target.flankY = 0;
+            this.target.shadowX = 0;
+            this.target.shadowY = 18;
+
+            this.requestTick();
+          };
+
+          window.addEventListener('mousemove', onPointerMove, { passive: true });
+          window.addEventListener('mouseleave', onPointerLeave, { passive: true });
+        },
+
+        requestTick() {
+          if (!this.isTicking) {
+            this.isTicking = true;
+            this.rafId = requestAnimationFrame(() => this.update());
+          }
+        },
+
+        update() {
+          const c = this.current;
+          const t = this.target;
+
+          c.pointerX += (t.pointerX - c.pointerX) * 0.055;
+          c.pointerY += (t.pointerY - c.pointerY) * 0.055;
+          c.lightX += (t.lightX - c.lightX) * 0.040;
+          c.lightY += (t.lightY - c.lightY) * 0.040;
+          c.dirLightX += (t.dirLightX - c.dirLightX) * 0.040;
+          c.dirLightY += (t.dirLightY - c.dirLightY) * 0.040;
+          c.wordmarkX += (t.wordmarkX - c.wordmarkX) * 0.035;
+          c.wordmarkY += (t.wordmarkY - c.wordmarkY) * 0.035;
+          c.flankX += (t.flankX - c.flankX) * 0.065;
+          c.flankY += (t.flankY - c.flankY) * 0.065;
+          c.shadowX += (t.shadowX - c.shadowX) * 0.055;
+          c.shadowY += (t.shadowY - c.shadowY) * 0.055;
+
+          this.render();
+
+          const diff = Math.abs(t.pointerX - c.pointerX) +
+                       Math.abs(t.pointerY - c.pointerY) +
+                       Math.abs(t.lightX - c.lightX) +
+                       Math.abs(t.lightY - c.lightY) +
+                       Math.abs(t.wordmarkX - c.wordmarkX) +
+                       Math.abs(t.wordmarkY - c.wordmarkY);
+
+          if (diff > 0.005) {
+            this.rafId = requestAnimationFrame(() => this.update());
+          } else {
+            this.isTicking = false;
+          }
+        },
+
+        render() {
+          if (radialLight) {
+            radialLight.style.transform = `translate3d(calc(-50% + ${this.current.lightX.toFixed(2)}px), calc(-50% + ${this.current.lightY.toFixed(2)}px), 0)`;
+          }
+          const dirLightEl = document.querySelector('.hero-poster-side-light') as HTMLElement | null;
+          if (dirLightEl) {
+            dirLightEl.style.transform = `translate3d(${this.current.dirLightX.toFixed(2)}px, ${this.current.dirLightY.toFixed(2)}px, 0)`;
+          }
+          if (portfolioWord && !this.isEntrancePlaying) {
+            portfolioWord.style.transform = `translate(calc(-50% + ${this.current.wordmarkX.toFixed(2)}px), calc(-50% + ${this.current.wordmarkY.toFixed(2)}px))`;
+          }
+          if (leftFlank && !this.isEntrancePlaying) {
+            leftFlank.style.transform = `translate3d(${(-this.current.flankX).toFixed(2)}px, ${this.current.flankY.toFixed(2)}px, 0)`;
+          }
+          if (rightFlank && !this.isEntrancePlaying) {
+            rightFlank.style.transform = `translate3d(${this.current.flankX.toFixed(2)}px, ${this.current.flankY.toFixed(2)}px, 0)`;
+          }
+          if (characterPortrait && !this.isEntrancePlaying) {
+            const totalX = this.current.pointerX;
+            const totalY = this.current.pointerY;
+            characterPortrait.style.transform = `translate3d(${totalX.toFixed(2)}px, ${totalY.toFixed(2)}px, 0)`;
+            characterPortrait.style.filter = `contrast(1.08) brightness(0.97) saturate(0.9) drop-shadow(${this.current.shadowX.toFixed(1)}px ${this.current.shadowY.toFixed(1)}px 32px rgba(0, 0, 0, 0.7))`;
+          }
+        },
+      };
+
+      CharacterController.init();
+
+      // ======================================================================
+      // Cinematic Personal-Portfolio Poster Entrance & Scroll Reversibility
+      // ======================================================================
       const restoreHeroState = (smooth = true) => {
+        CharacterController.isEntrancePlaying = false;
+
         if (smooth) {
+          // Smooth return over 500–800ms equivalent visual motion (650ms, power2.out)
+          if (characterPortrait) {
+            gsap.to(characterPortrait, {
+              opacity: 1,
+              y: 0,
+              scale: 1,
+              duration: 0.65,
+              ease: 'power2.out',
+              overwrite: 'auto',
+              onStart: () => {
+                if (characterPortrait) {
+                  characterPortrait.style.visibility = 'visible';
+                  characterPortrait.style.display = 'block';
+                }
+              },
+            });
+          }
+
+          if (characterScene) {
+            gsap.to(characterScene, {
+              opacity: 1,
+              x: 0,
+              scale: 1,
+              duration: 0.65,
+              ease: 'power2.out',
+              overwrite: 'auto',
+              onStart: () => {
+                if (characterScene) {
+                  characterScene.style.visibility = 'visible';
+                  characterScene.style.display = 'flex';
+                }
+              },
+            });
+          }
+
           if (radialLight) {
             gsap.to(radialLight, {
               opacity: 0.65,
@@ -61,7 +300,6 @@ export default function HeroExperience() {
             gsap.to(portfolioWord, {
               opacity: 0.92,
               scale: 1,
-              y: 0,
               duration: 0.65,
               ease: 'power2.out',
               overwrite: 'auto',
@@ -72,7 +310,6 @@ export default function HeroExperience() {
             gsap.to(leftFlank, {
               opacity: 1,
               x: 0,
-              y: 0,
               duration: 0.65,
               ease: 'power2.out',
               overwrite: 'auto',
@@ -83,13 +320,25 @@ export default function HeroExperience() {
             gsap.to(rightFlank, {
               opacity: 1,
               x: 0,
-              y: 0,
               duration: 0.65,
               ease: 'power2.out',
               overwrite: 'auto',
             });
           }
         } else {
+          // Immediate snap for instant initialization or bypass
+          if (characterPortrait) {
+            characterPortrait.style.opacity = '1';
+            characterPortrait.style.visibility = 'visible';
+            characterPortrait.style.display = 'block';
+            characterPortrait.style.transform = 'none';
+          }
+          if (characterScene) {
+            characterScene.style.opacity = '1';
+            characterScene.style.visibility = 'visible';
+            characterScene.style.display = 'flex';
+            characterScene.style.transform = 'none';
+          }
           if (radialLight) {
             radialLight.style.opacity = '0.65';
             radialLight.style.transform = 'translate3d(-50%, -50%, 0)';
@@ -97,7 +346,7 @@ export default function HeroExperience() {
           if (portfolioWord) {
             portfolioWord.style.opacity = '0.92';
             portfolioWord.style.clipPath = 'none';
-            portfolioWord.style.letterSpacing = '-0.04em';
+            portfolioWord.style.letterSpacing = '-0.055em';
             portfolioWord.style.transform = 'translate(-50%, -50%)';
           }
           if (leftFlank) {
@@ -125,18 +374,6 @@ export default function HeroExperience() {
             el.style.transform = 'none';
           }
         });
-        const nameEl = document.querySelector('.hero-poster-name') as HTMLElement | null;
-        const salutationEl = document.querySelector('.hero-salutation') as HTMLElement | null;
-        if (nameEl) {
-          nameEl.style.opacity = '1';
-          nameEl.style.transform = 'none';
-          nameEl.style.filter = 'none';
-        }
-        if (salutationEl) {
-          salutationEl.style.opacity = '1';
-          salutationEl.style.transform = 'none';
-        }
-        (window as any).__heroEntranceDone = true;
         anchorItems.forEach((anchor, idx) => {
           const num = anchor.querySelector('.anchor-index') as HTMLElement | null;
           const line = anchor.querySelector('.anchor-line') as HTMLElement | null;
@@ -147,59 +384,17 @@ export default function HeroExperience() {
           if (title) { title.style.clipPath = 'none'; title.style.opacity = '1'; title.style.transform = 'none'; }
           if (sub) { sub.style.opacity = '1'; sub.style.transform = 'none'; }
         });
+        CharacterController.requestTick();
       };
 
-      // Flank pointer tracking (desktop only, gated to viewport top)
-      if (!isTouch && !prefersReducedMotion) {
-        let fX = 0, fY = 0;
-        let tfX = 0, tfY = 0;
-        let isHeroActive = window.scrollY < 80;
-
-        const onPointerMove = (e: MouseEvent) => {
-          if (window.innerWidth <= 960 || !isHeroActive) return;
-          const normX = (e.clientX / window.innerWidth) * 2 - 1;
-          const normY = (e.clientY / window.innerHeight) * 2 - 1;
-          tfX = normX * 2.0;
-          tfY = normY * 1.5;
-        };
-
-        const onScrollCheck = () => {
-          isHeroActive = window.scrollY < 80;
-        };
-
-        window.addEventListener('mousemove', onPointerMove, { passive: true });
-        window.addEventListener('scroll', onScrollCheck, { passive: true });
-
-        const tick = () => {
-          if (!isHeroActive) return;
-          fX += (tfX - fX) * 0.065;
-          fY += (tfY - fY) * 0.065;
-          if (leftFlank) {
-            leftFlank.style.transform = `translate3d(${(-fX).toFixed(2)}px, ${fY.toFixed(2)}px, 0)`;
-          }
-          if (rightFlank) {
-            rightFlank.style.transform = `translate3d(${fX.toFixed(2)}px, ${fY.toFixed(2)}px, 0)`;
-          }
-          if (radialLight) {
-            radialLight.style.transform = `translate3d(calc(-50% + ${(fX * 4).toFixed(2)}px), calc(-50% + ${(fY * 3).toFixed(2)}px), 0)`;
-          }
-        };
-
-        gsap.ticker.add(tick);
-
-        cleanups.push(() => {
-          window.removeEventListener('mousemove', onPointerMove);
-          window.removeEventListener('scroll', onScrollCheck);
-          gsap.ticker.remove(tick);
-        });
-      }
+      const settleHeroImmediately = () => {
+        restoreHeroState(false);
+      };
 
       if (prefersReducedMotion || window.scrollY > 40) {
-        restoreHeroState(false);
+        settleHeroImmediately();
       } else {
-        const nameEl = document.querySelector('.hero-poster-name') as HTMLElement | null;
-        const salutationEl = document.querySelector('.hero-salutation') as HTMLElement | null;
-        const characterPortrait = document.getElementById('character-portrait') as HTMLElement | null;
+        CharacterController.isEntrancePlaying = true;
 
         if (radialLight) radialLight.style.opacity = '0.08';
         if (portfolioWord) {
@@ -207,6 +402,10 @@ export default function HeroExperience() {
           portfolioWord.style.clipPath = 'inset(100% 0% 0% 0%)';
           portfolioWord.style.letterSpacing = '0.04em';
           portfolioWord.style.transform = 'translate(-50%, -50%)';
+        }
+        if (characterPortrait) {
+          characterPortrait.style.opacity = '0';
+          characterPortrait.style.transform = 'translate3d(0, 85vh, 0) scale(0.97)';
         }
 
         if (leftLine) leftLine.style.transform = 'scaleX(0)';
@@ -218,20 +417,7 @@ export default function HeroExperience() {
         if (leftSep) leftSep.style.opacity = '0';
         if (rightSep) rightSep.style.opacity = '0';
 
-        if (salutationEl) {
-          salutationEl.style.opacity = '0';
-          salutationEl.style.transform = 'translate3d(0, 12px, 0)';
-        }
-        if (nameEl) {
-          nameEl.style.opacity = '0';
-          nameEl.style.transform = 'translate3d(0, 20px, 0)';
-        }
-        if (characterPortrait) {
-          characterPortrait.style.opacity = '0';
-          characterPortrait.style.transform = 'translate3d(0, 80px, 0) scale(0.96)';
-        }
-
-        [positioning, ctaCluster, rightMantra].forEach((el) => {
+        [greeting, positioning, ctaCluster, rightMantra].forEach((el) => {
           if (el) {
             el.style.opacity = '0';
             el.style.transform = 'translate3d(0, 16px, 0)';
@@ -251,120 +437,283 @@ export default function HeroExperience() {
 
         const entranceTl = gsap.timeline({
           onComplete: () => {
-            (window as any).__heroEntranceDone = true;
-            [leftTag1, leftTag2, rightTag1, rightTag2].forEach((tag) => {
-              if (tag) {
-                tag.style.clipPath = 'none';
-                tag.style.opacity = '1';
-                tag.style.transform = 'none';
-              }
-            });
-            if (leftSep) { leftSep.style.opacity = '1'; leftSep.style.transform = 'none'; }
-            if (rightSep) { rightSep.style.opacity = '1'; rightSep.style.transform = 'none'; }
+            CharacterController.isEntrancePlaying = false;
+            CharacterController.requestTick();
           },
         });
 
-        // STEP 1 — NAME APPEARS FIRST (0.05s)
-        if (salutationEl) {
-          entranceTl.to(salutationEl, { opacity: 1, y: 0, duration: 0.65, ease: 'power3.out', force3D: true }, 0.05);
-        }
-        if (nameEl) {
-          entranceTl.to(nameEl, {
-            opacity: 1,
-            y: 0,
-            duration: 0.82,
-            ease: 'power3.out',
-            force3D: true,
-          }, 0.08);
-        }
+        // 1. PORTFOLIO mask-reveal
+        entranceTl.fromTo(portfolioWord,
+          { opacity: 0, clipPath: 'inset(100% 0% 0% 0%)', letterSpacing: '0.04em' },
+          { opacity: 0.92, clipPath: 'inset(0% 0% 0% 0%)', letterSpacing: '-0.055em', duration: 0.70, ease: 'power3.out' },
+          0.22
+        );
 
-        // Background giant typography AAKASH smoothly reveals behind
-        if (portfolioWord) {
-          entranceTl.fromTo(portfolioWord,
-            { opacity: 0, clipPath: 'inset(100% 0% 0% 0%)', letterSpacing: '0.04em' },
-            { opacity: 0.92, clipPath: 'inset(0% 0% 0% 0%)', letterSpacing: '-0.04em', duration: 0.72, ease: 'power3.out' },
-            0.12
-          );
-        }
+        // 2. AAKASH rises from below (85vh -> 0%) with authentic settling physics (-4px -> 0px)
+        entranceTl.fromTo(characterPortrait,
+          { y: '85vh', opacity: 0, scale: 0.97 },
+          { y: '0%', opacity: 1, scale: 1, duration: 1.15, ease: 'power3.out' },
+          0.55
+        );
+        entranceTl.to(characterPortrait, { y: '-4px', duration: 0.14, ease: 'power1.out' }, 1.70);
+        entranceTl.to(characterPortrait, { y: '0px', duration: 0.18, ease: 'power2.inOut' }, 1.84);
 
-        // Atmospheric studio backlight blooms
-        if (radialLight) {
-          entranceTl.fromTo(radialLight,
-            { opacity: 0.12 },
-            { opacity: 0.75, duration: 0.6, ease: 'power2.out' },
-            0.25
-          );
-          entranceTl.to(radialLight, { opacity: 0.65, duration: 0.45, ease: 'power2.inOut' }, 1.35);
-        }
+        // 3. Backlight blooms behind Aakash
+        entranceTl.fromTo(radialLight,
+          { opacity: 0.12 },
+          { opacity: 0.88, duration: 0.45, ease: 'power2.out' },
+          1.35
+        );
+        entranceTl.to(radialLight, { opacity: 0.65, duration: 0.45, ease: 'power2.inOut' }, 1.80);
 
-        // STEP 2 — PORTRAIT ENTERS (0.45s)
-        // High-performance GPU transform entrance: translateY 80px -> 0, scale 0.96 -> 1, opacity 0 -> 1
-        if (characterPortrait) {
-          entranceTl.to(characterPortrait, {
-            opacity: 1,
-            y: 0,
-            scale: 1,
-            duration: 0.95,
-            ease: 'power3.out',
-            force3D: true,
-          }, 0.45);
-        }
+        // 4. Side Details Assemble
+        if (leftLine) entranceTl.to(leftLine, { scaleX: 1, duration: 0.22, ease: 'power2.out' }, 1.38);
+        if (leftTag1) entranceTl.to(leftTag1, { clipPath: 'inset(0% 0% 0% 0%)', opacity: 1, x: 0, duration: 0.26, ease: 'power2.out' }, 1.44);
+        if (leftSep) entranceTl.to(leftSep, { opacity: 1, duration: 0.15 }, 1.48);
+        if (leftTag2) entranceTl.to(leftTag2, { clipPath: 'inset(0% 0% 0% 0%)', opacity: 1, x: 0, duration: 0.26, ease: 'power2.out' }, 1.50);
 
-        // STEP 3 — HERO DETAILS APPEAR (1.10s)
-        if (leftLine) entranceTl.to(leftLine, { scaleX: 1, duration: 0.22, ease: 'power2.out' }, 1.10);
-        if (leftTag1) entranceTl.to(leftTag1, { clipPath: 'inset(0% 0% 0% 0%)', opacity: 1, x: 0, duration: 0.24, ease: 'power2.out' }, 1.14);
-        if (leftSep) entranceTl.to(leftSep, { opacity: 1, duration: 0.14 }, 1.18);
-        if (leftTag2) entranceTl.to(leftTag2, { clipPath: 'inset(0% 0% 0% 0%)', opacity: 1, x: 0, duration: 0.24, ease: 'power2.out' }, 1.20);
+        if (rightLine) entranceTl.to(rightLine, { scaleX: 1, duration: 0.22, ease: 'power2.out' }, 1.40);
+        if (rightTag1) entranceTl.to(rightTag1, { clipPath: 'inset(0% 0% 0% 0%)', opacity: 1, x: 0, duration: 0.26, ease: 'power2.out' }, 1.46);
+        if (rightSep) entranceTl.to(rightSep, { opacity: 1, duration: 0.15 }, 1.50);
+        if (rightTag2) entranceTl.to(rightTag2, { clipPath: 'inset(0% 0% 0% 0%)', opacity: 1, x: 0, duration: 0.26, ease: 'power2.out' }, 1.52);
 
-        if (rightLine) entranceTl.to(rightLine, { scaleX: 1, duration: 0.22, ease: 'power2.out' }, 1.12);
-        if (rightTag1) entranceTl.to(rightTag1, { clipPath: 'inset(0% 0% 0% 0%)', opacity: 1, x: 0, duration: 0.24, ease: 'power2.out' }, 1.16);
-        if (rightSep) entranceTl.to(rightSep, { opacity: 1, duration: 0.14 }, 1.20);
-        if (rightTag2) entranceTl.to(rightTag2, { clipPath: 'inset(0% 0% 0% 0%)', opacity: 1, x: 0, duration: 0.24, ease: 'power2.out' }, 1.22);
-
-        if (positioning) entranceTl.to(positioning, { opacity: 1, y: 0, duration: 0.45, ease: 'power2.out', force3D: true }, 1.26);
-        if (rightMantra) entranceTl.to(rightMantra, { opacity: 1, y: 0, duration: 0.45, ease: 'power2.out', force3D: true }, 1.34);
+        // 5. Copy & CTAs
+        if (greeting) entranceTl.to(greeting, { opacity: 1, y: 0, duration: 0.45, ease: 'power2.out' }, 1.58);
+        if (positioning) entranceTl.to(positioning, { opacity: 1, y: 0, duration: 0.45, ease: 'power2.out' }, 1.66);
+        if (rightMantra) entranceTl.to(rightMantra, { opacity: 1, y: 0, duration: 0.45, ease: 'power2.out' }, 1.72);
 
         anchorItems.forEach((anchor, idx) => {
-          const baseTime = 1.38 + idx * 0.08;
+          const baseTime = 1.78 + idx * 0.10;
           const num = anchor.querySelector('.anchor-index') as HTMLElement | null;
           const line = anchor.querySelector('.anchor-line') as HTMLElement | null;
           const title = anchor.querySelector('.anchor-title') as HTMLElement | null;
           const sub = anchor.querySelector('.anchor-sub') as HTMLElement | null;
 
-          if (num) entranceTl.to(num, { opacity: 1, y: 0, duration: 0.18, ease: 'power2.out', force3D: true }, baseTime);
+          if (num) entranceTl.to(num, { opacity: 1, y: 0, duration: 0.18, ease: 'power2.out' }, baseTime);
           if (line) entranceTl.to(line, { scaleX: idx === 0 ? 1 : 0.35, duration: 0.22, ease: 'power2.out' }, baseTime + 0.04);
-          if (title) entranceTl.to(title, { clipPath: 'inset(0% 0% 0% 0%)', opacity: 1, y: 0, duration: 0.24, ease: 'power2.out', force3D: true }, baseTime + 0.06);
-          if (sub) entranceTl.to(sub, { opacity: 1, y: 0, duration: 0.20, ease: 'power2.out', force3D: true }, baseTime + 0.08);
+          if (title) entranceTl.to(title, { clipPath: 'inset(0% 0% 0% 0%)', opacity: 1, y: 0, duration: 0.24, ease: 'power2.out' }, baseTime + 0.08);
+          if (sub) entranceTl.to(sub, { opacity: 1, y: 0, duration: 0.20, ease: 'power2.out' }, baseTime + 0.12);
         });
 
-        if (ctaCluster) entranceTl.to(ctaCluster, { opacity: 1, y: 0, duration: 0.45, ease: 'power2.out', force3D: true }, 1.55);
+        if (ctaCluster) entranceTl.to(ctaCluster, { opacity: 1, y: 0, duration: 0.45, ease: 'power2.out' }, 1.84);
+
+        // Safety skip on user scroll or key interaction
+        let hasSkipped = false;
+        const checkScrollSkip = () => {
+          if (window.scrollY > 40 && !hasSkipped) {
+            triggerSkip();
+          }
+        };
+        const triggerSkip = () => {
+          if (hasSkipped) return;
+          hasSkipped = true;
+          window.removeEventListener('scroll', checkScrollSkip);
+          window.removeEventListener('keydown', triggerSkip);
+          window.removeEventListener('touchstart', checkScrollSkip);
+          entranceTl.kill();
+          settleHeroImmediately();
+        };
+        window.addEventListener('scroll', checkScrollSkip, { passive: true });
+        window.addEventListener('keydown', triggerSkip, { once: true });
+        window.addEventListener('touchstart', checkScrollSkip, { passive: true, once: true });
       }
 
-      // Restrained, Non-Destructive Hero Exit Timeline
+      // ----------------------------------------------------------------------
+      // SCROLLTRIGGER STORYTELLING (Desktop)
+      // ----------------------------------------------------------------------
       const mm = gsap.matchMedia();
 
-      mm.add('(min-width: 961px)', () => {
-        if (!heroSection) return;
+      mm.add('(min-width: 961px) and (prefers-reduced-motion: no-preference)', () => {
+        if (!wrapper || !characterScene) return;
 
-        gsap.timeline({
+        const getAnchorRightX = () => Math.min(Math.max(window.innerWidth * 0.22, 220), 380);
+
+        const tl = gsap.timeline({
           scrollTrigger: {
-            trigger: heroSection,
+            trigger: wrapper,
             start: 'top top',
-            end: 'bottom top',
-            scrub: 0.5,
+            end: '+=5200',
+            pin: true,
+            scrub: 1.5,
+            anticipatePin: 1,
+            onEnterBack: () => {
+              if (characterScene) {
+                characterScene.style.visibility = 'visible';
+                characterScene.style.display = 'flex';
+              }
+              if (characterPortrait) {
+                characterPortrait.style.visibility = 'visible';
+                characterPortrait.style.display = 'block';
+              }
+            },
             onLeaveBack: () => {
+              // Returning completely to the Hero landing state
               restoreHeroState(true);
             },
+            onUpdate: (self) => {
+              // Smooth return when scrolling upward into the initial Hero state
+              if (self.direction === -1 && self.progress < 0.04) {
+                restoreHeroState(true);
+              }
+            },
           },
-        })
-        .to(leftFlank, { opacity: 0.3, y: -25, ease: 'none', force3D: true }, 0)
-        .to(rightFlank, { opacity: 0.3, y: -25, ease: 'none', force3D: true }, 0)
-        .to(portfolioWord, { opacity: 0.25, y: -30, ease: 'none', force3D: true }, 0);
+        });
+
+        // Step 1: Flanks Slide Out, Portrait Anchors to Right
+        tl.to(leftFlank, { x: -60, opacity: 0, duration: 1.0, ease: 'power2.inOut' }, 0);
+        tl.to(rightFlank, { x: 60, opacity: 0, duration: 1.0, ease: 'power2.inOut' }, 0);
+        tl.to(portfolioWord, { scale: 0.94, opacity: 0, duration: 0.9, ease: 'power2.inOut' }, 0.05);
+
+        tl.to(characterScene, {
+          x: () => getAnchorRightX(),
+          scale: 0.98,
+          duration: 1.1,
+          ease: 'power2.inOut',
+        }, 0.15);
+
+        if (characterPortrait) {
+          tl.to(characterPortrait, { scale: 0.98, opacity: 0.96, duration: 1.1, ease: 'power2.inOut' }, 0.15);
+        }
+        if (radialLight) {
+          tl.to(radialLight, { x: () => getAnchorRightX() * 0.75, duration: 1.1, ease: 'power2.inOut' }, 0.15);
+        }
+        if (aakashShadow) {
+          tl.to(aakashShadow, { opacity: 1, duration: 0.9, ease: 'power2.out' }, 0.2);
+        }
+
+        // Steps 2–7 & Identity Exit (Modular Builder)
+        buildIdentityTimeline(tl, {
+          stmtBackdrop,
+          stmtLine1,
+          stmtLine2,
+          stmtLine3,
+          envSymMarketer,
+          envSymBrand,
+          envSymCreator,
+          envSymSpeaker,
+          roleStage,
+          roleSpotlight,
+          frame1,
+          frame2,
+          frame3,
+          frame4,
+          historySlots,
+          historyCollectiveLine,
+          historyRow,
+          envSymbolsWrap,
+          wrapper,
+          characterScene,
+          getAnchorRightX,
+        });
+
+        // Step 8: Work Transition Phase (Modular Builder)
+        buildWorkTransitionTimeline(tl, {
+          characterScene,
+          characterPortrait,
+          radialLight,
+          workTransition,
+          projectApproach,
+          getAnchorRightX,
+        });
+
+        // ----------------------------------------------------------------------
+        // POINTER INTERACTION (Desktop Only — Micro-Interactions & Calm Parallax)
+        // ----------------------------------------------------------------------
+        if (window.matchMedia('(min-width: 1025px)').matches) {
+          let mouseX = 0, mouseY = 0;
+          let targetX = 0, targetY = 0;
+
+          window.addEventListener('mousemove', (e) => {
+            targetX = (e.clientX / window.innerWidth - 0.5) * 2;
+            targetY = (e.clientY / window.innerHeight - 0.5) * 2;
+          }, { passive: true });
+
+          gsap.ticker.add(() => {
+            mouseX += (targetX - mouseX) * 0.08;
+            mouseY += (targetY - mouseY) * 0.08;
+
+            // Only apply mouse parallax on portrait when in hero zone (< 120px) so it doesn't fight ScrollTrigger
+            if (characterPortrait && !CharacterController.isEntrancePlaying && window.scrollY < 120) {
+              gsap.set(characterPortrait, {
+                x: mouseX * 3,
+                y: mouseY * 2.5,
+              });
+            }
+
+            attachIdentityParallax(
+              mouseX,
+              mouseY,
+              [frame1, frame2, frame3, frame4],
+              [envSymMarketer, envSymBrand, envSymCreator, envSymSpeaker],
+              roleSpotlight
+            );
+          });
+        }
       });
 
-      // ======================================================================
+      // Mobile reveals
+      mm.add('(max-width: 960px)', () => {
+        const stmtLines = document.querySelectorAll('.stmt-line');
+        stmtLines.forEach((line) => {
+          gsap.fromTo(line,
+            { opacity: 0.35, y: 18 },
+            {
+              opacity: 1,
+              y: 0,
+              duration: 0.7,
+              ease: 'power2.out',
+              scrollTrigger: {
+                trigger: line,
+                start: 'top 88%',
+                end: 'top 65%',
+                scrub: 0.35,
+              },
+            }
+          );
+        });
+
+        const roleFrames = document.querySelectorAll('.editorial-role-frame');
+        roleFrames.forEach((frame) => {
+          gsap.fromTo(frame,
+            { opacity: 0.25, y: 25, scale: 0.94 },
+            {
+              opacity: 1,
+              y: 0,
+              scale: 1,
+              duration: 0.75,
+              ease: 'power2.out',
+              scrollTrigger: {
+                trigger: frame,
+                start: 'top 88%',
+                end: 'top 58%',
+                scrub: 0.35,
+              },
+            }
+          );
+        });
+
+        if (workTransition) {
+          gsap.fromTo(workTransition,
+            { opacity: 0.3, y: 25 },
+            {
+              opacity: 1,
+              y: 0,
+              duration: 0.8,
+              ease: 'power2.out',
+              scrollTrigger: {
+                trigger: workTransition,
+                start: 'top 85%',
+                end: 'top 55%',
+                scrub: 0.4,
+              },
+            }
+          );
+        }
+      });
+
+      // ----------------------------------------------------------------------
       // ANCHOR HOVER PREVIEW CONTROLLER
-      // ======================================================================
+      // ----------------------------------------------------------------------
       const previewStage = document.getElementById('hero-hover-preview');
       const previewImg = document.getElementById('hover-preview-img') as HTMLImageElement | null;
       const previewTitle = document.getElementById('hover-preview-title');
@@ -373,7 +722,7 @@ export default function HeroExperience() {
 
       if (anchorItems.length && previewStage) {
         anchorItems.forEach((item) => {
-          const onMouseEnter = () => {
+          item.addEventListener('mouseenter', () => {
             if (window.innerWidth <= 960) return;
 
             const titleEl = item.querySelector('.anchor-title') as HTMLElement | null;
@@ -416,9 +765,9 @@ export default function HeroExperience() {
               if (previewKicker && kickerText) previewKicker.textContent = kickerText;
               previewStage.classList.add('active');
             }
-          };
+          });
 
-          const onMouseLeave = () => {
+          item.addEventListener('mouseleave', () => {
             if (window.innerWidth <= 960) return;
 
             const titleEl = item.querySelector('.anchor-title') as HTMLElement | null;
@@ -438,33 +787,31 @@ export default function HeroExperience() {
 
             previewStage.classList.remove('active');
             previewStage.style.transform = '';
-          };
-
-          item.addEventListener('mouseenter', onMouseEnter);
-          item.addEventListener('mouseleave', onMouseLeave);
-
-          cleanups.push(() => {
-            item.removeEventListener('mouseenter', onMouseEnter);
-            item.removeEventListener('mouseleave', onMouseLeave);
           });
         });
 
-        const onPreviewMouseMove = (e: MouseEvent) => {
+        window.addEventListener('mousemove', (e) => {
           if (window.innerWidth <= 960 || !previewStage.classList.contains('active')) return;
           const normX = (e.clientX / window.innerWidth) * 2 - 1;
           const normY = (e.clientY / window.innerHeight) * 2 - 1;
-          previewStage.style.transform = `translate3d(${(normX * 6).toFixed(1)}px, ${(normY * 4).toFixed(1)}px, 0)`;
-        };
-
-        window.addEventListener('mousemove', onPreviewMouseMove, { passive: true });
-        cleanups.push(() => {
-          window.removeEventListener('mousemove', onPreviewMouseMove);
-        });
+          previewStage.style.transform = `translate(${(normX * 6).toFixed(1)}px, ${(normY * 4).toFixed(1)}px) scale(1) rotate(0deg)`;
+        }, { passive: true });
       }
+
+      // Global top scroll return safety: ensures portrait, scene and lighting smoothly restore when returning to top
+      const handleScrollReturn = () => {
+        if (window.scrollY <= 80) {
+          const portraitOp = characterPortrait ? Number(gsap.getProperty(characterPortrait, 'opacity')) : 1;
+          const sceneOp = characterScene ? Number(gsap.getProperty(characterScene, 'opacity')) : 1;
+          if (portraitOp < 0.95 || sceneOp < 0.95) {
+            restoreHeroState(true);
+          }
+        }
+      };
+      window.addEventListener('scroll', handleScrollReturn, { passive: true });
     }, containerRef);
 
     return () => {
-      cleanups.forEach((c) => c());
       ctx.revert();
     };
   }, []);
@@ -475,21 +822,26 @@ export default function HeroExperience() {
         {/* LAYER 1 & 2: Atmospheric Studio Background & Cinematic Lighting */}
         <HeroLighting />
 
-        {/* LAYER 3: Enormous Background Typography AAKASH (Behind Aakash) */}
+        {/* LAYER 3: Enormous Background Typography PORTFOLIO (Behind Aakash) */}
         <div className="hero-poster-wordmark" id="hero-portfolio-wordmark" aria-hidden="true">
-          AAKASH
+          PORTFOLIO
         </div>
 
-        {/* LAYER 4, 5 & 6: Poster Grid Composition (Left Flank, Portrait Spacer, Right Flank) */}
+        {/* LAYER 3b, 3c: Statement Backdrop, Environmental SVG Symbols, Completed History Row, Active Role Stage */}
+        <IdentityExperience />
+
+        {/* LAYER 4, 5 & 6: Poster Grid Composition (Left Flank, Centered Aakash, Right Flank) */}
         <div className="hero-poster-grid">
           <HeroLeftFlank />
-          {/* Spatial placeholder maintaining pixel-perfect 3-column layout while SharedPortraitBridge renders the continuous portrait */}
-          <div className="hero-center-subject hero-portrait-spacer" aria-hidden="true"></div>
+          <HeroPortrait />
           <HeroRightFlank />
         </div>
 
         {/* Hover preview */}
         <HeroProjectPreview />
+
+        {/* Transition Phase into Digi Marketrix */}
+        <WorkTransition />
       </section>
     </div>
   );
